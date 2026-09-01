@@ -408,15 +408,15 @@ Admin:
 
 ## 16. Construction appendix
 
-This appendix instantiates the shared deterministic Figma contract in the root [README](<C:/Users/Asus/Documents/ChatGPT/online store/README.md>). Every frame uses the `NS` prefix and must be built from the screen IDs, coordinates, component properties, fixtures, and state rules below. A frame is not approved while its direct Figma node URL, screenshot evidence, or unresolved-issue field is blank.
+This appendix instantiates the shared deterministic Figma contract in the root [README](../../../README.md). Every frame uses the `NS` prefix and must be built from the screen IDs, coordinates, component properties, fixtures, and state rules below. A frame is not approved while its direct Figma node URL, screenshot evidence, or unresolved-issue field is blank.
 
 ### 16.1 Frame matrix and coordinate anchors
 
 | Frame family | Desktop | Tablet | Mobile | Narrow QA |
 | --- | --- | --- | --- | --- |
-| Storefront shell | `1440 × auto`, full-bleed media with aligned content `x=96,w=1248`, 12 columns, 24 px gutter | `768 × auto`, content `x=32,w=704`, 8 columns, 16 px gutter | `390 × auto`, content `x=16,w=358`, 4 columns, 12 px gutter | `360 × auto`, content `x=16,w=328` |
-| Account shell | `1440 × auto`, nav `x=96,w=280`, gap `32`, content `w=920` | `768 × auto`, nav becomes a summary row, content `w=704` | `390 × auto`, stacked destination list and one-column content | `360 × auto`, same stack with 16 px side padding |
-| Admin shell | `1440 × auto`, sidebar `240`, topbar `64`, content padding `32`, no glow | `768 × auto`, sidebar hidden, operational cards | `390 × auto`, card queues and sticky save/action bar | `360 × auto`, no table overflow |
+| Storefront shell | `1440 × 900`, full-bleed media with aligned content `x=96,w=1248`, 12 columns, 24 px gutter | `768 × 1024`, content `x=32,w=704`, 8 columns, 16 px gutter | `390 × 844`, content `x=16,w=358`, 4 columns, 12 px gutter | `360 × 800`, content `x=16,w=328` |
+| Account shell | `1440 × 900`, nav `x=96,w=280`, gap `32`, content `w=920` | `768 × 1024`, nav becomes a summary row, content `w=704` | `390 × 844`, stacked destination list and one-column content | `360 × 800`, same stack with 16 px side padding |
+| Admin shell | `1440 × 900`, sidebar `240`, topbar `64`, content padding `32`, no glow | `768 × 1024`, sidebar hidden, operational cards | `390 × 844`, card queues and sticky save/action bar | `360 × 800`, no table overflow |
 
 Use these top-level coordinates in every primary frame:
 
@@ -434,9 +434,9 @@ Frame names follow `NS/<Screen>/<Viewport>/<State>`, for example `NS/Home/Deskto
 
 ### 16.2 Screen-sheet map
 
-Each row below represents an individual frame even where IDs are grouped. The screen sheet for that frame must use the root schema: section bounds, tokens, component properties, copy, asset, state, responsive change, and interaction.
+Each row below represents an individual frame even where IDs are grouped. Every row inherits the complete baseline from the root [shared page and state matrix](../../../README.md#shared-page-and-state-matrix); the state cell lists direction-specific or visually emphasized states and is additive, never a replacement. The screen sheet for that frame must use the root schema: section bounds, tokens, component properties, copy, asset, state, responsive change, and interaction.
 
-| Screen IDs | Desktop composition | Mobile transformation | Mandatory state frames |
+| Screen IDs | Desktop composition | Mobile transformation | Direction-specific / emphasized states (plus full root baseline) |
 | --- | --- | --- | --- |
 | `HOME` | Full-bleed cinematic hero, audience triptych, new collection, technical product rail, feature story, children/family capsule, trust, footer | 390 px hero, three audience destination cards, two-column products, cinematic campaign rail | Campaign, no campaign, video fallback, image fallback, loading, slow image, request error, offline |
 | `CATEGORY_WOMEN`, `CATEGORY_MEN`, `CATEGORY_CHILDREN` | Full-width category still, high-contrast title, subcategories, products, fit/material guide, SEO block | Portrait hero, horizontal subcategories, two-column products, expandable copy | Default, campaign off, loading, request error |
@@ -457,6 +457,31 @@ Each row below represents an individual frame even where IDs are grouped. The sc
 | `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | Sectioned dark form, 2-column fields, 120 × 44 px matrix cells, media crop/reorder panel | One-column sections; contained matrix scroll; sticky save bar | Draft, invalid, saving, saved, publish blocked, upload/crop failure |
 | `ADMIN_ORDERS`, `ADMIN_ORDER_DETAIL`, `ADMIN_PAYMENTS` | Queue tabs, immutable snapshots, payment callback timeline, internal notes, technical references | Queue/detail cards with labeled event rows | New/paid/preparing/shipped, payment mismatch, retry, webhook error, permission error |
 | `ADMIN_PROMOTIONS`, `ADMIN_CUSTOMERS`, `ADMIN_CUSTOMER_DETAIL`, `ADMIN_CONTENT`, `ADMIN_AUDIT`, `ADMIN_OPERATIONS` | Promotion/content editor, restricted customer lookup/detail, audit before/after, notification/media/payment health; no glow in operational surfaces | Card sections with explicit section navigation and unsaved-change guard; PII stays permission-gated | Draft, scheduled, publish blocked, success, failure, no activity, service degraded, permission error |
+
+### 16.2.1 Exact section-bound stacks
+
+The values below use `x,y,width,height` in pixels. They are the required bounds for the visible `Scroll-0` frame; `Scroll-1` and later frames keep the same viewport and continue the stack with a recorded scroll offset. Slash-separated IDs share this geometry but still receive separate Figma frames and node URLs.
+
+| Screen IDs | Desktop section stack (`1440 × 900`) | Mobile section stack (`390 × 844`) |
+| --- | --- | --- |
+| `HOME` | `Hero(0,156,1440,720)` with copy aligned `x=96` → `AudienceTriptych(96,940,1248,300)` → `TechnicalRail(96,1288,1248,510)` → `FeatureStory(96,1846,1248,420)` → `Trust(96,2310,1248,300)` → `Footer(96,2642,1248,280)` | `Hero(0,86,390,500)` → `AudienceCards(16,618,358,220)` → `Products(16,870,358,420)` → `CampaignRail(16,1322,358,320)` → `Trust(16,1674,358,260)` → `Footer(16,1966,358,320)` |
+| `CATEGORY_WOMEN`, `CATEGORY_MEN`, `CATEGORY_CHILDREN` | `CategoryHero(0,156,1440,520)` → `Subcategories(96,700,1248,64)` → `Products(96,788,1248,510)` → `FitMaterialGuide(96,1342,1248,360)` → `SEOCopy(96,1746,1248,360)` | `PortraitHero(0,86,390,420)` → `Subcategories(16,538,358,52)` → `Products(16,614,358,420)` → `FitGuideSEO(16,1066,358,420)` |
+| `PLP_WOMEN`, `PLP_MEN`, `PLP_CHILDREN` | `Toolbar(96,156,1248,96)` → `FilterRail(96,276,288,620)` + `ProductGrid(408,276,936,620)`; card rows are `288×510`, row gap `24` | `FilterSortBar(16,86,358,52)` → `ProductGrid(16,162,358,900)`; cards are `173×420`; filter sheet `16,86,358,758` |
+| `SEARCH` | `SearchOverlay(360,156,720,600)` → `SearchResults(96,800,1248,620)` | `SearchSurface(0,86,390,758)` with field `16,86,358,52` and results `16,162,358,682` |
+| `PDP` | `Gallery(96,156,744,900)` + `PurchaseInfo(864,156,456,760)` → `TechnicalDetails(96,1080,1248,420)` → `RelatedProducts(96,1524,1248,510)` | `Gallery(16,86,358,448)` → `PurchaseInfo(16,566,358,650)` → `TechnicalDetails(16,1238,358,420)` → `RelatedProducts(16,1682,358,420)`; purchase bar `0,772,390,72` |
+| `CART_DRAWER`, `CART` | Drawer `1008,0,432,900`; cart page `Items(96,156,816,720)` + `Summary(936,156,408,640)` | Sheet `0,86,390,758`; cart page `Items(16,86,358,620)` → `Summary(16,738,358,360)`; sticky CTA `16,744,358,52` |
+| `AUTH`, `CHECKOUT_ADDRESS`, `CHECKOUT_SHIPPING`, `CHECKOUT_PAYMENT` | Auth `Panel(492,206,456,560)`; checkout `Form(96,156,816,680)` + `Summary(936,156,408,640)` and stepper `96,116,816,32` | Auth `Form(16,86,358,650)`; checkout `Step(16,86,358,620)` → `Summary(16,730,358,300)`; sticky CTA `16,772,358,52` |
+| `CONFIRMATION`, `TRACKING` | `Receipt(96,156,792,560)` + `NextSteps(912,156,336,320)`; timeline `96,740,1248,220` | `Receipt(16,86,358,420)` → `NextSteps(16,538,358,240)` → `Timeline(16,806,358,520)` |
+| `ACCOUNT_DASHBOARD`, `PROFILE`, `ADDRESSES`, `ORDERS`, `ORDER_DETAIL` | `AccountNav(96,156,280,620)` + `AccountContent(408,156,920,720)`; dark raised cards use `night/900` | `AccountSummary(16,86,358,120)` → `DestinationList(16,230,358,360)` → `AccountContent(16,614,358,620)` |
+| `SUPPORT`, `SECURITY`, `NOTIFICATIONS` | `AccountNav(96,156,280,620)` + `SupportContent(408,156,920,720)`; no decorative glow | `Summary(16,86,358,120)` → `SearchOrControls(16,230,358,104)` → `AccordionContent(16,358,358,820)` |
+| `CAMPAIGN`, `GUIDE`, `ARTICLE`, `LOOKBOOK` | `StoryHero(96,156,1248,520)` → `ReadingMeasure(360,724,720,920)` → `ProductReferences(96,1668,1248,510)` | `StoryHero(16,86,358,360)` → `ReadingMeasure(16,478,358,980)` → `ProductRail(16,1474,358,420)` |
+| `ABOUT`, `TRUST`, `SHIPPING_POLICY`, `RETURNS_POLICY`, `SIZE_GUIDE`, `CARE_GUIDE`, `FAQ`, `CONTACT`, `PRIVACY`, `TERMS` | `DocumentHeader(96,156,1248,180)` → `ReadingMeasure(360,368,720,920)` → `RelatedOrContact(96,1320,1248,300)` | `DocumentHeader(16,86,358,160)` → `ReadingMeasure(16,270,358,980)` → `RelatedOrContact(16,1282,358,320)` |
+| `NOT_FOUND`, `OFFLINE`, `MAINTENANCE` | `Message(480,296,480,300)` with action `520,512,400,52` on `night/900` | `Message(16,214,358,300)` with action `16,542,358,52` |
+| `ADMIN_LOGIN`, `ADMIN_DASHBOARD` | `AdminSidebar(0,0,240,900)` + `AdminTopbar(240,0,1200,64)` + `Dashboard(272,96,1136,720)`; no glow | `AdminTopbar(0,0,390,56)` + `DashboardCards(16,80,358,720)` |
+| `ADMIN_PRODUCTS`, `ADMIN_CATEGORIES`, `ADMIN_INVENTORY` | `AdminSidebar(0,0,240,900)` + `FilterBar(272,96,1136,56)` + `DataTable(272,176,1136,620)` | `AdminTopbar(0,0,390,56)` + `FilterBar(16,80,358,52)` + `PriorityCards(16,156,358,760)` |
+| `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | `AdminSidebar(0,0,240,900)` + `FormHeader(272,96,1136,64)` + `FormSections(272,184,760,640)` + `Preview(1056,184,352,640)` | `AdminTopbar(0,0,390,56)` + `FormSections(16,80,358,980)` + sticky save bar `16,772,358,52` |
+| `ADMIN_ORDERS`, `ADMIN_ORDER_DETAIL`, `ADMIN_PAYMENTS` | `AdminSidebar(0,0,240,900)` + `QueueOrDetail(272,96,760,720)` + `EventsOrSummary(1056,96,352,720)` | `AdminTopbar(0,0,390,56)` + `QueueOrDetail(16,80,358,840)` |
+| `ADMIN_PROMOTIONS`, `ADMIN_CUSTOMERS`, `ADMIN_CUSTOMER_DETAIL`, `ADMIN_CONTENT`, `ADMIN_AUDIT`, `ADMIN_OPERATIONS` | `AdminSidebar(0,0,240,900)` + `SectionHeader(272,96,1136,64)` + `PrimaryPanel(272,184,760,640)` + `SecondaryPanel(1056,184,352,640)` | `AdminTopbar(0,0,390,56)` + `SectionNav(16,80,358,52)` + `PrimaryPanel(16,156,358,820)` |
 
 ### 16.3 Direction-specific component property values
 

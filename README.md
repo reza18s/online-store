@@ -330,6 +330,10 @@ Every Figma frame and exported screenshot must record the following metadata in 
 | Asset set | Image asset ID, source dimensions, crop mode, focal point, and alt text |
 | Handoff | Direct Figma node URL, owner, review date, and screenshot path once approved |
 
+#### Viewport and long-page policy
+
+Use explicit viewport frames for construction and screenshot comparison; do not use `auto` height for an approval frame. The standard viewport heights are `1440 × 900` desktop, `768 × 1024` tablet, `390 × 844` mobile, and `360 × 800` narrow-mobile QA. Long pages are represented by multiple frames with the same viewport and named scroll states (`Scroll-0`, `Scroll-1`, and so on). Each scroll frame repeats the shell metadata and records the exact section bounds visible in that capture.
+
 #### Canonical screen inventory
 
 These IDs are shared by all five directions. A direction may add a visual variant, but it may not remove a required screen.

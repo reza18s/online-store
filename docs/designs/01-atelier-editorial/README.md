@@ -496,9 +496,9 @@ The values below use `x,y,width,height` in pixels in one full-page coordinate sy
 | `CATEGORY_WOMEN`, `CATEGORY_MEN`, `CATEGORY_CHILDREN` | `PortraitHero(96,160,1248,460)` → `Intro(96,652,1248,160)` → `Subcategories(96,836,1248,224)` → `FeaturedLook(96,1084,1248,440)` → `PopularProducts(96,1556,1248,510)` → `GuideSEO(96,2120,1248,360)` | `PortraitHero(16,88,358,360)` → `Intro(16,480,358,144)` → `Subcategories(16,656,358,220)` → `Products(16,908,358,420)` → `GuideSEO(16,1360,358,360)` |
 | `PLP_WOMEN`, `PLP_MEN`, `PLP_CHILDREN` | `Toolbar(96,160,1248,96)` → `FilterRail(96,280,300,620)` + `ProductGrid(420,280,924,620)`; card rows are `300×510`, row gap `24` | `FilterSortBar(16,88,358,52)` → `ProductGrid(16,164,358,900)`; cards are `173×420`, row gap `24`; filter sheet `16,88,358,756` |
 | `SEARCH` | `SearchOverlay(360,160,720,600)` → `SearchResults(96,800,1248,620)` | `SearchSurface(0,88,390,756)` with sticky field `16,88,358,52` and results beginning `16,164,358,680` |
-| `PDP` | `Gallery(96,160,720,900)` + `PurchaseInfo(840,160,480,760)` → `DetailsReviews(96,1092,1248,420)` → `RelatedProducts(96,1576,1248,510)` | `Gallery(16,88,358,448)` → `PurchaseInfo(16,568,358,650)` → `DetailsReviews(16,1250,358,420)` → `RelatedProducts(16,1694,358,420)`; purchase bar `0,772,390,72` |
-| `CART_DRAWER`, `CART` | Drawer `1000,0,440,900`; cart page `Items(96,160,816,720)` + `Summary(936,160,408,640)` | Sheet `0,88,390,756`; cart page `Items(16,88,358,620)` → `Summary(16,740,358,360)`; sticky CTA `16,744,358,52` |
-| `AUTH`, `CHECKOUT_ADDRESS`, `CHECKOUT_SHIPPING`, `CHECKOUT_PAYMENT` | Auth `Panel(492,210,456,560)`; checkout `Form(96,160,816,680)` + `Summary(936,160,408,640)` and stepper `96,120,816,32` | Auth `Form(16,88,358,650)`; checkout `Step(16,88,358,620)` → `Summary(16,732,358,300)`; sticky CTA `16,772,358,52` |
+| `PDP` | `Gallery(96,160,720,900)` + `PurchaseInfo(840,160,480,760)` → `DetailsReviews(96,1092,1248,420)` → `RelatedProducts(96,1576,1248,510)` | `Gallery(16,88,358,448)` → `PurchaseInfo(16,568,358,650)` → `DetailsReviews(16,1250,358,420)` → `RelatedProducts(16,1694,358,420)`; purchase bar `0,692,390,72`; narrow `0,648,360,72` |
+| `CART_DRAWER`, `CART` | Drawer `1000,0,440,900`; cart page `Items(96,160,816,720)` + `Summary(936,160,408,640)` | Sheet `0,88,390,756`; cart page `Items(16,88,358,620)` → `Summary(16,740,358,360)`; sticky CTA `16,712,358,52`; narrow `16,668,328,52` |
+| `AUTH`, `CHECKOUT_ADDRESS`, `CHECKOUT_SHIPPING`, `CHECKOUT_PAYMENT` | Auth `Panel(492,210,456,560)`; checkout `Form(96,160,816,680)` + `Summary(936,160,408,640)` and stepper `96,120,816,32` | Auth `Form(16,88,358,650)`; checkout `Step(16,88,358,620)` → `Summary(16,732,358,300)`; sticky CTA `16,712,358,52`; narrow `16,668,328,52` |
 | `CONFIRMATION`, `TRACKING` | `Receipt(96,160,792,560)` + `NextSteps(912,160,336,320)`; timeline `96,744,1248,220` | `Receipt(16,88,358,420)` → `NextSteps(16,540,358,240)` → `Timeline(16,812,358,520)` |
 | `ACCOUNT_DASHBOARD`, `PROFILE`, `ADDRESSES`, `ORDERS`, `ORDER_DETAIL` | `AccountNav(96,160,280,620)` + `AccountContent(408,160,920,720)`; content sections use 24 px gaps | `AccountSummary(16,88,358,120)` → `DestinationList(16,232,358,360)` → `AccountContent(16,616,358,620)` |
 | `SUPPORT`, `SECURITY`, `NOTIFICATIONS` | `AccountNav(96,160,280,620)` + `SupportContent(408,160,920,720)`; FAQ/search controls occupy the first 96 px | `Summary(16,88,358,120)` → `SearchOrControls(16,232,358,104)` → `AccordionContent(16,360,358,820)` |
@@ -507,9 +507,22 @@ The values below use `x,y,width,height` in pixels in one full-page coordinate sy
 | `NOT_FOUND`, `OFFLINE`, `MAINTENANCE` | `Message(480,300,480,300)` with actions at `520,516,400,52` | `Message(16,220,358,300)` with action `16,548,358,52` |
 | `ADMIN_LOGIN`, `ADMIN_DASHBOARD` | `AdminSidebar(0,0,240,900)` + `AdminTopbar(240,0,1200,64)` + `Dashboard(272,96,1136,720)` | `AdminTopbar(0,0,390,56)` + `DashboardCards(16,80,358,720)` |
 | `ADMIN_PRODUCTS`, `ADMIN_CATEGORIES`, `ADMIN_INVENTORY` | `AdminSidebar(0,0,240,900)` + `FilterBar(272,96,1136,56)` + `DataTable(272,176,1136,620)` | `AdminTopbar(0,0,390,56)` + `FilterBar(16,80,358,52)` + `PriorityCards(16,156,358,760)` |
-| `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | `AdminSidebar(0,0,240,900)` + `FormHeader(272,96,1136,64)` + `FormSections(272,184,760,640)` + `Preview(1056,184,352,640)` | `AdminTopbar(0,0,390,56)` + `FormSections(16,80,358,980)` + sticky save bar `16,772,358,52` |
+| `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | `AdminSidebar(0,0,240,900)` + `FormHeader(272,96,1136,64)` + `FormSections(272,184,760,640)` + `Preview(1056,184,352,640)` | `AdminTopbar(0,0,390,56)` + `FormSections(16,80,358,980)` + sticky save bar `16,712,358,52`; narrow `16,668,328,52` |
 | `ADMIN_ORDERS`, `ADMIN_ORDER_DETAIL`, `ADMIN_PAYMENTS` | `AdminSidebar(0,0,240,900)` + `QueueOrDetail(272,96,760,720)` + `EventsOrSummary(1056,96,352,720)` | `AdminTopbar(0,0,390,56)` + `QueueOrDetail(16,80,358,840)` |
 | `ADMIN_PROMOTIONS`, `ADMIN_CUSTOMERS`, `ADMIN_CUSTOMER_DETAIL`, `ADMIN_CONTENT`, `ADMIN_AUDIT`, `ADMIN_OPERATIONS` | `AdminSidebar(0,0,240,900)` + `SectionHeader(272,96,1136,64)` + `PrimaryPanel(272,184,760,640)` + `SecondaryPanel(1056,184,352,640)` | `AdminTopbar(0,0,390,56)` + `SectionNav(16,80,358,52)` + `PrimaryPanel(16,156,358,820)` |
+
+### 16.2.2 Tablet, narrow, and scroll instantiation
+
+Use the root [responsive section-bound templates](../../../README.md#responsive-section-bound-templates) for tablet and narrow section geometry. The direction-specific stack above changes only the named section composition; for all other sections, copy the root coordinates verbatim. Create separate frames at these exact offsets:
+
+| Frame | Viewport | Usable scroll height | `Scroll-0`, `Scroll-1`, ... offsets | Fixed overlays |
+| --- | --- | --- | --- | --- |
+| Desktop | `1440 × 900` | `900` | `0, 900, 1800, 2700…` | none |
+| Tablet | `768 × 1024` | `1024` | `0, 1024, 2048, 3072…` | none |
+| Mobile | `390 × 844` | `764` (`844 - 64 bottom nav - 16 safe area`) | `0, 764, 1528, 2292…` | purchase `0,692,390,72`; CTA/save `16,712,358,52` |
+| Narrow | `360 × 800` | `720` (`800 - 64 - 16`) | `0, 720, 1440, 2160…` | purchase `0,648,360,72`; CTA/save `16,668,328,52` |
+
+For every section, record `localY = pageY - scrollOffset` and clip against the viewport; do not rewrite the full-page `pageY`. Fixed overlays remain outside the scroll canvas and must not intersect bottom navigation or the safe-area inset. If a section ends behind an overlay, add bottom padding equal to the overlay stack and capture its evidence in a separate overlay layer.
 
 ### 16.3 Direction-specific component property values
 

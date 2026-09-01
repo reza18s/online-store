@@ -289,6 +289,8 @@ The editable design file is [NOVA Store — Five Product Directions](https://www
 
 All five directions are equal, complete design candidates. Each must support the same functional feature map: women’s, men’s, and children’s clothing discovery; home; category landing; listing and filters; search; product detail; cart; checkout; payment recovery; order confirmation and tracking; account and support; editorial and SEO pages; and the complete admin surface. Each direction must include desktop, tablet, mobile, loading, empty, error, slow-network, offline, disabled, success, stock-conflict, and payment-conflict states. Only visual hierarchy, density, tone, merchandising emphasis, and design tokens change.
 
+Customer-visible Persian audience labels are fixed across all five directions: `زنانه` (women), `مردانه` (men), and `بچگانه` (children). Use these exact labels in navigation, category chips, filters, breadcrumbs, campaign copy, and admin taxonomy fixtures.
+
 ### Shared design-system rules
 
 - Use a token layer for color, spacing, radius, typography, elevation, motion, and z-index.
@@ -334,6 +336,10 @@ Every Figma frame and exported screenshot must record the following metadata in 
 
 Use explicit viewport frames for construction and screenshot comparison; do not use `auto` height for an approval frame. The standard viewport heights are `1440 × 900` desktop, `768 × 1024` tablet, `390 × 844` mobile, and `360 × 800` narrow-mobile QA. Long pages are represented by multiple frames with the same viewport and named scroll states (`Scroll-0`, `Scroll-1`, and so on). Each scroll frame repeats the shell metadata and records the exact section bounds visible in that capture.
 
+Scroll offsets are deterministic: desktop frames advance by `900 px` (`0, 900, 1800, 2700…`), tablet frames by `1024 px` (`0, 1024, 2048…`), mobile frames by the usable `764 px` (`0, 764, 1528, 2292…`), and narrow-mobile frames by the usable `720 px` (`0, 720, 1440, 2160…`). A section's viewport-local y-position is `pageY - scrollOffset`; a section is visible only when that value intersects the viewport. Fixed overlays are excluded from the usable height and are recorded separately.
+
+Mobile reserves a `64 px` bottom navigation and a `16 px` safe-area inset (`80 px` total). A full-width `72 px` purchase bar therefore uses `bottom=80` and y=`692` in a `390 × 844` frame or y=`648` in a `360 × 800` frame. A `52 px` checkout/cart CTA uses y=`712` or y=`668` respectively. Direction READMEs must use these formulas instead of placing sticky actions at the physical viewport bottom.
+
 #### Canonical screen inventory
 
 These IDs are shared by all five directions. A direction may add a visual variant, but it may not remove a required screen.
@@ -376,6 +382,22 @@ Each canonical screen gets a screen sheet with one row for every major section. 
 | State | State ID and visible state-specific copy/action |
 | Responsive change | What moves, hides, stacks, becomes sticky, or changes interaction at each breakpoint |
 | Interaction | Trigger, result, transition duration, focus target, URL/query change, and recovery path |
+
+#### Responsive section-bound templates
+
+The direction READMEs provide desktop and primary-mobile stacks. Unless a direction explicitly overrides a value, the following exact tablet and narrow-mobile bounds apply to every screen ID in the corresponding family. Coordinates use the same full-page coordinate system as the direction stacks.
+
+| Screen family | Tablet `768 × 1024` | Narrow `360 × 800` |
+| --- | --- | --- |
+| `HOME` | `Hero(32,140,704,480)` → `Audience(32,652,704,240)` → `Products(32,924,704,432)` → `Editorial(32,1380,704,320)` → `Trust(32,1724,704,280)` | `Hero(16,84,328,400)` → `Audience(16,516,328,200)` → `Products(16,740,328,396)` → `Editorial(16,1168,328,300)` → `Trust(16,1500,328,260)` |
+| `CATEGORY_*` | `Hero(32,140,704,360)` → `Subcategories(32,516,704,220)` → `Products(32,768,704,432)` → `GuideSEO(32,1224,704,360)` | `Hero(16,84,328,320)` → `Subcategories(16,428,328,200)` → `Products(16,660,328,396)` → `GuideSEO(16,1080,328,360)` |
+| `PLP_*` | `FilterSortBar(32,140,704,52)` → `ProductGrid(32,216,704,900)`; cards `224×396`, 16 px gap; filter sheet `32,140,704,844` | `FilterSortBar(16,84,328,52)` → `ProductGrid(16,160,328,900)`; cards `160×396`, 8 px gap; filter sheet `16,84,328,716` |
+| `SEARCH` | `SearchSurface(32,140,704,600)` → `Results(32,756,704,620)` | `SearchSurface(0,84,360,716)` with field `16,84,328,48` and results `16,148,328,640` |
+| `PDP` | `Gallery(32,140,704,600)` → `PurchaseInfo(32,764,704,600)` → `Details(32,1388,704,420)` | `Gallery(16,84,328,410)` → `PurchaseInfo(16,510,328,680)` → `Details(16,1214,328,420)`; purchase bar `0,648,360,72` |
+| `CART`/checkout | `ItemsOrStep(32,140,704,600)` → `Summary(32,764,704,360)`; checkout CTA `32,956,704,52` | `ItemsOrStep(16,84,328,600)` → `Summary(16,700,328,360)`; checkout CTA `16,668,328,52` |
+| `CONFIRMATION`/`TRACKING` | `Receipt(32,140,704,520)` → `Timeline(32,684,704,520)` | `Receipt(16,84,328,400)` → `Timeline(16,516,328,520)` |
+| `ACCOUNT_*`/support/content | `SummaryOrNav(32,140,704,144)` → `PrimaryContent(32,316,704,820)` | `SummaryOrNav(16,84,328,120)` → `PrimaryContent(16,228,328,820)` |
+| `ADMIN_*` | `Topbar(0,0,768,56)` → `SectionNav(32,80,704,52)` → `PrimaryPanel(32,156,704,820)` | `Topbar(0,0,360,56)` → `SectionNav(16,80,328,52)` → `PrimaryPanel(16,156,328,760)` |
 
 #### Canonical component property API
 

@@ -336,9 +336,20 @@ Every Figma frame and exported screenshot must record the following metadata in 
 
 Use explicit viewport frames for construction and screenshot comparison; do not use `auto` height for an approval frame. The standard viewport heights are `1440 × 900` desktop, `768 × 1024` tablet, `390 × 844` mobile, and `360 × 800` narrow-mobile QA. Long pages are represented by multiple frames with the same viewport and named scroll states (`Scroll-0`, `Scroll-1`, and so on). Each scroll frame repeats the shell metadata and records the exact section bounds visible in that capture.
 
-Scroll offsets are deterministic: desktop frames advance by `900 px` (`0, 900, 1800, 2700…`), tablet frames by `1024 px` (`0, 1024, 2048…`), mobile frames by the usable `764 px` (`0, 764, 1528, 2292…`), and narrow-mobile frames by the usable `720 px` (`0, 720, 1440, 2160…`). A section's viewport-local y-position is `pageY - scrollOffset`; a section is visible only when that value intersects the viewport. Fixed overlays are excluded from the usable height and are recorded separately.
+Scroll offsets are deterministic per viewport and fixed-action state. A section's viewport-local y-position is `pageY - scrollOffset`; a section is visible only when that value intersects the viewport. Use the following scroll strides so content covered by a fixed action is not skipped between captures:
 
-Mobile reserves a `64 px` bottom navigation and a `16 px` safe-area inset (`80 px` total). A full-width `72 px` purchase bar therefore uses `bottom=80` and y=`692` in a `390 × 844` frame or y=`648` in a `360 × 800` frame. A `52 px` checkout/cart CTA uses y=`712` or y=`668` respectively. Direction READMEs must use these formulas instead of placing sticky actions at the physical viewport bottom.
+| Frame state | Base usable height | Fixed-action reserve | Scroll step and offset sequence |
+| --- | ---: | ---: | --- |
+| Desktop, no fixed action | `900` | `0` | `900`: `0, 900, 1800, 2700…` |
+| Tablet, no fixed action | `1024` | `0` | `1024`: `0, 1024, 2048, 3072…` |
+| Mobile, no fixed action | `764` | `0` | `764`: `0, 764, 1528, 2292…` |
+| Mobile, `52 px` CTA/save bar | `764` | `52` | `712`: `0, 712, 1424, 2136…` |
+| Mobile, `72 px` purchase bar | `764` | `72` | `692`: `0, 692, 1384, 2076…` |
+| Narrow, no fixed action | `720` | `0` | `720`: `0, 720, 1440, 2160…` |
+| Narrow, `52 px` CTA/save bar | `720` | `52` | `668`: `0, 668, 1336, 2004…` |
+| Narrow, `72 px` purchase bar | `720` | `72` | `648`: `0, 648, 1296, 1944…` |
+
+Mobile reserves a `64 px` bottom navigation and a `16 px` safe-area inset (`80 px` total), so base usable height is viewport height minus `80 px`. A full-width `72 px` purchase bar uses `bottom=80` and y=`692` in a `390 × 844` frame or y=`648` in a `360 × 800` frame. A `52 px` checkout/cart/save CTA uses y=`712` or y=`668` respectively. Fixed overlays are excluded from the scroll canvas, and the corresponding action reserve is subtracted from the scroll step. Direction READMEs must use these formulas instead of advancing every mobile screen by the base stride.
 
 #### Canonical screen inventory
 
@@ -393,8 +404,11 @@ The direction READMEs provide desktop and primary-mobile stacks. Unless a direct
 | `CATEGORY_*` | `Hero(32,140,704,360)` → `Subcategories(32,516,704,220)` → `Products(32,768,704,432)` → `GuideSEO(32,1224,704,360)` | `Hero(16,84,328,320)` → `Subcategories(16,428,328,200)` → `Products(16,660,328,396)` → `GuideSEO(16,1080,328,360)` |
 | `PLP_*` | `FilterSortBar(32,140,704,52)` → `ProductGrid(32,216,704,900)`; cards `224×396`, 16 px gap; filter sheet `32,140,704,844` | `FilterSortBar(16,84,328,52)` → `ProductGrid(16,160,328,900)`; cards `160×396`, 8 px gap; filter sheet `16,84,328,716` |
 | `SEARCH` | `SearchSurface(32,140,704,600)` → `Results(32,756,704,620)` | `SearchSurface(0,84,360,716)` with field `16,84,328,48` and results `16,148,328,640` |
-| `PDP` | `Gallery(32,140,704,600)` → `PurchaseInfo(32,764,704,600)` → `Details(32,1388,704,420)` | `Gallery(16,84,328,410)` → `PurchaseInfo(16,510,328,680)` → `Details(16,1214,328,420)`; purchase bar `0,648,360,72` |
-| `CART`/checkout | `ItemsOrStep(32,140,704,600)` → `Summary(32,764,704,360)`; checkout CTA `32,956,704,52` | `ItemsOrStep(16,84,328,600)` → `Summary(16,700,328,360)`; checkout CTA `16,668,328,52` |
+| `PDP` | `Gallery(32,140,704,600)` → `PurchaseInfo(32,764,704,600)` → `Details(32,1388,704,420)` | `Gallery(16,84,328,410)` → `PurchaseInfo(16,510,328,680)` → `Details(16,1214,328,420)`; fixed purchase bar `390: 0,692,390,72`; narrow `0,648,360,72` |
+| `CART`/checkout | `ItemsOrStep(32,140,704,600)` → `Summary(32,764,704,360)`; checkout CTA `32,956,704,52` is in-flow, not fixed | `ItemsOrStep(16,84,328,600)` → `Summary(16,700,328,360)`; fixed CTA `390: 16,712,358,52`; narrow `16,668,328,52` |
+| `AUTH` | `Panel(164,180,440,560)` | `Form(16,84,328,650)`; no fixed action |
+| `CART_DRAWER` | `Drawer(384,0,384,1024)` | `Sheet(0,84,360,716)`; modal layer suppresses underlying navigation |
+| `NOT_FOUND`/`OFFLINE`/`MAINTENANCE` | `Message(144,300,480,300)`; action `176,616,416,52` | `Message(16,216,328,300)`; action `16,532,328,52` |
 | `CONFIRMATION`/`TRACKING` | `Receipt(32,140,704,520)` → `Timeline(32,684,704,520)` | `Receipt(16,84,328,400)` → `Timeline(16,516,328,520)` |
 | `ACCOUNT_*`/support/content | `SummaryOrNav(32,140,704,144)` → `PrimaryContent(32,316,704,820)` | `SummaryOrNav(16,84,328,120)` → `PrimaryContent(16,228,328,820)` |
 | `ADMIN_*` | `Topbar(0,0,768,56)` → `SectionNav(32,80,704,52)` → `PrimaryPanel(32,156,704,820)` | `Topbar(0,0,360,56)` → `SectionNav(16,80,328,52)` → `PrimaryPanel(16,156,328,760)` |

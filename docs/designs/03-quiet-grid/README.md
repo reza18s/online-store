@@ -461,14 +461,18 @@ The values below use `x,y,width,height` in pixels in one full-page coordinate sy
 
 Use the root [responsive section-bound templates](../../../README.md#responsive-section-bound-templates) for tablet and narrow section geometry. The direction-specific stack above changes only the named section composition; for all other sections, copy the root coordinates verbatim. Create separate frames at these exact offsets:
 
-| Frame | Viewport | Usable scroll height | `Scroll-0`, `Scroll-1`, ... offsets | Fixed overlays |
-| --- | --- | --- | --- | --- |
-| Desktop | `1440 × 900` | `900` | `0, 900, 1800, 2700…` | none |
-| Tablet | `768 × 1024` | `1024` | `0, 1024, 2048, 3072…` | none |
-| Mobile | `390 × 844` | `764` (`844 - 64 bottom nav - 16 safe area`) | `0, 764, 1528, 2292…` | purchase `0,692,390,72`; CTA/save `16,712,358,52` |
-| Narrow | `360 × 800` | `720` (`800 - 64 - 16`) | `0, 720, 1440, 2160…` | purchase `0,648,360,72`; CTA/save `16,668,328,52` |
+| Frame state | Viewport | Base usable height | Fixed-action reserve | Scroll step and offset sequence | Fixed overlays |
+| --- | --- | ---: | ---: | --- | --- |
+| Desktop, no fixed action | `1440 × 900` | `900` | `0` | `900`: `0, 900, 1800, 2700…` | none |
+| Tablet, no fixed action | `768 × 1024` | `1024` | `0` | `1024`: `0, 1024, 2048, 3072…` | none; checkout CTA is in-flow |
+| Mobile, no fixed action | `390 × 844` | `764` | `0` | `764`: `0, 764, 1528, 2292…` | none |
+| Mobile, `52 px` CTA/save | `390 × 844` | `764` | `52` | `712`: `0, 712, 1424, 2136…` | CTA/save `16,712,358,52` |
+| Mobile, `72 px` purchase | `390 × 844` | `764` | `72` | `692`: `0, 692, 1384, 2076…` | purchase `0,692,390,72` |
+| Narrow, no fixed action | `360 × 800` | `720` | `0` | `720`: `0, 720, 1440, 2160…` | none |
+| Narrow, `52 px` CTA/save | `360 × 800` | `720` | `52` | `668`: `0, 668, 1336, 2004…` | CTA/save `16,668,328,52` |
+| Narrow, `72 px` purchase | `360 × 800` | `720` | `72` | `648`: `0, 648, 1296, 1944…` | purchase `0,648,360,72` |
 
-For every section, record `localY = pageY - scrollOffset` and clip against the viewport; do not rewrite the full-page `pageY`. Fixed overlays remain outside the scroll canvas and must not intersect bottom navigation or the safe-area inset. If a section ends behind an overlay, add bottom padding equal to the overlay stack and capture its evidence in a separate overlay layer.
+For every section, record `localY = pageY - scrollOffset` and clip against the viewport; do not rewrite the full-page `pageY`. Use the action-specific stride whenever that fixed action is present so content under the overlay is captured in the next frame. Fixed overlays remain outside the scroll canvas and must not intersect bottom navigation or the safe-area inset. If a section ends behind an overlay, add bottom padding equal to the overlay stack and capture its evidence in a separate overlay layer.
 
 ### 16.3 Direction-specific component property values
 

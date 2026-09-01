@@ -406,3 +406,119 @@ Admin:
 - Core customer and admin prototypes work.
 - RTL, keyboard, focus, contrast, reduced motion, and state coverage pass.
 - Screenshot comparison finds no annotation overlap, weak hierarchy, crop errors, or responsive drift.
+
+## 16. Construction appendix
+
+This appendix instantiates the shared deterministic Figma contract in the root [README](<C:/Users/Asus/Documents/ChatGPT/online store/README.md>). Every frame uses the `FN` prefix and must be built from the screen IDs, coordinates, component properties, fixtures, and state rules below. A frame is not approved while its direct Figma node URL, screenshot evidence, or unresolved-issue field is blank.
+
+### 16.1 Frame matrix and coordinate anchors
+
+| Frame family | Desktop | Tablet | Mobile | Narrow QA |
+| --- | --- | --- | --- | --- |
+| Storefront shell | `1440 × auto`, content `x=120,w=1200`, 12 columns, 24 px gutter | `768 × auto`, content `x=32,w=704`, 8 columns, 16 px gutter | `390 × auto`, content `x=16,w=358`, 4 columns, 12 px gutter | `360 × auto`, content `x=16,w=328` |
+| Account shell | `1440 × auto`, nav `x=120,w=282`, gap `24`, content `w=894` | `768 × auto`, nav becomes a summary row, content `w=704` | `390 × auto`, stacked destination list and one-column content | `360 × auto`, same stack with 16 px side padding |
+| Admin shell | `1440 × auto`, sidebar `240`, topbar `64`, content padding `32` | `768 × auto`, sidebar hidden, card workflows | `390 × auto`, cards and sticky save/action bar | `360 × auto`, no table overflow |
+
+Use these top-level coordinates in every primary frame:
+
+| Screen | Desktop coordinate anchors | Mobile coordinate anchors |
+| --- | --- | --- |
+| Shell | Announcement `y=0,h=32`; header `y=32,h=72`; category nav `y=104,h=46`; optional guide strip `h=36` on editorial routes; content starts `y=150` or `186` | Announcement `h=28`; header `h=56`; content starts `y=84`; bottom nav fixed `h=64` plus safe area |
+| `HOME` | Hero `x=120,y=150,w=1200,h=620`; three audience panels; four-card product rails; guide note block; section gaps `48` | Hero `x=16,y=84,w=358,h=450`; three audience cards; two-column products; swipeable guide notes |
+| `PLP_*` | Filter rail `x=120,w=282`; gap `24`; product grid `x=426,w=894`, three columns of `282` with 24 px gutters | Sticky filter/sort bar `x=16,y=84,w=358,h=52`; two cards `w=173`; filters use a bottom sheet |
+| `PDP` | Gallery `x=120,w=672`; gap `24`; info `x=816,w=504`; notes begin after purchase essentials | Gallery `x=16,y=84,w=358,aspect=4:5`; info padding `16`; fixed purchase bar `h=72` |
+| `CART`/checkout | Items `x=120,w=792`; gap `24`; summary `x=936,w=384` | One-column content `x=16,w=358`; summary below items; sticky CTA above bottom navigation |
+| Account | Nav `x=120,w=282`; gap `24`; content `x=426,w=894`; long-form reading measure `640–720` | Summary header `x=16,w=358`; stacked destinations and content |
+| Admin | Sidebar `x=0,w=240`; topbar `y=0,h=64`; content `x=272,w=1136` | Topbar `h=56`; content padding `16`; order/content workflows become cards |
+
+Frame names follow `FN/<Screen>/<Viewport>/<State>`, for example `FN/Guide/Desktop/Material`, `FN/PDP/Mobile/Care-Expanded`, and `FN/Admin/Content/Desktop/Preview`. Record the actual node URL beside each name after the Figma frame is created.
+
+### 16.2 Screen-sheet map
+
+Each row below represents an individual frame even where IDs are grouped. The screen sheet for that frame must use the root schema: section bounds, tokens, component properties, copy, asset, state, responsive change, and interaction.
+
+| Screen IDs | Desktop composition | Mobile transformation | Mandatory state frames |
+| --- | --- | --- | --- |
+| `HOME` | 1200 px annotated hero/story, three audience panels, new arrivals, material guide, four-card product rails, care/style article, trust, footer | 358 px hero, three audience cards, two-column products, swipeable guide notes | Campaign, no campaign, loading, slow image, request error, offline |
+| `CATEGORY_WOMEN`, `CATEGORY_MEN`, `CATEGORY_CHILDREN` | Intro, subcategories, product grid, season note, fit/material guide, editorial links, SEO block | Portrait header, two-column subcategories/products, expandable notes | Default, campaign off, loading, request error |
+| `PLP_WOMEN`, `PLP_MEN`, `PLP_CHILDREN` | 282 px filter rail, three-card grid, material/fit/size/color/price/stock filters, sort, pagination | Two-column grid, sticky filter/sort, bottom-sheet filters | Default, filtered, sale, no results, loading, error, offline |
+| `SEARCH` | 680 px overlay with recent/category/product/guide groups and full results page | Full-screen search with sticky field and grouped results | Empty, typing, autocomplete, typo correction, no result, loading, error |
+| `PDP` | 672 px gallery, 504 px sticky info, purchase essentials first, material/fit/care notes afterward, reviews | Swipe gallery, 16 px info, size-guide sheet, fixed 72 px purchase bar | Empty variant, selected variant, size error, low stock, out of stock, sale, zoom, added, price changed |
+| `CART_DRAWER`, `CART` | 420 px practical drawer; full cart uses 792 px items plus 384 px summary | Full-width sheet; one-column cart with notes and sticky CTA | Empty, quantity updating, removed, stock conflict, price change, coupon success/error, offline |
+| `AUTH` | 440 px form with concise trust note; guest continuation below divider | Full-height one-column form with 16 px padding | Login, guest, invalid phone, expired code, rate limit, network error |
+| `CHECKOUT_ADDRESS`, `CHECKOUT_SHIPPING`, `CHECKOUT_PAYMENT` | `792+384` structured flow; plain-language carrier notes; clear retry information | One-column step panels; sticky next/pay CTA; method cards stack | Saved/new address, validation, unsupported region, quote loading/unavailable/expired, payment processing/redirect/failed/cancelled/timeout/pending |
+| `CONFIRMATION`, `TRACKING` | Receipt plus “what happens next” field note, clear timeline, exception guidance | Stacked receipt and vertical timeline with support action | Paid, pending, preparing, shipped, delayed, delivered, cancelled, shipment exception |
+| `ACCOUNT_DASHBOARD`, `PROFILE`, `ADDRESSES`, `ORDERS`, `ORDER_DETAIL` | 282 px account navigation plus 894 px content; cards use 24 px gaps; order snapshots immutable | Summary header, stacked destinations, one-column forms/order details | Loading, empty orders/addresses, validation error, save success/error, permission error, offline |
+| `SUPPORT`, `SECURITY`, `NOTIFICATIONS` | Searchable FAQ, support entry, session controls, preference groups | Accordion groups and full-width controls | Empty search, ticket submitted, session revoke success/error, preference save error |
+| `CAMPAIGN`, `GUIDE`, `ARTICLE`, `LOOKBOOK` | 640–720 px reading measure, 1200 px media/story modules, TOC, notes, related products | Single-column reading flow, collapsible TOC, swipe media, related rail after major sections | Published, scheduled, missing media, loading, unavailable, offline |
+| `ABOUT`, `TRUST`, `SHIPPING_POLICY`, `RETURNS_POLICY`, `SIZE_GUIDE`, `CARE_GUIDE`, `FAQ`, `CONTACT`, `PRIVACY`, `TERMS` | Long-form reading surface with guide rules, callouts, tables where needed, 640–720 px measure | 358 px reading column, stacked accordions and tables converted to cards | Default, loading, error, offline, contact validation/success |
+| `NOT_FOUND`, `OFFLINE`, `MAINTENANCE` | Centered 480 px message with return/search/support action | Full-width 358 px message and one primary action | 404, offline cached shell, maintenance window |
+| `ADMIN_LOGIN`, `ADMIN_DASHBOARD` | 240 px sidebar, 64 px topbar, stat cards, action queues, guide/content health | Sidebar hidden; cards and priority queue | Invalid, locked, rate-limited, MFA step, loading, permission error |
+| `ADMIN_PRODUCTS`, `ADMIN_CATEGORIES`, `ADMIN_INVENTORY` | Filter bar, 48/56 px rows, audience/category/status filters, bulk actions, material/care vocabulary | Priority columns become labeled cards; filters become a sheet | Loading, empty, request error, stock discrepancy, bulk-action success/error |
+| `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | Sectioned form, 2-column fields, 120 × 44 px matrix cells, crop/reorder panel, material/care fields | One-column sections; contained matrix scroll; sticky save bar | Draft, invalid, saving, saved, publish blocked, upload/crop failure |
+| `ADMIN_ORDERS`, `ADMIN_ORDER_DETAIL`, `ADMIN_PAYMENTS` | Queue tabs, immutable snapshots, payment/webhook timeline, internal notes, exception guidance | Queue/detail cards with labeled event rows | New/paid/preparing/shipped, payment mismatch, retry, webhook error, permission error |
+| `ADMIN_PROMOTIONS`, `ADMIN_CUSTOMERS`, `ADMIN_CUSTOMER_DETAIL`, `ADMIN_CONTENT`, `ADMIN_AUDIT`, `ADMIN_OPERATIONS` | Guide/article/campaign block editor, restricted customer lookup/detail, preview, audit before/after, notification/media/payment health | Card sections with explicit section navigation and unsaved-change guard; PII stays permission-gated | Draft, scheduled, publish blocked, success, failure, no activity, service degraded, permission error |
+
+### 16.3 Direction-specific component property values
+
+The property names come from the root contract; these are the FIELD NOTES defaults and overrides:
+
+| Component | FIELD NOTES value |
+| --- | --- |
+| `Button` | `primary=olive/700`, `hover=olive/800`, `pressed=olive/900`, radius `8`, purchase height `52` |
+| `FieldNote` | `type=material\|fit\|care\|delivery\|editorial`, `mode=compact\|expanded`, padding `16`, rule `1 px`, icon `20` |
+| `GuideCard` | `imageRatio=3:2`, `textMeasure=520`, `mode=compact\|expanded`, `relatedProducts=0\|1\|many` |
+| `ProductCard` | `imageRatio=4:5`, desktop `w=282–300`, mobile `w=173`, title `maxLines=2`, `showNotes=true`, `showSwatches=true` |
+| `MediaGallery` | `thumbnail=72×90`, detail image minimum `240`, `zoom=true`, `state=ready\|loading\|failed`, annotations never cover the garment |
+| `PriceBlock` | `Vazirmatn 700`, primary text `graphite/950`, sale `rust/700` plus label/icon, currency suffix `تومان` |
+| `CareSymbolRow` | `symbolCount=1..6`, `textAlternative=true`, `direction=rtl`, unavailable symbol uses label rather than opacity only |
+| `Drawer/Sheet` | Drawer `w=420`; sheet max `90vh`; paper surface; olive CTA; focus return to trigger |
+| `Admin` | Paper surfaces, olive actions, rust sale/editorial emphasis, navy informational notes; no color-only status |
+
+### 16.4 State and Persian copy fixtures
+
+Use these state fixtures consistently in frames and prototypes:
+
+| State | Required visible copy/action |
+| --- | --- |
+| Loading | Skeletons preserve final card and guide heights; annotations are not shown as broken placeholders |
+| Empty PLP | `محصولی مطابق این فیلتر پیدا نشد` / `حذف فیلترها` |
+| Offline | `ارتباط برقرار نشد؛ اطلاعات ذخیره‌شده را می‌بینید.` / `تلاش دوباره` |
+| PDP size error | `لطفاً اندازه را انتخاب کنید.`; focus moves to the size group |
+| Stock conflict | `موجودی این کالا تغییر کرده است.` / `به‌روزرسانی سبد` |
+| Price change | `قیمت این کالا تغییر کرده است.` / `مشاهده قیمت جدید` |
+| Payment failure | `پرداخت کامل نشد.` / `تلاش دوباره` / `پشتیبانی` |
+| Guide missing | `این راهنما موقتاً در دسترس نیست.` / `مشاهده محصولات` |
+| Success | `به سبد خرید اضافه شد` or `راهنما منتشر شد`; include icon, label, and next action |
+
+### 16.5 Content, annotation, and asset rules
+
+- Every guide/article/campaign uses a typed block list: `intro`, `heading`, `paragraph`, `image`, `fieldNote`, `measurementTable`, `careSymbols`, `productRail`, `callout`, `faq`, and `cta`.
+- Each block records `blockId`, order, visibility, audience/category scope, Persian copy, maximum length, asset IDs, and SEO heading level. Draft, scheduled, published, archived, and missing-block states are separate.
+- An annotation has an anchor point, leader-line direction, collision fallback, short label, long description, and accessible text alternative. Desktop annotations may sit beside media; mobile annotations collapse into ordered notes below the image.
+- A maximum of three annotations may overlay one image. Notes never cover the garment, size selector, price, or primary action.
+- Product master: minimum `1600×2000`; hero desktop `2400×1240`; mobile hero `1080×1350`; category `1200×1600`.
+- Every asset record includes `assetId`, license/owner, source dimensions, crop/focal point, desktop/mobile variant, and Persian alt text. Detail photography should show texture, weave, stitching, closure, and care-relevant construction where useful.
+- Every product/content fixture records audience, ID, title, price in toman, color, size, fit, material, care, inventory, delivery, returns, related content, and alt text.
+- Use the Section 9.3 fixture strings and test long guide titles, notes, tables, and CTA labels at `360 px`.
+
+### 16.6 Responsive and interaction rules
+
+- At `1024 px`, collapse the admin sidebar to a 72 px rail and move guide navigation into a compact section bar.
+- At `768 px`, the PDP changes from `672+504` to stacked gallery/information; PLP filters move to a sheet; guide tables become scroll-contained or labeled cards.
+- At `390 px`, keep two product columns, one-column forms, sticky purchase/checkout actions, and bottom navigation; long-form content uses one reading column.
+- At `360 px`, reduce note padding and section gaps from `24` to `16` before reducing body text; annotations, tables, prices, and actions may not clip.
+- Guide navigation updates the URL fragment and preserves scroll position; related-product rails appear after major blocks rather than between every paragraph.
+- Filter/sort changes update query parameters and reset pagination. Cart and payment conflicts use recoverable sheets; content publish has preview, unsaved-change, and rollback messaging.
+
+### 16.7 Handoff and approval checklist
+
+For every `FN/<Screen>/<Viewport>/<State>` frame, record the direct node URL, owner, review date, screenshot path, and status. Approval requires:
+
+- all bounds, grid values, and tokens match this appendix;
+- reading measure, annotation anchors, care-symbol alternatives, and content-block order are checked;
+- Persian RTL, mixed LTR references, focus, dialog return-focus, and reduced motion are checked;
+- desktop/mobile crops and text wrapping match the asset/content record;
+- `360 px` has no horizontal scroll or clipped prices/actions/notes;
+- loading, empty, offline, error, stock-conflict, payment-conflict, and success frames are linked;
+- no unresolved issue is hidden in a Figma comment instead of the handoff table.

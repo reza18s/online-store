@@ -405,3 +405,119 @@ Admin:
 - Slow-network, stock-conflict, and payment-conflict states are documented and prototyped where relevant.
 - Contrast, focus, keyboard, RTL, reduced-motion, and edge-state reviews pass.
 - Screenshot comparison finds no glow misuse, clipping, weak boundaries, wrong crop, or responsive drift.
+
+## 16. Construction appendix
+
+This appendix instantiates the shared deterministic Figma contract in the root [README](<C:/Users/Asus/Documents/ChatGPT/online store/README.md>). Every frame uses the `NS` prefix and must be built from the screen IDs, coordinates, component properties, fixtures, and state rules below. A frame is not approved while its direct Figma node URL, screenshot evidence, or unresolved-issue field is blank.
+
+### 16.1 Frame matrix and coordinate anchors
+
+| Frame family | Desktop | Tablet | Mobile | Narrow QA |
+| --- | --- | --- | --- | --- |
+| Storefront shell | `1440 × auto`, full-bleed media with aligned content `x=96,w=1248`, 12 columns, 24 px gutter | `768 × auto`, content `x=32,w=704`, 8 columns, 16 px gutter | `390 × auto`, content `x=16,w=358`, 4 columns, 12 px gutter | `360 × auto`, content `x=16,w=328` |
+| Account shell | `1440 × auto`, nav `x=96,w=280`, gap `32`, content `w=920` | `768 × auto`, nav becomes a summary row, content `w=704` | `390 × auto`, stacked destination list and one-column content | `360 × auto`, same stack with 16 px side padding |
+| Admin shell | `1440 × auto`, sidebar `240`, topbar `64`, content padding `32`, no glow | `768 × auto`, sidebar hidden, operational cards | `390 × auto`, card queues and sticky save/action bar | `360 × auto`, no table overflow |
+
+Use these top-level coordinates in every primary frame:
+
+| Screen | Desktop coordinate anchors | Mobile coordinate anchors |
+| --- | --- | --- |
+| Shell | Announcement `y=0,h=32`; header `y=32,h=76`; category nav `y=108,h=48`; content starts `y=156` | Announcement `h=28`; header `h=58`; content starts `y=86`; bottom nav fixed `h=64` plus safe area |
+| `HOME` | Full-bleed hero `x=0,y=156,w=1440,h=720`; aligned copy starts `x=96`; technical product rail cards `w=288` | Hero `x=0,y=86,w=390,h=500`; audience cards use `x=16,w=358`; product cards `w=173` |
+| `PLP_*` | Dark filter rail `x=96,w=288`; gap `24`; product grid `x=408,w=936`, three columns; metadata stays visible | Sticky filter/sort bar `x=16,y=86,w=358,h=52`; two cards `w=173`; filters use a sheet |
+| `PDP` | Gallery `x=96,w=744`; gap `24`; info `x=864,w=456`; technical data block below purchase essentials | Gallery `x=16,y=86,w=358,aspect=4:5`; info padding `16`; purchase bar fixed `h=72` |
+| `CART`/checkout | Items `x=96,w=816`; gap `24`; raised summary `x=936,w=408`; cyan is the only primary action | One-column content `x=16,w=358`; sticky CTA above bottom navigation |
+| Account | Nav `x=96,w=280`; gap `32`; content `x=408,w=920`; document pages may use designed light reading surface | Summary header `x=16,w=358`; stacked destinations and content |
+| Admin | Sidebar `x=0,w=240`; topbar `y=0,h=64`; content `x=272,w=1136`; raised surfaces differ from page background by luminance, not glow | Topbar `h=56`; content padding `16`; tables become labeled cards |
+
+Frame names follow `NS/<Screen>/<Viewport>/<State>`, for example `NS/Home/Desktop/Video-Fallback`, `NS/PDP/Mobile/Out-of-Stock`, and `NS/Admin/Payments/Desktop/Mismatch`. Record the actual node URL beside each name after the Figma frame is created.
+
+### 16.2 Screen-sheet map
+
+Each row below represents an individual frame even where IDs are grouped. The screen sheet for that frame must use the root schema: section bounds, tokens, component properties, copy, asset, state, responsive change, and interaction.
+
+| Screen IDs | Desktop composition | Mobile transformation | Mandatory state frames |
+| --- | --- | --- | --- |
+| `HOME` | Full-bleed cinematic hero, audience triptych, new collection, technical product rail, feature story, children/family capsule, trust, footer | 390 px hero, three audience destination cards, two-column products, cinematic campaign rail | Campaign, no campaign, video fallback, image fallback, loading, slow image, request error, offline |
+| `CATEGORY_WOMEN`, `CATEGORY_MEN`, `CATEGORY_CHILDREN` | Full-width category still, high-contrast title, subcategories, products, fit/material guide, SEO block | Portrait hero, horizontal subcategories, two-column products, expandable copy | Default, campaign off, loading, request error |
+| `PLP_WOMEN`, `PLP_MEN`, `PLP_CHILDREN` | 288 px dark filter rail, three-card grid, compact technical metadata, sort, applied chips, pagination | Two-column cards, sticky filter/sort, filter bottom sheet | Default, filtered, sale, no results, loading, error, offline |
+| `SEARCH` | 720 px dark overlay, recent/category/product groups, technical result metadata, full page | Full-screen search with sticky field and grouped result cards | Empty, typing, autocomplete, typo correction, no result, loading, error |
+| `PDP` | 744 px cinematic gallery, 456 px sticky info, technical fit/material block, contrast-safe price/stock/delivery/returns/details | Full-width gallery, 16 px info, size sheet, fixed 72 px purchase bar | Empty variant, selected variant, size error, low stock, out of stock, sale, zoom, added, price changed |
+| `CART_DRAWER`, `CART` | 432 px raised drawer; full cart uses 816 px items plus 408 px raised summary | Full-width sheet; one-column cart with sticky CTA | Empty, quantity updating, removed, stock conflict, price change, coupon success/error, offline |
+| `AUTH` | 456 px dark raised panel with optional media; guest continuation below divider | Full-height one-column form with 16 px padding | Login, guest, invalid phone, expired code, rate limit, network error |
+| `CHECKOUT_ADDRESS`, `CHECKOUT_SHIPPING`, `CHECKOUT_PAYMENT` | Reduced-effects `816+408` flow; high-contrast cards; cyan action; explicit total | One-column step panels; sticky next/pay CTA; method cards stack | Saved/new address, validation, unsupported region, quote loading/unavailable/expired, payment processing/redirect/failed/cancelled/timeout/pending |
+| `CONFIRMATION`, `TRACKING` | Cyan success state plus dark receipt; technical labeled timeline and carrier reference | Stacked success/receipt and vertical timeline | Paid, pending, preparing, shipped, delayed, delivered, cancelled, shipment exception |
+| `ACCOUNT_DASHBOARD`, `PROFILE`, `ADDRESSES`, `ORDERS`, `ORDER_DETAIL` | 280 px account navigation plus 920 px content; dark raised cards; immutable order snapshots | Summary header, stacked destinations, one-column forms/order details | Loading, empty orders/addresses, validation error, save success/error, permission error, offline |
+| `SUPPORT`, `SECURITY`, `NOTIFICATIONS` | FAQ search, support entry, sessions, and preferences in 920 px content; no decorative glow | Accordion groups and full-width controls | Empty search, ticket submitted, session revoke success/error, preference save error |
+| `CAMPAIGN`, `GUIDE`, `ARTICLE`, `LOOKBOOK` | Cinematic story media, technical captions, 720 px reading measure, shoppable references | Single-column reading flow, swipe media, related products after major sections | Published, scheduled, missing media, video fallback, loading, unavailable, offline |
+| `ABOUT`, `TRUST`, `SHIPPING_POLICY`, `RETURNS_POLICY`, `SIZE_GUIDE`, `CARE_GUIDE`, `FAQ`, `CONTACT`, `PRIVACY`, `TERMS` | Dark reading surface or explicitly designed light document mode, 640–720 px measure, labeled callouts | 358 px reading column, collapsible contents and accordions | Default, loading, error, offline, contact validation/success |
+| `NOT_FOUND`, `OFFLINE`, `MAINTENANCE` | Centered 480 px message on `night/900` with return/search/support action | Full-width 358 px message and one primary action | 404, offline cached shell, maintenance window |
+| `ADMIN_LOGIN`, `ADMIN_DASHBOARD` | 240 px sidebar, 64 px topbar, dark stat cards, action queues, no glow | Sidebar hidden; cards and priority queue | Invalid, locked, rate-limited, MFA step, loading, permission error |
+| `ADMIN_PRODUCTS`, `ADMIN_CATEGORIES`, `ADMIN_INVENTORY` | Dark filter bar, 48/56 px rows, audience/category/status filters, bulk actions, pagination | Priority columns become labeled cards; filters become a sheet | Loading, empty, request error, stock discrepancy, bulk-action success/error |
+| `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | Sectioned dark form, 2-column fields, 120 × 44 px matrix cells, media crop/reorder panel | One-column sections; contained matrix scroll; sticky save bar | Draft, invalid, saving, saved, publish blocked, upload/crop failure |
+| `ADMIN_ORDERS`, `ADMIN_ORDER_DETAIL`, `ADMIN_PAYMENTS` | Queue tabs, immutable snapshots, payment callback timeline, internal notes, technical references | Queue/detail cards with labeled event rows | New/paid/preparing/shipped, payment mismatch, retry, webhook error, permission error |
+| `ADMIN_PROMOTIONS`, `ADMIN_CUSTOMERS`, `ADMIN_CUSTOMER_DETAIL`, `ADMIN_CONTENT`, `ADMIN_AUDIT`, `ADMIN_OPERATIONS` | Promotion/content editor, restricted customer lookup/detail, audit before/after, notification/media/payment health; no glow in operational surfaces | Card sections with explicit section navigation and unsaved-change guard; PII stays permission-gated | Draft, scheduled, publish blocked, success, failure, no activity, service degraded, permission error |
+
+### 16.3 Direction-specific component property values
+
+The property names come from the root contract; these are the NIGHT SHIFT defaults and overrides:
+
+| Component | NIGHT SHIFT value |
+| --- | --- |
+| `Button` | `primary=cyan/500`, `hover=cyan/600`, `pressed=night/1000`, dark text `#071312`, radius `8`, purchase height `52` |
+| `CampaignFeature` | `accent=acid/500\|violet/500`, `glow=none\|subtle`, `copySafe=true`, `maxGlowSpread=24`, `campaignOnly=true` |
+| `ProductCard` | `imageRatio=4:5`, desktop `w=288–300`, mobile `w=173`, title `maxLines=2`, `showTechnicalMeta=true`, `showSwatches=true` |
+| `MediaGallery` | `thumbnail=72×90`, `gap=10`, `zoom=true`, `state=ready\|loading\|failed`, `darkGarmentOutline=true` when needed |
+| `PriceBlock` | Customer amount `Vazirmatn 700`; price is `white/100`; sale is `sale/500` with label/icon; currency suffix `تومان` |
+| `Drawer/Sheet` | Drawer `w=432`; sheet max `90vh`; raised `night/900` surface; cyan CTA; no glow on checkout |
+| `Admin` | `night/950` page, `night/900` surface, `night/750` border, cyan action; glow disabled for all operational controls |
+
+Glow rules: only campaign hero accents and explicitly marked performance badges may glow; blur/spread is at most `24 px`, opacity at most `40%`, and glow is disabled for focus rings, errors, payment states, tables, and admin operations.
+
+### 16.4 State and Persian copy fixtures
+
+Use these state fixtures consistently in frames and prototypes:
+
+| State | Required visible copy/action |
+| --- | --- |
+| Loading | Skeletons use `night/850` and `night/750` without glow; final card height is preserved |
+| Empty PLP | `محصولی مطابق این فیلتر پیدا نشد` / `حذف فیلترها` |
+| Offline | `ارتباط برقرار نشد؛ اطلاعات ذخیره‌شده را می‌بینید.` / `تلاش دوباره` |
+| PDP size error | `اندازه انتخابی را مشخص کنید.`; focus moves to the size group |
+| Stock conflict | `موجودی این کالا تغییر کرده است.` / `به‌روزرسانی سبد` |
+| Price change | `قیمت این کالا تغییر کرده است.` / `مشاهده قیمت جدید` |
+| Payment failure | `پرداخت تکمیل نشد.` / `تلاش دوباره` / `پشتیبانی` |
+| Pending verification | `وضعیت پرداخت در حال بررسی است.`; do not show a second payment CTA until the intent is safe to retry |
+| Success | `سفارش ثبت شد` or `به سبد اضافه شد`; cyan action, icon, and label remain readable without glow |
+
+### 16.5 Asset, contrast, and content rules
+
+- Product master: at least `1800×2250` because dark crops expose compression artifacts; test both black and white garments.
+- Hero source: `2880×1440` desktop and `1080×1440` mobile; each asset records a dark-safe and light-garment-safe crop.
+- Category source: `1440×1800`; preserve garment silhouette and a contrast-safe title area.
+- Every asset record includes `assetId`, license/owner, source dimensions, crop/focal point, overlay opacity, desktop/mobile variant, and Persian alt text.
+- Every text/control combination records measured contrast against its exact dark surface; body and controls must meet WCAG AA, and placeholders cannot be used without verification.
+- Every fixture records audience, product/category/content ID, title, price in toman, sale/regular price, color, size, fit, material, care, inventory, delivery, returns, and alt text.
+- Use Section 9.3 strings and test long Persian titles, technical references, prices, and CTA labels at `360 px`.
+
+### 16.6 Responsive and interaction rules
+
+- At `1024 px`, collapse the admin sidebar to a 72 px rail and remove decorative glow before reducing information density.
+- At `768 px`, the PDP changes from `744+456` to stacked gallery/information; PLP filters move to a sheet; operational tables become priority cards.
+- At `390 px`, maintain two product columns, one-column forms, sticky purchase/checkout actions, and bottom navigation.
+- At `360 px`, reduce gaps from `24` to `16` before reducing body text; white garments, cyan labels, and dark borders must remain readable.
+- Video hero fallback is explicit: `video → poster image → neutral media placeholder`; never leave a black silent block without status text.
+- Filter/sort changes update query parameters, reset pagination, and preserve audience. Cart and payment conflicts use recoverable sheets with no duplicate-payment path.
+
+### 16.7 Handoff and approval checklist
+
+For every `NS/<Screen>/<Viewport>/<State>` frame, record the direct node URL, owner, review date, screenshot path, and status. Approval requires:
+
+- all bounds, grid values, and tokens match this appendix;
+- contrast is measured for every dark surface, cyan/acid/violet control, status, placeholder, and garment crop;
+- Persian RTL, mixed LTR references, focus, dialog return-focus, and reduced motion are checked;
+- no glow appears on focus, error, payment, table, or admin operational states;
+- desktop/mobile crops and text wrapping match the asset/content record;
+- `360 px` has no horizontal scroll or clipped prices/actions;
+- loading, empty, offline, error, stock-conflict, payment-conflict, and success frames are linked;
+- no unresolved issue is hidden in a Figma comment instead of the handoff table.

@@ -408,3 +408,116 @@ Admin:
 - Color does not replace labels, structure, focus, or status icons.
 - Slow-network, stock-conflict, and payment-conflict states are documented and prototyped where relevant.
 - Screenshot comparison confirms correct crops, spacing, states, and responsive behavior.
+
+## 16. Construction appendix
+
+This appendix instantiates the shared deterministic Figma contract in the root [README](<C:/Users/Asus/Documents/ChatGPT/online store/README.md>). Every frame uses the `CM` prefix and must be built from the screen IDs, coordinates, component properties, fixtures, and state rules below. A frame is not approved while its direct Figma node URL, screenshot evidence, or unresolved-issue field is blank.
+
+### 16.1 Frame matrix and coordinate anchors
+
+| Frame family | Desktop | Tablet | Mobile | Narrow QA |
+| --- | --- | --- | --- | --- |
+| Storefront shell | `1440 × auto`, content `x=96,w=1248`, 12 columns, 24 px gutter | `768 × auto`, content `x=32,w=704`, 8 columns, 16 px gutter | `390 × auto`, content `x=16,w=358`, 4 columns, 12 px gutter | `360 × auto`, content `x=16,w=328` |
+| Account shell | `1440 × auto`, nav `x=96,w=280`, gap `32`, content `w=920` | `768 × auto`, nav becomes a summary row, content `w=704` | `390 × auto`, stacked destination list and one-column content | `360 × auto`, same stack with 16 px side padding |
+| Admin shell | `1440 × auto`, sidebar `240`, topbar `64`, content padding `32` | `768 × auto`, sidebar hidden, card queues | `390 × auto`, card queues and sticky save/action bar | `360 × auto`, no table overflow |
+
+Use these top-level coordinates in every primary frame:
+
+| Screen | Desktop coordinate anchors | Mobile coordinate anchors |
+| --- | --- | --- |
+| Shell | Campaign bar `y=0,h=36`; header `y=36,h=72`; category nav `y=108,h=48`; content starts `y=156` | Campaign bar `h=28`; header `h=56`; content starts `y=84`; bottom nav fixed `h=64` plus safe area |
+| `HOME` | Color-block hero `x=96,y=156,w=1248,h=620`; mosaic gap `24`; product rails use four cards; section gaps `48` | Hero `x=16,y=84,w=358,h=430`; audience tabs `h=44`; two-column product cards `w=173` |
+| `PLP_*` | Filter rail `x=96,w=288`; gap `24`; product grid `x=408,w=936`, three columns; campaign/drop badges sit within card media | Sticky filter/sort bar `x=16,y=84,w=358,h=52`; two cards `w=173` with 12 px gap; filters use a 90% height sheet |
+| `PDP` | Gallery `x=96,w=672`; gap `24`; info `x=792,w=504`; color-block variant area stays below title/price | Gallery `x=16,y=84,w=358,aspect=4:5`; info padding `16`; purchase bar fixed `h=72` |
+| `CART`/checkout | Items `x=96,w=816`; gap `24`; summary `x=936,w=408`; only cobalt is used for the primary action | One-column content `x=16,w=358`; sticky CTA above bottom navigation |
+| Account | Nav `x=96,w=280`; gap `32`; content `x=408,w=920` | Summary header `x=16,w=358`; destination cards and content stack |
+| Admin | Sidebar `x=0,w=240`; topbar `y=0,h=64`; content `x=272,w=1136` | Topbar `h=56`; content padding `16`; campaign colors appear only in previews |
+
+Frame names follow `CM/<Screen>/<Viewport>/<State>`, for example `CM/Home/Desktop/Campaign`, `CM/PLP/Mobile/Filter-Sheet`, and `CM/Admin/Content/Desktop/Preview`. Record the actual node URL beside each name after the Figma frame is created.
+
+### 16.2 Screen-sheet map
+
+Each row below represents an individual frame even where IDs are grouped. The screen sheet for that frame must use the root schema: section bounds, tokens, component properties, copy, asset, state, responsive change, and interaction.
+
+| Screen IDs | Desktop composition | Mobile transformation | Mandatory state frames |
+| --- | --- | --- | --- |
+| `HOME` | Color-block hero, three audience gates, new-drop mosaic, four-card product rails, trend tiles, sale module, trust, social proof, footer | 358 px hero, three horizontal audience tabs, two-column products, swipeable campaign blocks | Campaign, no campaign, loading, slow image, request error, offline |
+| `CATEGORY_WOMEN`, `CATEGORY_MEN`, `CATEGORY_CHILDREN` | Bold title band, subcategory chips, featured campaign, trending rail, shop-by-fit, editorial guide, SEO block | Compact color band, horizontal chips, two-column category/product cards, expandable SEO copy | Default, campaign off, loading, request error |
+| `PLP_WOMEN`, `PLP_MEN`, `PLP_CHILDREN` | 288 px filter rail, three-card grid, result count, applied chips, sort, sale/drop badges, pagination | Two-column grid, sticky filter/sort, 90% height filter sheet | Default, filtered, sale/drop, no results, loading, error, offline |
+| `SEARCH` | 680 px overlay with colored category markers, compact product results, recent/popular groups, full result page | Full-screen surface with sticky input and grouped result cards | Empty, typing, autocomplete, typo correction, no result, loading, error |
+| `PDP` | 672 px gallery, 504 px sticky info, image-led variant choice, price/stock/delivery/returns/details/reviews | Swipe gallery, 16 px information padding, size-guide sheet, fixed 72 px purchase bar | Empty variant, selected variant, size error, low stock, out of stock, sale, zoom, added, price changed |
+| `CART_DRAWER`, `CART` | 420 px drawer; full cart uses 816 px items plus 408 px summary | Full-width sheet; cart page stacks items and summary with sticky checkout CTA | Empty, quantity updating, removed, stock conflict, price change, coupon success/error, offline |
+| `AUTH` | 480 px form paired with campaign art; guest continuation below divider | Full-height one-column form with 16 px padding | Login, guest, invalid phone, expired code, rate limit, network error |
+| `CHECKOUT_ADDRESS`, `CHECKOUT_SHIPPING`, `CHECKOUT_PAYMENT` | `816+408` two-column flow; neutral surfaces; cobalt is the only primary CTA | One-column step panels; sticky next/pay CTA; methods stack | Saved/new address, validation, unsupported region, quote loading/unavailable/expired, payment processing/redirect/failed/cancelled/timeout/pending |
+| `CONFIRMATION`, `TRACKING` | Cobalt success header over neutral receipt; labeled timeline and carrier card | Stacked success/receipt and vertical timeline | Paid, pending, preparing, shipped, delayed, delivered, cancelled, shipment exception |
+| `ACCOUNT_DASHBOARD`, `PROFILE`, `ADDRESSES`, `ORDERS`, `ORDER_DETAIL` | 280 px account navigation plus 920 px content; cards use white/canvas surfaces and 24 px section gaps | Summary header, stacked destination cards, one-column forms/order details | Loading, empty orders/addresses, validation error, save success/error, permission error, offline |
+| `SUPPORT`, `SECURITY`, `NOTIFICATIONS` | FAQ search, support entry, session controls, and preference groups in the 920 px column | Accordion groups and full-width controls | Empty search, ticket submitted, session revoke success/error, preference save error |
+| `CAMPAIGN`, `GUIDE`, `ARTICLE`, `LOOKBOOK` | Color-block campaign modules, 720 px reading measure, shoppable product references, preview-safe copy areas | Single-column story, swipeable media, related products after each major section | Published, scheduled, missing media, loading, unavailable, offline |
+| `ABOUT`, `TRUST`, `SHIPPING_POLICY`, `RETURNS_POLICY`, `SIZE_GUIDE`, `CARE_GUIDE`, `FAQ`, `CONTACT`, `PRIVACY`, `TERMS` | Neutral reading surface, 720 px measure, one campaign accent maximum on supporting callouts | 358 px reading column, collapsible contents and stacked accordions | Default, loading, error, offline, contact validation/success |
+| `NOT_FOUND`, `OFFLINE`, `MAINTENANCE` | Centered 480 px message with return/search/support action; no campaign color is required | Full-width 358 px message and one primary action | 404, offline cached shell, maintenance window |
+| `ADMIN_LOGIN`, `ADMIN_DASHBOARD` | 240 px sidebar, 64 px topbar, stat cards, action queues; campaign color appears in preview tiles only | Sidebar hidden; cards and priority queue | Invalid, locked, rate-limited, MFA step, loading, permission error |
+| `ADMIN_PRODUCTS`, `ADMIN_CATEGORIES`, `ADMIN_INVENTORY` | Filter bar, 48/56 px rows, audience/category/status filters, bulk actions, pagination | Priority columns become labeled cards; filters become a sheet | Loading, empty, request error, stock discrepancy, bulk-action success/error |
+| `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | Sectioned form, 2-column fields, 120 × 44 px variant cells, media crop/reorder panel, preview strip | One-column sections; contained matrix scroll; sticky save bar | Draft, invalid, saving, saved, publish blocked, upload/crop failure |
+| `ADMIN_ORDERS`, `ADMIN_ORDER_DETAIL`, `ADMIN_PAYMENTS` | Queue tabs, immutable order snapshots, payment attempt/webhook timeline, internal notes | Queue/detail cards with labeled event rows | New/paid/preparing/shipped, payment mismatch, retry, webhook error, permission error |
+| `ADMIN_PROMOTIONS`, `ADMIN_CUSTOMERS`, `ADMIN_CUSTOMER_DETAIL`, `ADMIN_CONTENT`, `ADMIN_AUDIT`, `ADMIN_OPERATIONS` | Campaign rule editor, restricted customer lookup/detail, block editor/preview, audit before/after, notification/media/payment health | Card sections with explicit section navigation and unsaved-change guard; PII stays permission-gated | Draft, scheduled, publish blocked, success, failure, no activity, service degraded, permission error |
+
+### 16.3 Direction-specific component property values
+
+The property names come from the root contract; these are the CHROMA defaults and overrides:
+
+| Component | CHROMA value |
+| --- | --- |
+| `Button` | `primary=cobalt/700`, `hover=cobalt/800`, `pressed=ink/950`, radius `12`, purchase height `52`; no campaign accent for primary actions |
+| `CampaignBanner` | `accent=coral\|lime\|violet\|yellow`, `textSafe=true`, `campaignOnly=true`, `maxAccentCount=1` per checkout frame |
+| `DropBadge` | `status=new\|drop\|sale`, `fill=lime/500\|coral/600\|yellow/500`, explicit label and icon; never color-only |
+| `ProductCard` | `imageRatio=4:5`, desktop `w=288–300`, mobile `w=173`, title `maxLines=2`, `showDropBadge=true`, `showSwatches=true` |
+| `MediaGallery` | `thumbnail=72×90`, `gap=10`, `zoom=true`, `state=ready\|loading\|failed`; campaign overlay never hides the garment |
+| `PriceBlock` | Customer amount `Vazirmatn 700`; cobalt for action only; sale uses `coral/600` plus text/icon; currency suffix is `تومان` |
+| `Drawer/Sheet` | Drawer `w=420`; sheet max `90vh`; white/canvas surface; cobalt CTA; focus return to trigger |
+| `Admin` | White/canvas surfaces and cobalt actions; coral/lime/violet/yellow allowed only in campaign preview tiles |
+
+### 16.4 State and Persian copy fixtures
+
+Use these state fixtures consistently in frames and prototypes:
+
+| State | Required visible copy/action |
+| --- | --- |
+| Loading | Skeletons preserve the final card height; campaign tiles show a neutral placeholder, not a false promotion |
+| Empty PLP | `محصولی مطابق این فیلتر پیدا نشد` / `حذف فیلترها` |
+| Offline | `ارتباط برقرار نشد؛ اطلاعات ذخیره‌شده را می‌بینید.` / `تلاش دوباره` |
+| PDP size error | `یک اندازه انتخاب کنید.`; focus moves to the size group |
+| Stock conflict | `موجودی کالا تغییر کرده است.` / `به‌روزرسانی سبد` |
+| Price change | `قیمت این کالا تغییر کرده است.` / `مشاهده قیمت جدید` |
+| Payment failure | `پرداخت انجام نشد؛ دوباره تلاش کنید.` / `پشتیبانی` |
+| Campaign success | `به سبد اضافه شد` or `کمپین منتشر شد`; include label, icon, and next action |
+
+### 16.5 Asset, campaign, and content rules
+
+- Hero source: minimum `2400×1200` desktop and `1080×1350` mobile; reserve a declared Persian text-safe rectangle in every campaign asset.
+- Product master: `1600×2000`, `4:5`; preserve garment silhouette and use the asset record's focal point rather than a generic center crop.
+- Category image: `1200×1500`; keep the audience and garment context visible when color bands are overlaid.
+- Every campaign asset records `assetId`, license/owner, source dimensions, crop/focal point, accent assignment, overlay opacity, desktop/mobile variant, and Persian alt text.
+- Every campaign records `campaignId`, audience scope, category scope, start/end time, accent, promotion label, maximum copy length, and fallback when unpublished.
+- Use the Section 9.3 fixture strings for women, men, and children. Test long titles, discount labels, and CTA copy at `360 px`; no campaign accent may reduce text contrast.
+- Product cards always expose title, price, stock, and primary action without hover.
+
+### 16.6 Responsive and interaction rules
+
+- At `1024 px`, collapse the admin sidebar to a 72 px rail and reduce campaign tile span before reducing type.
+- At `768 px`, the PDP changes from `672+504` to stacked gallery/information; PLP filters move to a sheet; mosaic tiles become a single ordered list.
+- At `390 px`, audience tabs remain text-labelled, products stay two columns, and checkout/payment actions remain sticky above bottom navigation.
+- At `360 px`, reduce tile gaps and label padding before reducing body text; all campaign labels must wrap without clipping.
+- Color never determines audience meaning, sale state, or navigation. Every campaign color has a text label/icon and a tested contrast pair.
+- Filter/sort changes update query parameters, reset pagination, and preserve the selected audience. Cart and payment conflicts use explicit recovery sheets.
+
+### 16.7 Handoff and approval checklist
+
+For every `CM/<Screen>/<Viewport>/<State>` frame, record the direct node URL, owner, review date, screenshot path, and status. Approval requires:
+
+- all bounds and tokens match this appendix;
+- campaign accents pass contrast checks in every text/control combination;
+- Persian RTL, mixed LTR references, focus, dialog return-focus, and reduced motion are checked;
+- desktop/mobile crops and text wrapping match the asset/content record;
+- `360 px` has no horizontal scroll or clipped prices/actions;
+- loading, empty, offline, error, stock-conflict, payment-conflict, and success frames are linked;
+- no unresolved issue is hidden in a Figma comment instead of the handoff table.

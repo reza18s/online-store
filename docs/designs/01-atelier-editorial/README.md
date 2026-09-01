@@ -433,3 +433,114 @@ Admin prototypes:
 - RTL, mixed-content, keyboard, focus, contrast, and reduced-motion reviews pass.
 - Screenshot comparison finds no clipping, overlap, wrong crop, missing state, or detached-component drift.
 - Approved frames expose direct node links for development handoff.
+
+## 16. Construction appendix
+
+This appendix instantiates the shared deterministic Figma contract in the root [README](<C:/Users/Asus/Documents/ChatGPT/online store/README.md>). Every frame uses the `AE` prefix and must be built from the screen IDs, coordinates, component properties, fixtures, and state rules below. A frame is not approved while its direct Figma node URL, screenshot evidence, or unresolved-issue field is blank.
+
+### 16.1 Frame matrix and coordinate anchors
+
+| Frame family | Desktop | Tablet | Mobile | Narrow QA |
+| --- | --- | --- | --- | --- |
+| Storefront shell | `1440 × auto`, content `x=96,w=1248`, 12 columns, 24 px gutter | `768 × auto`, content `x=32,w=704`, 8 columns, 16 px gutter | `390 × auto`, content `x=16,w=358`, 4 columns, 12 px gutter | `360 × auto`, content `x=16,w=328` |
+| Account shell | `1440 × auto`, nav `x=96,w=280`, gap `32`, content `w=920` | `768 × auto`, nav becomes a summary row, content `w=704` | `390 × auto`, stacked destination list and one-column content | `360 × auto`, same stack with 16 px side padding |
+| Admin shell | `1440 × auto`, sidebar `240`, topbar `64`, content padding `32` | `768 × auto`, sidebar hidden, card queues | `390 × auto`, card queues and sticky save/action bar | `360 × auto`, no table overflow |
+
+Use these top-level coordinates in every primary frame:
+
+| Screen | Desktop coordinate anchors | Mobile coordinate anchors |
+| --- | --- | --- |
+| Shell | Announcement `y=0,h=32`; header `y=32,h=80`; category nav `y=112,h=48`; content starts `y=160` | Announcement `h=28`; header `h=60`; content starts `y=88`; bottom nav fixed `h=64` plus safe area |
+| `HOME` | Hero `x=96,y=160,w=1248,h=680`; section gaps `64`; product rail cards `w=288,h=510` | Hero `x=16,y=88,w=358,h=480`; section gaps `32`; product grid cards `w=173` |
+| `PLP_*` | Filter rail `x=96,w=300`; gap `24`; product grid `x=420,w=924`, three columns of `300` with 12 px internal gap | Sticky filter/sort bar `x=16,y=88,w=358,h=52`; two cards `w=173` with 12 px gap |
+| `PDP` | Gallery `x=96,w=720`; gap `24`; info `x=840,w=480`; sticky info begins below `y=160` | Gallery `x=16,y=88,w=358,aspect=4:5`; info padding `16`; purchase bar fixed `h=72` |
+| `CART`/checkout | Items `x=96,w=816`; gap `24`; summary `x=936,w=408` | One-column content `x=16,w=358`; sticky CTA above bottom navigation |
+| Account | Nav `x=96,w=280`; gap `32`; content `x=408,w=920` | Summary header `x=16,w=358`; destination cards and content stack |
+| Admin | Sidebar `x=0,w=240`; topbar `y=0,h=64`; content `x=272,w=1136` | Topbar `h=56`; content padding `16`; priority tables become cards |
+
+Frame names follow `AE/<Screen>/<Viewport>/<State>`, for example `AE/PDP/Desktop/Size-Error`, `AE/PLP/Mobile/No-Results`, and `AE/Admin/Product-Edit/Tablet/Publish-Blocked`. Record the actual node URL beside each name after the Figma frame is created.
+
+### 16.2 Screen-sheet map
+
+Each row below represents an individual frame even where IDs are grouped. The screen sheet for that frame must use the root schema: section bounds, tokens, component properties, copy, asset, state, responsive change, and interaction.
+
+| Screen IDs | Desktop composition | Mobile transformation | Mandatory state frames |
+| --- | --- | --- | --- |
+| `HOME` | 1248 px editorial hero, asymmetric category story, four-card new-arrival rail, three audience feature panels, collection story, best sellers, trust, journal, footer | 358 px portrait hero, two-column audience/category cards, two-column products, horizontal editorial rail, fixed bottom nav | Campaign, no campaign, loading, slow image, request error, offline |
+| `CATEGORY_WOMEN`, `CATEGORY_MEN`, `CATEGORY_CHILDREN` | Portrait hero, intro, subcategory grid, featured look, popular rail, sizing/fit guide, SEO block | Portrait hero, two-column subcategories, compact look cards, accordion SEO copy | Default, empty campaign, loading, request error |
+| `PLP_WOMEN`, `PLP_MEN`, `PLP_CHILDREN` | 300 px filter rail, 3-card comparison grid, result count, applied chips, sort, pagination | Sticky 52 px filter/sort bar, two-column cards, filter bottom sheet | Default, filtered, sale, no results, loading, request error, offline |
+| `SEARCH` | 720 px search overlay with recent/popular/category/product groups and full result page | Full-screen surface with sticky 52 px input and grouped results | Empty, typing, autocomplete, typo correction, no result, loading, error |
+| `PDP` | 720 px portrait gallery, 480 px sticky information, price/variant/fit/stock/delivery/returns/details/reviews | Swipe gallery, 16 px information padding, size-guide sheet, fixed 72 px purchase bar | Empty variant, selected variant, size error, low stock, out of stock, sale, zoom, added, price changed |
+| `CART_DRAWER`, `CART` | 440 px cart drawer; full cart uses 816 px items plus 408 px summary | Full-width sheet; cart page stacks items and summary with sticky checkout CTA | Empty, quantity updating, removed, stock conflict, price change, coupon success/error, offline |
+| `AUTH` | 456 px centered form with editorial side image; guest continuation below divider | Full-height one-column form with 16 px padding | Login, guest, invalid phone, expired code, rate limit, network error |
+| `CHECKOUT_ADDRESS`, `CHECKOUT_SHIPPING`, `CHECKOUT_PAYMENT` | `816+408` two-column flow; 3-step indicator; summary remains visible | One-column step panels; sticky next/pay CTA; long selections use sheets | Saved/new address, validation, unsupported region, quote loading/unavailable/expired, payment processing/redirect/failed/cancelled/timeout/pending |
+| `CONFIRMATION`, `TRACKING` | 792 px receipt and order timeline with shipment card | Single success stack and vertical timeline | Paid, pending, preparing, shipped, delayed, delivered, cancelled, shipment exception |
+| `ACCOUNT_DASHBOARD`, `PROFILE`, `ADDRESSES`, `ORDERS`, `ORDER_DETAIL` | 280 px account navigation plus 920 px content; cards use 16 px padding and 24 px section gaps | Summary header, stacked destination cards, one-column forms and order details | Loading, empty orders/addresses, validation error, save success/error, permission error, offline |
+| `SUPPORT`, `SECURITY`, `NOTIFICATIONS` | Support entry, searchable FAQ, sessions, and preference groups in the 920 px content column | Accordion groups and full-width form controls | Empty search, ticket submitted, session revoke success/error, preference save error |
+| `CAMPAIGN`, `GUIDE`, `ARTICLE`, `LOOKBOOK` | Editorial reading width 720 px with 1248 px image/story modules and product references | Single-column reading flow, 4:5 media, related product rail | Published, scheduled, missing media, loading, unavailable, offline |
+| `ABOUT`, `TRUST`, `SHIPPING_POLICY`, `RETURNS_POLICY`, `SIZE_GUIDE`, `CARE_GUIDE`, `FAQ`, `CONTACT`, `PRIVACY`, `TERMS` | 720 px reading measure, 1248 px page frame, anchored contents where useful | 358 px reading column, collapsible contents and stacked accordions | Default, loading, error, offline, contact validation/success |
+| `NOT_FOUND`, `OFFLINE`, `MAINTENANCE` | Centered 480 px message inside the shell with return/search/support actions | Full-width 358 px message and one primary action | 404, offline cached shell, maintenance window |
+| `ADMIN_LOGIN`, `ADMIN_DASHBOARD` | 240 px sidebar, 64 px topbar, 32 px content padding; dashboard stat cards and action queues | Sidebar hidden; cards and priority queue | Invalid, locked, rate-limited, MFA step, loading, permission error |
+| `ADMIN_PRODUCTS`, `ADMIN_CATEGORIES`, `ADMIN_INVENTORY` | Filter bar, 48/56 px data rows, status badges, bulk actions, pagination | Priority columns become labeled cards; filters become a sheet | Loading, empty, request error, stock discrepancy, bulk-action success/error |
+| `ADMIN_PRODUCT_EDIT`, `ADMIN_VARIANTS`, `ADMIN_MEDIA` | Sectioned form, 2-column fields, 120 × 44 px variant cells, media crop/reorder panel | One-column sections; contained horizontal variant matrix; sticky save bar | Draft, invalid, saving, saved, publish blocked, upload/crop failure |
+| `ADMIN_ORDERS`, `ADMIN_ORDER_DETAIL`, `ADMIN_PAYMENTS` | Queue tabs, order detail snapshots, payment attempt/webhook timeline, internal notes | Queue/detail cards with labeled event rows | New/paid/preparing/shipped, payment mismatch, retry, webhook error, permission error |
+| `ADMIN_PROMOTIONS`, `ADMIN_CUSTOMERS`, `ADMIN_CUSTOMER_DETAIL`, `ADMIN_CONTENT`, `ADMIN_AUDIT`, `ADMIN_OPERATIONS` | Rule editor, restricted customer lookup/detail, content block editor/preview, audit before/after, notification/media/payment health | Card sections with explicit section navigation and unsaved-change guard; PII stays permission-gated | Draft, scheduled, publish blocked, success, failure, no activity, service degraded, permission error |
+
+### 16.3 Direction-specific component property values
+
+The property names come from the root contract; these are the ATELIER defaults and overrides:
+
+| Component | ATELIER value |
+| --- | --- |
+| `Button` | `primary=oxblood/700`, `hover=oxblood/800`, `pressed=charcoal/950`, radius `8`, purchase height `52` |
+| `ProductCard` | `imageRatio=4:5`, desktop `w=288–300`, mobile `w=173`, title `maxLines=2`, `showSwatches=true`, `showSecondImage=true` only on desktop hover-capable previews |
+| `EditorialFeature` | `layout=asymmetric`, `imageRatio=3:4`, `copyMeasure=420`, `copySafeInset=48`, `accent=brass/700` for labels only |
+| `MediaGallery` | `thumbnail=72×90`, `gap=10`, `zoom=true`, image fallback uses `ivory/100` with an outlined icon and text |
+| `PriceBlock` | Customer amount `Vazirmatn 700`; regular/sale prices remain adjacent; currency suffix is `تومان`; no brass for price text |
+| `Drawer/Sheet` | Drawer `w=440`; sheet max `90vh`; ivory surface; oxblood CTA; focus return to trigger |
+| `Admin` | Admin uses ivory/50 canvas and charcoal text; oxblood actions; brass is never used for status or body text |
+
+### 16.4 State and Persian copy fixtures
+
+Use these state fixtures consistently in the frames and prototypes:
+
+| State | Required visible copy/action |
+| --- | --- |
+| Loading | Skeleton preserves the final card height; button keeps its label width and shows a spinner |
+| Empty PLP | `محصولی در این محدوده پیدا نشد` / `حذف فیلترها` |
+| Offline | `ارتباط برقرار نشد؛ اطلاعات ذخیره‌شده را می‌بینید.` / `تلاش دوباره` |
+| PDP size error | `لطفاً اندازه را انتخاب کنید.`; focus moves to the size group |
+| Stock conflict | `موجودی این کالا تغییر کرده است.` / `به‌روزرسانی سبد` |
+| Price change | `قیمت این کالا تغییر کرده است.` / `مشاهده قیمت جدید` |
+| Payment failure | `پرداخت ناموفق بود؛ مبلغی از حساب شما کسر نشده است.` / `تلاش دوباره` / `پشتیبانی` |
+| Success | `به سبد خرید اضافه شد` or `سفارش ثبت شد`; include an icon and a next action |
+
+### 16.5 Asset and content rules
+
+- Hero source: minimum `2400×1360` desktop and `1080×1440` mobile; keep the garment silhouette and the Persian copy-safe area inside the declared focal rectangle.
+- Product master: minimum `1600×2000`, neutral background, center crop at `50% 50%` unless the asset record declares a different focal point.
+- Category portrait: minimum `1200×1600`; never crop the model's head, garment hem, or child safety context.
+- Every asset record includes `assetId`, license/owner, source dimensions, crop mode, focal point, desktop/mobile variant, and Persian alt text.
+- Use the fixtures from Section 9.6 for women, men, and children. Add a character-limit record for each heading, title, label, error, and CTA; long Persian strings must be tested at `360 px`.
+- Editorial captions may use Estedad, but product names, prices, inventory, actions, errors, and support text use Vazirmatn.
+
+### 16.6 Responsive and interaction rules
+
+- At `1024 px`, reduce editorial margins before reducing type; the admin sidebar becomes a 72 px icon rail.
+- At `768 px`, the PDP changes from `720+480` to stacked gallery/information; PLP filters move to a sheet; admin tables expose priority cards.
+- At `390 px`, category cards and products remain two columns; all forms are one column; purchase and checkout actions are sticky above the bottom navigation.
+- At `360 px`, reduce section gaps from `32` to `24` before reducing body text; no title, price, or CTA may clip.
+- Editorial hover treatments never carry required information. Image zoom, wishlist, and secondary image are available through explicit controls on touch devices.
+- Filter/sort changes update query parameters, reset pagination, and preserve the selected audience. Cart and payment conflicts use a recoverable sheet instead of silently mutating data.
+
+### 16.7 Handoff and approval checklist
+
+For every `AE/<Screen>/<Viewport>/<State>` frame, record the direct node URL, owner, review date, screenshot path, and status. Approval requires:
+
+- all bounds and tokens match this appendix;
+- Persian RTL, mixed LTR references, focus, dialog return-focus, and reduced motion are checked;
+- contrast is checked for charcoal, oxblood, brass, and every status alias;
+- desktop/mobile crops and text wrapping match the asset/content record;
+- `360 px` has no horizontal scroll or clipped prices/actions;
+- loading, empty, offline, error, stock-conflict, payment-conflict, and success frames are linked;
+- no unresolved issue is hidden in a Figma comment instead of this handoff table.

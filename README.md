@@ -4,7 +4,7 @@
 
 ## Project status
 
-This repository is currently an empty Git repository. This README is the initial product, engineering, infrastructure, SEO, advertising, and marketing source of truth. The product category is clothing for women, men, and children, and customer-facing prices will use toman. No application code, production credentials, hosting account, payment account, or final brand identity has been selected yet.
+This repository is currently documentation-only: no application code has been implemented yet. This README is the initial product, engineering, infrastructure, SEO, advertising, marketing, and Figma source of truth. The product category is clothing for women, men, and children, and customer-facing prices will use toman. No production credentials, hosting account, payment account, or final brand identity has been selected yet.
 
 The implementation should begin only after the decisions in [Open decisions](#open-decisions) are resolved.
 
@@ -306,7 +306,147 @@ All five directions are equal, complete design candidates. Each must support the
 - The component inventory maps to implemented shadcn/ui primitives or documented custom components.
 - RTL review covers Persian text, mixed numerals, breadcrumbs, drawers, tables, charts, and payment references.
 - Visual regression snapshots are approved at mobile, tablet, and desktop breakpoints.
-- The Figma file's screenshot QA still needs a final pass; the initial automated visual capture was rate-limited on the Figma Starter plan.
+- Screenshot QA evidence is a release gate. The initial automated visual capture was rate-limited on the Figma Starter plan, so each approved frame must later receive a manual or successful automated screenshot record.
+
+### Deterministic Figma construction contract
+
+The five direction READMEs are visual specifications layered on top of one shared contract. A designer must be able to build a frame by reading the relevant direction README and this section without inventing dimensions, states, copy, or component behavior. If a direction-specific rule conflicts with this contract, the direction-specific rule wins only when it is explicitly labelled as an override.
+
+#### Required frame metadata
+
+Every Figma frame and exported screenshot must record the following metadata in its description or handoff table:
+
+| Field | Required value |
+| --- | --- |
+| Screen ID | One canonical ID from the screen inventory below, for example `PDP` or `ADMIN_PRODUCT_EDIT` |
+| Direction | `AE`, `CM`, `QG`, `NS`, or `FN` |
+| Viewport | Exact width × height in pixels; use `1440`, `1280`, `1024`, `768`, `390`, or `360` width where applicable |
+| Scroll state | `top`, `mid`, `bottom`, or a named scroll position such as `PDP/Details` |
+| Data state | Default, populated, empty, loading, error, offline, or another state from the state matrix |
+| RTL mode | `fa-IR` document direction; every embedded Latin/numeric reference is explicitly marked LTR |
+| Grid | Column count, content width, margin, gutter, and alignment origin |
+| Component set | Exact component instance names and property values used in the frame |
+| Content set | Product/order/content fixture ID and approved Persian strings |
+| Asset set | Image asset ID, source dimensions, crop mode, focal point, and alt text |
+| Handoff | Direct Figma node URL, owner, review date, and screenshot path once approved |
+
+#### Canonical screen inventory
+
+These IDs are shared by all five directions. A direction may add a visual variant, but it may not remove a required screen.
+
+```text
+HOME
+CATEGORY_WOMEN / CATEGORY_MEN / CATEGORY_CHILDREN
+PLP_WOMEN / PLP_MEN / PLP_CHILDREN
+SEARCH
+PDP
+CART_DRAWER / CART
+AUTH
+CHECKOUT_ADDRESS / CHECKOUT_SHIPPING / CHECKOUT_PAYMENT
+CONFIRMATION / TRACKING
+ACCOUNT_DASHBOARD / PROFILE / ADDRESSES / ORDERS / ORDER_DETAIL
+SUPPORT / SECURITY / NOTIFICATIONS
+CAMPAIGN / GUIDE / ARTICLE / LOOKBOOK
+ABOUT / TRUST / SHIPPING_POLICY / RETURNS_POLICY / SIZE_GUIDE / CARE_GUIDE
+FAQ / CONTACT / PRIVACY / TERMS
+NOT_FOUND / OFFLINE / MAINTENANCE
+ADMIN_LOGIN / ADMIN_DASHBOARD / ADMIN_PRODUCTS / ADMIN_PRODUCT_EDIT
+ADMIN_VARIANTS / ADMIN_MEDIA / ADMIN_CATEGORIES / ADMIN_INVENTORY
+ADMIN_ORDERS / ADMIN_ORDER_DETAIL / ADMIN_PAYMENTS / ADMIN_PROMOTIONS
+ADMIN_CUSTOMERS / ADMIN_CUSTOMER_DETAIL / ADMIN_CONTENT / ADMIN_AUDIT / ADMIN_OPERATIONS
+```
+
+#### Screen-sheet schema
+
+Each canonical screen gets a screen sheet with one row for every major section. The row format is intentionally mechanical so that the five directions can be compared at equal scope.
+
+| Column | What must be recorded |
+| --- | --- |
+| Section | Stable name such as `Header`, `Hero`, `FilterRail`, `ProductGrid`, or `StickyPurchaseBar` |
+| Bounds | Exact `x`, `y`, `width`, and `height` at the target viewport |
+| Layout | Auto Layout direction, gap, padding, alignment, wrapping, and min/max sizing |
+| Token | Color, type, spacing, radius, elevation, motion, and z-index token names; no unexplained one-off values |
+| Content | Exact Persian copy, content fixture, character limit, line limit, and truncation rule |
+| Asset | Figma asset ID, source size, aspect ratio, crop/focal point, loading fallback, and alt text |
+| Component | Component name, variant, component properties, instance swaps, and nested slots |
+| State | State ID and visible state-specific copy/action |
+| Responsive change | What moves, hides, stacks, becomes sticky, or changes interaction at each breakpoint |
+| Interaction | Trigger, result, transition duration, focus target, URL/query change, and recovery path |
+
+#### Canonical component property API
+
+The same property names must be used in all five directions. Visual styles may change, but property names and behavior stay compatible.
+
+| Component | Required properties |
+| --- | --- |
+| `Button` | `size=sm\|md\|lg`, `tone=primary\|secondary\|outline\|ghost\|destructive`, `state=default\|hover\|pressed\|focus\|disabled\|loading\|error\|success`, `leadingIcon=true\|false`, `trailingIcon=true\|false`, `fullWidth=true\|false` |
+| `IconButton` | `size=sm\|md\|lg`, `tone=ghost\|surface\|outline`, `state`, `icon`, `tooltip`, `ariaLabel` |
+| `Field` | `kind=text\|phone\|search\|textarea`, `state=empty\|filled\|focus\|disabled\|loading\|error\|success`, `direction=rtl\|ltr`, `prefix`, `suffix`, `helper` |
+| `Select` | `mode=single\|multiple`, `state=placeholder\|selected\|open\|disabled\|error`, `optionCount`, `selectedCount`, `mobilePresentation=inline\|sheet` |
+| `ProductCard` | `audience=women\|men\|children`, `status=regular\|new\|sale\|lowStock\|outOfStock\|loading`, `showSwatches`, `showSecondImage`, `showWishlist`, `imageRatio=4:5`, `titleLines=1\|2` |
+| `MediaGallery` | `mode=image\|video\|fallback`, `mediaCount`, `activeIndex`, `zoom=true\|false`, `state=ready\|loading\|failed` |
+| `SizeSelector` | `system=women\|men\|children`, `state=empty\|selected\|lowStock\|unavailable\|error`, `sizeCount`, `showGuide` |
+| `CartItem` | `state=default\|updating\|removed\|stockConflict\|priceChange\|error`, `quantity`, `showRemove`, `showConflictAction` |
+| `OrderSummary` | `state=default\|recalculating\|couponSuccess\|couponError\|quoteExpired`, `showShipping`, `showCoupon`, `ctaState` |
+| `Dialog/Drawer/Sheet` | `type=info\|form\|confirmation\|destructive\|navigation\|cart\|filters\|sizeGuide`, `state=open\|closing\|loading\|error`, `dismissible`, `returnFocusId` |
+| `DataTable` | `density=dense\|comfortable`, `state=ready\|loading\|empty\|error`, `selectable`, `sortable`, `expandedRows`, `mobileMode=table\|cards` |
+
+#### Shared page and state matrix
+
+At minimum, each direction must show these states in the named screens. Additional direction-specific states are allowed but do not replace this baseline.
+
+| Screen | Required state frames |
+| --- | --- |
+| Home/category/PLP/search | Default, loading, slow image/network, empty/no result, request error, offline |
+| PDP | Variant empty, color selected, size selected, size error, low stock, out of stock, sale, zoom, add success, price changed, request error |
+| Cart | Default, empty, quantity updating, removed item, stock conflict, price change, coupon success, coupon error, recalculating, offline |
+| Checkout | Saved address, new address, validation error, unsupported region, quote loading, unavailable method, expired quote, payment processing, redirect, failed, cancelled, timeout, pending verification |
+| Confirmation/tracking | Paid, pending, preparing, shipped, delayed, delivered, cancelled, shipment exception, support handoff |
+| Account/support/content | Default, loading, empty, validation error, permission error, offline, maintenance, success confirmation |
+| Admin | Login invalid/locked/rate-limited, table loading/empty/error, draft invalid/saving/saved/publish-blocked, media failure, inventory discrepancy, payment mismatch, audit success |
+
+#### Interaction and data contracts
+
+- PLP filters serialize to stable query parameters in this order: audience, category, size, color, fit, material, price, stock, sale; removing a chip removes only that parameter.
+- Sort is a single query parameter and survives back/forward navigation; filter and sort changes reset pagination to page one.
+- Search exposes recent searches locally, debounces requests, labels suggestions by category/product/content, and preserves the corrected query when a typo suggestion is accepted.
+- A guest cart has a local draft ID. Signing in merges compatible lines, preserves the latest server price/stock truth, and presents a conflict sheet before removing or changing a line.
+- Add-to-cart is disabled until required variants are selected. A stock conflict keeps the customer on the PDP or cart and explains the exact line change.
+- Payment retries reuse the same order intent, never silently create a duplicate order, and show `processing`, `pending verification`, `failed`, `cancelled`, and `timeout` as distinct states.
+- Address forms validate required Persian fields, phone format, province/city relationship, and unsupported delivery regions before enabling the next step.
+- Drawers and dialogs trap focus, close on Escape when dismissible, return focus to the trigger, and never rely on backdrop click alone.
+- Every destructive action has a confirmation state and a recoverable success/error message.
+
+#### Asset, copy, and content contract
+
+Every final frame uses named fixtures instead of placeholder text. Each fixture records audience, product/category/content ID, Persian title, price in toman, sale/regular price, color, size set, fit, material, care, inventory, delivery promise, returns summary, and alt text. Asset records include source license/owner, original dimensions, crop, focal point, contrast-safe overlay, and mobile/desktop variants. Text records include maximum characters, maximum lines, and the fallback string for loading, missing, or failed content.
+
+Prices are formatted as `۲٬۴۹۰٬۰۰۰ تومان` for customer UI. SKU, phone, coupon, payment, tracking, and order references are isolated LTR strings. No design may use an English placeholder where a Persian fixture is required.
+
+#### Breakpoint transition contract
+
+| Width | Required transition |
+| --- | --- |
+| `1440` | Full header/navigation; 12-column grid; desktop rails; full account/admin navigation |
+| `1280` | Preserve hierarchy; reduce outer margin before reducing type; keep core two-column PDP/checkout layout |
+| `1024` | Collapse admin sidebar to icon rail; convert wide editorial splits to stacked or 8-column compositions; keep primary CTA visible |
+| `768` | Use tablet frames for PLP, PDP, cart, checkout, account order detail, admin product edit, and admin order detail; convert data tables to priority columns/cards where specified |
+| `390` | Two-column product grid; one-column forms; sticky mobile purchase/checkout action; bottom navigation; filter and size bottom sheets |
+| `360` | No horizontal scroll; preserve 44 px targets; reduce gaps before reducing body text; verify long Persian labels and prices |
+
+#### Figma handoff and QA evidence
+
+Before a direction is marked approved, its README must link every canonical frame and state to a direct node URL and record:
+
+- Screenshot exports for `1440`, `768`, `390`, and `360` where required.
+- Pixel dimensions and grid overlays checked against the screen sheet.
+- Contrast checks for text, controls, status, campaign colors, and dark/light garment media.
+- RTL checks for navigation, breadcrumbs, carousels, pagination, timelines, tables, and mixed LTR references.
+- Keyboard focus, dialog return-focus, reduced-motion, loading, offline, and error checks.
+- Crop, text-wrap, annotation-overlap, sticky-element, and 360 px clipping checks.
+- Reviewer, date, evidence path, unresolved issue, and approval status.
+
+The direction-specific READMEs below now include the values and screen maps that instantiate this contract for each candidate.
 
 ## Iran hosting and production setup
 

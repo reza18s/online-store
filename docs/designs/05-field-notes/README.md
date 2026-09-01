@@ -499,7 +499,7 @@ Use the root [responsive section-bound templates](../../../README.md#responsive-
 | Narrow, `52 px` CTA/save | `360 × 800` | `720` | `52` | `668`: `0, 668, 1336, 2004…` | CTA/save `16,668,328,52` |
 | Narrow, `72 px` purchase | `360 × 800` | `720` | `72` | `648`: `0, 648, 1296, 1944…` | purchase `0,648,360,72` |
 
-For every section, record `localY = pageY - scrollOffset` and clip against the viewport; do not rewrite the full-page `pageY`. Use the action-specific stride whenever that fixed action is present so content under the overlay is captured in the next frame. Fixed overlays remain outside the scroll canvas and must not intersect bottom navigation or the safe-area inset. If a section ends behind an overlay, add bottom padding equal to the overlay stack and capture its evidence in a separate overlay layer.
+For every section, record `localY = pageY - scrollOffset` and clip against the viewport; do not rewrite the full-page `pageY`. Use the action-specific stride whenever that fixed action is present so content under the overlay is captured in the next frame. Fixed overlays remain outside the scroll canvas and must not intersect bottom navigation or the safe-area inset. If a section ends behind an overlay, add bottom padding equal to the overlay stack and capture its evidence in a separate overlay layer. `SEARCH` and `AUTH` use full-viewport modal layers in both primary mobile (`390 × 844`) and narrow (`360 × 800`) frames; hide the underlying shell and bottom navigation while the modal is open, and do not count the hidden navigation in active-frame bounds. `CART_DRAWER` follows the same modal-layer rule from the root fallback template.
 
 ### 16.3 Direction-specific component property values
 

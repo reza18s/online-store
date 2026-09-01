@@ -349,7 +349,7 @@ Scroll offsets are deterministic per viewport and fixed-action state. A section'
 | Narrow, `52 px` CTA/save bar | `720` | `52` | `668`: `0, 668, 1336, 2004…` |
 | Narrow, `72 px` purchase bar | `720` | `72` | `648`: `0, 648, 1296, 1944…` |
 
-Mobile reserves a `64 px` bottom navigation and a `16 px` safe-area inset (`80 px` total), so base usable height is viewport height minus `80 px`. A full-width `72 px` purchase bar uses `bottom=80` and y=`692` in a `390 × 844` frame or y=`648` in a `360 × 800` frame. A `52 px` checkout/cart/save CTA uses y=`712` or y=`668` respectively. Fixed overlays are excluded from the scroll canvas, and the corresponding action reserve is subtracted from the scroll step. Direction READMEs must use these formulas instead of advancing every mobile screen by the base stride.
+Mobile regular frames reserve a `64 px` bottom navigation and a `16 px` safe-area inset (`80 px` total), so base usable height is viewport height minus `80 px`. A full-width `72 px` purchase bar uses `bottom=80` and y=`692` in a `390 × 844` frame or y=`648` in a `360 × 800` frame. A `52 px` checkout/cart/save CTA uses y=`712` or y=`668` respectively. Fixed overlays are excluded from the scroll canvas, and the corresponding action reserve is subtracted from the scroll step. Full-viewport modal layers such as `SEARCH`, `AUTH`, and `CART_DRAWER` explicitly suppress the underlying navigation and use the full frame instead. Direction READMEs must use these formulas instead of advancing every mobile screen by the base stride.
 
 #### Canonical screen inventory
 
@@ -403,14 +403,17 @@ The direction READMEs provide desktop and primary-mobile stacks. Unless a direct
 | `HOME` | `Hero(32,140,704,480)` → `Audience(32,652,704,240)` → `Products(32,924,704,432)` → `Editorial(32,1380,704,320)` → `Trust(32,1724,704,280)` | `Hero(16,84,328,400)` → `Audience(16,516,328,200)` → `Products(16,740,328,396)` → `Editorial(16,1168,328,300)` → `Trust(16,1500,328,260)` |
 | `CATEGORY_*` | `Hero(32,140,704,360)` → `Subcategories(32,516,704,220)` → `Products(32,768,704,432)` → `GuideSEO(32,1224,704,360)` | `Hero(16,84,328,320)` → `Subcategories(16,428,328,200)` → `Products(16,660,328,396)` → `GuideSEO(16,1080,328,360)` |
 | `PLP_*` | `FilterSortBar(32,140,704,52)` → `ProductGrid(32,216,704,900)`; cards `224×396`, 16 px gap; filter sheet `32,140,704,844` | `FilterSortBar(16,84,328,52)` → `ProductGrid(16,160,328,900)`; cards `160×396`, 8 px gap; filter sheet `16,84,328,716` |
-| `SEARCH` | `SearchSurface(32,140,704,600)` → `Results(32,756,704,620)` | `SearchSurface(0,84,360,716)` with field `16,84,328,48` and results `16,148,328,640` |
+| `SEARCH` | `SearchSurface(32,140,704,600)` → `Results(32,756,704,620)` | `SearchLayer(0,0,360,800)` + `SearchSurface(0,84,360,716)` with field `16,84,328,48` and results `16,148,328,640`; modal layer hides underlying bottom navigation |
 | `PDP` | `Gallery(32,140,704,600)` → `PurchaseInfo(32,764,704,600)` → `Details(32,1388,704,420)` | `Gallery(16,84,328,410)` → `PurchaseInfo(16,510,328,680)` → `Details(16,1214,328,420)`; fixed purchase bar `390: 0,692,390,72`; narrow `0,648,360,72` |
 | `CART`/checkout | `ItemsOrStep(32,140,704,600)` → `Summary(32,764,704,360)`; checkout CTA `32,956,704,52` is in-flow, not fixed | `ItemsOrStep(16,84,328,600)` → `Summary(16,700,328,360)`; fixed CTA `390: 16,712,358,52`; narrow `16,668,328,52` |
-| `AUTH` | `Panel(164,180,440,560)` | `Form(16,84,328,650)`; no fixed action |
+| `AUTH` | `AuthLayer(0,0,768,1024)` + `Panel(164,180,440,560)` | `AuthLayer(0,0,360,800)` + `Form(16,84,328,650)`; no fixed action; modal layer hides underlying bottom navigation |
 | `CART_DRAWER` | `Drawer(384,0,384,1024)` | `Sheet(0,84,360,716)`; modal layer suppresses underlying navigation |
 | `NOT_FOUND`/`OFFLINE`/`MAINTENANCE` | `Message(144,300,480,300)`; action `176,616,416,52` | `Message(16,216,328,300)`; action `16,532,328,52` |
 | `CONFIRMATION`/`TRACKING` | `Receipt(32,140,704,520)` → `Timeline(32,684,704,520)` | `Receipt(16,84,328,400)` → `Timeline(16,516,328,520)` |
-| `ACCOUNT_*`/support/content | `SummaryOrNav(32,140,704,144)` → `PrimaryContent(32,316,704,820)` | `SummaryOrNav(16,84,328,120)` → `PrimaryContent(16,228,328,820)` |
+| `ACCOUNT_DASHBOARD`, `PROFILE`, `ADDRESSES`, `ORDERS`, `ORDER_DETAIL` | `AccountHeader(32,140,704,144)` → `AccountNav(32,316,704,52)` → `PrimaryContent(32,392,704,820)` | `AccountHeader(16,84,328,120)` → `AccountNav(16,228,328,52)` → `PrimaryContent(16,296,328,820)` |
+| `SUPPORT`, `SECURITY`, `NOTIFICATIONS` | `SupportHeader(32,140,704,144)` → `SearchOrTabs(32,316,704,96)` → `FAQOrTicketContent(32,436,704,820)` | `SupportHeader(16,84,328,120)` → `SearchOrTabs(16,228,328,104)` → `FAQOrTicketContent(16,356,328,820)` |
+| `CAMPAIGN`, `GUIDE`, `ARTICLE`, `LOOKBOOK` | `StoryHero(32,140,704,420)` → `ReadingMeasure(64,592,640,760)` → `ProductReferences(32,1384,704,432)` | `StoryHero(16,84,328,320)` → `ReadingMeasure(16,428,328,900)` → `ProductReferences(16,1352,328,396)` |
+| `ABOUT`, `TRUST`, `SHIPPING_POLICY`, `RETURNS_POLICY`, `SIZE_GUIDE`, `CARE_GUIDE`, `FAQ`, `CONTACT`, `PRIVACY`, `TERMS` | `DocumentHeader(32,140,704,160)` → `TOCOrControls(32,332,704,96)` → `ReadingMeasure(64,460,640,820)` → `RelatedOrContact(32,1304,704,300)` | `DocumentHeader(16,84,328,140)` → `TOCOrControls(16,244,328,96)` → `ReadingMeasure(16,356,328,900)` → `RelatedOrContact(16,1272,328,300)` |
 | `ADMIN_*` | `Topbar(0,0,768,56)` → `SectionNav(32,80,704,52)` → `PrimaryPanel(32,156,704,820)` | `Topbar(0,0,360,56)` → `SectionNav(16,80,328,52)` → `PrimaryPanel(16,156,328,760)` |
 
 #### Canonical component property API

@@ -434,7 +434,7 @@ Each row below represents an individual frame even where IDs are grouped. Every 
 
 ### 16.2.1 Exact section-bound stacks
 
-The values below use `x,y,width,height` in pixels. They are the required bounds for the visible `Scroll-0` frame; `Scroll-1` and later frames keep the same viewport and continue the stack with a recorded scroll offset. Slash-separated IDs share this geometry but still receive separate Figma frames and node URLs.
+The values below use `x,y,width,height` in pixels in one full-page coordinate system. The `1440 × 900` and `390 × 844` viewports show the portion intersecting their recorded scroll offset; `Scroll-0` starts at `y=0`, and `Scroll-1` and later frames retain these coordinates while recording the new offset. Slash-separated IDs share this geometry but still receive separate Figma frames and node URLs.
 
 | Screen IDs | Desktop section stack (`1440 × 900`) | Mobile section stack (`390 × 844`) |
 | --- | --- | --- |

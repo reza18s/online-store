@@ -4,9 +4,9 @@
 
 ## Project status
 
-This repository is currently documentation-only: no application code has been implemented yet. This README is the initial product, engineering, infrastructure, SEO, advertising, marketing, and Figma source of truth. The product category is clothing for women, men, and children, and customer-facing prices will use toman. No production credentials, hosting account, payment account, or final brand identity has been selected yet.
+This repository now contains a minimal workspace scaffold but no application features. This README is the initial product, engineering, infrastructure, SEO, advertising, marketing, and Figma source of truth. The product category is clothing for women, men, and children, and all money values will use integer toman values. No production credentials, hosting account, payment account, or final brand identity has been selected yet.
 
-The implementation should begin only after the decisions in [Open decisions](#open-decisions) are resolved.
+Feature implementation should begin only after the remaining decisions in [Open decisions](#open-decisions) are resolved.
 
 ## Executive decisions
 
@@ -15,7 +15,7 @@ The implementation should begin only after the decisions in [Open decisions](#op
 | Product model | Start as a single-merchant store; design boundaries so a marketplace can be added later | Keeps checkout, inventory, permissions, and operations manageable for the first release |
 | Primary audience | Persian-speaking customers in Iran | Drives `fa-IR`, RTL, Iranian payment/shipping adapters, local hosting, and local acquisition |
 | Product category | Clothing for women, men, and children, with accessories and seasonal collections | Gives every design direction a concrete catalog, variant, sizing, photography, and content model |
-| Customer currency display | Show all storefront prices and totals in toman | Matches the confirmed customer-facing convention; the backend integer storage unit remains a separate open engineering decision |
+| Money | Store and display money as integer toman values | Keeps the database, payment boundary, refunds, discounts, shipping, and reports in one unit |
 | Frontend | React + Vite, with prerendering or Vite SSR for public indexable pages | Preserves the requested Vite stack while avoiding a client-only SEO trap |
 | Backend | Node.js + NestJS + Prisma + PostgreSQL | Modular domain boundaries, type-safe persistence, and reliable transactional workflows |
 | Client state | Zustand for cart/session/UI preferences; TanStack Query for server state | Prevents duplicated server caches and keeps local interaction state simple |
@@ -170,6 +170,7 @@ Landing page -> category/search -> product detail -> cart -> address/shipping ->
 ### Recommended repository structure
 
 ```text
+CONTEXT.md              # Domain glossary, invariants, and ownership vocabulary
 apps/
   web/                 # React + Vite storefront, account, and admin shells
   api/                 # NestJS HTTP API
@@ -188,7 +189,7 @@ docs/
   runbooks/            # Deploy, restore, incident, and rollback procedures
 ```
 
-Use a workspace package manager selected during Phase 0. `pnpm` is the recommended default for a TypeScript monorepo, but the repository should record the final choice in `package.json` and this README before implementation.
+Use Bun for the workspace. The root `package.json` pins the package-manager contract to `bun@1.3.4` and owns the workspace globs; application and package dependencies remain intentionally uninstalled until feature implementation begins.
 
 ### Backend module boundaries
 
@@ -213,6 +214,88 @@ Admin
 
 Each NestJS module owns its application use cases, domain rules, persistence boundary, and HTTP mapping. A module should expose only the providers or contracts that another module truly needs. Keep external providers behind adapters such as `PaymentGateway`, `SmsProvider`, `ShippingProvider`, `ObjectStorage`, and `AnalyticsSink`.
 
+### Pre-implementation architecture review
+
+The repository does not contain application source yet. The following findings are therefore pre-implementation risks, not runtime defects. They describe the seams to validate before scaffolding the monorepo and should not be treated as selected interfaces until the relevant decision is confirmed.
+
+#### Recommended sequencing
+
+1. **Pin domain vocabulary and ownership first.** Create `CONTEXT.md` and record durable architecture decisions in `docs/adr/` before implementation. Define the meaning and owner of money units, order states, inventory reservations, product publication, provider failures, audit events, and recovery. This gives every future module a shared vocabulary and keeps decisions local.
+2. **Deepen checkout/order intake.** Treat checkout and order intake as the deep module at the seam where cart, inventory, shipping, payment, promotion, notification, and order behavior is composed. Its implementation should own sequencing, transaction ownership, immutable snapshots, idempotency, recovery, and operator-visible audit behavior. Keep the capability implementations behind internal seams so callers do not learn their ordering or retry mechanics.
+3. **Deepen local/server truth reconciliation.** The frontend has two real representations of customer intent: local cart interaction state in Zustand and server truth in TanStack Query. One flow-level module should own guest-cart merge, optimistic updates, rollback, stock and price conflicts, invalidation, and payment recovery. Store and query mechanics remain implementation details or adapters behind that seam; callers should depend on customer-visible transitions.
+4. **Keep design directions as visual adapters.** The five design directions share one functional and state contract. Runtime behavior should live in shared behavioral modules, while each direction owns visual hierarchy, density, tokens, and explicitly declared visual overrides. Do not create five copies of cart, checkout, account, admin, accessibility, or error-state behavior.
+5. **Deepen identity and access control.** Keep authentication/session lifecycle distinct from customer profile behavior and authorization policy. Enforce authorization inside the relevant use-case implementation, keep the admin surface as a caller rather than the owner of access policy, and keep SMS, OTP, or external identity providers behind adapters.
+
+#### Architecture decision gates
+
+Before Phase 1 exits, document and test these decisions:
+
+- **Domain context:** glossary terms, module ownership, invariants, and rejected alternatives are recorded in `CONTEXT.md` and relevant ADRs.
+- **Checkout consistency:** one implementation owns workflow sequencing, transaction and reservation behavior, order-time snapshots, duplicate or delayed payment callbacks, and recovery semantics.
+- **Identity and access:** authentication, session creation and revocation, password reset, throttling, MFA, authorization, customer-PII access, cart merge identity, and audit semantics have explicit responsibility seams.
+- **Frontend reconciliation:** cart merge precedence, optimistic rollback, server price and stock precedence, query invalidation, and payment-pending recovery are owned behind one interface.
+- **Provider effects:** concrete payment, SMS, shipping, storage, and analytics adapters translate provider vocabulary; retry, timeout, signature, idempotency, audit, and observability policy has an explicit owner.
+- **Public read path:** SSR/prerendered pages, browser readers, sitemap generation, canonical metadata, redirects, and product structured data agree on one public catalog truth.
+- **Design baseline:** one direction is selected only after equivalent responsive, RTL, accessibility, workflow, and state review.
+
+#### Guardrails
+
+- Apply the deletion test to every proposed module: deleting it should cause meaningful behavior to reappear across callers, not merely remove pass-through code.
+- Keep the interface smaller than the implementation; callers and tests should cross the same seam.
+- Use an adapter only for real variation or a verified test seam. One adapter is a hypothetical seam; two adapters justify a real one.
+- Do not create a universal cross-cutting module for money, errors, logging, retries, or audit when ownership can remain local to the deep implementation that needs the policy.
+
+#### Candidate 5 — Identity and access control
+
+Auth deserves its own deepening opportunity rather than becoming a generic security bucket. The plan names separate `Auth`, `Users`, and `Admin` modules, while the actual security behavior also affects cart, checkout, support, audit, and operations.
+
+The identity/access implementation should make these responsibilities explicit:
+
+- Authentication and session lifecycle: customer phone verification, admin password plus MFA, session creation, expiry, revocation, login throttling, and manual recovery for a lost phone.
+- Authorization: decide whether an identified actor may perform an operation, and enforce that policy inside the relevant use-case implementation rather than only in guards, controllers, or frontend code.
+- Customer-data protection: keep PII access restrictions and audit semantics at the identity/access seam; the admin surface remains a caller of those policies.
+- Identity-dependent workflows: keep guest-to-user cart merge and permission or recovery states consistent without exposing session storage mechanics to cart or checkout callers.
+- External identity effects: keep SMS, OTP, and other identity providers behind adapters so provider-specific failures do not leak into session or authorization rules.
+
+Avoid both extremes: a shallow `Auth` pass-through module that only moves session data, and a giant security module that owns every user-related concern. `Users`, `Admin`, cart, checkout, and support should retain their own domain behavior while depending on the shared identity/access guarantees they need. The five design directions should express auth, permission, locked, MFA, and session-revocation states as visual adapters over that shared behavior.
+
+Evidence for this candidate is already present in the `Backend module boundaries`, `Data model outline`, `State ownership`, `Security baseline`, `P0 launch features`, and `Interaction and data contracts` sections, plus the corresponding account, security/session, permission-error, and admin-MFA states in the design READMEs.
+
+#### Confirmed first-release decisions
+
+The architecture interview confirmed the following small, strong boundaries. Deferred authentication and commerce features stay out of the first release until real product evidence requires them.
+
+**Identity and access**
+
+- Use one shared `Identity & Access` module for customer authentication, admin authentication, sessions, roles, permissions, MFA, sensitive-PII access, and security audit events. `Users`, `Admin`, cart, checkout, and support keep their own domain behavior.
+- Use a normalized, verified phone number as the unique customer identity. Email is optional; do not add usernames, social login, passkeys, SSO, or email login in the first release.
+- Customer sign-in uses a six-digit OTP that expires after five minutes, is single-use, allows five attempts, and has a 60-second resend cooldown. A new code invalidates the previous one. Hash codes at rest, rate-limit by phone/IP/device, return generic errors, and never log OTP values.
+- Keep customer and admin access paths separate. Customers use phone OTP; admins use a password plus TOTP and recovery codes. A customer session can never become an admin session. Lost-phone recovery is a manual support process, and changing a phone number verifies both the old and new numbers before revoking all sessions.
+- Store durable sessions in PostgreSQL and temporary OTP, cooldown, attempt, and rate-limit data in Redis. Use an opaque `__Host-` secure, httpOnly, `SameSite=Lax`, `Path=/` cookie; rotate sessions after authentication or privilege changes and support immediate revocation.
+- Use 30-day idle/90-day maximum customer sessions and 8-hour idle/24-hour maximum admin sessions. Do not add refresh tokens until mobile or third-party clients create a real need.
+- Enforce authorization inside use cases with three fixed staff roles: `support`, `operations`, and `admin`. Keep permissions explicit and deny by default; do not build custom roles or a policy engine. Support may request refunds, admin approves and executes them, and operations cannot refund money.
+- Keep staff access to customer data least-privileged: support sees only what a case needs, operations sees full shipping data during fulfillment, and admin access to sensitive PII is audited. Never expose OTPs, session tokens, passwords, or payment secrets.
+- Allow guest checkout. Verify the phone during checkout, merge a guest cart only after successful verification with server truth winning conflicts, and let guests view an order only with the order number plus a fresh phone OTP.
+- Record security and sensitive admin actions in an append-only `AuditEvent`; never record OTPs, tokens, passwords, or payment secrets. Cookie-authenticated state-changing requests require a CSRF token in a custom header and `Origin` verification; `GET` must not mutate state.
+
+**Checkout and order consistency**
+
+- One checkout application service owns final validation, pricing, inventory reservation, order creation, payment attempts, recovery, and operator-visible audit behavior. The browser never supplies authoritative totals or status.
+- Do not reserve inventory in the cart. At final checkout, recheck price and stock, create a 15-minute reservation with the pending order, and release it when payment fails or expires.
+- Keep order status and payment status separate. Payment moves through `pending`, `paid`, `failed`, and `refunded`; order fulfillment moves through `pending_payment`, `confirmed`, `preparing`, `shipped`, and `delivered`, with `cancelled` or `returned` as ending states.
+- Only a verified provider callback or server reconciliation can mark a payment as paid. Admin reconciliation must check the provider transaction ID; it cannot freely mark an order as paid. Store a unique provider event ID so duplicate callbacks are harmless.
+- Require an idempotency key for each checkout attempt so duplicate clicks and network retries reuse the same order/payment attempt instead of creating duplicates.
+- Save immutable order-time snapshots for product identity, SKU, options, quantity, prices, tax, shipping, discounts, totals, and delivery address. After submission, customers cannot edit the order; cancellation is allowed only before fulfillment and paid cancellations create refunds.
+- Operations changes fulfillment statuses, support can cancel before fulfillment, and admin can override a status only with a reason and audit event. Customers can read status but cannot write it.
+
+**Commercial and fulfillment scope**
+
+- Store money as integer toman values across the database, payment boundary, refunds, discounts, shipping, and reports. Never mix rial and toman silently.
+- Start with one Iranian payment gateway and online payment only. Keep the gateway behind `PaymentGateway`; do not add cash on delivery or multiple gateways in the first release.
+- Support nationwide delivery with one shipping method and fixed rates by destination. Keep carrier-specific behavior behind `ShippingProvider`; add live quotes and multiple carriers later.
+- Accept return requests within seven days of delivery for unused, unwashed, tagged items. Support reviews requests; there is no direct exchange flow at launch.
+- Refund approved returns to the original payment method. The store pays return shipping for damaged, incorrect, or defective items; the customer pays for size, color, or preference returns. Do not support arbitrary partial refunds at launch.
+
 ### Data model outline
 
 The first Prisma schema should include at least:
@@ -234,7 +317,7 @@ Important modeling rules:
 - Add indexes for every high-volume lookup: product slug, SKU, order number, user email/phone, status plus created date, and active promotion windows.
 - Use soft deletion or archival for products and categories that appear in historic orders.
 - Keep payment provider IDs and webhook payload hashes unique where idempotency requires it.
-- Store money in the smallest integer unit selected by the business and document whether it is rial or toman. Never mix units silently.
+- Store all money as integer toman values. Never mix rial and toman silently.
 
 ### API shape
 
@@ -626,8 +709,8 @@ Starting targets:
 
 - Keep PostgreSQL, Redis, object-storage management, and admin services off the public internet.
 - Use least-privilege database roles and separate migration credentials from runtime credentials.
-- Use secure, httpOnly, same-site session cookies or another documented session design; do not store long-lived access tokens in localStorage.
-- Add password hashing, login throttling, reset-token expiry, admin MFA, and audit logs.
+- Use an opaque PostgreSQL-backed session in a secure, httpOnly, `SameSite=Lax`, `__Host-` cookie; do not store long-lived access tokens in localStorage.
+- Hash admin passwords, expire OTP challenges and recovery codes, throttle login attempts, require admin MFA, and record sensitive actions in audit logs.
 - Validate all input at the API boundary with Zod/class-validator and enforce authorization inside use cases.
 - Verify payment and shipping webhook signatures; make handlers idempotent.
 - Redact tokens, payment payloads, passwords, and personal data from logs.
@@ -922,7 +1005,7 @@ Weekly dashboard:
 
 ### Phase 0 — Decisions and validation
 
-- Confirm the final brand, audience segments within women’s, men’s, and children’s clothing, backend currency storage unit, return policy, shipping regions, payment options, and support channels.
+- Confirm the final brand, audience segments within women’s, men’s, and children’s clothing, support channel, and remaining provider choices.
 - Complete all five Figma directions, compare them at equivalent scope, select the production baseline, and approve responsive/RTL screens.
 - Pilot two Iranian hosting providers using the scorecard and restore drill.
 - Confirm domain, analytics, ad-channel eligibility, and current legal/compliance requirements with local counsel or qualified advisors.
@@ -951,7 +1034,7 @@ Weekly dashboard:
 
 ### Phase 3 — Identity and cart
 
-- Add account registration/login/reset and session policy.
+- Add phone-OTP customer sign-in, separate admin password/TOTP, and the confirmed session policy.
 - Add guest cart, persistent cart, cart merge, quantity/variant validation, and stock checks.
 - Add address management and customer-facing order history shell.
 
@@ -999,21 +1082,21 @@ The repository has no application code yet, so the following are planned checks 
 ### Local engineering checks
 
 ```bash
-pnpm install
-pnpm typecheck
-pnpm lint
-pnpm test
-pnpm build
+bun install
+bun run typecheck
+bun run lint
+bun run test
+bun run build
 docker compose config
 ```
 
 ### Database and API checks
 
 ```bash
-pnpm prisma migrate deploy
-pnpm prisma db seed
-pnpm test:integration
-pnpm test:e2e
+bunx prisma migrate deploy
+bunx prisma db seed
+bun run test:integration
+bun run test:e2e
 ```
 
 Cover at minimum:
@@ -1043,8 +1126,7 @@ Cover at minimum:
 These must be resolved before implementation is considered ready to start:
 
 - What is the final brand name, domain, logo, and tone of voice?
-- Will the database and payment boundary store money as rial or toman integers? Customer-facing interfaces will display toman.
-- Which payment gateway, shipping carriers, SMS provider, and support channel are available and contractually approved?
+- Which payment gateway, shipping provider, SMS provider, and support channel are available and contractually approved?
 - Which two Iranian hosting providers pass the pilot scorecard and restore drill?
 - Is PostgreSQL managed or self-hosted, and who owns patching and backup verification?
 - What is the launch budget, gross margin, allowable CAC, and minimum viable order volume?

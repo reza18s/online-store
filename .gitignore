@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.turbo/
+*.tsbuildinfo
+
+.env
+.env.*
+!.env.example
+
+bun-debug.log*
+.DS_Store

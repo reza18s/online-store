@@ -1,0 +1,149 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "NOVA: Start frontend",
+      "type": "shell",
+      "command": "bun run dev",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Start API",
+      "type": "shell",
+      "command": "bun run dev:api",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Start worker",
+      "type": "shell",
+      "command": "bun run dev:worker",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Start infrastructure",
+      "type": "shell",
+      "command": "docker compose --env-file .env.example -f infra/docker/compose.yml up -d",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Generate Prisma client",
+      "type": "shell",
+      "command": "bun run db:generate",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Typecheck",
+      "type": "shell",
+      "command": "bun run typecheck",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$tsc",
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Lint",
+      "type": "shell",
+      "command": "bun run lint",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Test",
+      "type": "shell",
+      "command": "bun run test",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Build",
+      "type": "shell",
+      "command": "bun run build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": "$tsc",
+      "presentation": {
+        "group": "nova",
+        "panel": "dedicated",
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "NOVA: Start full stack",
+      "dependsOn": [
+        "NOVA: Start infrastructure",
+        "NOVA: Start frontend",
+        "NOVA: Start API",
+        "NOVA: Start worker"
+      ],
+      "dependsOrder": "parallel",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

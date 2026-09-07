@@ -1,10 +1,10 @@
 # NOVA Store Context
 
-Status: workspace scaffold only. No storefront, API, worker, database schema, authentication flow, or checkout feature has been implemented.
+Status: Phase 1 engineering foundation. Commerce use cases are not implemented yet.
 
 ## Product boundary
 
-- Single-merchant Iran-first clothing store.
+- Single-merchant, Iran-first clothing store for women, men, and children.
 - Customer-facing and persisted money values use integer toman values.
 - Nationwide delivery starts with one shipping method and fixed destination rates.
 - Online payment starts with one gateway behind a provider adapter.
@@ -19,8 +19,15 @@ Status: workspace scaffold only. No storefront, API, worker, database schema, au
 - **Payment:** a separate lifecycle from fulfillment; only a verified provider callback or server reconciliation can confirm payment.
 - **Audit event:** an append-only record for security events and sensitive operational actions; it must not contain secrets.
 
-## Setup boundary
+## Ownership boundaries
 
-This initial setup creates the workspace structure, package identity, shared TypeScript defaults, and local infrastructure definition. Bun is the workspace package manager. The setup intentionally does not create application source, install feature dependencies, run containers, select production providers, or add production credentials.
+- `apps/api` owns HTTP mapping and application orchestration.
+- `packages/db` owns Prisma schema/client access and database lifecycle helpers.
+- `packages/api-client` owns transport-safe response/error types and query-key conventions.
+- `packages/ui` owns reusable visual primitives and design tokens, not commerce behavior.
+- `apps/web` owns route composition and local UI/cart intent; server truth remains with TanStack Query.
+- `apps/worker` owns asynchronous jobs and provider effects once those capabilities are implemented.
 
-See [README.md](README.md) for the full product scope, confirmed architecture decisions, and remaining provider/operations decisions.
+## Current setup boundary
+
+This foundation does not select production providers, add credentials, or implement payment, SMS, shipping, authentication, catalog CRUD, checkout, or admin mutations. Those changes require the decision gates and sequencing in [`arch.md`](arch.md).

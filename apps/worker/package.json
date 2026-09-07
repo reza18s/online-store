@@ -1,5 +1,15 @@
 {
   "name": "@nova/worker",
   "private": true,
-  "version": "0.0.0"
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "bun --watch src/main.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "bun dist/main.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@nova/config": "workspace:*",
+    "@nova/db": "workspace:*"
+  }
 }

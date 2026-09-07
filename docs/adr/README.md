@@ -1,3 +1,3 @@
 # Architecture decision records
 
-Record durable decisions here once implementation begins. The current confirmed decisions are summarized in [CONTEXT.md](../../CONTEXT.md) and [README.md](../../README.md).
+Durable decisions live here. The current foundation decision is [ADR-0001](0001-foundation.md); product and provider decisions that are still open remain documented in [`arch.md`](../../arch.md).

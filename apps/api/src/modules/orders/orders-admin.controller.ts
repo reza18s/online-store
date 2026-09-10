@@ -24,6 +24,10 @@ import {
   type AdminOrderSummaryView,
 } from './orders.service';
 
+type AdminOrderDetailResponse = Omit<AdminOrderDetail, 'payment'> & {
+  payment: Omit<NonNullable<AdminOrderDetail['payment']>, 'redirectUrl'> | null;
+};
+
 @Controller('admin/orders')
 @UseGuards(StaffAuthGuard, StaffRoleGuard)
 @RequireStaffRoles('support', 'operations', 'admin')
@@ -45,7 +49,7 @@ export class OrdersAdminController {
   public async detail(
     @Param('orderNumber') orderNumber: string,
     @Req() request: StaffRequest,
-  ): Promise<ApiEnvelope<AdminOrderDetail>> {
+  ): Promise<ApiEnvelope<AdminOrderDetailResponse>> {
     return this.envelope(
       request,
       toAdminOrderDetail(await this.orders.getForStaff(this.staff(request), orderNumber)),
@@ -58,7 +62,7 @@ export class OrdersAdminController {
     @Param('orderNumber') orderNumber: string,
     @Body() input: AdminOrderStatusDto,
     @Req() request: StaffRequest,
-  ): Promise<ApiEnvelope<AdminOrderDetail>> {
+  ): Promise<ApiEnvelope<AdminOrderDetailResponse>> {
     return this.envelope(
       request,
       toAdminOrderDetail(
@@ -73,7 +77,7 @@ export class OrdersAdminController {
     @Param('orderNumber') orderNumber: string,
     @Body() input: AdminShipmentUpdateDto,
     @Req() request: StaffRequest,
-  ): Promise<ApiEnvelope<AdminOrderDetail>> {
+  ): Promise<ApiEnvelope<AdminOrderDetailResponse>> {
     return this.envelope(
       request,
       toAdminOrderDetail(await this.orders.updateShipment(this.staff(request), orderNumber, input)),
@@ -86,7 +90,7 @@ export class OrdersAdminController {
     @Param('orderNumber') orderNumber: string,
     @Body() input: AdminReturnReviewDto,
     @Req() request: StaffRequest,
-  ): Promise<ApiEnvelope<AdminOrderDetail>> {
+  ): Promise<ApiEnvelope<AdminOrderDetailResponse>> {
     return this.envelope(
       request,
       toAdminOrderDetail(
@@ -140,7 +144,7 @@ function toAdminOrderSummary(source: AdminOrderSummaryView): AdminOrderSummary {
   };
 }
 
-function toAdminOrderDetail(source: AdminOrderDetailView): AdminOrderDetail {
+function toAdminOrderDetail(source: AdminOrderDetailView): AdminOrderDetailResponse {
   return {
     ...toCustomerOrderSummary(source),
     customer: source.customer,
@@ -172,7 +176,6 @@ function toAdminOrderDetail(source: AdminOrderDetailView): AdminOrderDetail {
       ? {
           status: source.payment.status,
           amountToman: source.payment.amountToman,
-          redirectUrl: source.payment.redirectUrl,
           createdAt: source.payment.createdAt.toISOString(),
           paidAt: source.payment.paidAt?.toISOString() ?? null,
         }

@@ -202,11 +202,13 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
     });
   }
   if (path.startsWith('#product/')) {
+    const slug = decodePathSegment(path.slice('#product/'.length));
     return createSeoDocument({
       origin,
       title: 'NOVA | محصول',
       description: 'جزئیات و مشخصات محصولات نوا.',
-      canonicalPath: null,
+      canonicalPath: slug ? `/product/${encodeURIComponent(slug)}` : null,
+      noIndex: !slug,
     });
   }
   if (path === '#home' || path === '#') {

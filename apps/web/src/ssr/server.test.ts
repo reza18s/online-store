@@ -82,6 +82,7 @@ test('keeps product JSON-LD catalog-first when resolver structured data conflict
         '@context': 'https://schema.org',
         '@type': 'Product',
         name: 'Resolver override that must not win',
+        description: 'Resolver description that must not win in Product JSON-LD',
         offers: { price: '1' },
       },
     },
@@ -121,7 +122,9 @@ test('keeps product JSON-LD catalog-first when resolver structured data conflict
     (productJsonLd.offers as { availability: string }).availability,
     'https://schema.org/InStock',
   );
-  assert.equal(productJsonLd.description, 'رویه‌ای سبک برای روزهای روشن.');
+  assert.equal(context.seo.description, 'رویه‌ای سبک برای روزهای روشن.');
+  assert.equal(productJsonLd.description, product.description);
+  assert.doesNotMatch(context.bodyHtml, /Resolver description that must not win/);
   assert.deepEqual(
     (breadcrumbJsonLd.itemListElement as Array<{ name: string }>).map((item) => item.name),
     ['خانه', 'زنانه', 'مانتوی لینن آوا'],
@@ -303,10 +306,10 @@ test('keeps private, system, and asset paths out of resolver lookup and indexing
   assert.deepEqual(calls, []);
 });
 
-test('returns a controlled noindex 404 for missing static assets', async () => {
+test('returns controlled asset headers for GET and HEAD requests', async () => {
   const server = createWebServer({
     ...optionsBase,
-    staticRoot: fileURLToPath(new URL('../../dist/', import.meta.url)),
+    staticRoot: fileURLToPath(new URL('../../public/', import.meta.url)),
     template: '<html><head></head><body><div id="root"></div></body></html>',
   });
   await new Promise<void>((resolve, reject) => {
@@ -317,6 +320,22 @@ test('returns a controlled noindex 404 for missing static assets', async () => {
   try {
     const address = server.address();
     if (!address || typeof address === 'string') throw new Error('Server did not expose a port.');
+    const assetUrl = `http://127.0.0.1:${address.port}/assets/nova-product-linen-overshirt.webp`;
+    const assetResponse = await fetch(assetUrl);
+    assert.equal(assetResponse.status, 200);
+    assert.equal(assetResponse.headers.get('cache-control'), 'public, max-age=31536000, immutable');
+    assert.equal(assetResponse.headers.get('x-robots-tag'), 'noindex, nofollow');
+    assert.ok((await assetResponse.arrayBuffer()).byteLength > 0);
+
+    const assetHeadResponse = await fetch(assetUrl, { method: 'HEAD' });
+    assert.equal(assetHeadResponse.status, 200);
+    assert.equal(
+      assetHeadResponse.headers.get('cache-control'),
+      'public, max-age=31536000, immutable',
+    );
+    assert.equal(assetHeadResponse.headers.get('x-robots-tag'), 'noindex, nofollow');
+    assert.equal(await assetHeadResponse.text(), '');
+
     const response = await fetch(
       `http://127.0.0.1:${address.port}/assets/__missing-seo-001-asset__.webp`,
     );
@@ -324,6 +343,15 @@ test('returns a controlled noindex 404 for missing static assets', async () => {
     assert.equal(response.headers.get('cache-control'), 'no-store');
     assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow');
     assert.equal(await response.text(), 'Not found');
+
+    const headResponse = await fetch(
+      `http://127.0.0.1:${address.port}/assets/__missing-seo-001-asset__.webp`,
+      { method: 'HEAD' },
+    );
+    assert.equal(headResponse.status, 404);
+    assert.equal(headResponse.headers.get('cache-control'), 'no-store');
+    assert.equal(headResponse.headers.get('x-robots-tag'), 'noindex, nofollow');
+    assert.equal(await headResponse.text(), '');
   } finally {
     await new Promise<void>((resolve, reject) => {
       server.close((error) => (error ? reject(error) : resolve()));

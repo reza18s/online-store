@@ -40,11 +40,13 @@ media therefore remain the source of truth for that graph. HTML and JSON
 contexts are escaped before insertion.
 
 The server emits a small useful initial body containing the route heading,
-description, and safe product/content links. The existing client bundle then
-starts with an injected internal hash route (`#product/...`, `#category/...`,
-or `#content/...`) and keeps the current hash-router interaction model. The
-new `#content/:slug` route reads the published content endpoint and renders
-plain text/body blocks; it does not render arbitrary HTML.
+description, and safe product/content links. When the root carries the
+`data-nova-ssr="true"` marker, the existing client bundle hydrates that markup;
+an unmarked client-only root continues through the `createRoot` fallback. The
+bundle then starts with an injected internal hash route (`#product/...`,
+`#category/...`, or `#content/...`) and keeps the current hash-router
+interaction model. The new `#content/:slug` route reads the published content
+endpoint and renders plain text/body blocks; it does not render arbitrary HTML.
 
 Private, account, auth, admin, cart, checkout, order, and return paths are
 never in the sitemap and receive `noindex, nofollow` metadata. System and asset

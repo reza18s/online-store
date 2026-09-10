@@ -80,6 +80,14 @@ test('client public content stays indexable while catalog compatibility routes a
   assert.equal(category.title, 'NOVA | زنانه');
   assert.equal(category.canonicalUrl, 'https://nova.example/category/women');
 
+  const product = clientSeoForHashRoute('#product/linen-overshirt', 'https://nova.example');
+  assert.equal(product.robots, 'index, follow');
+  assert.equal(product.canonicalUrl, 'https://nova.example/product/linen-overshirt');
+
+  const invalidProduct = clientSeoForHashRoute('#product/bad%2Fslug', 'https://nova.example');
+  assert.equal(invalidProduct.robots, 'noindex, nofollow');
+  assert.equal(invalidProduct.canonicalUrl, null);
+
   for (const route of [
     '#products',
     '#products/women?sort=newest&color=red',

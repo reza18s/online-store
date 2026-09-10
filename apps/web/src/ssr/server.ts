@@ -168,6 +168,10 @@ function productIsAvailable(product: CatalogProduct): boolean {
   return product.available && product.stockStatus !== 'OUT_OF_STOCK';
 }
 
+function catalogProductDescription(product: CatalogProduct): string {
+  return product.description ?? product.shortDescription ?? `جزئیات و مشخصات ${product.name}.`;
+}
+
 function productAvailabilityLabel(product: CatalogProduct): string {
   if (!productIsAvailable(product)) return 'ناموجود';
   return product.stockStatus === 'LOW_STOCK' ? 'رو به اتمام' : 'موجود';
@@ -214,11 +218,7 @@ function productBreadcrumbJsonLd(
   };
 }
 
-function productJsonLd(
-  origin: string,
-  product: CatalogProduct,
-  description: string,
-): Record<string, unknown> {
+function productJsonLd(origin: string, product: CatalogProduct): Record<string, unknown> {
   const images =
     product.media.length > 0 ? product.media.map((media) => media.url) : [product.imageUrl];
   const priceToman = product.priceToman;
@@ -234,7 +234,7 @@ function productJsonLd(
     '@type': 'Product',
     '@id': `${productUrl}#product`,
     name: product.name,
-    description,
+    description: catalogProductDescription(product),
     ...(imageUrls.length > 0 ? { image: imageUrls } : {}),
     url: productUrl,
     ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}),
@@ -548,8 +548,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         fetcher,
       );
       const fallback = metadataFallback(origin, route);
-      const productDescription =
-        product.description ?? product.shortDescription ?? `جزئیات و مشخصات ${product.name}.`;
+      const productDescription = catalogProductDescription(product);
       const seo = seoDocumentFromMetadata(
         origin,
         {
@@ -557,7 +556,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
           title: `NOVA | ${product.name}`,
           description: productDescription,
           imagePath: imagePath(product),
-          jsonLd: productJsonLd(origin, product, productDescription),
+          jsonLd: productJsonLd(origin, product),
         },
         resolution.metadata ? { ...resolution.metadata, structuredData: null } : null,
       );
@@ -566,11 +565,10 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         hashRoute: routeHash(route),
         seo: {
           ...seo,
-          jsonLd:
-            seo.robots === 'index, follow' ? productJsonLd(origin, product, seo.description) : null,
+          jsonLd: seo.robots === 'index, follow' ? productJsonLd(origin, product) : null,
         },
         status: 200,
-        bodyHtml: productBody(product, seo.description),
+        bodyHtml: productBody(product, productDescription),
         cacheControl: publicCache,
       };
     }
@@ -848,7 +846,7 @@ async function serveStatic(
       'Cache-Control': noStoreCache,
       'X-Robots-Tag': 'noindex, nofollow',
     });
-    response.end('Not found');
+    response.end(request.method === 'HEAD' ? undefined : 'Not found');
     return true;
   }
   response.writeHead(200, {
@@ -856,6 +854,10 @@ async function serveStatic(
     'Cache-Control': 'public, max-age=31536000, immutable',
     'X-Robots-Tag': 'noindex, nofollow',
   });
+  if (request.method === 'HEAD') {
+    response.end();
+    return true;
+  }
   createReadStream(filePath)
     .on('error', () => response.destroy())
     .pipe(response);

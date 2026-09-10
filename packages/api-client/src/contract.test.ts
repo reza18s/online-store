@@ -296,12 +296,16 @@ test('covered request DTOs and client interfaces match OpenAPI field sets', () =
     CartMergeConflict: 'CartMergeConflict',
     CheckoutQuoteLine: 'CheckoutQuoteLine',
     CheckoutQuote: 'CheckoutQuote',
+    CheckoutPayment: 'CheckoutPayment',
     CheckoutOrder: 'CheckoutOrder',
     CustomerOrderSummary: 'CustomerOrderSummary',
     CustomerOrderPage: 'CustomerOrderPage',
+    CustomerOrderPayment: 'CustomerOrderPayment',
     CustomerOrderDetail: 'CustomerOrderDetail',
     AdminOrderSummary: 'AdminOrderSummary',
     AdminOrderPage: 'AdminOrderPage',
+    AdminOrderPayment: 'AdminOrderPayment',
+    AdminOrderDetail: 'AdminOrderDetail',
     AdminPaymentAttempt: 'AdminPaymentAttempt',
     AdminPaymentPage: 'AdminPaymentPage',
     ContentBlock: 'ContentBlock',
@@ -318,6 +322,25 @@ test('covered request DTOs and client interfaces match OpenAPI field sets', () =
       [...typeFields(typeName)].sort(),
       typeName,
     );
+  }
+});
+
+test('admin order payment contracts exclude redirectUrl while customer and checkout retain it', () => {
+  const adminOrderDetail = contract.components.schemas.AdminOrderDetail;
+  assert.ok(adminOrderDetail);
+  assert.equal(schemaFields('AdminOrderDetail').has('redirectUrl'), false);
+  assert.equal(adminOrderDetail.required?.includes('redirectUrl'), false);
+  assert.doesNotMatch(JSON.stringify(adminOrderDetail), /redirectUrl/);
+  assert.equal(schemaFields('AdminOrderPayment').has('redirectUrl'), false);
+  const adminOrderPayment = contract.components.schemas.AdminOrderPayment;
+  assert.ok(adminOrderPayment);
+  assert.equal(adminOrderPayment.required?.includes('redirectUrl'), false);
+
+  for (const schemaName of ['CustomerOrderPayment', 'CheckoutPayment']) {
+    const paymentSchema = contract.components.schemas[schemaName];
+    assert.ok(paymentSchema);
+    assert.equal(schemaFields(schemaName).has('redirectUrl'), true, schemaName);
+    assert.equal(paymentSchema.required?.includes('redirectUrl'), true, schemaName);
   }
 });
 

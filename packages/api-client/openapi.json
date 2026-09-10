@@ -1720,6 +1720,21 @@
         },
         "additionalProperties": false
       },
+      "CustomerOrderPayment": {
+        "type": "object",
+        "required": ["status", "amountToman", "redirectUrl", "createdAt", "paidAt"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "REDIRECTED", "SUCCEEDED", "FAILED", "EXPIRED", "CANCELLED"]
+          },
+          "amountToman": { "type": "integer" },
+          "redirectUrl": { "type": ["string", "null"], "format": "uri-reference" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "paidAt": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
       "CustomerOrderDetail": {
         "type": "object",
         "required": [
@@ -1758,7 +1773,9 @@
           "updatedAt": { "type": "string", "format": "date-time" },
           "items": { "type": "array" },
           "address": { "type": ["object", "null"] },
-          "payment": { "type": ["object", "null"] },
+          "payment": {
+            "oneOf": [{ "$ref": "#/components/schemas/CustomerOrderPayment" }, { "type": "null" }]
+          },
           "shipment": { "type": ["object", "null"] },
           "events": { "type": "array" },
           "refunds": { "type": "array" },
@@ -1819,14 +1836,77 @@
         "additionalProperties": false
       },
       "AdminOrderDetail": {
-        "allOf": [
-          { "$ref": "#/components/schemas/CustomerOrderDetail" },
-          {
-            "type": "object",
-            "required": ["customer"],
-            "properties": { "customer": { "type": ["object", "null"] } }
-          }
-        ]
+        "type": "object",
+        "required": [
+          "orderId",
+          "orderNumber",
+          "status",
+          "paymentStatus",
+          "subtotalToman",
+          "discountToman",
+          "shippingToman",
+          "taxToman",
+          "totalToman",
+          "currency",
+          "createdAt",
+          "updatedAt",
+          "customer",
+          "items",
+          "address",
+          "payment",
+          "shipment",
+          "events",
+          "refunds",
+          "returnRequest"
+        ],
+        "properties": {
+          "orderId": { "type": "string" },
+          "orderNumber": { "type": "string" },
+          "status": { "type": "string" },
+          "paymentStatus": { "type": "string" },
+          "subtotalToman": { "type": "integer" },
+          "discountToman": { "type": "integer" },
+          "shippingToman": { "type": "integer" },
+          "taxToman": { "type": "integer" },
+          "totalToman": { "type": "integer" },
+          "currency": { "const": "TOMAN" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "customer": { "type": ["object", "null"] },
+          "items": {
+            "type": "array",
+            "items": { "type": "object" }
+          },
+          "address": { "type": ["object", "null"] },
+          "payment": {
+            "oneOf": [{ "$ref": "#/components/schemas/AdminOrderPayment" }, { "type": "null" }]
+          },
+          "shipment": { "type": ["object", "null"] },
+          "events": {
+            "type": "array",
+            "items": { "type": "object" }
+          },
+          "refunds": {
+            "type": "array",
+            "items": { "type": "object" }
+          },
+          "returnRequest": { "type": ["object", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "AdminOrderPayment": {
+        "type": "object",
+        "required": ["status", "amountToman", "createdAt", "paidAt"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "REDIRECTED", "SUCCEEDED", "FAILED", "EXPIRED", "CANCELLED"]
+          },
+          "amountToman": { "type": "integer" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "paidAt": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "additionalProperties": false
       },
       "AdminPaymentPage": {
         "type": "object",

@@ -686,6 +686,13 @@ export interface CustomerOrderPayment {
   paidAt: string | null;
 }
 
+export interface AdminOrderPayment {
+  status: CheckoutPaymentAttemptStatus;
+  amountToman: number;
+  createdAt: string;
+  paidAt: string | null;
+}
+
 export type OrderRefundStatus = 'PENDING' | 'SUCCEEDED' | 'FAILED';
 
 export interface CustomerOrderRefund {
@@ -787,8 +794,15 @@ export interface AdminOrderPage {
   limit: number;
 }
 
-export interface AdminOrderDetail extends CustomerOrderDetail {
+export interface AdminOrderDetail extends CustomerOrderSummary {
   customer: AdminOrderCustomer | null;
+  items: CustomerOrderItem[];
+  address: CustomerOrderAddress | null;
+  payment: AdminOrderPayment | null;
+  shipment: CustomerOrderShipment | null;
+  events: CustomerOrderEvent[];
+  refunds: CustomerOrderRefund[];
+  returnRequest: CustomerReturnRequest | null;
 }
 
 export type AdminAuditActorType = 'CUSTOMER' | 'STAFF' | 'SYSTEM';

@@ -68,6 +68,7 @@ export type {
   AdminOrderCustomer,
   AdminOrderDetail,
   AdminOrderListQuery,
+  AdminOrderPayment,
   AdminReturnReviewInput,
   AdminReturnReviewStatus,
   AdminOrderStatusInput,

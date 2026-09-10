@@ -21,5 +21,6 @@ The check fails when a controller route is added, removed, or renamed without up
 - `POST /v1/cart/items` and `POST /v1/checkout` accept the `idempotency-key` header. Checkout also requires a customer session.
 - Cart reads and item mutations support a guest cart cookie; `POST /v1/cart/merge` requires a customer session and may return `409 CART_MERGE_CONFLICT` with typed conflict details.
 - Customer order and checkout routes require customer authentication. Admin order reads require `support`, `operations`, or `admin`; fulfillment mutations require `operations` or `admin`; return review requires `support` or `admin`. Admin payments and content require `admin`.
+- Checkout and customer order payment objects retain `redirectUrl` because those responses may return a customer payment redirect. Admin order detail payment objects intentionally omit `redirectUrl`, including when the underlying payment attempt has one.
 
 The artifact records route presence for auth, address, inventory, audit, coupon, notification, SEO, and payment-callback routes without claiming that their detailed schemas are complete in this task. Their existing module tests and security-owned boundaries remain the source of truth until those surfaces receive their own contract expansion.

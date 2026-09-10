@@ -6,7 +6,6 @@ import {
   useState,
   type FormEvent,
   type ReactNode,
-  type SVGProps,
 } from 'react';
 
 import { Button } from '@nova/ui';
@@ -17,7 +16,6 @@ import type {
   AdminInventoryItem,
   AdminOrderSummary,
   CartView,
-  CatalogSearchSuggestion,
   CheckoutOrderStatus,
   CheckoutShippingMethod,
   CustomerAddress,
@@ -52,6 +50,15 @@ import {
   useRequestCustomerOrderReturn,
 } from './features/orders/orders-api';
 import { useCheckoutQuote, useSubmitCheckout } from './features/checkout/checkout-api';
+import { Icon, type IconName } from './shared/icon';
+import {
+  parseHashRoute,
+  useHashRoute,
+  useScrollToTop,
+  type Audience,
+  type PreviewState,
+} from './shared/hash-route';
+import { Header, Logo, MenuDrawer, MobileBottomNav, SearchDialog } from './shared/site-shell';
 import {
   toStorefrontProduct,
   toStorefrontProductDetail,
@@ -59,7 +66,6 @@ import {
   useCatalogFacets,
   useCatalogProduct,
   useCatalogProducts,
-  useCatalogSuggestions,
   type CatalogFacetFilters,
   type CatalogFilters,
   type StorefrontProduct,
@@ -73,255 +79,6 @@ import {
   useRemoveCartItem,
   useUpdateCartItem,
 } from './features/cart/cart-api';
-
-type IconName =
-  | 'arrow-left'
-  | 'arrow-right'
-  | 'bag'
-  | 'bell'
-  | 'book'
-  | 'calendar'
-  | 'check'
-  | 'chevron-down'
-  | 'close'
-  | 'dress'
-  | 'edit'
-  | 'eye'
-  | 'filter'
-  | 'grid'
-  | 'heart'
-  | 'home'
-  | 'info'
-  | 'instagram'
-  | 'layers'
-  | 'menu'
-  | 'more-vertical'
-  | 'package'
-  | 'plus'
-  | 'refresh'
-  | 'rotate'
-  | 'search'
-  | 'send'
-  | 'settings'
-  | 'shirt'
-  | 'sparkles'
-  | 'tag'
-  | 'truck'
-  | 'user'
-  | 'users'
-  | 'warehouse'
-  | 'warning';
-
-type IconProps = SVGProps<SVGSVGElement> & {
-  name: IconName;
-  size?: number;
-};
-
-const iconPaths: Record<IconName, ReactNode> = {
-  'arrow-left': <path d="m9 5 7 7-7 7" />,
-  'arrow-right': <path d="m15 5-7 7 7 7" />,
-  bag: (
-    <>
-      <path d="M5 8.5h14l-1 11H6l-1-11Z" />
-      <path d="M8.5 8.5V6a3.5 3.5 0 0 1 7 0v2.5" />
-    </>
-  ),
-  bell: (
-    <>
-      <path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 8.5h18C21 16 18 16 18 9Z" />
-      <path d="M10 21h4" />
-    </>
-  ),
-  book: (
-    <>
-      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H11v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" />
-      <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H13v16h4.5a2.5 2.5 0 0 1 2.5 2.5v-16Z" />
-    </>
-  ),
-  calendar: (
-    <>
-      <rect x="3.5" y="5" width="17" height="15" rx="2" />
-      <path d="M7 3v4M17 3v4M3.5 9h17" />
-    </>
-  ),
-  check: <path d="m5 12 4.5 4.5L19 7" />,
-  'chevron-down': <path d="m6 9 6 6 6-6" />,
-  close: <path d="m6 6 12 12M18 6 6 18" />,
-  dress: (
-    <>
-      <path d="M9 4.5a3 3 0 0 0 6 0" />
-      <path d="m9 6-2 4 2 1-3 8h8l-3-8 2-1-2-4" />
-      <path d="m15 6 2 4-2 1 3 8h-8" />
-    </>
-  ),
-  edit: (
-    <>
-      <path d="m4 16.5-.7 4.2 4.2-.7L19 8.5 15.5 5 4 16.5Z" />
-      <path d="m13.5 7 3.5 3.5M4 20.5l3.5-3.5" />
-    </>
-  ),
-  eye: (
-    <>
-      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
-      <circle cx="12" cy="12" r="2.5" />
-    </>
-  ),
-  filter: (
-    <>
-      <path d="M4 5h16" />
-      <path d="M7 12h10" />
-      <path d="M10 19h4" />
-    </>
-  ),
-  grid: (
-    <>
-      <rect x="4" y="4" width="6" height="6" rx="1" />
-      <rect x="14" y="4" width="6" height="6" rx="1" />
-      <rect x="4" y="14" width="6" height="6" rx="1" />
-      <rect x="14" y="14" width="6" height="6" rx="1" />
-    </>
-  ),
-  heart: (
-    <path d="M20.8 8.8c0 5.2-8.8 10.4-8.8 10.4S3.2 14 3.2 8.8A4.7 4.7 0 0 1 12 6.5a4.7 4.7 0 0 1 8.8 2.3Z" />
-  ),
-  home: (
-    <>
-      <path d="m3.5 10.5 8.5-7 8.5 7" />
-      <path d="M5.5 9.5v10h13v-10M9 19.5v-5h6v5" />
-    </>
-  ),
-  info: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 10.5v5M12 7.5h.01" />
-    </>
-  ),
-  instagram: (
-    <>
-      <rect x="4" y="4" width="16" height="16" rx="4" />
-      <circle cx="12" cy="12" r="3.5" />
-      <path d="M17.5 6.5h.01" />
-    </>
-  ),
-  layers: (
-    <>
-      <path d="m12 3 8 4.5-8 4.5-8-4.5L12 3Z" />
-      <path d="m4 12 8 4.5 8-4.5M4 16.5 12 21l8-4.5" />
-    </>
-  ),
-  menu: <path d="M4 7h16M4 12h16M4 17h16" />,
-  'more-vertical': (
-    <>
-      <circle cx="12" cy="5" r="1" />
-      <circle cx="12" cy="12" r="1" />
-      <circle cx="12" cy="19" r="1" />
-    </>
-  ),
-  package: (
-    <>
-      <path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Z" />
-      <path d="m4.5 7.8 7.5 4.2 7.5-4.2M12 12v9" />
-    </>
-  ),
-  plus: <path d="M12 5v14M5 12h14" />,
-  refresh: (
-    <>
-      <path d="M20 11a8 8 0 0 0-13.6-5.7L4 7.5" />
-      <path d="M4 4v3.5h3.5M4 13a8 8 0 0 0 13.6 5.7l2.4-2.2" />
-      <path d="M20 20v-3.5h-3.5" />
-    </>
-  ),
-  rotate: (
-    <>
-      <path d="M4 12a8 8 0 0 1 13.6-5.7L20 8.5" />
-      <path d="M20 5v3.5h-3.5M20 12a8 8 0 0 1-13.6 5.7L4 15.5" />
-      <path d="M4 19v-3.5h3.5" />
-    </>
-  ),
-  search: (
-    <>
-      <circle cx="10.8" cy="10.8" r="6.8" />
-      <path d="m16 16 4.5 4.5" />
-    </>
-  ),
-  send: <path d="m4 4 16 8-16 8 3-8-3-8Zm3 8h13" />,
-  settings: (
-    <>
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.6V20a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H6v-2.6h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V5h2.6v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v2.6H21a1.7 1.7 0 0 0-1.6 1Z" />
-    </>
-  ),
-  shirt: (
-    <>
-      <path d="m8 5 4 2 4-2 4 3-2.5 4-2-1v9h-7v-9l-2 1L4 8l4-3Z" />
-      <path d="M10 6.5a2.2 2.2 0 0 0 4 0" />
-    </>
-  ),
-  sparkles: (
-    <>
-      <path d="m8 3 1.2 3.8L13 8l-3.8 1.2L8 13l-1.2-3.8L3 8l3.8-1.2L8 3Z" />
-      <path d="m17 12 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3ZM17 3v3M18.5 4.5h-3" />
-    </>
-  ),
-  tag: (
-    <>
-      <path d="M4 4h7l9 9-7 7-9-9V4Z" />
-      <circle cx="8" cy="8" r="1" />
-    </>
-  ),
-  truck: (
-    <>
-      <path d="M3 6h11v10H3zM14 9h4l3 3v4h-7V9Z" />
-      <circle cx="7" cy="18" r="2" />
-      <circle cx="18" cy="18" r="2" />
-    </>
-  ),
-  user: (
-    <>
-      <circle cx="12" cy="8" r="3.5" />
-      <path d="M4.5 20a7.5 7.5 0 0 1 15 0" />
-    </>
-  ),
-  users: (
-    <>
-      <circle cx="9" cy="8" r="3" />
-      <path d="M3 19a6 6 0 0 1 12 0M16 5.5a3 3 0 0 1 0 5.8M17 14a5 5 0 0 1 4 5" />
-    </>
-  ),
-  warehouse: (
-    <>
-      <path d="m3 9 9-5 9 5v11H3V9Z" />
-      <path d="M7 20v-6h10v6M7 10h.01M12 10h.01M17 10h.01" />
-    </>
-  ),
-  warning: (
-    <>
-      <path d="m12 3 9 16H3l9-16Z" />
-      <path d="M12 9v4M12 16h.01" />
-    </>
-  ),
-};
-
-function Icon({ name, size = 20, ...props }: IconProps) {
-  return (
-    <svg
-      aria-hidden="true"
-      fill="none"
-      height={size}
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="1.6"
-      viewBox="0 0 24 24"
-      width={size}
-      {...props}
-    >
-      {iconPaths[name]}
-    </svg>
-  );
-}
-
-type Audience = 'women' | 'men' | 'children';
 
 type Product = StorefrontProduct;
 
@@ -416,16 +173,6 @@ const categories: Category[] = [
   { label: 'تخفیف', href: '#products/sale', icon: 'tag' },
 ];
 
-const navItems = [
-  { label: 'زنانه', href: '#category/women' },
-  { label: 'مردانه', href: '#category/men' },
-  { label: 'بچگانه', href: '#category/children' },
-  { label: 'اکسسوری', href: '#products/accessories' },
-  { label: 'جدیدترین‌ها', href: '#products/new' },
-  { label: 'کالکشن‌ها', href: '#campaign' },
-  { label: 'تخفیف', href: '#products/sale' },
-];
-
 const audienceCopy: Record<
   Audience,
   { label: string; title: string; description: string; image: string }
@@ -514,14 +261,6 @@ function apiErrorMessage(error: unknown, fallback: string): string {
   return error instanceof Error ? error.message : fallback;
 }
 
-function decodeHashSegment(value: string): string {
-  try {
-    return decodeURIComponent(value);
-  } catch {
-    return value;
-  }
-}
-
 function setDocumentMetadata(title: string, description: string) {
   document.title = title;
   let descriptionTag = document.querySelector<HTMLMetaElement>('meta[name="description"]');
@@ -531,91 +270,6 @@ function setDocumentMetadata(title: string, description: string) {
     document.head.append(descriptionTag);
   }
   descriptionTag.content = description;
-}
-
-function useHashRoute() {
-  const [route, setRoute] = useState(() => window.location.hash || '#home');
-
-  useEffect(() => {
-    const onHashChange = () => setRoute(window.location.hash || '#home');
-    window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
-  }, []);
-
-  return route;
-}
-
-function useScrollToTop(route: string) {
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [route]);
-}
-
-function Logo({ descriptor = 'ATELIER EDITORIAL' }: { descriptor?: string } = {}) {
-  return (
-    <a
-      className="brand-lockup inline-flex w-max flex-col items-center leading-none"
-      href="#home"
-      aria-label="NOVA، صفحه اصلی"
-    >
-      <span className="brand-lockup__name">NOVA</span>
-      <span className="brand-lockup__descriptor !text-muted-foreground">{descriptor}</span>
-    </a>
-  );
-}
-
-type HeaderProps = {
-  cartCount: number;
-  onMenu: () => void;
-  onSearch: () => void;
-};
-
-function Header({ cartCount, onMenu, onSearch }: HeaderProps) {
-  return (
-    <header className="site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur">
-      <div className="shell site-header__inner mx-auto w-[calc(100%-2rem)] max-w-[1280px]">
-        <div className="site-header__nav-wrap flex items-center gap-3.5">
-          <button
-            className="icon-button site-header__menu"
-            type="button"
-            onClick={onMenu}
-            aria-label="باز کردن منو"
-          >
-            <Icon name="menu" />
-          </button>
-          <nav className="site-nav flex items-center" aria-label="دسته‌بندی‌های اصلی">
-            {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="site-nav__link">
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-
-        <Logo />
-
-        <div className="site-header__actions flex items-center gap-0.5">
-          <button className="icon-button" type="button" onClick={onSearch} aria-label="جست‌وجو">
-            <Icon name="search" />
-          </button>
-          <a className="icon-button site-header__account" href="#account" aria-label="حساب کاربری">
-            <Icon name="user" />
-          </a>
-          <a
-            className="cart-button inline-flex min-h-10 items-center gap-2 rounded-editorial bg-primary px-3 text-primary-foreground transition-transform duration-150 hover:-translate-y-px hover:bg-primary-hover"
-            href="#cart"
-            aria-label={`سبد خرید، ${cartCount} کالا`}
-          >
-            <Icon name="bag" size={18} />
-            <span className="cart-button__label">سبد</span>
-            <span className="cart-button__count" aria-hidden="true">
-              {cartCount}
-            </span>
-          </a>
-        </div>
-      </div>
-    </header>
-  );
 }
 
 type SectionHeadingProps = {
@@ -3418,15 +3072,6 @@ function AddressBookPage({
     </main>
   );
 }
-
-type PreviewState =
-  | 'cart-conflict'
-  | 'payment-pending'
-  | 'payment-failed'
-  | 'payment-recovery'
-  | 'offline'
-  | 'error'
-  | 'maintenance';
 
 const previewStateCopy: Record<
   PreviewState,
@@ -6320,266 +5965,6 @@ function NotFoundPage() {
   );
 }
 
-function MobileBottomNav({ cartCount }: { cartCount: number }) {
-  return (
-    <nav className="mobile-bottom-nav" aria-label="ناوبری سریع">
-      <a href="#home">
-        <Icon name="home" size={20} />
-        <span>خانه</span>
-      </a>
-      <a href="#products">
-        <Icon name="grid" size={20} />
-        <span>فروشگاه</span>
-      </a>
-      <a href="#search">
-        <Icon name="search" size={20} />
-        <span>جست‌وجو</span>
-      </a>
-      <a href="#cart">
-        <span className="mobile-bottom-nav__bag">
-          <Icon name="bag" size={20} />
-          {cartCount ? <b>{cartCount}</b> : null}
-        </span>
-        <span>سبد</span>
-      </a>
-      <a href="#account">
-        <Icon name="user" size={20} />
-        <span>حساب</span>
-      </a>
-    </nav>
-  );
-}
-
-function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const [query, setQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
-  const [recent, setRecent] = useState<string[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const suggestionQuery = useCatalogSuggestions(debouncedQuery, open);
-  const normalizedQuery = query.trim();
-
-  useEffect(() => {
-    const nextQuery = query.trim();
-    const timeout = window.setTimeout(() => setDebouncedQuery(nextQuery), 220);
-    return () => window.clearTimeout(timeout);
-  }, [query]);
-
-  useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
-
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(
-        window.localStorage.getItem('nova.recent-searches') ?? '[]',
-      ) as unknown;
-      if (Array.isArray(saved))
-        setRecent(saved.filter((item): item is string => typeof item === 'string').slice(0, 5));
-    } catch {
-      setRecent([]);
-    }
-  }, []);
-
-  const rememberSearch = (term: string) => {
-    const normalized = term.trim();
-    if (!normalized) return;
-    const next = [normalized, ...recent.filter((item) => item !== normalized)].slice(0, 5);
-    setRecent(next);
-    try {
-      window.localStorage.setItem('nova.recent-searches', JSON.stringify(next));
-    } catch {
-      // Local search history is an enhancement; private browsing may reject storage.
-    }
-  };
-
-  const submitSearch = (term: string) => {
-    const normalized = term.trim();
-    if (!normalized) return;
-    rememberSearch(normalized);
-    window.location.hash = `products?q=${encodeURIComponent(normalized)}`;
-    onClose();
-  };
-
-  const openSuggestion = (suggestion: CatalogSearchSuggestion) => {
-    rememberSearch(normalizedQuery);
-    const destination =
-      suggestion.type === 'CATEGORY'
-        ? `products?category=${encodeURIComponent(suggestion.slug)}`
-        : `product/${encodeURIComponent(suggestion.slug)}`;
-    window.location.hash = destination;
-    onClose();
-  };
-
-  if (!open) return null;
-  const suggestions = suggestionQuery.data ?? [];
-  const isSearching = Boolean(normalizedQuery);
-  const isWaitingForDebounce = isSearching && debouncedQuery !== normalizedQuery;
-  const isSuggestionPending = isSearching && (isWaitingForDebounce || suggestionQuery.isPending);
-  return (
-    <div
-      className="modal-layer fixed inset-0 z-[500] flex items-start justify-center"
-      role="presentation"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <section
-        className="search-dialog w-full max-w-3xl bg-surface shadow-float"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="search-title"
-        onKeyDown={(event) => {
-          if (event.key === 'Escape') onClose();
-        }}
-      >
-        <div className="search-dialog__top">
-          <div>
-            <span className="section-heading__eyebrow">NOVA / SEARCH</span>
-            <h2 id="search-title">چه چیزی پیدا می‌کنید؟</h2>
-          </div>
-          <button className="icon-button" type="button" onClick={onClose} aria-label="بستن جست‌وجو">
-            <Icon name="close" />
-          </button>
-        </div>
-        <form
-          className="search-field"
-          onSubmit={(event) => {
-            event.preventDefault();
-            submitSearch(query);
-          }}
-        >
-          <Icon name="search" size={19} />
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="جست‌وجوی محصول، دسته یا کالکشن"
-            aria-label="جست‌وجوی محصول، دسته یا کالکشن"
-          />
-        </form>
-        <div className="search-dialog__results" aria-live="polite">
-          <span className="section-heading__eyebrow">
-            {normalizedQuery ? 'نتایج جست‌وجو' : 'پیشنهادهای نوا'}
-          </span>
-          {isSuggestionPending ? (
-            <p className="search-empty">در حال جست‌وجو...</p>
-          ) : suggestionQuery.isError ? (
-            <div
-              className="flex items-center justify-between gap-3 py-4 text-sm text-warning"
-              role="alert"
-            >
-              <span>جست‌وجو در دسترس نیست.</span>
-              <button
-                className="text-primary underline"
-                type="button"
-                onClick={() => void suggestionQuery.refetch()}
-              >
-                تلاش دوباره
-              </button>
-            </div>
-          ) : suggestions.length ? (
-            suggestions.map((suggestion) => (
-              <a
-                href={
-                  suggestion.type === 'CATEGORY'
-                    ? `#products?category=${encodeURIComponent(suggestion.slug)}`
-                    : `#product/${encodeURIComponent(suggestion.slug)}`
-                }
-                key={`${suggestion.type}:${suggestion.id}`}
-                onClick={() => openSuggestion(suggestion)}
-              >
-                {suggestion.imageUrl ? (
-                  <img src={suggestion.imageUrl} alt={suggestion.imageAlt ?? ''} />
-                ) : (
-                  <span className="flex h-12 w-12 items-center justify-center bg-secondary text-muted-foreground">
-                    <Icon name={suggestion.type === 'CATEGORY' ? 'layers' : 'shirt'} size={19} />
-                  </span>
-                )}
-                <span>
-                  <strong>{suggestion.label}</strong>
-                  <small>{suggestion.type === 'CATEGORY' ? 'دسته‌بندی' : 'محصول'}</small>
-                </span>
-                <Icon name="arrow-left" size={16} />
-              </a>
-            ))
-          ) : normalizedQuery ? (
-            <p className="search-empty">نتیجه‌ای پیدا نشد؛ عبارت دیگری را امتحان کنید.</p>
-          ) : (
-            <p className="search-empty">برای شروع، نام محصول یا دسته را وارد کنید.</p>
-          )}
-          {!query.trim() && recent.length ? (
-            <div className="mt-5 border-t border-border pt-4">
-              <span className="section-heading__eyebrow">جست‌وجوهای اخیر</span>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {recent.map((item) => (
-                  <button
-                    className="border border-border bg-surface px-3 py-2 text-xs hover:border-primary hover:text-primary"
-                    type="button"
-                    key={item}
-                    onClick={() => {
-                      setQuery(item);
-                      submitSearch(item);
-                    }}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose, open]);
-  if (!open) return null;
-  return (
-    <div
-      className="modal-layer modal-layer--drawer fixed inset-0 z-[500] flex items-start"
-      role="presentation"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-    >
-      <aside
-        className="menu-drawer h-full max-w-[380px] w-[min(86vw,380px)] bg-surface shadow-float"
-        role="dialog"
-        aria-modal="true"
-        aria-label="منوی فروشگاه"
-      >
-        <div className="menu-drawer__top">
-          <Logo />
-          <button className="icon-button" type="button" onClick={onClose} aria-label="بستن منو">
-            <Icon name="close" />
-          </button>
-        </div>
-        <nav>
-          {navItems.map((item) => (
-            <a href={item.href} key={item.href} onClick={onClose}>
-              {item.label}
-              <Icon name="arrow-left" size={16} />
-            </a>
-          ))}
-        </nav>
-        <div className="menu-drawer__footer">
-          <a href="#account">ورود به حساب کاربری</a>
-          <a href="#support">پشتیبانی و تماس</a>
-        </div>
-      </aside>
-    </div>
-  );
-}
-
 function RouteView({
   route,
   cart,
@@ -6603,114 +5988,99 @@ function RouteView({
   onToggleWishlist: (slug: string) => void;
   onAdd: (product: Product) => void;
 }) {
-  const queryStart = route.indexOf('?');
-  const path = queryStart >= 0 ? route.slice(0, queryStart) : route;
-  const queryString = queryStart >= 0 ? route.slice(queryStart + 1) : '';
-  const audienceMatch = path.match(/^#(?:category|products)\/(women|men|children)$/);
-  if (path === '#home' || path === '#' || path === '#search')
-    return (
-      <HomePage isWishlisted={isWishlisted} onToggleWishlist={onToggleWishlist} onAdd={onAdd} />
-    );
-  if (path === '#auth' || path === '#auth/request') return <AuthPage mode="request" />;
-  if (path === '#auth/verify') return <AuthPage mode="verify" queryString={queryString} />;
-  if (path.startsWith('#category/'))
-    return (
-      <CategoryPage
-        audience={audienceMatch?.[1] as Audience | undefined}
-        isWishlisted={isWishlisted}
-        onToggleWishlist={onToggleWishlist}
-        onAdd={onAdd}
-      />
-    );
-  if (path === '#products' || path.startsWith('#products/')) {
-    const mode = path.split('/')[1] ?? '';
-    return (
-      <ProductsPage
-        audience={
-          mode && ['women', 'men', 'children'].includes(mode) ? (mode as Audience) : undefined
-        }
-        mode={mode}
-        queryString={queryString}
-        isWishlisted={isWishlisted}
-        onToggleWishlist={onToggleWishlist}
-        onAdd={onAdd}
-      />
-    );
+  const resolved = parseHashRoute(route);
+
+  switch (resolved.kind) {
+    case 'home':
+      return (
+        <HomePage isWishlisted={isWishlisted} onToggleWishlist={onToggleWishlist} onAdd={onAdd} />
+      );
+    case 'auth-request':
+      return <AuthPage mode="request" />;
+    case 'auth-verify':
+      return <AuthPage mode="verify" queryString={resolved.queryString} />;
+    case 'category':
+      return (
+        <CategoryPage
+          audience={resolved.audience}
+          isWishlisted={isWishlisted}
+          onToggleWishlist={onToggleWishlist}
+          onAdd={onAdd}
+        />
+      );
+    case 'products':
+      return (
+        <ProductsPage
+          audience={resolved.audience}
+          mode={resolved.mode}
+          queryString={resolved.queryString}
+          isWishlisted={isWishlisted}
+          onToggleWishlist={onToggleWishlist}
+          onAdd={onAdd}
+        />
+      );
+    case 'product':
+      return (
+        <ProductPage
+          slug={resolved.slug}
+          isWishlisted={isWishlisted}
+          onToggleWishlist={onToggleWishlist}
+          onAdd={onAdd}
+        />
+      );
+    case 'cart':
+      return (
+        <CartPage
+          cart={cart}
+          isLoading={cartLoading}
+          isError={cartError}
+          onRetry={onRetryCart}
+          onUpdateItem={onUpdateCartItem}
+          onRemoveItem={onRemoveCartItem}
+          isWishlisted={isWishlisted}
+          onToggleWishlist={onToggleWishlist}
+          onAdd={onAdd}
+        />
+      );
+    case 'preview-state':
+      return <PreviewStatePage state={resolved.state} />;
+    case 'checkout-confirmation':
+      return <ConfirmationPage queryString={resolved.queryString} />;
+    case 'checkout':
+      return (
+        <CheckoutPage
+          step={resolved.step}
+          queryString={resolved.queryString}
+          cart={cart}
+          cartLoading={cartLoading}
+          cartError={cartError}
+          onRetryCart={onRetryCart}
+        />
+      );
+    case 'account':
+      return <AccountPage section={resolved.section} />;
+    case 'address-list':
+      return <AddressBookPage />;
+    case 'address-create':
+      return <AddressBookPage mode="create" />;
+    case 'address-edit':
+      return <AddressBookPage mode="edit" addressId={resolved.addressId} />;
+    case 'order':
+      return <OrderPage orderNumber={resolved.orderNumber} />;
+    case 'return':
+      return (
+        <ReturnPage
+          mode={resolved.status ? 'status' : undefined}
+          queryString={resolved.queryString}
+        />
+      );
+    case 'editorial':
+      return <EditorialPage page={resolved.page} />;
+    case 'admin':
+      return <AdminPage page={resolved.page} />;
+    case 'not-found':
+      return <NotFoundPage />;
   }
-  if (path.startsWith('#product/'))
-    return (
-      <ProductPage
-        slug={path.split('/')[1] ?? ''}
-        isWishlisted={isWishlisted}
-        onToggleWishlist={onToggleWishlist}
-        onAdd={onAdd}
-      />
-    );
-  if (path === '#cart' || path === '#cart/empty')
-    return (
-      <CartPage
-        cart={cart}
-        isLoading={cartLoading}
-        isError={cartError}
-        onRetry={onRetryCart}
-        onUpdateItem={onUpdateCartItem}
-        onRemoveItem={onRemoveCartItem}
-        isWishlisted={isWishlisted}
-        onToggleWishlist={onToggleWishlist}
-        onAdd={onAdd}
-      />
-    );
-  if (path === '#cart/conflict') return <PreviewStatePage state="cart-conflict" />;
-  if (path === '#checkout/confirmation') return <ConfirmationPage queryString={queryString} />;
-  if (path === '#checkout/payment-pending') return <PreviewStatePage state="payment-pending" />;
-  if (path === '#checkout/payment-failed') return <PreviewStatePage state="payment-failed" />;
-  if (path === '#checkout/payment-recovery') return <PreviewStatePage state="payment-recovery" />;
-  if (path.startsWith('#checkout/'))
-    return (
-      <CheckoutPage
-        step={path.split('/')[1] ?? 'address'}
-        queryString={queryString}
-        cart={cart}
-        cartLoading={cartLoading}
-        cartError={cartError}
-        onRetryCart={onRetryCart}
-      />
-    );
-  if (path === '#account') return <AccountPage />;
-  if (path === '#account/addresses') return <AddressBookPage />;
-  if (path === '#account/addresses/create') return <AddressBookPage mode="create" />;
-  if (path === '#account/addresses/edit' || path.startsWith('#account/addresses/edit/')) {
-    const addressId = path.slice('#account/addresses/edit/'.length);
-    return <AddressBookPage mode="edit" addressId={addressId || undefined} />;
-  }
-  if (path.startsWith('#account/'))
-    return <AccountPage section={path.slice('#account/'.length) || 'dashboard'} />;
-  if (path.startsWith('#order/'))
-    return <OrderPage orderNumber={decodeHashSegment(path.slice('#order/'.length))} />;
-  if (path === '#return' || path === '#return/request') {
-    return <ReturnPage queryString={queryString} />;
-  }
-  if (path === '#return/status') return <ReturnPage mode="status" queryString={queryString} />;
-  if (['#campaign', '#guide', '#article', '#lookbook', '#about', '#trust'].includes(path))
-    return <EditorialPage page={path.slice(1)} />;
-  if (
-    path === '#size-guide' ||
-    path === '#shipping-policy' ||
-    path === '#returns-policy' ||
-    path === '#care-guide' ||
-    path === '#faq' ||
-    path === '#contact' ||
-    path === '#privacy' ||
-    path === '#terms' ||
-    path === '#support'
-  )
-    return <EditorialPage page={path.slice(1)} />;
-  if (path === '#state/offline') return <PreviewStatePage state="offline" />;
-  if (path === '#state/error') return <PreviewStatePage state="error" />;
-  if (path === '#state/maintenance') return <PreviewStatePage state="maintenance" />;
-  if (path === '#admin' || path.startsWith('#admin/'))
-    return <AdminPage page={path.slice('#admin'.length).replace(/^\//, '') || 'admin'} />;
-  return <NotFoundPage />;
 }
 
 export function App() {

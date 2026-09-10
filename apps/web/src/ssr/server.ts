@@ -3,7 +3,7 @@ import {
   type IncomingMessage,
   type ServerResponse,
 } from 'node:http';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import { createReadStream } from 'node:fs';
 import { dirname, extname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -559,7 +559,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
           imagePath: imagePath(product),
           jsonLd: productJsonLd(origin, product, productDescription),
         },
-        resolution.metadata,
+        resolution.metadata ? { ...resolution.metadata, structuredData: null } : null,
       );
       return {
         path: route.path,
@@ -567,11 +567,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         seo: {
           ...seo,
           jsonLd:
-            seo.robots === 'index, follow'
-              ? resolution.metadata?.structuredData == null
-                ? productJsonLd(origin, product, seo.description)
-                : seo.jsonLd
-              : null,
+            seo.robots === 'index, follow' ? productJsonLd(origin, product, seo.description) : null,
         },
         status: 200,
         bodyHtml: productBody(product, seo.description),
@@ -691,7 +687,12 @@ function sitemapXml(origin: string, paths: string[]): string {
 
 function isRecognizedSitemapPath(path: string): boolean {
   const route = parsePublicRenderPath(path);
-  return route.kind === 'home' || route.kind === 'category' || route.kind === 'product';
+  return (
+    route.kind === 'home' ||
+    route.kind === 'category' ||
+    route.kind === 'product' ||
+    route.kind === 'content'
+  );
 }
 
 async function indexableSitemapPaths(
@@ -823,16 +824,33 @@ function mimeType(path: string): string {
   );
 }
 
-function serveStatic(
+async function serveStatic(
   staticRoot: string,
   request: IncomingMessage,
   response: ServerResponse,
-): boolean {
+): Promise<boolean> {
   const requestPath = new URL(request.url ?? '/', 'http://localhost').pathname;
   if (!requestPath.startsWith('/assets/')) return false;
-  const filePath = normalize(join(staticRoot, requestPath));
-  if (!filePath.startsWith(`${normalize(staticRoot)}${process.platform === 'win32' ? '\\' : '/'}`))
-    return false;
+  const normalizedRoot = normalize(staticRoot);
+  const separator = process.platform === 'win32' ? '\\' : '/';
+  const rootPrefix = normalizedRoot.endsWith(separator)
+    ? normalizedRoot
+    : `${normalizedRoot}${separator}`;
+  const filePath = normalize(join(normalizedRoot, requestPath));
+  if (!filePath.startsWith(rootPrefix)) return false;
+  try {
+    const file = await stat(filePath);
+    if (!file.isFile()) return false;
+  } catch (error) {
+    if (!['ENOENT', 'ENOTDIR'].includes((error as NodeJS.ErrnoException).code ?? '')) throw error;
+    response.writeHead(404, {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Cache-Control': noStoreCache,
+      'X-Robots-Tag': 'noindex, nofollow',
+    });
+    response.end('Not found');
+    return true;
+  }
   response.writeHead(200, {
     'Content-Type': mimeType(filePath),
     'Cache-Control': 'public, max-age=31536000, immutable',
@@ -854,7 +872,7 @@ async function handleNodeRequest(
       response.writeHead(405, { Allow: 'GET, HEAD' }).end();
       return;
     }
-    if (serveStatic(options.staticRoot, request, response)) return;
+    if (await serveStatic(options.staticRoot, request, response)) return;
     const result = await handleRequest(
       new URL(request.url ?? '/', options.origin).toString(),
       options,

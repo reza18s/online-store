@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 import type { CatalogCategory, CatalogProduct, ContentPage, SeoResolution } from '@nova/api-client';
 
 import {
+  createWebServer,
   handleRequest,
   renderDocument,
   renderRoute,
@@ -67,7 +69,7 @@ function fixtureFetcher(responses: Record<string, unknown>, statuses: Record<str
   return { fetcher, calls };
 }
 
-test('renders a product with resolver metadata and catalog-derived Product JSON-LD', async () => {
+test('keeps product JSON-LD catalog-first when resolver structured data conflicts', async () => {
   const resolution: SeoResolution = {
     path: '/product/linen-overshirt',
     metadata: {
@@ -76,7 +78,12 @@ test('renders a product with resolver metadata and catalog-derived Product JSON-
       description: 'رویه‌ای سبک برای روزهای روشن.',
       canonicalUrl: '/product/linen-overshirt',
       noIndex: false,
-      structuredData: null,
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: 'Resolver override that must not win',
+        offers: { price: '1' },
+      },
     },
     redirect: null,
   };
@@ -89,6 +96,7 @@ test('renders a product with resolver metadata and catalog-derived Product JSON-
   assert.equal(context.status, 200);
   assert.equal(context.seo.title, 'مانتوی لینن آوا | NOVA');
   assert.equal(context.seo.canonicalUrl, 'https://nova.example/product/linen-overshirt');
+  assert.equal(context.seo.robots, 'index, follow');
   assert.match(context.bodyHtml, /مانتوی لینن آوا/);
   assert.match(context.bodyHtml, /وضعیت: موجود/);
   assert.match(context.bodyHtml, /product-detail__main-image/);
@@ -103,6 +111,11 @@ test('renders a product with resolver metadata and catalog-derived Product JSON-
   assert.ok(productJsonLd);
   assert.ok(breadcrumbJsonLd);
   assert.ok(organizationJsonLd);
+  assert.equal(productJsonLd.name, product.name);
+  assert.equal(
+    graph.some((entry) => entry.name === 'Resolver override that must not win'),
+    false,
+  );
   assert.equal((productJsonLd.offers as { price: string }).price, '24900000');
   assert.equal(
     (productJsonLd.offers as { availability: string }).availability,
@@ -288,6 +301,34 @@ test('keeps private, system, and asset paths out of resolver lookup and indexing
     assert.equal(context.seo.canonicalUrl, null, path);
   }
   assert.deepEqual(calls, []);
+});
+
+test('returns a controlled noindex 404 for missing static assets', async () => {
+  const server = createWebServer({
+    ...optionsBase,
+    staticRoot: fileURLToPath(new URL('../../dist/', import.meta.url)),
+    template: '<html><head></head><body><div id="root"></div></body></html>',
+  });
+  await new Promise<void>((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(0, '127.0.0.1', resolve);
+  });
+
+  try {
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('Server did not expose a port.');
+    const response = await fetch(
+      `http://127.0.0.1:${address.port}/assets/__missing-seo-001-asset__.webp`,
+    );
+    assert.equal(response.status, 404);
+    assert.equal(response.headers.get('cache-control'), 'no-store');
+    assert.equal(response.headers.get('x-robots-tag'), 'noindex, nofollow');
+    assert.equal(await response.text(), 'Not found');
+  } finally {
+    await new Promise<void>((resolve, reject) => {
+      server.close((error) => (error ? reject(error) : resolve()));
+    });
+  }
 });
 
 test('renders one managed head set and safely serializes the initial context', () => {

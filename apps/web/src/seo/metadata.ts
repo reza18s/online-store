@@ -230,6 +230,7 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
       origin,
       title: 'NOVA | فروشگاه پوشاک',
       description: 'انتخابی از لباس‌ها و اکسسوری‌های نوا برای روزهای پیش رو.',
+      noIndex: true,
     });
   }
   if (path === '#not-found') {

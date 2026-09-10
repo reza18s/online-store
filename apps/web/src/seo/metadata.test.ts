@@ -75,17 +75,28 @@ test('resolver metadata overrides fallbacks without changing the route contract'
   assert.deepEqual(seo.jsonLd, { managed: true });
 });
 
-test('client hash routes keep the existing copy while private routes become noindex', () => {
+test('client public content stays indexable while catalog compatibility routes are noindex', () => {
   const category = clientSeoForHashRoute('#category/women', 'https://nova.example');
   assert.equal(category.title, 'NOVA | زنانه');
   assert.equal(category.canonicalUrl, 'https://nova.example/category/women');
 
-  const products = clientSeoForHashRoute('#products/women', 'https://nova.example');
-  assert.equal(products.robots, 'index, follow');
+  for (const route of [
+    '#products',
+    '#products/women?sort=newest&color=red',
+    '#search?sort=newest',
+  ]) {
+    assert.equal(clientSeoForHashRoute(route, 'https://nova.example').robots, 'noindex, nofollow');
+  }
+
+  const content = clientSeoForHashRoute('#content/size-guide', 'https://nova.example');
+  assert.equal(content.robots, 'index, follow');
 
   const account = clientSeoForHashRoute('#account/orders', 'https://nova.example');
   assert.equal(account.robots, 'noindex, nofollow');
   assert.equal(account.canonicalUrl, null);
+
+  const temporaryState = clientSeoForHashRoute('#state/offline', 'https://nova.example');
+  assert.equal(temporaryState.robots, 'noindex, nofollow');
 
   const notFound = clientSeoForHashRoute('#not-found', 'https://nova.example');
   assert.equal(notFound.robots, 'noindex, nofollow');

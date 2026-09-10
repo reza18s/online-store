@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { StrictMode, type ReactNode } from 'react';
+import { StrictMode, type ReactNode, useEffect, useState } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
 
 import '@nova/ui/styles.css';
@@ -28,21 +28,41 @@ const appRenderers: AppRenderers = {
   },
 };
 
-export function mountApp(rootElement: HTMLElement, renderers: AppRenderers = appRenderers): void {
-  const app = (
+function InteractiveApp() {
+  return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>
     </StrictMode>
   );
+}
 
-  if (rootElement.dataset.novaSsr === 'true') {
-    renderers.hydrate(rootElement, app);
+function StaticSsrHandoff({ shellHtml }: { shellHtml: string }) {
+  const [interactive, setInteractive] = useState(false);
+
+  useEffect(() => {
+    setInteractive(true);
+  }, []);
+
+  if (!interactive) {
+    return <div data-nova-ssr-shell="true" dangerouslySetInnerHTML={{ __html: shellHtml }} />;
+  }
+
+  return <InteractiveApp />;
+}
+
+export function mountApp(rootElement: HTMLElement, renderers: AppRenderers = appRenderers): void {
+  const shellElement = rootElement.firstElementChild;
+  if (
+    rootElement.dataset.novaSsr === 'true' &&
+    shellElement?.getAttribute('data-nova-ssr-shell') === 'true'
+  ) {
+    renderers.hydrate(rootElement, <StaticSsrHandoff shellHtml={shellElement.innerHTML} />);
     return;
   }
 
-  renderers.create(rootElement, app);
+  renderers.create(rootElement, <InteractiveApp />);
 }
 
 if (typeof document !== 'undefined') {

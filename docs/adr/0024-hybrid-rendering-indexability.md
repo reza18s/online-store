@@ -41,12 +41,17 @@ contexts are escaped before insertion.
 
 The server emits a small useful initial body containing the route heading,
 description, and safe product/content links. When the root carries the
-`data-nova-ssr="true"` marker, the existing client bundle hydrates that markup;
-an unmarked client-only root continues through the `createRoot` fallback. The
-bundle then starts with an injected internal hash route (`#product/...`,
-`#category/...`, or `#content/...`) and keeps the current hash-router
-interaction model. The new `#content/:slug` route reads the published content
-endpoint and renders plain text/body blocks; it does not render arbitrary HTML.
+`data-nova-ssr="true"` marker, its body is wrapped in a
+`data-nova-ssr-shell="true"` child. The client captures that shell's inner HTML
+and hydrates a static handoff component whose first render reproduces the same
+marker and HTML through `dangerouslySetInnerHTML`; its `useEffect` then swaps
+to the interactive App. An unmarked client-only root continues through the
+`createRoot` fallback, so the handcrafted server body is never hydrated as the
+different App tree. The bundle starts with an injected internal hash route
+(`#product/...`, `#category/...`, or `#content/...`) and keeps the current
+hash-router interaction model. The new `#content/:slug` route reads the
+published content endpoint and renders plain text/body blocks; it does not
+render arbitrary HTML.
 
 Private, account, auth, admin, cart, checkout, order, and return paths are
 never in the sitemap and receive `noindex, nofollow` metadata. System and asset

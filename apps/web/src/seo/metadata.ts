@@ -1,5 +1,7 @@
 import type { SeoMetadata } from '@nova/api-client';
 
+import { parseHashRoute } from '../shared/hash-route';
+
 export type SeoDocumentType = 'website' | 'product' | 'article';
 
 export interface SeoDocument {
@@ -244,13 +246,28 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
     });
   }
 
+  const parsed = parseHashRoute(path);
+  if (parsed.kind === 'editorial') {
+    return createSeoDocument({
+      origin,
+      title: 'NOVA | Atelier Editorial',
+      description: siteDescription,
+    });
+  }
+  if (parsed.kind === 'content') {
+    return createSeoDocument({
+      origin,
+      title: 'NOVA | محتوا',
+      description: siteDescription,
+      noIndex: true,
+    });
+  }
+
   return createSeoDocument({
     origin,
     title: 'NOVA | Atelier Editorial',
     description: siteDescription,
-    canonicalPath: path.startsWith('#content/')
-      ? `/content/${path.slice('#content/'.length)}`
-      : null,
+    noIndex: true,
   });
 }
 

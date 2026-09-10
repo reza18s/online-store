@@ -1359,6 +1359,11 @@ function isNotFoundError(error: unknown): boolean {
   return typeof error === 'object' && error !== null && 'status' in error && error.status === 404;
 }
 
+function normalizeSeoPath(path: string): string {
+  const normalized = path.trim().replace(/\/+$/, '');
+  return normalized || '/';
+}
+
 function ProductDetailSkeleton() {
   return (
     <div
@@ -1407,13 +1412,34 @@ function ProductPage({
   }, [productQuery.data?.id]);
 
   useEffect(() => {
-    if (!productQuery.data) return;
     const initial = readInitialRenderContext();
-    if (
+    const initialMatches =
       initial &&
       initial.hashRoute === `#product/${slug}` &&
-      initial.path === window.location.pathname
-    ) {
+      normalizeSeoPath(initial.path) === normalizeSeoPath(window.location.pathname);
+
+    if (productQuery.isError || !productQuery.data) {
+      if (productQuery.isPending) {
+        if (initialMatches) return;
+        applySeoDocument(
+          document,
+          clientSeoForHashRoute(`#product/${slug}`, window.location.origin),
+        );
+        return;
+      }
+      applySeoDocument(
+        document,
+        createSeoDocument({
+          origin: window.location.origin,
+          title: 'NOVA | محصول',
+          description: 'جزئیات و مشخصات محصولات نوا.',
+          noIndex: true,
+        }),
+      );
+      return;
+    }
+    if (initialMatches) {
+      applySeoDocument(document, initial.seo);
       return;
     }
     const product = toStorefrontProductDetail(productQuery.data);
@@ -1428,7 +1454,7 @@ function ProductPage({
         imagePath: product.image,
       }),
     );
-  }, [productQuery.data, slug]);
+  }, [productQuery.data, productQuery.isError, productQuery.isPending, slug]);
 
   if (productQuery.isPending) {
     return (
@@ -4049,6 +4075,46 @@ function EditorialPage({ page }: { page: string }) {
 
 function PublishedContentPage({ slug }: { slug: string }) {
   const query = useContentPage(slug);
+
+  useEffect(() => {
+    const initial = readInitialRenderContext();
+    const initialMatches =
+      initial &&
+      initial.hashRoute === `#content/${slug}` &&
+      normalizeSeoPath(initial.path) === normalizeSeoPath(window.location.pathname);
+
+    if (query.isError || !query.data) {
+      if (query.isPending && initialMatches) return;
+      applySeoDocument(document, clientSeoForHashRoute(`#content/${slug}`, window.location.origin));
+      return;
+    }
+    if (initialMatches) {
+      applySeoDocument(document, initial.seo);
+      return;
+    }
+
+    const description = query.data.body?.slice(0, 320) ?? query.data.title;
+    const canonicalPath = `/content/${encodeURIComponent(slug)}`;
+    applySeoDocument(
+      document,
+      createSeoDocument({
+        origin: window.location.origin,
+        title: `NOVA | ${query.data.title}`,
+        description,
+        canonicalPath,
+        type: 'article',
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: query.data.title,
+          description,
+          url: `${window.location.origin}${canonicalPath}`,
+          inLanguage: 'fa-IR',
+        },
+      }),
+    );
+  }, [query.data, query.isError, query.isPending, slug]);
+
   if (query.isPending) {
     return (
       <main className="shell inner-page mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background">
@@ -6176,10 +6242,13 @@ export function App() {
 
   useEffect(() => {
     const initial = readInitialRenderContext();
-    const seo =
-      initial && initial.hashRoute === route && initial.path === window.location.pathname
-        ? initial.seo
-        : clientSeoForHashRoute(route, window.location.origin);
+    const initialMatches =
+      initial &&
+      initial.hashRoute === route &&
+      normalizeSeoPath(initial.path) === normalizeSeoPath(window.location.pathname);
+    const isDataRoute = route.startsWith('#product/') || route.startsWith('#content/');
+    const seo = initialMatches ? initial.seo : clientSeoForHashRoute(route, window.location.origin);
+    if (isDataRoute && !initialMatches) return;
     applySeoDocument(document, seo);
   }, [route]);
 

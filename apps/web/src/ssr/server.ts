@@ -641,7 +641,7 @@ function stripManagedHead(template: string): string {
 
 export function renderDocument(template: string, context: RenderContext): string {
   const cleanTemplate = stripManagedHead(template);
-  const root = `<div id="root" data-nova-ssr="true">${context.bodyHtml}</div>`;
+  const root = `<div id="root" data-nova-ssr="true"><div data-nova-ssr-shell="true">${context.bodyHtml}</div></div>`;
   const contextScript = `<script>globalThis.__NOVA_RENDER_CONTEXT__=${safeJson({ path: context.path, hashRoute: context.hashRoute, seo: context.seo })};</script>`;
   return cleanTemplate
     .replace('</head>', `${renderHead(context.seo)}</head>`)

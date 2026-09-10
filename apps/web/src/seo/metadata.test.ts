@@ -97,7 +97,19 @@ test('client public content stays indexable while catalog compatibility routes a
   }
 
   const content = clientSeoForHashRoute('#content/size-guide', 'https://nova.example');
-  assert.equal(content.robots, 'index, follow');
+  assert.equal(content.robots, 'noindex, nofollow');
+  assert.equal(content.canonicalUrl, null);
+
+  const editorial = clientSeoForHashRoute('#campaign', 'https://nova.example');
+  assert.equal(editorial.robots, 'index, follow');
+
+  const unknown = clientSeoForHashRoute('#unrecognized', 'https://nova.example');
+  assert.equal(unknown.robots, 'noindex, nofollow');
+  assert.equal(unknown.canonicalUrl, null);
+
+  const invalidCategory = clientSeoForHashRoute('#category/unknown', 'https://nova.example');
+  assert.equal(invalidCategory.robots, 'noindex, nofollow');
+  assert.equal(invalidCategory.canonicalUrl, null);
 
   const account = clientSeoForHashRoute('#account/orders', 'https://nova.example');
   assert.equal(account.robots, 'noindex, nofollow');

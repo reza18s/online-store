@@ -382,6 +382,7 @@ test('renders one managed head set and safely serializes the initial context', (
   assert.equal((html.match(/<title>/g) ?? []).length, 1);
   assert.equal((html.match(/name="description"/g) ?? []).length, 1);
   assert.equal((html.match(/rel="canonical"/g) ?? []).length, 1);
+  assert.match(html, /<div id="root" data-nova-ssr="true"><div data-nova-ssr-shell="true">/);
   assert.match(html, /Title &lt;safe&gt;/);
   assert.match(html, /\\u003c\/script\\u003e/);
   assert.match(html, /__NOVA_RENDER_CONTEXT__/);

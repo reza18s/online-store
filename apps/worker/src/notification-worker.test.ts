@@ -25,13 +25,19 @@ function createDatabase(initial: FakeJob[]) {
         return jobs
           .filter(
             (job) =>
-              (job.status === 'PENDING' || job.status === 'PROCESSING') &&
-              job.availableAt <= NOW,
+              (job.status === 'PENDING' || job.status === 'PROCESSING') && job.availableAt <= NOW,
           )
           .sort((left, right) => left.availableAt.getTime() - right.availableAt.getTime())
-          .slice(0, take);
+          .slice(0, take)
+          .map((job) => ({ ...job }));
       },
-      updateMany: async ({ where, data }: { where: Record<string, unknown>; data: Record<string, unknown> }) => {
+      updateMany: async ({
+        where,
+        data,
+      }: {
+        where: Record<string, unknown>;
+        data: Record<string, unknown>;
+      }) => {
         const job = jobs.find((candidate) => candidate.id === where.id);
         if (!job) return { count: 0 };
         const status = where.status as 'PENDING' | 'PROCESSING' | { in: string[] } | undefined;
@@ -90,6 +96,64 @@ test('claims and marks a notification job sent once', async () => {
   assert.deepEqual(delivered, ['job-1']);
   assert.equal(fixture.jobs[0]?.status, 'SENT');
   assert.equal(fixture.jobs[0]?.attempts, 1);
+});
+
+test('reclaims an expired processing lease and marks the job sent', async () => {
+  const fixture = createDatabase([
+    job({
+      status: 'PROCESSING',
+      availableAt: new Date(NOW.getTime() - 1),
+    }),
+  ]);
+  const sender: NotificationSender = { send: async () => {} };
+
+  const result = await processNotificationBatch(fixture.database, sender, NOW);
+
+  assert.deepEqual(result, { claimed: 1, sent: 1, retried: 0, failed: 0 });
+  assert.equal(fixture.jobs[0]?.status, 'SENT');
+  assert.equal(fixture.jobs[0]?.attempts, 1);
+});
+
+test('duplicate workers allow only one conditional claim', async () => {
+  const fixture = createDatabase([job()]);
+  let deliveries = 0;
+  const sender: NotificationSender = {
+    send: async () => {
+      deliveries += 1;
+    },
+  };
+
+  const results = await Promise.all([
+    processNotificationBatch(fixture.database, sender, NOW),
+    processNotificationBatch(fixture.database, sender, NOW),
+  ]);
+
+  assert.equal(deliveries, 1);
+  assert.deepEqual(
+    results.sort((left, right) => left.claimed - right.claimed),
+    [
+      { claimed: 0, sent: 0, retried: 0, failed: 0 },
+      { claimed: 1, sent: 1, retried: 0, failed: 0 },
+    ],
+  );
+  assert.equal(fixture.jobs[0]?.status, 'SENT');
+});
+
+test('preserves capped retry scheduling after a provider failure', async () => {
+  const fixture = createDatabase([job({ attempts: 1 })]);
+  const sender: NotificationSender = {
+    send: async () => {
+      throw new Error('provider response must not be persisted');
+    },
+  };
+
+  const result = await processNotificationBatch(fixture.database, sender, NOW);
+
+  assert.deepEqual(result, { claimed: 1, sent: 0, retried: 1, failed: 0 });
+  assert.equal(fixture.jobs[0]?.status, 'PENDING');
+  assert.equal(fixture.jobs[0]?.attempts, 2);
+  assert.equal(fixture.jobs[0]?.availableAt.getTime(), NOW.getTime() + 60_000);
+  assert.equal(fixture.jobs[0]?.lastError, 'notification-delivery-failed');
 });
 
 test('retries provider failures and terminally fails after the attempt limit', async () => {

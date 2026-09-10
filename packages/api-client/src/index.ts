@@ -110,6 +110,7 @@ export type {
   CartView,
   ContentBlock,
   ContentPage,
+  ContentPageSummary,
   CheckoutRequestInput,
   CheckoutOrder,
   CheckoutOrderStatus,

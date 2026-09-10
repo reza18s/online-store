@@ -1,4 +1,4 @@
-import type { ContentPage as ContentPageResponse } from '@nova/api-client';
+import type { ContentPage as ContentPageResponse, ContentPageSummary } from '@nova/api-client';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@nova/db';
 
@@ -19,8 +19,18 @@ const publicContentPageSelect = {
   },
 } as const satisfies Prisma.ContentPageSelect;
 
+const publicContentPageSummarySelect = {
+  slug: true,
+  title: true,
+  updatedAt: true,
+} as const satisfies Prisma.ContentPageSelect;
+
 type PublicContentPageSource = Prisma.ContentPageGetPayload<{
   select: typeof publicContentPageSelect;
+}>;
+
+type PublicContentPageSummarySource = Prisma.ContentPageGetPayload<{
+  select: typeof publicContentPageSummarySelect;
 }>;
 
 export function normalizeContentSlug(value: string): string {
@@ -50,9 +60,28 @@ function toPublicContentPage(source: PublicContentPageSource): ContentPageRespon
   };
 }
 
+function toPublicContentPageSummary(source: PublicContentPageSummarySource): ContentPageSummary {
+  return {
+    slug: source.slug,
+    title: source.title,
+    updatedAt: source.updatedAt.toISOString(),
+  };
+}
+
 @Injectable()
 export class ContentPageService {
   public constructor(private readonly database: DatabaseService) {}
+
+  public async listPublishedPages(): Promise<ContentPageSummary[]> {
+    // The sitemap index must discover every published page, so this read is
+    // deliberately complete rather than silently truncated by a fixed take.
+    const pages = await this.database.prisma.contentPage.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: [{ slug: 'asc' }],
+      select: publicContentPageSummarySelect,
+    });
+    return pages.map(toPublicContentPageSummary);
+  }
 
   public async getPublishedPage(slugInput: string): Promise<ContentPageResponse> {
     const slug = normalizeContentSlug(slugInput);

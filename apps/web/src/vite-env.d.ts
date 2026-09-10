@@ -1,9 +1,17 @@
 declare module '*.css';
 
-interface ImportMetaEnv {
-  readonly DEV: boolean;
+import type { InitialRenderContext } from './seo/metadata';
+
+declare global {
+  interface ImportMetaEnv {
+    readonly DEV: boolean;
+  }
+
+  interface ImportMeta {
+    readonly env: ImportMetaEnv;
+  }
+
+  var __NOVA_RENDER_CONTEXT__: InitialRenderContext | undefined;
 }
 
-interface ImportMeta {
-  readonly env: ImportMetaEnv;
-}
+export {};

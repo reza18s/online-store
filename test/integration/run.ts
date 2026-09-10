@@ -11,7 +11,7 @@ import {
 
 const integrationDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = resolve(integrationDirectory, '..', '..');
-function selectedSuites(): readonly CommerceIntegrationSuite[] {
+export function selectedSuites(): readonly CommerceIntegrationSuite[] {
   const requested = process.env.NOVA_INTEGRATION_SUITE?.split(',')
     .map((value) => value.trim())
     .filter(Boolean);
@@ -29,6 +29,13 @@ function selectedSuites(): readonly CommerceIntegrationSuite[] {
     );
   }
   return selected;
+}
+
+export function isFullMatrix(suites: readonly CommerceIntegrationSuite[]): boolean {
+  return (
+    suites.length === commerceIntegrationSuites.length &&
+    commerceIntegrationSuites.every((suite) => suites.some((selected) => selected.id === suite.id))
+  );
 }
 
 function printOutput(output: string | null | undefined, stream: 'stdout' | 'stderr'): void {
@@ -84,13 +91,26 @@ function main(): void {
     return;
   }
 
-  console.log(`\nIntegration harness passed: ${suites.length} suite(s).`);
-  console.log('This command does not claim live database, provider, or browser coverage.');
+  if (isFullMatrix(suites)) {
+    console.log(
+      `\nPASS: complete deterministic commerce integration matrix (${suites.length} suites).`,
+    );
+  } else {
+    console.log(
+      `\nDIAGNOSTIC/PARTIAL: selected deterministic suites passed (${suites.length}/${commerceIntegrationSuites.length}); ` +
+        'the complete matrix was not run.',
+    );
+  }
+  console.log(
+    'This command does not claim live database, provider, browser, or concurrency coverage.',
+  );
 }
 
-try {
-  main();
-} catch (error) {
-  console.error(error instanceof Error ? error.message : error);
-  process.exitCode = 1;
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  try {
+    main();
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+  }
 }

@@ -4,3 +4,4 @@ coverage
 .vite
 bun.lock
 *.generated.*
+**/src/generated/**

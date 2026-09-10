@@ -23,11 +23,23 @@ module.exports = {
           DEFAULT: 'var(--muted)',
           foreground: 'var(--muted-foreground)',
         },
-        success: 'var(--success)',
-        warning: 'var(--warning)',
-        destructive: 'var(--destructive)',
+        success: {
+          DEFAULT: 'var(--success)',
+          100: 'var(--success-soft)',
+        },
+        warning: {
+          DEFAULT: 'var(--warning)',
+          100: 'var(--warning-soft)',
+        },
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          100: 'var(--error-soft)',
+        },
         'destructive-hover': 'var(--destructive-hover)',
-        info: 'var(--info)',
+        info: {
+          DEFAULT: 'var(--info)',
+          100: 'var(--info-soft)',
+        },
       },
       borderRadius: {
         control: '8px',

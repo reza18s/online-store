@@ -9,6 +9,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/coverage/**',
       '**/.vite/**',
+      '**/src/generated/**',
       'bun.lock',
       '**/*.d.ts',
     ],
@@ -73,6 +74,19 @@ export default tseslint.config(
   },
   {
     files: ['**/vite.config.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+        projectService: false,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-misused-promises': 'off',
+    },
+  },
+  {
+    files: ['**/prisma.config.ts'],
     languageOptions: {
       parserOptions: {
         project: false,

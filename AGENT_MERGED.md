@@ -2786,6 +2786,45 @@ Do not begin full NAE or QG work until AE reaches its completion gate.
 
 AE must not receive a scoring advantage merely because it was developed first.
 
+## Design Before Code Gate
+
+Every new non-trivial page, user flow, component family, or visual direction must pass through a visual design step before implementation begins.
+
+Required order:
+
+```text
+design brief and content hierarchy
+↓
+identify the exact page(s), state(s), and target viewport(s) needed for the next task
+↓
+create a visual design image or mockup for the exact page(s), state(s), and viewport(s)
+↓
+inspect the created design image and review it with the user for corrections or approval
+↓
+translate the approved direction into React + Tailwind + shared primitives
+↓
+render the implementation and compare it with the supplied reference(s)
+↓
+iterate until the implementation and supplied design direction agree
+```
+
+The created design image or mockup is the required pre-implementation visual source of truth for the next task. If the user supplies page image(s), screenshot(s), or design export(s), inspect them first and use them as constraints for the new design rather than ignoring or replacing them with a generic interpretation.
+
+Before implementation, the agent must:
+
+1. identify the exact page(s), flow(s), state(s), and viewport(s) required for the next implementation batch
+2. create the visual design image(s) or mockup(s) for the requested page(s) before writing page UI code
+3. inspect the created design image(s) at the intended target breakpoints and review them with the user
+4. incorporate the user's corrections or approval before beginning visual implementation
+5. inspect any user-supplied reference(s) rather than relying on filenames, metadata, prompts, or assumptions
+6. check the primary desktop view and at least one narrow mobile RTL view when those views are in scope
+7. identify the intended responsive behavior, states, content density, and image treatment from the approved design direction
+8. preserve the created design image(s), supplied reference(s), or clear references to them in the workspace when possible
+
+Only after this gate passes may the agent implement the screen. If a visual design image has not been created and reviewed, pause and complete that design step before coding. The implementation must use the approved visual decisions as its source of truth while preserving semantic HTML, keyboard access, WCAG 2.2 AA requirements, reduced-motion behavior, and real application contracts. Tailwind utilities and the established design tokens are the primary implementation path; do not replace the design step with ad-hoc CSS or code-first experimentation.
+
+After coding, perform a visual comparison against the approved design image(s) and any supplied reference(s) at the same target widths. If the rendered result materially differs, fix the implementation and explain the discrepancy; do not silently change the approved design direction. Do not mark the screen complete until the design artifact, any supplied reference(s), and the rendered implementation have all been inspected.
+
 ---
 
 # 71. Stage 1 — Audit Existing AE

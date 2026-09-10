@@ -1,12 +1,17 @@
-export { DatabaseClient, PrismaClient } from './client';
+export { DatabaseClient, Prisma, PrismaClient } from './client';
 export type {
   ActorType,
   CartKind,
   ContentStatus,
   InventoryReservationStatus,
+  NotificationStatus,
   OrderStatus,
   PaymentAttemptStatus,
   PaymentStatus,
+  PromotionRedemptionStatus,
+  RefundStatus,
+  ReturnReason,
+  ReturnRequestStatus,
   ProductStatus,
   PromotionType,
   ReviewStatus,
@@ -14,4 +19,4 @@ export type {
   ShipmentStatus,
   StockMovementType,
   UserStatus,
-} from '@prisma/client';
+} from './generated/prisma/client';

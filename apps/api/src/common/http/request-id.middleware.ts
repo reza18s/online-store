@@ -6,7 +6,19 @@ export interface RequestWithId {
 }
 
 export interface ResponseWithHeaders {
-  setHeader(name: string, value: string): void;
+  setHeader(name: string, value: string | string[]): void;
+  getHeader?(name: string): number | string | string[] | undefined;
+}
+
+export function appendSetCookie(response: ResponseWithHeaders, cookie: string): void {
+  const current = response.getHeader?.('Set-Cookie');
+  const cookies = Array.isArray(current)
+    ? current.map(String)
+    : typeof current === 'string'
+      ? [current]
+      : [];
+
+  response.setHeader('Set-Cookie', [...cookies, cookie]);
 }
 
 const requestIdPattern = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;

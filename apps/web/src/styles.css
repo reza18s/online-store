@@ -910,6 +910,11 @@ textarea:focus-visible {
   color: var(--warning);
 }
 
+.inline-message--error {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
 .inline-message--info {
   background: var(--info-soft);
   color: var(--info);

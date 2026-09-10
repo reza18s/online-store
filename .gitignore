@@ -5,6 +5,7 @@ coverage/
 .vite/
 .turbo/
 *.tsbuildinfo
+**/src/generated/
 
 .env
 .env.*

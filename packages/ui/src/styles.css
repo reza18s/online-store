@@ -25,8 +25,11 @@
   --accent-soft: var(--oxblood-100);
   --accent: var(--champagne-600);
   --success: #39705a;
+  --success-soft: #e4eee8;
   --warning: #87643a;
+  --warning-soft: #f5ead8;
   --info: #526b83;
+  --info-soft: #e6edf2;
   --destructive: var(--error-700);
   --destructive-hover: #8f312e;
 }

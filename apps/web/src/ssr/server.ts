@@ -693,17 +693,52 @@ function isRecognizedSitemapPath(path: string): boolean {
   );
 }
 
+function effectiveSitemapPath(
+  origin: string,
+  fallbackPath: string,
+  canonicalUrl: string | null,
+): string | null {
+  if (canonicalUrl === null) return fallbackPath;
+
+  const value = canonicalUrl.trim();
+  if (!value || value.startsWith('//') || value.includes('\\')) return null;
+
+  let site: URL;
+  let canonical: URL;
+  try {
+    site = new URL(origin);
+    canonical = value.startsWith('/') ? new URL(value, site) : new URL(value);
+  } catch {
+    return null;
+  }
+
+  if (
+    !['http:', 'https:'].includes(site.protocol) ||
+    canonical.origin !== site.origin ||
+    canonical.username ||
+    canonical.password ||
+    canonical.search ||
+    canonical.hash
+  ) {
+    return null;
+  }
+
+  const canonicalPath = canonical.pathname.replace(/\/+$/, '') || '/';
+  return isRecognizedSitemapPath(canonicalPath) ? canonicalPath : null;
+}
+
 async function indexableSitemapPaths(
   apiOrigin: string,
   paths: string[],
   fetcher: Fetcher,
+  origin: string,
 ): Promise<string[]> {
   const candidates = [...new Set(paths)].filter(isRecognizedSitemapPath).sort();
   const resolved = await Promise.all(
     candidates.map(async (path) => {
       const resolution = await getApi<SeoResolution>(apiOrigin, resolverPath(path), fetcher);
       if (resolution.redirect || resolution.metadata?.noIndex) return null;
-      return path;
+      return effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
     }),
   );
   return resolved.filter((path): path is string => path !== null);
@@ -745,7 +780,7 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
         .map((product) => `/product/${encodeURIComponent(product.slug)}`)
         .filter(isRecognizedSitemapPath),
     ];
-    const indexablePaths = await indexableSitemapPaths(options.apiOrigin, paths, fetcher);
+    const indexablePaths = await indexableSitemapPaths(options.apiOrigin, paths, fetcher, origin);
     return {
       status: 200,
       headers: new Headers({

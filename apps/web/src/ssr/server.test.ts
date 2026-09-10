@@ -459,6 +459,72 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
   assert.match(robots, /Sitemap: https:\/\/nova\.example\/sitemap\.xml/);
 });
 
+test('sitemap uses safe resolver canonicals and preserves null-canonical candidates', async () => {
+  const oldProduct = { ...product, slug: 'old' };
+  const unsafeProduct = { ...product, slug: 'unsafe' };
+  const fallbackProduct = { ...product, slug: 'fallback' };
+  const { fetcher } = fixtureFetcher({
+    '/v1/catalog/categories': [],
+    '/v1/catalog/products?limit=100&sort=newest&page=1': {
+      items: [oldProduct, unsafeProduct, fallbackProduct],
+      total: 3,
+      page: 1,
+      limit: 100,
+    },
+    '/v1/seo/resolve?path=%2F': {
+      path: '/',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fproduct%2Fold': {
+      path: '/product/old',
+      metadata: {
+        path: '/product/old',
+        title: 'قدیمی',
+        description: 'برای انتقال.',
+        canonicalUrl: '/product/new',
+        noIndex: false,
+        structuredData: null,
+      },
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fproduct%2Funsafe': {
+      path: '/product/unsafe',
+      metadata: {
+        path: '/product/unsafe',
+        title: 'ناامن',
+        description: 'canonical ناامن.',
+        canonicalUrl: 'https://evil.example/product/new',
+        noIndex: false,
+        structuredData: null,
+      },
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fproduct%2Ffallback': {
+      path: '/product/fallback',
+      metadata: {
+        path: '/product/fallback',
+        title: 'پشتیبان',
+        description: 'بدون canonical.',
+        canonicalUrl: null,
+        noIndex: false,
+        structuredData: null,
+      },
+      redirect: null,
+    } satisfies SeoResolution,
+  });
+
+  const sitemap = await sitemapResponse({ ...optionsBase, fetcher });
+  assert.equal(sitemap.status, 200);
+  const locations = [...sitemap.body.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
+  assert.deepEqual(locations, [
+    'https://nova.example/',
+    'https://nova.example/product/fallback',
+    'https://nova.example/product/new',
+  ]);
+  assert.doesNotMatch(sitemap.body, /product\/old|product\/unsafe|evil\.example/);
+});
+
 test('crawler generation fails closed when the API is unavailable', async () => {
   const { fetcher } = fixtureFetcher({}, {});
   const result = await sitemapResponse({ ...optionsBase, fetcher });

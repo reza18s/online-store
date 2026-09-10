@@ -374,6 +374,29 @@ test('OpenAPI route inventory matches every Nest controller route', () => {
   assert.deepEqual([...contractRoutes()].sort(), [...sourceRoutes()].sort());
 });
 
+test('public content index is complete, published-only, and separate from the detail route', () => {
+  const index = contract.paths['/v1/content/pages']?.get;
+  assert.ok(index, 'published content index route is missing');
+  assert.equal(index.operationId, 'contentPageIndex');
+  assert.deepEqual(index.security, []);
+  assert.equal(refName((index.responses as Record<string, unknown>)?.['200']), 'ContentPageIndex');
+  assert.equal(refName((index.responses as Record<string, unknown>)?.default), 'ApiError500');
+  assert.equal(refName((index.responses as Record<string, unknown>)?.['400']), 'ApiError400');
+  assert.equal(contract.paths['/v1/content/pages/{slug}']?.get?.operationId, 'contentPage');
+
+  assert.deepEqual([...schemaFields('ContentPageSummary')].sort(), ['slug', 'title', 'updatedAt']);
+  assert.equal(schemaFields('ContentPageSummary').has('body'), false);
+  assert.equal(schemaFields('ContentPageSummary').has('blocks'), false);
+  assert.deepEqual(contract.components.schemas.ContentPageIndex, {
+    type: 'array',
+    items: { $ref: '#/components/schemas/ContentPageSummary' },
+  });
+  assert.equal(
+    refName((contract.components.schemas.ApiEnvelopeContentPageIndex as Schema).properties?.data),
+    'ContentPageIndex',
+  );
+});
+
 test('frontend API transport paths resolve to inventoried contract routes', () => {
   const paths = new Set<string>();
   for (const file of sourceFiles(webSourceRoot)) {
@@ -463,6 +486,7 @@ test('covered request DTOs and client interfaces match OpenAPI field sets', () =
     AdminPaymentPage: 'AdminPaymentPage',
     ContentBlock: 'ContentBlock',
     ContentPage: 'ContentPage',
+    ContentPageSummary: 'ContentPageSummary',
     AdminContentPageListItem: 'AdminContentPageListItem',
     AdminContentPage: 'AdminContentPage',
     AdminContentPagePage: 'AdminContentPagePage',

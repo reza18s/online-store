@@ -61,6 +61,12 @@ export interface ContentPage {
   blocks: ContentBlock[];
 }
 
+export interface ContentPageSummary {
+  slug: string;
+  title: string;
+  updatedAt: string;
+}
+
 export type AdminContentStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 
 export interface AdminContentPageListItem {

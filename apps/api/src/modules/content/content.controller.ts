@@ -18,6 +18,7 @@ import type {
   ApiEnvelope,
   SeoResolution,
   ContentPage as ContentPageResponse,
+  ContentPageSummary,
 } from '@nova/api-client';
 
 import type { RequestWithId } from '../../common/http/request-id.middleware';
@@ -46,6 +47,11 @@ import { ContentPageService } from './content-page.service';
 @Controller('content')
 export class ContentController {
   public constructor(private readonly content: ContentPageService) {}
+
+  @Get('pages')
+  public async index(@Req() request: RequestWithId): Promise<ApiEnvelope<ContentPageSummary[]>> {
+    return this.envelope(request, await this.content.listPublishedPages());
+  }
 
   @Get('pages/:slug')
   public async page(

@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "bun --watch src/main.ts",
     "build": "tsc -p tsconfig.json",
+    "health": "bun src/health.ts",
     "start": "bun dist/main.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

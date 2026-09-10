@@ -1,0 +1,2287 @@
+{
+  "openapi": "3.1.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {
+    "title": "NOVA Store API",
+    "version": "0.1.0",
+    "description": "Stable transport contract for the NOVA API. Detailed schemas are authoritative for the catalog/facets, cart merge, checkout, customer orders, admin orders, admin payments, admin content, and health surfaces."
+  },
+  "servers": [{ "url": "http://localhost:4000", "description": "Local API" }],
+  "tags": [
+    { "name": "health" },
+    { "name": "catalog" },
+    { "name": "cart" },
+    { "name": "checkout" },
+    { "name": "customer-orders" },
+    { "name": "admin-orders" },
+    { "name": "admin-payments" },
+    { "name": "admin-content" },
+    { "name": "inventory" }
+  ],
+  "paths": {
+    "/health/live": {
+      "get": {
+        "operationId": "healthLive",
+        "tags": ["health"],
+        "x-nova-schema-status": "detailed",
+        "responses": {
+          "200": {
+            "description": "Liveness status",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/HealthStatus" } }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "healthReady",
+        "tags": ["health"],
+        "x-nova-schema-status": "detailed",
+        "responses": {
+          "200": {
+            "description": "Readiness status",
+            "content": {
+              "application/json": { "schema": { "$ref": "#/components/schemas/HealthStatus" } }
+            }
+          },
+          "503": { "$ref": "#/components/responses/ApiError503" }
+        }
+      }
+    },
+    "/v1/catalog/categories": {
+      "get": {
+        "operationId": "catalogCategories",
+        "tags": ["catalog"],
+        "x-nova-schema-status": "detailed",
+        "responses": { "200": { "$ref": "#/components/responses/CatalogCategoryList" } }
+      }
+    },
+    "/v1/catalog/facets": {
+      "get": {
+        "operationId": "catalogFacets",
+        "tags": ["catalog"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-query-dto": "CatalogFacetQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/CatalogFacets" } }
+      }
+    },
+    "/v1/catalog/products": {
+      "get": {
+        "operationId": "catalogProducts",
+        "tags": ["catalog"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-query-dto": "ProductListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/CatalogProductPage" } }
+      }
+    },
+    "/v1/catalog/products/{slug}": {
+      "get": {
+        "operationId": "catalogProduct",
+        "tags": ["catalog"],
+        "x-nova-schema-status": "detailed",
+        "parameters": [{ "$ref": "#/components/parameters/Slug" }],
+        "responses": { "200": { "$ref": "#/components/responses/CatalogProduct" } }
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "operationId": "catalogSearch",
+        "tags": ["catalog"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-query-dto": "ProductListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/CatalogProductPage" } }
+      }
+    },
+    "/v1/search/suggestions": {
+      "get": {
+        "operationId": "catalogSearchSuggestions",
+        "tags": ["catalog"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-query-dto": "SearchSuggestionsQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/CatalogSearchSuggestions" } }
+      }
+    },
+    "/v1/cart": {
+      "get": {
+        "operationId": "cartCurrent",
+        "tags": ["cart"],
+        "x-nova-schema-status": "detailed",
+        "responses": { "200": { "$ref": "#/components/responses/CartView" } }
+      }
+    },
+    "/v1/cart/items": {
+      "post": {
+        "operationId": "cartAddItem",
+        "tags": ["cart"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-request-dto": "CartItemMutationDto",
+        "x-nova-idempotency-key": true,
+        "requestBody": { "$ref": "#/components/requestBodies/CartItemMutation" },
+        "responses": { "200": { "$ref": "#/components/responses/CartView" } }
+      }
+    },
+    "/v1/cart/merge": {
+      "post": {
+        "operationId": "cartMerge",
+        "tags": ["cart"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "customer",
+        "responses": {
+          "200": { "$ref": "#/components/responses/CartView" },
+          "409": { "$ref": "#/components/responses/CartMergeConflict" }
+        }
+      }
+    },
+    "/v1/cart/items/{variantId}": {
+      "patch": {
+        "operationId": "cartUpdateItem",
+        "tags": ["cart"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-request-dto": "CartItemQuantityDto",
+        "parameters": [{ "$ref": "#/components/parameters/VariantId" }],
+        "requestBody": { "$ref": "#/components/requestBodies/CartItemQuantity" },
+        "responses": { "200": { "$ref": "#/components/responses/CartView" } }
+      },
+      "delete": {
+        "operationId": "cartRemoveItem",
+        "tags": ["cart"],
+        "x-nova-schema-status": "detailed",
+        "parameters": [{ "$ref": "#/components/parameters/VariantId" }],
+        "responses": { "200": { "$ref": "#/components/responses/CartView" } }
+      }
+    },
+    "/v1/checkout/quote": {
+      "post": {
+        "operationId": "checkoutQuote",
+        "tags": ["checkout"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "customer",
+        "x-nova-request-dto": "CheckoutRequestDto",
+        "requestBody": { "$ref": "#/components/requestBodies/CheckoutRequest" },
+        "responses": { "200": { "$ref": "#/components/responses/CheckoutQuote" } }
+      }
+    },
+    "/v1/checkout": {
+      "post": {
+        "operationId": "checkoutSubmit",
+        "tags": ["checkout"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "customer",
+        "x-nova-request-dto": "CheckoutRequestDto",
+        "x-nova-idempotency-key": true,
+        "requestBody": { "$ref": "#/components/requestBodies/CheckoutRequest" },
+        "responses": { "200": { "$ref": "#/components/responses/CheckoutOrder" } }
+      }
+    },
+    "/v1/account/orders": {
+      "get": {
+        "operationId": "customerOrderList",
+        "tags": ["customer-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "customer",
+        "x-nova-query-dto": "CustomerOrderListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/CustomerOrderPage" } }
+      }
+    },
+    "/v1/account/orders/{orderNumber}": {
+      "get": {
+        "operationId": "customerOrderDetail",
+        "tags": ["customer-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "customer",
+        "parameters": [{ "$ref": "#/components/parameters/OrderNumber" }],
+        "responses": { "200": { "$ref": "#/components/responses/CustomerOrderDetail" } }
+      }
+    },
+    "/v1/account/orders/{orderNumber}/cancel": {
+      "post": {
+        "operationId": "customerOrderCancel",
+        "tags": ["customer-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "customer",
+        "x-nova-request-dto": "CustomerOrderCancelDto",
+        "parameters": [{ "$ref": "#/components/parameters/OrderNumber" }],
+        "requestBody": { "$ref": "#/components/requestBodies/CustomerOrderCancel" },
+        "responses": { "200": { "$ref": "#/components/responses/CustomerOrderDetail" } }
+      }
+    },
+    "/v1/account/orders/{orderNumber}/returns": {
+      "post": {
+        "operationId": "customerOrderReturn",
+        "tags": ["customer-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "customer",
+        "x-nova-request-dto": "CustomerReturnRequestDto",
+        "parameters": [{ "$ref": "#/components/parameters/OrderNumber" }],
+        "requestBody": { "$ref": "#/components/requestBodies/CustomerReturnRequest" },
+        "responses": { "200": { "$ref": "#/components/responses/CustomerOrderDetail" } }
+      }
+    },
+    "/v1/admin/orders": {
+      "get": {
+        "operationId": "adminOrderList",
+        "tags": ["admin-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:support|operations|admin",
+        "x-nova-query-dto": "AdminOrderListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/AdminOrderPage" } }
+      }
+    },
+    "/v1/admin/orders/{orderNumber}": {
+      "get": {
+        "operationId": "adminOrderDetail",
+        "tags": ["admin-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:support|operations|admin",
+        "parameters": [{ "$ref": "#/components/parameters/OrderNumber" }],
+        "responses": { "200": { "$ref": "#/components/responses/AdminOrderDetail" } }
+      }
+    },
+    "/v1/admin/orders/{orderNumber}/status": {
+      "patch": {
+        "operationId": "adminOrderStatus",
+        "tags": ["admin-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:operations|admin",
+        "x-nova-request-dto": "AdminOrderStatusDto",
+        "parameters": [{ "$ref": "#/components/parameters/OrderNumber" }],
+        "requestBody": { "$ref": "#/components/requestBodies/AdminOrderStatus" },
+        "responses": { "200": { "$ref": "#/components/responses/AdminOrderDetail" } }
+      }
+    },
+    "/v1/admin/orders/{orderNumber}/shipment": {
+      "patch": {
+        "operationId": "adminOrderShipment",
+        "tags": ["admin-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:operations|admin",
+        "x-nova-request-dto": "AdminShipmentUpdateDto",
+        "parameters": [{ "$ref": "#/components/parameters/OrderNumber" }],
+        "requestBody": { "$ref": "#/components/requestBodies/AdminShipmentUpdate" },
+        "responses": { "200": { "$ref": "#/components/responses/AdminOrderDetail" } }
+      }
+    },
+    "/v1/admin/orders/{orderNumber}/return": {
+      "patch": {
+        "operationId": "adminOrderReturnReview",
+        "tags": ["admin-orders"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:support|admin",
+        "x-nova-request-dto": "AdminReturnReviewDto",
+        "parameters": [{ "$ref": "#/components/parameters/OrderNumber" }],
+        "requestBody": { "$ref": "#/components/requestBodies/AdminReturnReview" },
+        "responses": { "200": { "$ref": "#/components/responses/AdminOrderDetail" } }
+      }
+    },
+    "/v1/admin/payments": {
+      "get": {
+        "operationId": "adminPaymentList",
+        "tags": ["admin-payments"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-query-dto": "AdminPaymentListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/AdminPaymentPage" } }
+      }
+    },
+    "/v1/admin/payments/{paymentAttemptId}": {
+      "get": {
+        "operationId": "adminPaymentDetail",
+        "tags": ["admin-payments"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "parameters": [{ "$ref": "#/components/parameters/PaymentAttemptId" }],
+        "responses": { "200": { "$ref": "#/components/responses/AdminPaymentAttempt" } }
+      }
+    },
+    "/v1/admin/content/pages": {
+      "get": {
+        "operationId": "adminContentPageList",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-query-dto": "AdminContentPageListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/AdminContentPagePage" } }
+      },
+      "post": {
+        "operationId": "adminContentPageCreate",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-request-dto": "CreateAdminContentPageDto",
+        "requestBody": { "$ref": "#/components/requestBodies/CreateAdminContentPage" },
+        "responses": { "200": { "$ref": "#/components/responses/AdminContentPage" } }
+      }
+    },
+    "/v1/admin/content/pages/{pageId}": {
+      "get": {
+        "operationId": "adminContentPageDetail",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "parameters": [{ "$ref": "#/components/parameters/PageId" }],
+        "responses": { "200": { "$ref": "#/components/responses/AdminContentPage" } }
+      },
+      "patch": {
+        "operationId": "adminContentPageUpdate",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-request-dto": "UpdateAdminContentPageDto",
+        "parameters": [{ "$ref": "#/components/parameters/PageId" }],
+        "requestBody": { "$ref": "#/components/requestBodies/UpdateAdminContentPage" },
+        "responses": { "200": { "$ref": "#/components/responses/AdminContentPage" } }
+      }
+    },
+    "/v1/admin/content/pages/{pageId}/status": {
+      "patch": {
+        "operationId": "adminContentPageStatus",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-request-dto": "UpdateAdminContentPageStatusDto",
+        "parameters": [{ "$ref": "#/components/parameters/PageId" }],
+        "requestBody": { "$ref": "#/components/requestBodies/UpdateAdminContentPageStatus" },
+        "responses": { "200": { "$ref": "#/components/responses/AdminContentPage" } }
+      }
+    },
+    "/v1/content/pages/{slug}": {
+      "get": {
+        "operationId": "contentPage",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "parameters": [{ "$ref": "#/components/parameters/Slug" }],
+        "responses": { "200": { "$ref": "#/components/responses/ContentPage" } }
+      }
+    },
+    "/v1/seo/resolve": {
+      "get": {
+        "operationId": "seoResolve",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-query-dto": "SeoResolveQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/SeoResolution" } }
+      }
+    },
+
+    "/v1/admin/content/seo-metadata": {
+      "get": {
+        "operationId": "adminSeoMetadataList",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-query-dto": "AdminContentListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/AdminSeoMetadataPage" } }
+      },
+      "post": {
+        "operationId": "adminSeoMetadataCreate",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-request-dto": "CreateAdminSeoMetadataDto",
+        "responses": { "200": { "$ref": "#/components/responses/AdminSeoMetadata" } }
+      }
+    },
+    "/v1/admin/content/seo-metadata/{metadataId}": {
+      "patch": {
+        "operationId": "adminSeoMetadataUpdate",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-request-dto": "UpdateAdminSeoMetadataDto",
+        "parameters": [{ "$ref": "#/components/parameters/MetadataId" }],
+        "responses": { "200": { "$ref": "#/components/responses/AdminSeoMetadata" } }
+      },
+      "delete": {
+        "operationId": "adminSeoMetadataDelete",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "parameters": [{ "$ref": "#/components/parameters/MetadataId" }],
+        "responses": { "200": { "$ref": "#/components/responses/NullEnvelope" } }
+      }
+    },
+    "/v1/admin/content/redirects": {
+      "get": {
+        "operationId": "adminRedirectList",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-query-dto": "AdminContentListQueryDto",
+        "responses": { "200": { "$ref": "#/components/responses/AdminRedirectPage" } }
+      },
+      "post": {
+        "operationId": "adminRedirectCreate",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-request-dto": "CreateAdminRedirectDto",
+        "responses": { "200": { "$ref": "#/components/responses/AdminRedirect" } }
+      }
+    },
+    "/v1/admin/content/redirects/{redirectId}": {
+      "patch": {
+        "operationId": "adminRedirectUpdate",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "x-nova-request-dto": "UpdateAdminRedirectDto",
+        "parameters": [{ "$ref": "#/components/parameters/RedirectId" }],
+        "responses": { "200": { "$ref": "#/components/responses/AdminRedirect" } }
+      },
+      "delete": {
+        "operationId": "adminRedirectDelete",
+        "tags": ["admin-content"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "parameters": [{ "$ref": "#/components/parameters/RedirectId" }],
+        "responses": { "200": { "$ref": "#/components/responses/NullEnvelope" } }
+      }
+    },
+
+    "/v1/account/addresses": {
+      "get": {
+        "operationId": "addressList",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Address envelope" } }
+      },
+      "post": {
+        "operationId": "addressCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Address envelope" } }
+      }
+    },
+    "/v1/account/addresses/{addressId}": {
+      "patch": {
+        "operationId": "addressUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Address envelope" } }
+      },
+      "delete": {
+        "operationId": "addressDelete",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Address envelope" } }
+      }
+    },
+    "/v1/account/addresses/{addressId}/default": {
+      "post": {
+        "operationId": "addressDefault",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Address envelope" } }
+      }
+    },
+    "/v1/auth/otp/request": {
+      "post": {
+        "operationId": "authOtpRequest",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "OTP challenge envelope" } }
+      }
+    },
+    "/v1/auth/otp/verify": {
+      "post": {
+        "operationId": "authOtpVerify",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Customer session envelope" } }
+      }
+    },
+    "/v1/auth/me": {
+      "get": {
+        "operationId": "authMe",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Customer envelope" } }
+      }
+    },
+    "/v1/auth/logout": {
+      "post": {
+        "operationId": "authLogout",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Empty envelope" } }
+      }
+    },
+    "/v1/staff/auth/login": {
+      "post": {
+        "operationId": "staffLogin",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Staff session envelope" } }
+      }
+    },
+    "/v1/staff/auth/me": {
+      "get": {
+        "operationId": "staffMe",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Staff envelope" } }
+      }
+    },
+    "/v1/staff/auth/logout": {
+      "post": {
+        "operationId": "staffLogout",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Empty envelope" } }
+      }
+    },
+    "/v1/payments/{provider}/callback": {
+      "post": {
+        "operationId": "paymentCallback",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Payment callback envelope" } }
+      }
+    },
+    "/v1/admin/catalog/categories": {
+      "get": {
+        "operationId": "adminCatalogCategoryList",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Category envelope" } }
+      },
+      "post": {
+        "operationId": "adminCatalogCategoryCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Category envelope" } }
+      }
+    },
+    "/v1/admin/catalog/categories/{categoryId}": {
+      "patch": {
+        "operationId": "adminCatalogCategoryUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Category envelope" } }
+      }
+    },
+    "/v1/admin/catalog/categories/{categoryId}/status": {
+      "patch": {
+        "operationId": "adminCatalogCategoryStatus",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Category envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products": {
+      "get": {
+        "operationId": "adminCatalogProductList",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Product page envelope" } }
+      },
+      "post": {
+        "operationId": "adminCatalogProductCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Product envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}": {
+      "patch": {
+        "operationId": "adminCatalogProductUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Product envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/categories": {
+      "get": {
+        "operationId": "adminCatalogProductCategories",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Category envelope" } }
+      },
+      "put": {
+        "operationId": "adminCatalogProductCategoriesReplace",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Category envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/options": {
+      "get": {
+        "operationId": "adminCatalogProductOptions",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Option envelope" } }
+      },
+      "post": {
+        "operationId": "adminCatalogProductOptionCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Option envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/options/{optionId}": {
+      "patch": {
+        "operationId": "adminCatalogProductOptionUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Option envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/options/{optionId}/values": {
+      "post": {
+        "operationId": "adminCatalogProductOptionValueCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Option value envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/options/{optionId}/values/{valueId}": {
+      "patch": {
+        "operationId": "adminCatalogProductOptionValueUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Option value envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/variants": {
+      "get": {
+        "operationId": "adminCatalogProductVariants",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Variant envelope" } }
+      },
+      "post": {
+        "operationId": "adminCatalogProductVariantCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Variant envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/variants/{variantId}": {
+      "patch": {
+        "operationId": "adminCatalogProductVariantUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Variant envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/media": {
+      "get": {
+        "operationId": "adminCatalogProductMedia",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Media envelope" } }
+      },
+      "post": {
+        "operationId": "adminCatalogProductMediaCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Media envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/media/{mediaId}": {
+      "patch": {
+        "operationId": "adminCatalogProductMediaUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Media envelope" } }
+      },
+      "delete": {
+        "operationId": "adminCatalogProductMediaDelete",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Media envelope" } }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/status": {
+      "patch": {
+        "operationId": "adminCatalogProductStatus",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Product envelope" } }
+      }
+    },
+    "/v1/admin/inventory/items": {
+      "get": {
+        "operationId": "adminInventoryList",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Inventory page envelope" } }
+      }
+    },
+    "/v1/admin/inventory/items/{variantId}": {
+      "get": {
+        "operationId": "adminInventoryDetail",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Inventory envelope" } }
+      }
+    },
+    "/v1/admin/inventory/items/{variantId}/adjustments": {
+      "post": {
+        "operationId": "adminInventoryAdjustment",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Inventory envelope" } }
+      }
+    },
+    "/v1/admin/inventory/items/{variantId}/reorder-point": {
+      "patch": {
+        "operationId": "adminInventoryReorderPoint",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Inventory envelope" } }
+      }
+    },
+    "/v1/admin/audit-events": {
+      "get": {
+        "operationId": "adminAuditEvents",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Audit page envelope" } }
+      }
+    },
+    "/v1/admin/coupons": {
+      "get": {
+        "operationId": "adminCouponList",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Coupon page envelope" } }
+      },
+      "post": {
+        "operationId": "adminCouponCreate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Coupon envelope" } }
+      }
+    },
+    "/v1/admin/coupons/{couponId}": {
+      "patch": {
+        "operationId": "adminCouponUpdate",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Coupon envelope" } }
+      }
+    },
+    "/v1/admin/customers": {
+      "get": {
+        "operationId": "adminCustomerList",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Customer page envelope" } }
+      }
+    },
+    "/v1/admin/notifications": {
+      "get": {
+        "operationId": "adminNotificationList",
+        "x-nova-schema-status": "inventory-only",
+        "responses": { "200": { "description": "Notification page envelope" } }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Slug": { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } },
+      "VariantId": {
+        "name": "variantId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$" }
+      },
+      "OrderNumber": {
+        "name": "orderNumber",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "PaymentAttemptId": {
+        "name": "paymentAttemptId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "PageId": {
+        "name": "pageId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "MetadataId": {
+        "name": "metadataId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      },
+      "RedirectId": {
+        "name": "redirectId",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "string" }
+      }
+    },
+    "requestBodies": {
+      "CartItemMutation": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/CartItemMutation" } }
+        }
+      },
+      "CartItemQuantity": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/CartItemQuantity" } }
+        }
+      },
+      "CheckoutRequest": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/CheckoutRequest" } }
+        }
+      },
+      "CustomerOrderCancel": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/CustomerOrderCancel" } }
+        }
+      },
+      "CustomerReturnRequest": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/CustomerReturnRequest" } }
+        }
+      },
+      "AdminOrderStatus": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/AdminOrderStatus" } }
+        }
+      },
+      "AdminShipmentUpdate": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/AdminShipmentUpdate" } }
+        }
+      },
+      "AdminReturnReview": {
+        "required": true,
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/AdminReturnReview" } }
+        }
+      },
+      "CreateAdminContentPage": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/CreateAdminContentPage" }
+          }
+        }
+      },
+      "UpdateAdminContentPage": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/UpdateAdminContentPage" }
+          }
+        }
+      },
+      "UpdateAdminContentPageStatus": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/UpdateAdminContentPageStatus" }
+          }
+        }
+      }
+    },
+    "responses": {
+      "ApiError400": {
+        "description": "Validation error",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorEnvelope" } }
+        }
+      },
+      "ApiError503": {
+        "description": "Service unavailable",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorEnvelope" } }
+        }
+      },
+      "CatalogCategoryList": {
+        "description": "Category list envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCatalogCategoryList" }
+          }
+        }
+      },
+      "CatalogFacets": {
+        "description": "Facet envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCatalogFacets" }
+          }
+        }
+      },
+      "CatalogProductPage": {
+        "description": "Product page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCatalogProductPage" }
+          }
+        }
+      },
+      "CatalogProduct": {
+        "description": "Product envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCatalogProduct" }
+          }
+        }
+      },
+      "CatalogSearchSuggestions": {
+        "description": "Suggestion envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCatalogSearchSuggestions" }
+          }
+        }
+      },
+      "CartView": {
+        "description": "Cart envelope",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ApiEnvelopeCartView" } }
+        }
+      },
+      "CartMergeConflict": {
+        "description": "Merge conflict envelope",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ApiErrorEnvelope" } }
+        }
+      },
+      "CheckoutQuote": {
+        "description": "Checkout quote envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCheckoutQuote" }
+          }
+        }
+      },
+      "CheckoutOrder": {
+        "description": "Checkout order envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCheckoutOrder" }
+          }
+        }
+      },
+      "CustomerOrderPage": {
+        "description": "Customer order page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCustomerOrderPage" }
+          }
+        }
+      },
+      "CustomerOrderDetail": {
+        "description": "Customer order detail envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeCustomerOrderDetail" }
+          }
+        }
+      },
+      "AdminOrderPage": {
+        "description": "Admin order page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminOrderPage" }
+          }
+        }
+      },
+      "AdminOrderDetail": {
+        "description": "Admin order detail envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminOrderDetail" }
+          }
+        }
+      },
+      "AdminPaymentPage": {
+        "description": "Admin payment page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminPaymentPage" }
+          }
+        }
+      },
+      "AdminPaymentAttempt": {
+        "description": "Admin payment detail envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminPaymentAttempt" }
+          }
+        }
+      },
+      "AdminContentPagePage": {
+        "description": "Admin content page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminContentPagePage" }
+          }
+        }
+      },
+      "AdminContentPage": {
+        "description": "Admin content page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminContentPage" }
+          }
+        }
+      },
+      "ContentPage": {
+        "description": "Published content page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeContentPage" }
+          }
+        }
+      },
+      "SeoResolution": {
+        "description": "SEO resolution envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeSeoResolution" }
+          }
+        }
+      },
+      "AdminSeoMetadataPage": {
+        "description": "SEO metadata page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminSeoMetadataPage" }
+          }
+        }
+      },
+      "AdminSeoMetadata": {
+        "description": "SEO metadata envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminSeoMetadata" }
+          }
+        }
+      },
+      "AdminRedirectPage": {
+        "description": "Redirect page envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminRedirectPage" }
+          }
+        }
+      },
+      "AdminRedirect": {
+        "description": "Redirect envelope",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ApiEnvelopeAdminRedirect" }
+          }
+        }
+      },
+      "NullEnvelope": {
+        "description": "Empty envelope",
+        "content": {
+          "application/json": { "schema": { "$ref": "#/components/schemas/ApiEnvelopeNull" } }
+        }
+      }
+    },
+    "schemas": {
+      "ApiMeta": {
+        "type": "object",
+        "required": ["requestId", "timestamp"],
+        "properties": {
+          "requestId": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "ApiErrorPayload": {
+        "type": "object",
+        "required": ["code", "message", "statusCode", "requestId", "timestamp"],
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "statusCode": { "type": "integer" },
+          "requestId": { "type": "string" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "details": {}
+        },
+        "additionalProperties": false
+      },
+      "ApiErrorEnvelope": {
+        "type": "object",
+        "required": ["error"],
+        "properties": { "error": { "$ref": "#/components/schemas/ApiErrorPayload" } },
+        "additionalProperties": false
+      },
+      "HealthStatus": {
+        "type": "object",
+        "required": ["status", "service", "timestamp"],
+        "properties": {
+          "status": { "const": "ok" },
+          "service": { "const": "api" },
+          "timestamp": { "type": "string", "format": "date-time" },
+          "database": { "const": "ok" }
+        },
+        "additionalProperties": false
+      },
+      "CatalogFacetQuery": {
+        "type": "object",
+        "properties": {
+          "q": { "type": "string", "maxLength": 120 },
+          "category": { "type": "string", "maxLength": 80 },
+          "audience": { "type": "string", "enum": ["women", "men", "children"] },
+          "size": { "type": "string", "maxLength": 80 },
+          "color": { "type": "string", "maxLength": 80 },
+          "material": { "type": "string", "maxLength": 80 },
+          "minPrice": { "type": "integer", "minimum": 0 },
+          "maxPrice": { "type": "integer", "minimum": 0 },
+          "inStock": { "type": "boolean" },
+          "onSale": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      },
+      "ProductListQuery": {
+        "type": "object",
+        "required": ["limit", "page"],
+        "properties": {
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 24 },
+          "page": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 },
+          "q": { "type": "string", "maxLength": 120 },
+          "category": { "type": "string", "maxLength": 80 },
+          "audience": { "type": "string", "enum": ["women", "men", "children"] },
+          "size": { "type": "string", "maxLength": 80 },
+          "color": { "type": "string", "maxLength": 80 },
+          "material": { "type": "string", "maxLength": 80 },
+          "minPrice": { "type": "integer", "minimum": 0 },
+          "maxPrice": { "type": "integer", "minimum": 0 },
+          "inStock": { "type": "boolean" },
+          "onSale": { "type": "boolean" },
+          "sort": { "type": "string", "enum": ["newest", "price_asc", "price_desc", "name"] }
+        },
+        "additionalProperties": false
+      },
+      "SearchSuggestionsQuery": {
+        "type": "object",
+        "required": ["limit"],
+        "properties": {
+          "q": { "type": "string", "maxLength": 120 },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 10, "default": 8 }
+        },
+        "additionalProperties": false
+      },
+      "CustomerOrderListQuery": {
+        "type": "object",
+        "required": ["limit", "page"],
+        "properties": {
+          "limit": { "type": "integer", "minimum": 1, "maximum": 50, "default": 10 },
+          "page": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 },
+          "status": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "AdminOrderListQuery": {
+        "type": "object",
+        "required": ["limit", "page"],
+        "properties": {
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 24 },
+          "page": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 },
+          "q": { "type": "string", "maxLength": 120 },
+          "status": { "type": "string" },
+          "paymentStatus": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "AdminPaymentListQuery": {
+        "type": "object",
+        "required": ["limit", "page"],
+        "properties": {
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 24 },
+          "page": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 },
+          "status": { "type": "string" },
+          "provider": { "type": "string", "maxLength": 120 },
+          "orderNumber": { "type": "string", "maxLength": 128 }
+        },
+        "additionalProperties": false
+      },
+      "AdminContentPageListQuery": {
+        "type": "object",
+        "required": ["page", "limit"],
+        "properties": {
+          "page": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 24 },
+          "q": { "type": "string", "maxLength": 160 },
+          "status": { "type": "string", "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"] }
+        },
+        "additionalProperties": false
+      },
+      "AdminContentListQuery": {
+        "type": "object",
+        "required": ["page", "limit"],
+        "properties": {
+          "page": { "type": "integer", "minimum": 1, "maximum": 100000, "default": 1 },
+          "limit": { "type": "integer", "minimum": 1, "maximum": 100, "default": 24 },
+          "q": { "type": "string", "maxLength": 160 }
+        },
+        "additionalProperties": false
+      },
+      "SeoResolveQuery": {
+        "type": "object",
+        "required": ["path"],
+        "properties": { "path": { "type": "string", "minLength": 1, "maxLength": 2048 } },
+        "additionalProperties": false
+      },
+      "CreateAdminSeoMetadata": {
+        "type": "object",
+        "required": ["path", "title", "description"],
+        "properties": {
+          "path": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "canonicalUrl": { "type": ["string", "null"] },
+          "noIndex": { "type": "boolean" },
+          "structuredData": {}
+        },
+        "additionalProperties": false
+      },
+      "UpdateAdminSeoMetadata": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "canonicalUrl": { "type": ["string", "null"] },
+          "noIndex": { "type": "boolean" },
+          "structuredData": {},
+          "expectedUpdatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "CreateAdminRedirect": {
+        "type": "object",
+        "required": ["fromPath", "toPath"],
+        "properties": {
+          "fromPath": { "type": "string" },
+          "toPath": { "type": "string" },
+          "statusCode": { "type": "integer", "enum": [301, 302, 307, 308] }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAdminRedirect": {
+        "type": "object",
+        "properties": {
+          "toPath": { "type": "string" },
+          "statusCode": { "type": "integer", "enum": [301, 302, 307, 308] }
+        },
+        "additionalProperties": false
+      },
+      "CatalogCategory": {
+        "type": "object",
+        "required": ["id", "slug", "name"],
+        "properties": {
+          "id": { "type": "string" },
+          "slug": { "type": "string" },
+          "name": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "CatalogFacetOption": {
+        "type": "object",
+        "required": ["value", "label", "count", "selected"],
+        "properties": {
+          "value": { "type": "string" },
+          "label": { "type": "string" },
+          "count": { "type": "integer" },
+          "selected": { "type": "boolean" },
+          "hex": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "CatalogFacetGroup": {
+        "type": "object",
+        "required": ["key", "label", "options"],
+        "properties": {
+          "key": { "type": "string", "enum": ["size", "color", "material"] },
+          "label": { "type": "string" },
+          "options": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CatalogFacetOption" }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatalogFacets": {
+        "type": "object",
+        "required": ["groups"],
+        "properties": {
+          "groups": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CatalogFacetGroup" }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatalogProductVariant": {
+        "type": "object",
+        "required": [
+          "id",
+          "sku",
+          "title",
+          "size",
+          "color",
+          "colorHex",
+          "priceToman",
+          "compareAtPriceToman",
+          "optionValueIds",
+          "media",
+          "available"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "sku": { "type": "string" },
+          "title": { "type": ["string", "null"] },
+          "size": { "type": ["string", "null"] },
+          "color": { "type": ["string", "null"] },
+          "colorHex": { "type": ["string", "null"] },
+          "priceToman": { "type": ["integer", "null"] },
+          "compareAtPriceToman": { "type": ["integer", "null"] },
+          "optionValueIds": { "type": "array", "items": { "type": "string" } },
+          "media": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CatalogVariantMedia" }
+          },
+          "available": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      },
+      "CatalogVariantMedia": {
+        "type": "object",
+        "required": ["url", "altText", "sortOrder"],
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "altText": { "type": "string" },
+          "sortOrder": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "CatalogProductMedia": {
+        "type": "object",
+        "required": ["url", "altText", "kind", "sortOrder"],
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "altText": { "type": "string" },
+          "kind": { "type": "string", "enum": ["PRODUCT", "DETAIL", "SWATCH"] },
+          "sortOrder": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "ProductSummary": {
+        "type": "object",
+        "required": [
+          "id",
+          "slug",
+          "name",
+          "priceToman",
+          "compareAtPriceToman",
+          "available",
+          "imageUrl",
+          "imageAlt",
+          "categories",
+          "options",
+          "variants",
+          "colors",
+          "stockStatus"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "slug": { "type": "string" },
+          "name": { "type": "string" },
+          "priceToman": { "type": "integer" },
+          "compareAtPriceToman": { "type": ["integer", "null"] },
+          "available": { "type": "boolean" },
+          "imageUrl": { "type": ["string", "null"], "format": "uri-reference" },
+          "imageAlt": { "type": ["string", "null"] },
+          "categories": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CatalogCategory" }
+          },
+          "options": { "type": "array" },
+          "variants": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CatalogProductVariant" }
+          },
+          "colors": { "type": "array" },
+          "stockStatus": { "type": "string", "enum": ["IN_STOCK", "LOW_STOCK", "OUT_OF_STOCK"] }
+        },
+        "additionalProperties": false
+      },
+      "CatalogProduct": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ProductSummary" },
+          {
+            "type": "object",
+            "required": ["shortDescription", "description", "brand", "media", "attributes"],
+            "properties": {
+              "shortDescription": { "type": ["string", "null"] },
+              "description": { "type": ["string", "null"] },
+              "brand": { "type": ["string", "null"] },
+              "media": {
+                "type": "array",
+                "items": { "$ref": "#/components/schemas/CatalogProductMedia" }
+              },
+              "attributes": { "type": "array" }
+            }
+          }
+        ]
+      },
+      "CatalogProductPage": {
+        "type": "object",
+        "required": ["items", "total", "page", "limit"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/ProductSummary" } },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "CartItemMutation": {
+        "type": "object",
+        "required": ["variantId", "quantity"],
+        "properties": {
+          "variantId": { "type": "string", "pattern": "^[A-Za-z0-9_-]+$", "maxLength": 128 },
+          "quantity": { "type": "integer", "minimum": 1, "maximum": 99 }
+        },
+        "additionalProperties": false
+      },
+      "CartItemQuantity": {
+        "type": "object",
+        "required": ["quantity"],
+        "properties": { "quantity": { "type": "integer", "minimum": 1, "maximum": 99 } },
+        "additionalProperties": false
+      },
+      "CartLine": {
+        "type": "object",
+        "required": [
+          "id",
+          "variantId",
+          "quantity",
+          "available",
+          "productId",
+          "productSlug",
+          "productName",
+          "sku",
+          "title",
+          "unitPriceToman",
+          "compareAtPriceToman",
+          "imageUrl",
+          "imageAlt"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "variantId": { "type": "string" },
+          "quantity": { "type": "integer" },
+          "available": { "type": "boolean" },
+          "productId": { "type": "string" },
+          "productSlug": { "type": "string" },
+          "productName": { "type": "string" },
+          "sku": { "type": "string" },
+          "title": { "type": ["string", "null"] },
+          "unitPriceToman": { "type": "integer" },
+          "compareAtPriceToman": { "type": ["integer", "null"] },
+          "imageUrl": { "type": ["string", "null"] },
+          "imageAlt": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "CartView": {
+        "type": "object",
+        "required": ["id", "kind", "items", "itemCount", "subtotalToman", "currency"],
+        "properties": {
+          "id": { "type": ["string", "null"] },
+          "kind": { "type": "string", "enum": ["GUEST", "CUSTOMER"] },
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/CartLine" } },
+          "itemCount": { "type": "integer" },
+          "subtotalToman": { "type": "integer" },
+          "currency": { "const": "TOMAN" }
+        },
+        "additionalProperties": false
+      },
+      "CartMergeConflict": {
+        "type": "object",
+        "required": [
+          "variantId",
+          "reason",
+          "guestQuantity",
+          "customerQuantity",
+          "mergedQuantity",
+          "availableQuantity"
+        ],
+        "properties": {
+          "variantId": { "type": "string" },
+          "reason": {
+            "type": "string",
+            "enum": ["VARIANT_UNAVAILABLE", "STOCK_LIMIT", "QUANTITY_LIMIT"]
+          },
+          "guestQuantity": { "type": "integer" },
+          "customerQuantity": { "type": "integer" },
+          "mergedQuantity": { "type": "integer" },
+          "availableQuantity": { "type": ["integer", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutRequest": {
+        "type": "object",
+        "required": ["addressId", "shippingMethod"],
+        "properties": {
+          "addressId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,128}$" },
+          "shippingMethod": { "type": "string", "enum": ["STANDARD", "EXPRESS"] },
+          "couponCode": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9_-]{1,64}$" }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutSelectedOption": {
+        "type": "object",
+        "required": ["key", "name", "valueKey", "valueLabel"],
+        "properties": {
+          "key": { "type": "string" },
+          "name": { "type": "string" },
+          "valueKey": { "type": "string" },
+          "valueLabel": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutQuoteLine": {
+        "type": "object",
+        "required": [
+          "cartItemId",
+          "productId",
+          "variantId",
+          "productName",
+          "sku",
+          "selectedOptions",
+          "quantity",
+          "unitPriceToman",
+          "compareAtPriceToman",
+          "lineTotalToman"
+        ],
+        "properties": {
+          "cartItemId": { "type": "string" },
+          "productId": { "type": "string" },
+          "variantId": { "type": "string" },
+          "productName": { "type": "string" },
+          "sku": { "type": "string" },
+          "selectedOptions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CheckoutSelectedOption" }
+          },
+          "quantity": { "type": "integer" },
+          "unitPriceToman": { "type": "integer" },
+          "compareAtPriceToman": { "type": ["integer", "null"] },
+          "lineTotalToman": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutQuote": {
+        "type": "object",
+        "required": [
+          "cartId",
+          "address",
+          "shippingMethod",
+          "shippingLabel",
+          "shippingEstimate",
+          "lines",
+          "subtotalToman",
+          "discountToman",
+          "coupon",
+          "shippingToman",
+          "taxToman",
+          "totalToman",
+          "currency",
+          "expiresAt"
+        ],
+        "properties": {
+          "cartId": { "type": "string" },
+          "address": { "type": "object" },
+          "shippingMethod": { "type": "string", "enum": ["STANDARD", "EXPRESS"] },
+          "shippingLabel": { "type": "string" },
+          "shippingEstimate": { "type": "string" },
+          "lines": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CheckoutQuoteLine" }
+          },
+          "subtotalToman": { "type": "integer" },
+          "discountToman": { "type": "integer" },
+          "coupon": { "type": ["object", "null"] },
+          "shippingToman": { "type": "integer" },
+          "taxToman": { "type": "integer" },
+          "totalToman": { "type": "integer" },
+          "currency": { "const": "TOMAN" },
+          "expiresAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutPayment": {
+        "type": "object",
+        "required": ["status", "redirectUrl"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "REDIRECTED", "SUCCEEDED", "FAILED", "EXPIRED", "CANCELLED"]
+          },
+          "redirectUrl": { "type": ["string", "null"], "format": "uri-reference" }
+        },
+        "additionalProperties": false
+      },
+      "CheckoutOrder": {
+        "type": "object",
+        "required": [
+          "orderId",
+          "orderNumber",
+          "status",
+          "paymentStatus",
+          "subtotalToman",
+          "discountToman",
+          "shippingToman",
+          "taxToman",
+          "totalToman",
+          "currency",
+          "payment"
+        ],
+        "properties": {
+          "orderId": { "type": "string" },
+          "orderNumber": { "type": "string" },
+          "status": { "type": "string" },
+          "paymentStatus": { "type": "string" },
+          "subtotalToman": { "type": "integer" },
+          "discountToman": { "type": "integer" },
+          "shippingToman": { "type": "integer" },
+          "taxToman": { "type": "integer" },
+          "totalToman": { "type": "integer" },
+          "currency": { "const": "TOMAN" },
+          "payment": { "$ref": "#/components/schemas/CheckoutPayment" }
+        },
+        "additionalProperties": false
+      },
+      "CustomerOrderCancel": {
+        "type": "object",
+        "required": ["reason"],
+        "properties": { "reason": { "type": "string", "minLength": 1, "maxLength": 500 } },
+        "additionalProperties": false
+      },
+      "CustomerReturnRequest": {
+        "type": "object",
+        "required": [
+          "reason",
+          "unusedConfirmed",
+          "unwashedConfirmed",
+          "tagsAttachedConfirmed",
+          "items"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "DAMAGED",
+              "INCORRECT_ITEM",
+              "DEFECTIVE",
+              "SIZE_PREFERENCE",
+              "COLOR_PREFERENCE",
+              "CHANGE_OF_MIND"
+            ]
+          },
+          "note": { "type": ["string", "null"], "maxLength": 500 },
+          "unusedConfirmed": { "type": "boolean" },
+          "unwashedConfirmed": { "type": "boolean" },
+          "tagsAttachedConfirmed": { "type": "boolean" },
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "required": ["orderItemId", "quantity"],
+              "properties": {
+                "orderItemId": { "type": "string" },
+                "quantity": { "type": "integer", "minimum": 1, "maximum": 100 }
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CustomerOrderSummary": {
+        "type": "object",
+        "required": [
+          "orderId",
+          "orderNumber",
+          "status",
+          "paymentStatus",
+          "subtotalToman",
+          "discountToman",
+          "shippingToman",
+          "taxToman",
+          "totalToman",
+          "currency",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "orderId": { "type": "string" },
+          "orderNumber": { "type": "string" },
+          "status": { "type": "string" },
+          "paymentStatus": { "type": "string" },
+          "subtotalToman": { "type": "integer" },
+          "discountToman": { "type": "integer" },
+          "shippingToman": { "type": "integer" },
+          "taxToman": { "type": "integer" },
+          "totalToman": { "type": "integer" },
+          "currency": { "const": "TOMAN" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "CustomerOrderPage": {
+        "type": "object",
+        "required": ["items", "total", "page", "limit"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CustomerOrderSummary" }
+          },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "CustomerOrderDetail": {
+        "type": "object",
+        "required": [
+          "orderId",
+          "orderNumber",
+          "status",
+          "paymentStatus",
+          "subtotalToman",
+          "discountToman",
+          "shippingToman",
+          "taxToman",
+          "totalToman",
+          "currency",
+          "createdAt",
+          "updatedAt",
+          "items",
+          "address",
+          "payment",
+          "shipment",
+          "events",
+          "refunds",
+          "returnRequest"
+        ],
+        "properties": {
+          "orderId": { "type": "string" },
+          "orderNumber": { "type": "string" },
+          "status": { "type": "string" },
+          "paymentStatus": { "type": "string" },
+          "subtotalToman": { "type": "integer" },
+          "discountToman": { "type": "integer" },
+          "shippingToman": { "type": "integer" },
+          "taxToman": { "type": "integer" },
+          "totalToman": { "type": "integer" },
+          "currency": { "const": "TOMAN" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "items": { "type": "array" },
+          "address": { "type": ["object", "null"] },
+          "payment": { "type": ["object", "null"] },
+          "shipment": { "type": ["object", "null"] },
+          "events": { "type": "array" },
+          "refunds": { "type": "array" },
+          "returnRequest": { "type": ["object", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "AdminOrderPage": {
+        "type": "object",
+        "required": ["items", "total", "page", "limit"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminOrderSummary" }
+          },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "AdminOrderSummary": {
+        "type": "object",
+        "required": [
+          "orderId",
+          "orderNumber",
+          "status",
+          "paymentStatus",
+          "subtotalToman",
+          "discountToman",
+          "shippingToman",
+          "taxToman",
+          "totalToman",
+          "currency",
+          "createdAt",
+          "updatedAt",
+          "customer",
+          "shipmentStatus",
+          "trackingReference"
+        ],
+        "properties": {
+          "orderId": { "type": "string" },
+          "orderNumber": { "type": "string" },
+          "status": { "type": "string" },
+          "paymentStatus": { "type": "string" },
+          "subtotalToman": { "type": "integer" },
+          "discountToman": { "type": "integer" },
+          "shippingToman": { "type": "integer" },
+          "taxToman": { "type": "integer" },
+          "totalToman": { "type": "integer" },
+          "currency": { "const": "TOMAN" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "customer": { "type": ["object", "null"] },
+          "shipmentStatus": { "type": ["string", "null"] },
+          "trackingReference": { "type": ["string", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "AdminOrderDetail": {
+        "allOf": [
+          { "$ref": "#/components/schemas/CustomerOrderDetail" },
+          {
+            "type": "object",
+            "required": ["customer"],
+            "properties": { "customer": { "type": ["object", "null"] } }
+          }
+        ]
+      },
+      "AdminPaymentPage": {
+        "type": "object",
+        "required": ["items", "total", "page", "limit"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminPaymentAttempt" }
+          },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "AdminPaymentAttempt": {
+        "type": "object",
+        "required": [
+          "id",
+          "orderId",
+          "orderNumber",
+          "provider",
+          "providerTransactionId",
+          "status",
+          "amountToman",
+          "orderStatus",
+          "paymentStatus",
+          "createdAt",
+          "updatedAt",
+          "paidAt",
+          "refunds"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "orderId": { "type": "string" },
+          "orderNumber": { "type": "string" },
+          "provider": { "type": "string" },
+          "providerTransactionId": { "type": ["string", "null"] },
+          "status": { "type": "string" },
+          "amountToman": { "type": "integer" },
+          "orderStatus": { "type": "string" },
+          "paymentStatus": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" },
+          "paidAt": { "type": ["string", "null"], "format": "date-time" },
+          "refunds": { "type": "array" }
+        },
+        "additionalProperties": false
+      },
+      "ContentBlock": {
+        "type": "object",
+        "required": ["kind", "payload", "sortOrder"],
+        "properties": {
+          "kind": { "type": "string" },
+          "payload": {},
+          "sortOrder": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "ContentPage": {
+        "type": "object",
+        "required": ["slug", "title", "body", "blocks"],
+        "properties": {
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "body": { "type": ["string", "null"] },
+          "blocks": { "type": "array", "items": { "$ref": "#/components/schemas/ContentBlock" } }
+        },
+        "additionalProperties": false
+      },
+      "AdminContentPageListItem": {
+        "type": "object",
+        "required": ["id", "slug", "title", "status", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "type": "string", "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"] },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "AdminContentBlock": {
+        "allOf": [
+          { "$ref": "#/components/schemas/ContentBlock" },
+          { "type": "object", "required": ["id"], "properties": { "id": { "type": "string" } } }
+        ]
+      },
+      "AdminContentPage": {
+        "type": "object",
+        "required": ["id", "slug", "title", "status", "body", "blocks", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "type": "string", "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"] },
+          "body": { "type": ["string", "null"] },
+          "blocks": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminContentBlock" }
+          },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "AdminContentPagePage": {
+        "type": "object",
+        "required": ["items", "total", "page", "limit"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminContentPageListItem" }
+          },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "CreateAdminContentPage": {
+        "type": "object",
+        "required": ["slug", "title"],
+        "properties": {
+          "slug": { "type": "string" },
+          "title": { "type": "string" },
+          "body": { "type": ["string", "null"] },
+          "blocks": { "type": "array" }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAdminContentPage": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "body": { "type": ["string", "null"] },
+          "blocks": { "type": "array" },
+          "expectedUpdatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAdminContentPageStatus": {
+        "type": "object",
+        "required": ["status"],
+        "properties": {
+          "status": { "type": "string", "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"] },
+          "expectedUpdatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "SeoMetadata": {
+        "type": "object",
+        "required": ["path", "title", "description", "canonicalUrl", "noIndex", "structuredData"],
+        "properties": {
+          "path": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "canonicalUrl": { "type": ["string", "null"] },
+          "noIndex": { "type": "boolean" },
+          "structuredData": { "type": ["object", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "SeoResolution": {
+        "type": "object",
+        "required": ["path", "metadata", "redirect"],
+        "properties": {
+          "path": { "type": "string" },
+          "metadata": {
+            "oneOf": [{ "$ref": "#/components/schemas/SeoMetadata" }, { "type": "null" }]
+          },
+          "redirect": { "type": ["object", "null"] }
+        },
+        "additionalProperties": false
+      },
+      "AdminSeoMetadata": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SeoMetadata" },
+          {
+            "type": "object",
+            "required": ["id", "updatedAt"],
+            "properties": {
+              "id": { "type": "string" },
+              "updatedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        ]
+      },
+      "AdminSeoMetadataPage": {
+        "type": "object",
+        "required": ["items", "total", "page", "limit"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/AdminSeoMetadata" }
+          },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "AdminRedirect": {
+        "type": "object",
+        "required": ["id", "fromPath", "toPath", "statusCode", "createdAt"],
+        "properties": {
+          "id": { "type": "string" },
+          "fromPath": { "type": "string" },
+          "toPath": { "type": "string" },
+          "statusCode": { "type": "integer", "enum": [301, 302, 307, 308] },
+          "createdAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "AdminRedirectPage": {
+        "type": "object",
+        "required": ["items", "total", "page", "limit"],
+        "properties": {
+          "items": { "type": "array", "items": { "$ref": "#/components/schemas/AdminRedirect" } },
+          "total": { "type": "integer" },
+          "page": { "type": "integer" },
+          "limit": { "type": "integer" }
+        },
+        "additionalProperties": false
+      },
+      "AdminOrderStatus": {
+        "type": "object",
+        "required": ["status", "reason"],
+        "properties": {
+          "status": { "type": "string", "enum": ["PREPARING", "SHIPPED", "DELIVERED"] },
+          "reason": { "type": "string" },
+          "expectedUpdatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "AdminShipmentUpdate": {
+        "type": "object",
+        "required": ["provider", "method", "status", "reason"],
+        "properties": {
+          "provider": { "type": "string" },
+          "method": { "type": "string" },
+          "status": { "type": "string", "enum": ["PENDING", "PACKED", "SHIPPED", "DELIVERED"] },
+          "trackingReference": { "type": ["string", "null"] },
+          "reason": { "type": "string" },
+          "expectedUpdatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "AdminReturnReview": {
+        "type": "object",
+        "required": ["status", "reason"],
+        "properties": {
+          "status": { "type": "string", "enum": ["APPROVED", "REJECTED", "RECEIVED"] },
+          "reason": { "type": "string" },
+          "expectedUpdatedAt": { "type": "string", "format": "date-time" }
+        },
+        "additionalProperties": false
+      },
+      "ApiEnvelopeNull": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "type": "null" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        },
+        "additionalProperties": false
+      },
+      "ApiEnvelopeCatalogCategoryList": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/CatalogCategory" } },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCatalogFacets": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CatalogFacets" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCatalogProductPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CatalogProductPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCatalogProduct": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CatalogProduct" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCatalogSearchSuggestions": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "type": "array" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCartView": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CartView" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCheckoutQuote": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CheckoutQuote" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCheckoutOrder": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CheckoutOrder" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCustomerOrderPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CustomerOrderPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeCustomerOrderDetail": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/CustomerOrderDetail" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminOrderPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminOrderPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminOrderDetail": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminOrderDetail" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminPaymentPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminPaymentPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminPaymentAttempt": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminPaymentAttempt" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminContentPagePage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminContentPagePage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminContentPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminContentPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeContentPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/ContentPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeSeoResolution": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/SeoResolution" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminSeoMetadataPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminSeoMetadataPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminSeoMetadata": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminSeoMetadata" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminRedirectPage": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminRedirectPage" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      },
+      "ApiEnvelopeAdminRedirect": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": { "$ref": "#/components/schemas/AdminRedirect" },
+          "meta": { "$ref": "#/components/schemas/ApiMeta" }
+        }
+      }
+    },
+    "x-nova-error-codes": [
+      "VALIDATION_ERROR",
+      "UNAUTHORIZED",
+      "FORBIDDEN",
+      "NOT_FOUND",
+      "CONFLICT",
+      "CART_MERGE_CONFLICT",
+      "RATE_LIMITED",
+      "SERVICE_UNAVAILABLE",
+      "INTERNAL_ERROR"
+    ]
+  }
+}

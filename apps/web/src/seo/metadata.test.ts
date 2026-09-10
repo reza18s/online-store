@@ -80,7 +80,13 @@ test('client hash routes keep the existing copy while private routes become noin
   assert.equal(category.title, 'NOVA | زنانه');
   assert.equal(category.canonicalUrl, 'https://nova.example/category/women');
 
+  const products = clientSeoForHashRoute('#products/women', 'https://nova.example');
+  assert.equal(products.robots, 'index, follow');
+
   const account = clientSeoForHashRoute('#account/orders', 'https://nova.example');
   assert.equal(account.robots, 'noindex, nofollow');
   assert.equal(account.canonicalUrl, null);
+
+  const notFound = clientSeoForHashRoute('#not-found', 'https://nova.example');
+  assert.equal(notFound.robots, 'noindex, nofollow');
 });

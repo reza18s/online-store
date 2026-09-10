@@ -33,7 +33,6 @@ export interface RenderOptions {
   origin: string;
   apiOrigin: string;
   fetcher?: Fetcher;
-  contentSlugs?: string[];
 }
 
 export interface RenderContext extends InitialRenderContext {
@@ -115,6 +114,21 @@ function catalogProductsPath(query: string): string {
   return `/v1/catalog/products?${query}`;
 }
 
+function isNonPublicPath(path: string): boolean {
+  return (
+    !path.startsWith('/') ||
+    path.startsWith('//') ||
+    path.includes('\\') ||
+    path.includes('?') ||
+    /^\/(?:api|v1|health|assets|src|node_modules|@vite|@id|_vite|\.well-known)(?:\/|$)/i.test(
+      path,
+    ) ||
+    /^\/(?:favicon\.[a-z0-9]+|manifest(?:\.json)?|service-worker\.js|robots\.txt|sitemap\.xml)$/i.test(
+      path,
+    )
+  );
+}
+
 function routeHash(route: PublicRenderRoute): string {
   switch (route.kind) {
     case 'home':
@@ -135,50 +149,127 @@ function routeHash(route: PublicRenderRoute): string {
       if (route.path.startsWith('/return')) return '#return';
       return '#home';
     case 'unknown':
-      return '#home';
+      return '#not-found';
   }
 }
 
 function imagePath(product: ProductSummary | CatalogProduct): string | null {
+  if ('media' in product) {
+    return (
+      product.media.find((media) => media.kind === 'PRODUCT')?.url ??
+      product.media[0]?.url ??
+      product.imageUrl
+    );
+  }
   return product.imageUrl;
 }
 
-function productJsonLd(origin: string, product: CatalogProduct): Record<string, unknown> {
+function productIsAvailable(product: CatalogProduct): boolean {
+  return product.available && product.stockStatus !== 'OUT_OF_STOCK';
+}
+
+function productAvailabilityLabel(product: CatalogProduct): string {
+  if (!productIsAvailable(product)) return 'ناموجود';
+  return product.stockStatus === 'LOW_STOCK' ? 'رو به اتمام' : 'موجود';
+}
+
+function organizationJsonLd(origin: string): Record<string, unknown> {
+  return {
+    '@type': 'Organization',
+    '@id': `${trimOrigin(origin)}/#organization`,
+    name: 'NOVA Store',
+    url: `${trimOrigin(origin)}/`,
+  };
+}
+
+function productBreadcrumbJsonLd(
+  origin: string,
+  product: CatalogProduct,
+  productUrl: string,
+): Record<string, unknown> {
+  const category = product.categories.find(
+    (candidate) =>
+      parsePublicRenderPath(`/category/${encodeURIComponent(candidate.slug)}`).kind ===
+        'category' && Boolean(candidate.name),
+  );
+  const items = [
+    { name: 'خانه', item: `${trimOrigin(origin)}/` },
+    ...(category
+      ? [
+          {
+            name: category.name,
+            item: `${trimOrigin(origin)}/category/${encodeURIComponent(category.slug)}`,
+          },
+        ]
+      : []),
+    { name: product.name, item: productUrl },
+  ];
+  return {
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      ...item,
+    })),
+  };
+}
+
+function productJsonLd(
+  origin: string,
+  product: CatalogProduct,
+  description: string,
+): Record<string, unknown> {
   const images =
     product.media.length > 0 ? product.media.map((media) => media.url) : [product.imageUrl];
   const priceToman = product.priceToman;
-  return {
-    '@context': 'https://schema.org',
+  const productUrl = `${trimOrigin(origin)}/product/${encodeURIComponent(product.slug)}`;
+  const imageUrls = images
+    .filter((value): value is string => Boolean(value))
+    .map((value) =>
+      /^https?:\/\//i.test(value)
+        ? value
+        : `${trimOrigin(origin)}${value.startsWith('/') ? value : `/${value}`}`,
+    );
+  const productNode = {
     '@type': 'Product',
+    '@id': `${productUrl}#product`,
     name: product.name,
-    description: product.description ?? product.shortDescription ?? undefined,
-    image: images
-      .filter((value): value is string => Boolean(value))
-      .map((value) =>
-        /^https?:\/\//i.test(value)
-          ? value
-          : `${trimOrigin(origin)}${value.startsWith('/') ? value : `/${value}`}`,
-      ),
-    url: `${trimOrigin(origin)}/product/${encodeURIComponent(product.slug)}`,
+    description,
+    ...(imageUrls.length > 0 ? { image: imageUrls } : {}),
+    url: productUrl,
+    ...(product.brand ? { brand: { '@type': 'Brand', name: product.brand } } : {}),
     offers: {
       '@type': 'Offer',
       priceCurrency: 'IRR',
       price: String(priceToman * 10),
-      availability: product.available
+      availability: productIsAvailable(product)
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
-      url: `${trimOrigin(origin)}/product/${encodeURIComponent(product.slug)}`,
+      url: productUrl,
     },
+  };
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      productNode,
+      productBreadcrumbJsonLd(origin, product, productUrl),
+      organizationJsonLd(origin),
+    ],
   };
 }
 
 function homeJsonLd(origin: string): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'NOVA Store',
-    url: `${trimOrigin(origin)}/`,
-    inLanguage: 'fa-IR',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        name: 'NOVA Store',
+        url: `${trimOrigin(origin)}/`,
+        inLanguage: 'fa-IR',
+      },
+      organizationJsonLd(origin),
+    ],
   };
 }
 
@@ -233,10 +324,23 @@ function initialBody(
 
 function productBody(product: CatalogProduct, description: string): string {
   const href = `/product/${encodeURIComponent(product.slug)}`;
-  const image = product.imageUrl
-    ? `<img src="${escapeHtml(product.imageUrl)}" alt="${escapeHtml(product.imageAlt ?? product.name)}" />`
-    : '';
-  return `<main data-nova-ssr-content="true"><article><a href="${escapeHtml(href)}">${image}<h1>${escapeHtml(product.name)}</h1></a><p>${escapeHtml(description)}</p><p>${escapeHtml(String(product.priceToman))} تومان</p></article></main>`;
+  const primaryMedia = product.media.find((media) => media.kind === 'PRODUCT') ?? product.media[0];
+  const primaryImageUrl = primaryMedia?.url ?? product.imageUrl;
+  const primaryImageAlt = primaryMedia?.altText ?? product.imageAlt ?? product.name;
+  const category = product.categories.find(
+    (candidate) =>
+      parsePublicRenderPath(`/category/${encodeURIComponent(candidate.slug)}`).kind ===
+        'category' && Boolean(candidate.name),
+  );
+  const breadcrumb = `<nav class="breadcrumb" aria-label="مسیر صفحه"><a href="/">خانه</a>${
+    category
+      ? `<span>/</span><a href="/category/${encodeURIComponent(category.slug)}">${escapeHtml(category.name)}</a>`
+      : ''
+  }<span>/</span><span aria-current="page">${escapeHtml(product.name)}</span></nav>`;
+  const image = primaryImageUrl
+    ? `<div class="product-detail__main-image"><img src="${escapeHtml(primaryImageUrl)}" alt="${escapeHtml(primaryImageAlt)}" loading="eager" decoding="async" fetchpriority="high" /></div>`
+    : '<div class="product-detail__main-image" aria-hidden="true"></div>';
+  return `<main data-nova-ssr-content="true"><article>${breadcrumb}${image}<a href="${escapeHtml(href)}"><h1>${escapeHtml(product.name)}</h1></a><p>${escapeHtml(description)}</p><p>${escapeHtml(String(product.priceToman))} تومان</p><p>وضعیت: ${escapeHtml(productAvailabilityLabel(product))}</p></article></main>`;
 }
 
 function contentBody(route: PublicRenderRoute, page: ContentPage, description: string): string {
@@ -335,24 +439,26 @@ function serviceUnavailableContext(origin: string, route: PublicRenderRoute): Re
 export async function renderRoute(path: string, options: RenderOptions): Promise<RenderContext> {
   const origin = trimOrigin(options.origin);
   const route = parsePublicRenderPath(path);
-  if (route.kind === 'private' || route.kind === 'unknown') {
-    return route.kind === 'private'
-      ? {
-          path: route.path,
-          hashRoute: routeHash(route),
-          seo: createSeoDocument({ origin, ...metadataFallback(origin, route) }),
-          status: 200,
-          bodyHtml: initialBody('NOVA', defaultSiteDescription),
-          cacheControl: noStoreCache,
-        }
-      : notFoundContext(origin, route);
+  if (route.kind === 'private') {
+    return {
+      path: route.path,
+      hashRoute: routeHash(route),
+      seo: createSeoDocument({ origin, ...metadataFallback(origin, route) }),
+      status: 200,
+      bodyHtml: initialBody('NOVA', defaultSiteDescription),
+      cacheControl: noStoreCache,
+    };
   }
+  if (route.kind === 'unknown' && isNonPublicPath(route.path))
+    return notFoundContext(origin, route);
 
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
   let resolution: SeoResolution;
   try {
     resolution = await getApi<SeoResolution>(options.apiOrigin, resolverPath(route.path), fetcher);
-  } catch {
+  } catch (error) {
+    if (route.kind === 'unknown' && error instanceof RenderApiError && error.status === 404)
+      return notFoundContext(origin, route);
     return serviceUnavailableContext(origin, route);
   }
 
@@ -367,6 +473,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
       cacheControl: redirectCache,
     };
   }
+  if (route.kind === 'unknown') return notFoundContext(origin, route);
 
   try {
     if (route.kind === 'home') {
@@ -441,22 +548,31 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         fetcher,
       );
       const fallback = metadataFallback(origin, route);
+      const productDescription =
+        product.description ?? product.shortDescription ?? `جزئیات و مشخصات ${product.name}.`;
       const seo = seoDocumentFromMetadata(
         origin,
         {
           ...fallback,
           title: `NOVA | ${product.name}`,
-          description:
-            product.description ?? product.shortDescription ?? `جزئیات و مشخصات ${product.name}.`,
+          description: productDescription,
           imagePath: imagePath(product),
-          jsonLd: productJsonLd(origin, product),
+          jsonLd: productJsonLd(origin, product, productDescription),
         },
         resolution.metadata,
       );
       return {
         path: route.path,
         hashRoute: routeHash(route),
-        seo,
+        seo: {
+          ...seo,
+          jsonLd:
+            seo.robots === 'index, follow'
+              ? resolution.metadata?.structuredData == null
+                ? productJsonLd(origin, product, seo.description)
+                : seo.jsonLd
+              : null,
+        },
         status: 200,
         bodyHtml: productBody(product, seo.description),
         cacheControl: publicCache,
@@ -550,6 +666,12 @@ export function robotsText(origin: string): string {
     'Disallow: /checkout',
     'Disallow: /order',
     'Disallow: /return',
+    'Disallow: /assets/',
+    'Disallow: /api/',
+    'Disallow: /v1/',
+    'Disallow: /health',
+    'Disallow: /favicon.ico',
+    'Disallow: /manifest.json',
     `Sitemap: ${trimOrigin(origin)}/sitemap.xml`,
   ];
   return `${lines.join('\n')}\n`;
@@ -565,6 +687,27 @@ function sitemapXml(origin: string, paths: string[]): string {
     .map((path) => `<url><loc>${xmlEscape(`${trimOrigin(origin)}${path}`)}</loc></url>`)
     .join('');
   return `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${entries}</urlset>`;
+}
+
+function isRecognizedSitemapPath(path: string): boolean {
+  const route = parsePublicRenderPath(path);
+  return route.kind === 'home' || route.kind === 'category' || route.kind === 'product';
+}
+
+async function indexableSitemapPaths(
+  apiOrigin: string,
+  paths: string[],
+  fetcher: Fetcher,
+): Promise<string[]> {
+  const candidates = [...new Set(paths)].filter(isRecognizedSitemapPath).sort();
+  const resolved = await Promise.all(
+    candidates.map(async (path) => {
+      const resolution = await getApi<SeoResolution>(apiOrigin, resolverPath(path), fetcher);
+      if (resolution.redirect || resolution.metadata?.noIndex) return null;
+      return path;
+    }),
+  );
+  return resolved.filter((path): path is string => path !== null);
 }
 
 async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<ProductSummary[]> {
@@ -596,31 +739,21 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
     ]);
     const paths = [
       '/',
-      ...categories.map((category) => `/category/${encodeURIComponent(category.slug)}`),
-      ...products.map((product) => `/product/${encodeURIComponent(product.slug)}`),
+      ...categories
+        .map((category) => `/category/${encodeURIComponent(category.slug)}`)
+        .filter(isRecognizedSitemapPath),
+      ...products
+        .map((product) => `/product/${encodeURIComponent(product.slug)}`)
+        .filter(isRecognizedSitemapPath),
     ];
-    const contentSlugs = (options.contentSlugs ?? []).filter(
-      (slug) => parsePublicRenderPath(`/content/${slug}`).kind === 'content',
-    );
-    for (const slug of contentSlugs) {
-      try {
-        await getApi<ContentPage>(
-          options.apiOrigin,
-          `/v1/content/pages/${encodeURIComponent(slug)}`,
-          fetcher,
-        );
-        paths.push(`/content/${encodeURIComponent(slug)}`);
-      } catch (error) {
-        if (!(error instanceof RenderApiError && error.status === 404)) throw error;
-      }
-    }
+    const indexablePaths = await indexableSitemapPaths(options.apiOrigin, paths, fetcher);
     return {
       status: 200,
       headers: new Headers({
         'Content-Type': 'application/xml; charset=utf-8',
         'Cache-Control': sitemapCache,
       }),
-      body: sitemapXml(origin, paths),
+      body: sitemapXml(origin, indexablePaths),
     };
   } catch {
     return {
@@ -674,13 +807,6 @@ export async function handleRequest(
   };
 }
 
-function contentSlugsFromEnvironment(): string[] {
-  return (process.env.NOVA_PUBLIC_CONTENT_SLUGS ?? '')
-    .split(',')
-    .map((slug) => slug.trim().toLowerCase())
-    .filter((slug) => parsePublicRenderPath(`/content/${slug}`).kind === 'content');
-}
-
 function mimeType(path: string): string {
   return (
     (
@@ -710,6 +836,7 @@ function serveStatic(
   response.writeHead(200, {
     'Content-Type': mimeType(filePath),
     'Cache-Control': 'public, max-age=31536000, immutable',
+    'X-Robots-Tag': 'noindex, nofollow',
   });
   createReadStream(filePath)
     .on('error', () => response.destroy())
@@ -760,7 +887,6 @@ export async function startServer(): Promise<void> {
   const server = createWebServer({
     origin,
     apiOrigin: process.env.NOVA_API_ORIGIN ?? 'http://localhost:4000',
-    contentSlugs: contentSlugsFromEnvironment(),
     staticRoot,
     template,
   });

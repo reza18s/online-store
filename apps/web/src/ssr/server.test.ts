@@ -90,11 +90,70 @@ test('renders a product with resolver metadata and catalog-derived Product JSON-
   assert.equal(context.seo.title, 'مانتوی لینن آوا | NOVA');
   assert.equal(context.seo.canonicalUrl, 'https://nova.example/product/linen-overshirt');
   assert.match(context.bodyHtml, /مانتوی لینن آوا/);
-  assert.deepEqual((context.seo.jsonLd as { offers: { price: string } }).offers.price, '24900000');
+  assert.match(context.bodyHtml, /وضعیت: موجود/);
+  assert.match(context.bodyHtml, /product-detail__main-image/);
+  assert.match(context.bodyHtml, /loading="eager"/);
+  assert.match(context.bodyHtml, /decoding="async"/);
+  assert.match(context.bodyHtml, /fetchpriority="high"/);
+  assert.doesNotMatch(context.bodyHtml, /(?:width|height)="/);
+  const graph = (context.seo.jsonLd as { '@graph': Array<Record<string, unknown>> })['@graph'];
+  const productJsonLd = graph.find((entry) => entry['@type'] === 'Product');
+  const breadcrumbJsonLd = graph.find((entry) => entry['@type'] === 'BreadcrumbList');
+  const organizationJsonLd = graph.find((entry) => entry['@type'] === 'Organization');
+  assert.ok(productJsonLd);
+  assert.ok(breadcrumbJsonLd);
+  assert.ok(organizationJsonLd);
+  assert.equal((productJsonLd.offers as { price: string }).price, '24900000');
+  assert.equal(
+    (productJsonLd.offers as { availability: string }).availability,
+    'https://schema.org/InStock',
+  );
+  assert.equal(productJsonLd.description, 'رویه‌ای سبک برای روزهای روشن.');
+  assert.deepEqual(
+    (breadcrumbJsonLd.itemListElement as Array<{ name: string }>).map((item) => item.name),
+    ['خانه', 'زنانه', 'مانتوی لینن آوا'],
+  );
+  assert.equal(organizationJsonLd.name, 'NOVA Store');
   assert.deepEqual(calls, [
     '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt',
     '/v1/catalog/products/linen-overshirt',
   ]);
+});
+
+test('uses catalog availability and a safe image fallback for unavailable products', async () => {
+  const unavailableProduct = {
+    ...product,
+    slug: 'unavailable-overshirt',
+    available: false,
+    imageUrl: null,
+    imageAlt: null,
+    stockStatus: 'OUT_OF_STOCK',
+  } satisfies CatalogProduct;
+  const { fetcher } = fixtureFetcher({
+    '/v1/seo/resolve?path=%2Fproduct%2Funavailable-overshirt': {
+      path: '/product/unavailable-overshirt',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/catalog/products/unavailable-overshirt': unavailableProduct,
+  });
+
+  const context = await renderRoute('/product/unavailable-overshirt', {
+    ...optionsBase,
+    fetcher,
+  });
+  assert.equal(context.status, 200);
+  assert.match(context.bodyHtml, /وضعیت: ناموجود/);
+  assert.doesNotMatch(context.bodyHtml, /<img\b/);
+  assert.equal(context.seo.openGraph.imageUrl, null);
+  const graph = (context.seo.jsonLd as { '@graph': Array<Record<string, unknown>> })['@graph'];
+  const productJsonLd = graph.find((entry) => entry['@type'] === 'Product');
+  assert.ok(productJsonLd);
+  assert.equal(productJsonLd.image, undefined);
+  assert.equal(
+    (productJsonLd.offers as { availability: string }).availability,
+    'https://schema.org/OutOfStock',
+  );
 });
 
 test('renders home, category, and published content initial HTML from public reads', async () => {
@@ -156,6 +215,39 @@ test('follows resolver redirects before loading catalog content', async () => {
   assert.equal(calls.length, 1);
 });
 
+test('resolves unknown public paths before a final noindex 404', async () => {
+  const { fetcher, calls } = fixtureFetcher({
+    '/v1/seo/resolve?path=%2Flegacy-product': {
+      path: '/legacy-product',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+  });
+  const context = await renderRoute('/legacy-product', { ...optionsBase, fetcher });
+  assert.equal(context.status, 404);
+  assert.equal(context.hashRoute, '#not-found');
+  assert.equal(context.seo.robots, 'noindex, nofollow');
+  assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Flegacy-product']);
+});
+
+test('allows persisted redirects for unknown legacy public paths', async () => {
+  const { fetcher, calls } = fixtureFetcher({
+    '/v1/seo/resolve?path=%2Fold-catalog-path': {
+      path: '/old-catalog-path',
+      metadata: null,
+      redirect: { fromPath: '/old-catalog-path', toPath: '/product/new', statusCode: 308 },
+    } satisfies SeoResolution,
+  });
+  const result = await handleRequest(
+    'https://nova.example/old-catalog-path',
+    { ...optionsBase, fetcher },
+    '<html><head></head><body><div id="root"></div></body></html>',
+  );
+  assert.equal(result.status, 308);
+  assert.equal(result.headers.get('location'), '/product/new');
+  assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Fold-catalog-path']);
+});
+
 test('returns a safe noindex 404 for missing published products', async () => {
   const { fetcher } = fixtureFetcher(
     {
@@ -181,6 +273,21 @@ test('keeps private clean paths on their existing client routes while excluding 
   assert.equal(context.hashRoute, '#account');
   assert.equal(context.seo.robots, 'noindex, nofollow');
   assert.equal(context.seo.canonicalUrl, null);
+});
+
+test('keeps private, system, and asset paths out of resolver lookup and indexing', async () => {
+  const { fetcher, calls } = fixtureFetcher({});
+  for (const path of [
+    '/account/orders',
+    '/health',
+    '/v1/catalog/products',
+    '/assets/missing.webp',
+  ]) {
+    const context = await renderRoute(path, { ...optionsBase, fetcher });
+    assert.equal(context.seo.robots, 'noindex, nofollow', path);
+    assert.equal(context.seo.canonicalUrl, null, path);
+  }
+  assert.deepEqual(calls, []);
 });
 
 test('renders one managed head set and safely serializes the initial context', () => {
@@ -211,35 +318,74 @@ test('renders one managed head set and safely serializes the initial context', (
   assert.match(html, /__NOVA_RENDER_CONTEXT__/);
 });
 
-test('crawler files include public catalog/content truth and exclude private routes', async () => {
-  const categories: CatalogCategory[] = [{ id: 'women', slug: 'women', name: 'زنانه' }];
-  const { fetcher } = fixtureFetcher(
-    {
-      '/v1/catalog/categories': categories,
-      '/v1/catalog/products?limit=100&sort=newest&page=1': {
-        items: [product],
-        total: 1,
-        page: 1,
-        limit: 100,
-      },
-      '/v1/content/pages/size-guide': page,
-      '/v1/content/pages/draft': { error: 'not found' },
+test('crawler files are deterministic, renderer-aware, and resolver-filtered', async () => {
+  const categories: CatalogCategory[] = [
+    { id: 'women', slug: 'women', name: 'زنانه' },
+    { id: 'sale', slug: 'sale', name: 'حراج' },
+  ];
+  const hiddenProduct = { ...product, slug: 'hidden-product' };
+  const redirectedProduct = { ...product, slug: 'redirected-product' };
+  const { fetcher } = fixtureFetcher({
+    '/v1/catalog/categories': categories,
+    '/v1/catalog/products?limit=100&sort=newest&page=1': {
+      items: [product, hiddenProduct, redirectedProduct],
+      total: 3,
+      page: 1,
+      limit: 100,
     },
-    { '/v1/content/pages/draft': 404 },
-  );
+    '/v1/seo/resolve?path=%2F': {
+      path: '/',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fcategory%2Fwomen': {
+      path: '/category/women',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fproduct%2Fhidden-product': {
+      path: '/product/hidden-product',
+      metadata: {
+        path: '/product/hidden-product',
+        title: 'پنهان',
+        description: 'برای فهرست نیست.',
+        canonicalUrl: '/product/hidden-product',
+        noIndex: true,
+        structuredData: null,
+      },
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt': {
+      path: '/product/linen-overshirt',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fproduct%2Fredirected-product': {
+      path: '/product/redirected-product',
+      metadata: null,
+      redirect: {
+        fromPath: '/product/redirected-product',
+        toPath: '/product/linen-overshirt',
+        statusCode: 308,
+      },
+    } satisfies SeoResolution,
+  });
   const sitemap = await sitemapResponse({
     ...optionsBase,
     fetcher,
-    contentSlugs: ['size-guide', 'draft'],
   });
   assert.equal(sitemap.status, 200);
-  assert.match(sitemap.body, /https:\/\/nova\.example\/product\/linen-overshirt/);
-  assert.match(sitemap.body, /https:\/\/nova\.example\/content\/size-guide/);
-  assert.doesNotMatch(sitemap.body, /draft/);
-  assert.doesNotMatch(sitemap.body, /account|admin|checkout|cart/);
+  const locations = [...sitemap.body.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
+  assert.deepEqual(locations, [
+    'https://nova.example/',
+    'https://nova.example/category/women',
+    'https://nova.example/product/linen-overshirt',
+  ]);
+  assert.doesNotMatch(sitemap.body, /sale|hidden-product|redirected-product|content/);
 
   const robots = robotsText(optionsBase.origin);
   assert.match(robots, /Disallow: \/account/);
+  assert.match(robots, /Disallow: \/assets\//);
   assert.match(robots, /Sitemap: https:\/\/nova\.example\/sitemap\.xml/);
 });
 

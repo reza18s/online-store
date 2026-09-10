@@ -1,11 +1,16 @@
 # TEST-001 E2E harness
 
-`bun run test:e2e` is a live-runtime gate, not a fake browser pass. It checks:
+`bun run test:e2e` is a live-runtime prerequisite gate, not a browser test. It checks:
 
 1. `GET /health/live` returns `200`;
 2. `GET /health/ready` returns `200` with `database: "ok"`;
-3. the Vite/preview storefront serves the HTML shell for home, category,
-   search, PDP, cart, auth, account, checkout, and admin hash routes.
+3. the Vite/preview storefront serves one HTML root shell with the expected
+   RTL application root.
+
+The root-shell check intentionally does not append hash routes before using
+`fetch`: fragments are not sent in an HTTP request, so a fetch-based probe
+cannot establish route-level rendering. This command reports one named
+root-shell availability result only; browser route journeys remain deferred.
 
 The command exits with code `2` and prints `BLOCKED` when the API, exact
 PostgreSQL-backed readiness, or storefront is unavailable. It does not start
@@ -21,7 +26,7 @@ bun run dev:api
 bun run dev
 ```
 
-Override URLs when the servers use different ports:
+Override local origins when the servers use different ports:
 
 ```powershell
 $env:NOVA_E2E_API_URL = 'http://127.0.0.1:4000'
@@ -35,3 +40,7 @@ interaction journeys, authenticated checkout, payment redirects/callbacks,
 and admin mutations are explicitly `NOT RUN`/`BLOCKED`, not skipped passing
 tests. Add a browser runner only after the repository adopts an approved
 Playwright setup and user-controlled test credentials/fixtures.
+
+The runner rejects URL credentials, query strings, and fragments and logs only
+the parsed origin. It keeps the local API readiness and storefront prerequisite
+fail-closed; it does not print the configured URL values or environment values.

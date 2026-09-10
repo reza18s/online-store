@@ -28,7 +28,7 @@ export const commerceIntegrationSuites: readonly CommerceIntegrationSuite[] = [
   },
   {
     id: 'checkout-inventory',
-    label: 'authoritative checkout quotes, idempotent order intent, and reservations',
+    label: 'authoritative checkout quotes, idempotent order intent, and sequential reservations',
     files: [
       'apps/api/src/modules/checkout/checkout.test.ts',
       'apps/api/src/modules/inventory/inventory.test.ts',
@@ -37,7 +37,7 @@ export const commerceIntegrationSuites: readonly CommerceIntegrationSuite[] = [
       'checkout idempotency',
       'checkout price conflict',
       'checkout stock conflict',
-      'reservation race/settlement transitions',
+      'sequential reservation conflict and settlement transitions',
     ],
   },
   {
@@ -68,14 +68,19 @@ export const commerceIntegrationSuites: readonly CommerceIntegrationSuite[] = [
     ],
   },
   {
-    id: 'auth-http',
-    label: 'customer/staff authentication, sessions, roles, and CSRF',
+    id: 'auth-service-boundaries',
+    label: 'customer/staff auth service boundaries and direct CSRF guard behavior',
     files: [
       'apps/api/src/modules/auth/auth.test.ts',
       'apps/api/src/modules/staff-auth/staff-auth.test.ts',
       'apps/api/src/common/http/csrf.guard.test.ts',
     ],
-    capabilities: ['customer auth', 'staff auth', 'role authorization', 'CSRF rejection'],
+    capabilities: [
+      'customer auth service',
+      'staff auth service',
+      'session and role policy',
+      'direct CSRF guard checks',
+    ],
   },
   {
     id: 'notifications',
@@ -117,4 +122,5 @@ export const unavailableRuntimeCoverage: readonly string[] = [
   'Redis-backed OTP state and worker runtime against the exact redis:7-alpine service',
   'real SMS, payment, shipping, and notification providers',
   'authenticated browser journeys requiring user-controlled OTP, CAPTCHA, or SMS data',
+  'concurrent reservation race execution against a database-backed runtime harness',
 ];

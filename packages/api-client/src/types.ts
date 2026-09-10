@@ -50,6 +50,10 @@ export interface ContentBlock {
   sortOrder: number;
 }
 
+export interface AdminContentBlock extends ContentBlock {
+  id: string;
+}
+
 export interface ContentPage {
   slug: string;
   title: string;
@@ -70,7 +74,7 @@ export interface AdminContentPageListItem {
 
 export interface AdminContentPage extends AdminContentPageListItem {
   body: string | null;
-  blocks: Array<ContentBlock & { id: string }>;
+  blocks: AdminContentBlock[];
 }
 
 export interface AdminContentPageListQuery {
@@ -915,7 +919,7 @@ export interface AdminCouponCreateInput {
   code: string;
   type: AdminCouponType;
   amount: number;
-  minimumOrderToman: number;
+  minimumOrderToman?: number;
   activeFrom: string;
   activeUntil: string;
   maxRedemptions?: number | null;
@@ -1092,6 +1096,11 @@ export interface CatalogProductQuery {
   limit?: number;
 }
 
+export interface CatalogSearchSuggestionsQuery {
+  q?: string;
+  limit?: number;
+}
+
 export interface CatalogFacetQuery {
   q?: string;
   category?: string;
@@ -1103,6 +1112,10 @@ export interface CatalogFacetQuery {
   maxPrice?: number;
   inStock?: boolean;
   onSale?: boolean;
+}
+
+export interface SeoResolveQuery {
+  path: string;
 }
 
 export type CatalogFacetKey = 'size' | 'color' | 'material';

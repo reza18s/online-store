@@ -87,6 +87,7 @@ export type {
   AdminSeoMetadataPage,
   AdminSeoMetadataUpdateInput,
   AdminContentPage,
+  AdminContentBlock,
   AdminContentPageCreateInput,
   AdminContentPageListItem,
   AdminContentPageListQuery,
@@ -157,6 +158,7 @@ export type {
   CatalogProductVariant,
   CatalogVariantMedia,
   CatalogSearchPage,
+  CatalogSearchSuggestionsQuery,
   CatalogSearchSuggestion,
   CatalogSearchSuggestionType,
   CatalogSort,
@@ -176,5 +178,6 @@ export type {
   SeoMetadata,
   SeoRedirect,
   SeoRedirectStatusCode,
+  SeoResolveQuery,
   SeoResolution,
 } from './types';

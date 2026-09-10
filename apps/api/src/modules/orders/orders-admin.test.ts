@@ -5,6 +5,7 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
 import type { AuthenticatedStaff } from '../auth/session.service';
 import { AdminOrderListQueryDto } from './dto/admin-order-list.query';
+import { OrdersAdminController } from './orders-admin.controller';
 import { OrdersService } from './orders.service';
 
 interface FakeAdminOrder {
@@ -244,6 +245,29 @@ test('staff detail returns the order snapshots and customer identity without int
   assert.equal(result.payment?.status, 'SUCCEEDED');
   assert.equal(result.shipment?.trackingReference, 'TRK-1');
   assert.equal('reason' in (result.events[0] ?? {}), false);
+});
+
+test('admin order detail responses omit payment redirect URLs', async () => {
+  const source = createOrder({
+    paymentAttempts: [
+      {
+        status: 'REDIRECTED',
+        amountToman: 2_089_000,
+        redirectUrl: 'https://payments.example.test/checkout/secret-token',
+        createdAt: new Date('2026-09-07T08:01:00.000Z'),
+        paidAt: null,
+      },
+    ],
+  });
+  const controller = new OrdersAdminController(createService([source]));
+
+  const response = await controller.detail('NV-ABC-001', {
+    requestId: 'request-1',
+    staff: createStaff(['support']),
+  } as never);
+
+  assert.equal(response.data.payment?.status, 'REDIRECTED');
+  assert.equal('redirectUrl' in (response.data.payment ?? {}), false);
 });
 
 test('staff order reads enforce roles and hide missing orders', async () => {

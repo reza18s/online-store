@@ -18,16 +18,25 @@ has these invariants:
 - PostgreSQL credentials are read only from the current process environment through
   `NOVA_BACKUP_SOURCE_DATABASE_URL` and, for restore,
   `NOVA_BACKUP_RESTORE_DATABASE_URL`. They are never printed in the JSON output.
-- `pg_dump` reads the source. The source and target must resolve to different
-  host/port/database identities.
+- The verifier accepts connection URLs only from those process environment
+  variables; it has no credential-bearing URL parameters. It passes the selected
+  database name as a non-secret `--dbname` value and forwards credentials through
+  the PostgreSQL client process environment.
+- `pg_dump` reads the source. The source and target must use different database
+  names, and the verifier compares their connected server/port/database identity
+  before it starts the archive or restore.
 - The archive path must be new; an existing file is rejected instead of replaced.
+  The archive is written to a unique partial path and atomically published to the
+  requested path, so a concurrent file cannot be overwritten by the verifier.
 - Restore requires a pre-existing target database with zero user tables. The
   verifier never creates, drops, resets, truncates, or cleans a database and never
   passes `pg_restore --clean`.
 - Restore uses `--exit-on-error` and `--single-transaction`, then verifies that the
   target contains user tables and any explicitly requested expected tables.
 - The script leaves the archive in place for evidence and does not remove the
-  target or its data. Cleanup is an operator-owned action outside this contract.
+  target or its data. Failed runs may leave a `.partial.<guid>` archive beside the
+  requested path for operator inspection; cleanup is an operator-owned action
+  outside this contract.
 - Output is compact JSON events with status `RUNNING`, `PASS`, `FAIL`, or
   `BLOCKED`. Exit code `0` means the selected mode passed, `1` means an executable
   check failed, and `2` means a safety or external-decision gate blocked execution.
@@ -47,7 +56,8 @@ The operator also needs:
   PostgreSQL major version as the source;
 - a new writable archive path with enough local capacity;
 - for a restore drill, an already-created disposable PostgreSQL database that is
-  empty of user tables and is not the source database;
+  empty of user tables, has a different database name, and is not the source
+  database;
 - a record location outside this repository for the JSON output, archive SHA-256,
   source/target identities approved by the operator, and the run timestamp.
 

@@ -3,10 +3,6 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$BackupFile,
 
-    [string]$SourceDatabaseUrl = $env:NOVA_BACKUP_SOURCE_DATABASE_URL,
-
-    [string]$RestoreDatabaseUrl = $env:NOVA_BACKUP_RESTORE_DATABASE_URL,
-
     [string[]]$ExpectedTable = @(),
 
     [switch]$BackupOnly
@@ -14,6 +10,8 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+$SourceDatabaseUrl = [Environment]::GetEnvironmentVariable('NOVA_BACKUP_SOURCE_DATABASE_URL', 'Process')
+$RestoreDatabaseUrl = [Environment]::GetEnvironmentVariable('NOVA_BACKUP_RESTORE_DATABASE_URL', 'Process')
 
 function Write-Event {
     param(
@@ -111,6 +109,7 @@ function Get-PostgresEnvironment {
         PGUSER     = [Uri]::UnescapeDataString($userInfo[0])
         PGDATABASE = $databaseName
         PGAPPNAME  = 'nova-ops-002-backup-verify'
+        PGPASSWORD = $null
     }
 
     if ($userInfo.Count -eq 2) {
@@ -163,9 +162,33 @@ function Invoke-PostgresProcess {
     )
 
     $environment = Get-PostgresEnvironment -ConnectionUrl $DatabaseUrl
+    $connectionEnvironmentNames = @(
+        'PGHOST',
+        'PGHOSTADDR',
+        'PGPORT',
+        'PGUSER',
+        'PGPASSWORD',
+        'PGDATABASE',
+        'PGSERVICE',
+        'PGSERVICEFILE',
+        'PGAPPNAME',
+        'PGCONNECT_TIMEOUT',
+        'PGSSLMODE',
+        'PGSSLROOTCERT',
+        'PGSSLCERT',
+        'PGSSLKEY',
+        'PGSSLCRL',
+        'PGSSLCRLDIR',
+        'PGGSSENCMODE',
+        'PGCHANNELBINDING',
+        'PGTARGETSESSIONATTRS'
+    )
     $previous = @{}
-    foreach ($name in $environment.Keys) {
+    foreach ($name in $connectionEnvironmentNames) {
         $previous[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+        [Environment]::SetEnvironmentVariable($name, $null, 'Process')
+    }
+    foreach ($name in $environment.Keys) {
         [Environment]::SetEnvironmentVariable($name, $environment[$name], 'Process')
     }
 
@@ -174,7 +197,7 @@ function Invoke-PostgresProcess {
         $exitCode = $LASTEXITCODE
     }
     finally {
-        foreach ($name in $environment.Keys) {
+        foreach ($name in $connectionEnvironmentNames) {
             [Environment]::SetEnvironmentVariable($name, $previous[$name], 'Process')
         }
     }
@@ -241,6 +264,25 @@ function Invoke-PostgresQuery {
     return $value
 }
 
+function Get-ConnectedDatabaseIdentity {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    return Invoke-PostgresQuery `
+        -PsqlPath $PsqlPath `
+        -DatabaseUrl $DatabaseUrl `
+        -Query "SELECT COALESCE(inet_server_addr()::text, 'local-socket') || ':' || COALESCE(inet_server_port()::text, '0') || ':' || current_database();" `
+        -Description $Description
+}
+
 try {
     if ([string]::IsNullOrWhiteSpace($SourceDatabaseUrl)) {
         throw 'BLOCKED: set NOVA_BACKUP_SOURCE_DATABASE_URL in the current process environment.'
@@ -262,6 +304,8 @@ try {
         throw 'BLOCKED: the backup output file already exists; choose a new path to prevent accidental overwrite.'
     }
 
+    $temporaryBackupPath = "$backupPath.partial.$([Guid]::NewGuid().ToString('N'))"
+
     foreach ($table in @($ExpectedTable)) {
         if ([string]::IsNullOrWhiteSpace($table) -or $table -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') {
             throw "BLOCKED: expected table '$table' is not a simple PostgreSQL identifier."
@@ -276,6 +320,23 @@ try {
         $restore = Get-DatabaseIdentity -ConnectionUrl $RestoreDatabaseUrl
         if ($source.Host -eq $restore.Host -and $source.Port -eq $restore.Port -and $source.Database -eq $restore.Database) {
             throw 'BLOCKED: the restore target resolves to the source database; a separate target is required.'
+        }
+
+        if ([StringComparer]::OrdinalIgnoreCase.Equals($source.Database, $restore.Database)) {
+            throw 'BLOCKED: the restore target must use a different database name from the source database.'
+        }
+
+        $sourceConnectionIdentity = Get-ConnectedDatabaseIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $SourceDatabaseUrl `
+            -Description 'source database identity check'
+        $restoreConnectionIdentity = Get-ConnectedDatabaseIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $RestoreDatabaseUrl `
+            -Description 'restore-target identity check'
+
+        if ($sourceConnectionIdentity -eq $restoreConnectionIdentity) {
+            throw 'BLOCKED: the restore target has the same connected server and database identity as the source.'
         }
 
         $existingTableCountText = Invoke-PostgresQuery `
@@ -297,20 +358,20 @@ try {
     Write-Event -Status 'RUNNING' -Phase 'backup' -Message 'Creating a PostgreSQL custom-format archive from the source database.'
     Invoke-PostgresCommand `
         -CommandPath $pgDumpPath `
-        -Arguments @('--format=custom', "--file=$backupPath", '--no-owner', '--no-acl') `
+        -Arguments @("--dbname=$($source.Database)", '--format=custom', "--file=$temporaryBackupPath", '--no-owner', '--no-acl') `
         -Description 'PostgreSQL backup' `
         -DatabaseUrl $SourceDatabaseUrl
 
-    if (-not (Test-Path -LiteralPath $backupPath -PathType Leaf)) {
-        throw 'FAIL: pg_dump completed but did not create the backup archive.'
+    if (-not (Test-Path -LiteralPath $temporaryBackupPath -PathType Leaf)) {
+        throw 'FAIL: pg_dump completed but did not create the temporary backup archive.'
     }
 
-    $backupInfo = Get-Item -LiteralPath $backupPath
+    $backupInfo = Get-Item -LiteralPath $temporaryBackupPath
     if ($backupInfo.Length -le 0) {
-        throw 'FAIL: pg_dump created an empty backup archive.'
+        throw 'FAIL: pg_dump created an empty temporary backup archive.'
     }
 
-    $archiveEntries = @(& $pgRestorePath '--list' $backupPath 2>&1)
+    $archiveEntries = @(& $pgRestorePath '--list' $temporaryBackupPath 2>&1)
     if ($LASTEXITCODE -ne 0) {
         throw 'FAIL: pg_restore archive listing failed; the archive is not structurally verifiable.'
     }
@@ -325,7 +386,15 @@ try {
         throw 'FAIL: pg_restore archive listing contained no data-definition or data entries.'
     }
 
-    $sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $backupPath).Hash.ToLowerInvariant()
+    $sha256 = (Get-FileHash -Algorithm SHA256 -LiteralPath $temporaryBackupPath).Hash.ToLowerInvariant()
+    try {
+        [IO.File]::Move($temporaryBackupPath, $backupPath)
+    }
+    catch {
+        throw 'BLOCKED: could not publish the backup archive atomically because the final path became unavailable or already exists.'
+    }
+
+    $backupInfo = Get-Item -LiteralPath $backupPath
     Write-Event `
         -Status 'PASS' `
         -Phase 'archive' `
@@ -349,7 +418,7 @@ try {
     Write-Event -Status 'RUNNING' -Phase 'restore' -Message 'Restoring the archive into the preflighted empty target database.'
     Invoke-PostgresCommand `
         -CommandPath $pgRestorePath `
-        -Arguments @('--format=custom', '--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', $backupPath) `
+        -Arguments @("--dbname=$($restore.Database)", '--format=custom', '--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', $backupPath) `
         -Description 'PostgreSQL restore' `
         -DatabaseUrl $RestoreDatabaseUrl
 

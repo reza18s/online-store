@@ -28,6 +28,21 @@ successful merge still combines compatible lines and deletes the guest source.
 Checkout remains authoritative and repeats its own live price, lifecycle, and
 stock validation before reservation.
 
+The authenticated merge request may include explicit per-variant resolutions.
+Zero removes that line from the guest cart; a positive quantity retains no more
+than the quantity originally present in that guest line. The service applies
+these resolutions, re-reads the guest cart, and repeats the conflict checks in
+the same transaction. If any conflict remains, the entire transaction rolls
+back, preserving both the original guest cart and the structured conflict
+payload. The request body is the preferred client contract; an omitted body is
+still treated as an empty resolution set for compatibility with older callers.
+
+The cart feature owns this recovery flow. The parent route passes the canonical
+cart state and customer identity to `StorefrontCartPage`; the page submits
+resolutions through the merge mutation and keeps the conflict details until a
+successful merge. The legacy `#cart/conflict` alias resolves to the real cart
+route rather than a generic preview state.
+
 ## Consequences
 
 - Customer-facing transport can distinguish a merge conflict from a generic

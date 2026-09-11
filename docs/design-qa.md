@@ -163,6 +163,16 @@ API-error states; formal pixel runtime remains `NOT RUN` against
 The target image remains evidence of intended visual composition, not proof
 of pixel parity across every state or browser.
 
+The 2026-09-12 formal-registration audit confirmed why the pixel gate remains
+open: `output/design-artifacts/auth-staff-login-atelier.png` is a `1536×1024`
+RGB presentation board containing framed desktop/mobile panels and editorial
+labels, not two standalone viewport exports. The visible panels are
+approximately `1096×895` (aspect `1.2246`) and `353×895` (aspect `0.3944`),
+which do not match the required `1440×900` (`1.6`) and `390×844` (`0.4621`)
+reference ratios. Resizing or trimming them would invent geometry, so no formal
+pixel diff is claimed. Obtain standalone exact-size exports or an authoritative
+crop manifest before closing `QA-001-VIS-001`.
+
 ### Parent follow-up — 2026-09-11
 
 Commit `03ed76f` addressed the source-level composition variance in the

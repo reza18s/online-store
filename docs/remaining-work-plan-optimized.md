@@ -31,7 +31,7 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 - Live execution ledger: [`docs/remaining-work-status.md`](remaining-work-status.md). Update it after every merge, dispatch, resume/stop, PR state change, validation result or blocker.
 - Feature/provider/SEO/ops/test/QA/release tasks follow the dependency graph below.
 
-Existing implementation already covers most backend/domain foundations, Prisma migrations/seed, catalog/search/facets, cart/merge, customer/staff auth backend, checkout/order/payment logic, inventory, coupons, notification outbox, fulfillment/returns, content/SEO APIs, browser transport, admin dashboard and admin products. Main remaining work is production-connected UI, provider adapters, SSR/SEO, runtime/E2E, QA, observability/recovery and launch readiness.
+Existing implementation already covers most backend/domain foundations, Prisma migrations/seed, catalog/search/facets, cart/merge, customer/staff auth backend, checkout/order/payment logic, inventory, coupons, notification outbox, fulfillment/returns, content/SEO APIs, browser transport, admin dashboard and admin products. Main remaining work is production-connected UI, provider adapters, remaining published-CMS-content and full browser/crawler coverage, runtime/E2E, QA, observability/recovery and launch readiness.
 
 - `QA-001` — 🟡 audit and bounded owner fixes are integrated in `1bad6aa`; report `docs/design-qa.md` records the three findings, deterministic gates pass, and browser/AT/pixel gates remain unavailable.
 
@@ -563,7 +563,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## OPS-001 — worker observability
 
-**Status:** ✅ locally accepted and merged into `codex/integration` as `808dd7634a357eb45eb61da4e9b320c7146f2d62` from task commit `9e69d54d1dbec8355d308418ca61ebae9b4f284d`. The bounded implementation is limited to worker observability/lifecycle behavior, focused tests and its runbook; no remote PR was created because repository export/push access is blocked. Live worker/outbox validation is intentionally batched for the wave/integration gate.
+**Status:** ✅ locally accepted and merged into `codex/integration` as `808dd7634a357eb45eb61da4e9b320c7146f2d62` from task commit `9e69d54d1dbec8355d308418ca61ebae9b4f284d`. The bounded implementation is limited to worker observability/lifecycle behavior, focused tests and its runbook; no remote PR was created because repository export/push access is blocked. The batched live gate verified worker health/startup and provider-independent retry plus local-sender `PENDING → SENT` transitions; external provider delivery and database concurrency remain separate follow-up gates.
 
 **Goal:** production-like safe/observable notification worker; provider implementation remains PROVIDER-002-owned.
 

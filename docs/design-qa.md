@@ -320,7 +320,7 @@ full assistive-technology output or pixel comparison.
 
 ```text
 git rev-parse HEAD
-  465ce070cbdb31e9ab1dbad8c6b2f21bc06d12bb
+  465ce070cbdb31e9ab1dbad8c6b2f21bc06d12bb (HEAD during the parent QA recheck; later live-runtime evidence was recorded on 2026-09-11)
 
 bun test apps/web/src test/e2e/run.test.ts
   PASS — 132 pass, 0 fail, 31 files
@@ -344,5 +344,8 @@ production fix was attempted in this audit.
 
 **Final QA-001 result:** deterministic source/test gates `PASS`; responsive
 runtime, browser accessibility, exact-width, and pixel-regression gates
-`NOT RUN`/`BLOCKED`; four parent-routable findings recorded, three of them
-accessibility failures and one target-matching visual variance.
+`NOT RUN`/`BLOCKED`. Four historical parent-routable findings were recorded;
+the three accessibility findings are now `CLOSED` at source/bounded-runtime
+scope, and the visual finding is `SUPERSEDED` for the bounded default viewport.
+Exact target-size, full assistive-technology and pixel-comparison gates remain
+open.

@@ -35,6 +35,21 @@ test('validates staff login fields with localized, field-specific errors', () =>
   assert.equal(validateStaffLoginInput('admin@example.com', 'secret', '123456'), null);
 });
 
+test('renders the session-expired staff login state from the safe route marker', () => {
+  const queryClient = new QueryClient();
+  const markup = renderToStaticMarkup(
+    createElement(
+      QueryClientProvider,
+      { client: queryClient },
+      createElement(AdminPage, { page: 'login', queryString: 'expired=1' }),
+    ),
+  );
+
+  assert.match(markup, /نشست مدیریت منقضی شده است/);
+  assert.match(markup, /role="status"/);
+  queryClient.clear();
+});
+
 test('renders an accessible mobile logout control in the legacy admin shell', () => {
   const queryClient = new QueryClient();
   const markup = renderToStaticMarkup(

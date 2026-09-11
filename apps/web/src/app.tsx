@@ -2541,8 +2541,9 @@ export function AdminRouteUnavailablePage({ page }: { page: string }) {
   );
 }
 
-export function AdminPage({ page }: { page: string }) {
+export function AdminPage({ page, queryString = '' }: { page: string; queryString?: string }) {
   const isLoginPage = page === 'login';
+  const sessionExpired = new URLSearchParams(queryString).get('expired') === '1';
   const staffQuery = useStaffUser(!isLoginPage);
   const authFailure = isStaffAuthFailure(staffQuery.error);
   const authorizationFailure = isStaffAuthorizationFailure(staffQuery.error);
@@ -2552,7 +2553,7 @@ export function AdminPage({ page }: { page: string }) {
     hasStaffSession: Boolean(staffQuery.data),
   });
 
-  if (isLoginPage) return <AdminLoginPage />;
+  if (isLoginPage) return <AdminLoginPage sessionExpired={sessionExpired} />;
   if (authorizationFailure) return <AdminPermissionDeniedPage />;
   if (staffQuery.isPending && !allowDevelopmentPreview) return <AdminSessionLoading />;
   if (authFailure && staffQuery.data) return <AdminLoginPage sessionExpired />;
@@ -2926,7 +2927,7 @@ export function RouteView({
     case 'content':
       return <PublicContentSystemPage slug={resolved.slug} />;
     case 'admin':
-      return <AdminPage page={resolved.page} />;
+      return <AdminPage page={resolved.page} queryString={resolved.queryString} />;
     case 'not-found':
       return <NotFoundPage />;
   }

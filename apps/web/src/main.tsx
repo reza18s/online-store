@@ -17,7 +17,7 @@ import './styles.css';
 
 function redirectToStaffLogin(): void {
   if (typeof window !== 'undefined' && window.location.hash.startsWith('#admin')) {
-    window.location.hash = '#admin/login';
+    window.location.hash = '#admin/login?expired=1';
   }
 }
 

@@ -78,7 +78,9 @@ the sitemap closed with a non-cacheable 503 response; an optional deployment
 manifest is not used as a substitute for API truth. Resolver lookups are
 bounded to 16 concurrent requests, and the single-document sitemap is bounded
 by the standard 50,000-URL and 50 MiB limits; an over-limit result fails closed
-until sitemap index/partition support is introduced.
+until sitemap index/partition support is introduced. Catalog page shapes and
+product slugs are validated before candidate generation so malformed upstream
+records cannot become fabricated sitemap URLs.
 
 ## Cache and deployment assumptions
 

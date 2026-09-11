@@ -1,3 +1,4 @@
+import { isContentPageSlug } from '@nova/api-client';
 import type { SeoMetadata } from '@nova/api-client';
 
 import { parseHashRoute } from '../shared/hash-route';
@@ -74,7 +75,9 @@ export function parsePublicRenderPath(input: string): PublicRenderRoute {
       return { kind: 'category', path, slug };
     }
     if (slug && prefix === 'product') return { kind: 'product', path, slug };
-    if (slug && prefix === 'content') return { kind: 'content', path, slug };
+    if (slug && prefix === 'content' && isContentPageSlug(slug)) {
+      return { kind: 'content', path, slug };
+    }
   }
 
   if (/^\/(?:auth|account|admin|cart|checkout|order|return)(?:\/|$)/.test(path)) {

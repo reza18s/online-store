@@ -70,7 +70,7 @@ const sitemapMaxUrlCount = 50_000;
 const sitemapMaxBytes = 50 * 1024 * 1024;
 const sitemapResolverConcurrency = 16;
 const rfc3339DateTimePattern =
-  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 const contentPageSummaryFields = new Set(['slug', 'title', 'updatedAt']);
 
 function trimOrigin(value: string): string {
@@ -136,8 +136,68 @@ function isContentPageSummaryList(value: unknown): value is ContentPageSummary[]
       typeof summary.title === 'string' &&
       summary.title.trim().length > 0 &&
       typeof summary.updatedAt === 'string' &&
-      rfc3339DateTimePattern.test(summary.updatedAt) &&
-      Number.isFinite(Date.parse(summary.updatedAt))
+      isRfc3339DateTime(summary.updatedAt)
+    );
+  });
+}
+
+function isRfc3339DateTime(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const match = rfc3339DateTimePattern.exec(value);
+  if (!match) return false;
+
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText, offset] = match;
+  if (!yearText || !monthText || !dayText || !hourText || !minuteText || !secondText || !offset) {
+    return false;
+  }
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  const hour = Number(hourText);
+  const minute = Number(minuteText);
+  const second = Number(secondText);
+  if (year < 1 || month < 1 || month > 12 || hour > 23 || minute > 59 || second > 59) {
+    return false;
+  }
+
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  if (daysInMonth === undefined || day < 1 || day > daysInMonth) return false;
+
+  if (offset !== 'Z') {
+    const offsetHour = Number(offset.slice(1, 3));
+    const offsetMinute = Number(offset.slice(4, 6));
+    if (offsetHour > 23 || offsetMinute > 59) return false;
+  }
+  return Number.isFinite(Date.parse(value));
+}
+
+function isCatalogProductPage(value: unknown): value is CatalogProductPage {
+  if (!value || typeof value !== 'object') return false;
+  const page = value as Record<string, unknown>;
+  const total = page.total;
+  const pageNumber = page.page;
+  const limit = page.limit;
+  if (
+    typeof total !== 'number' ||
+    !Number.isInteger(total) ||
+    total < 0 ||
+    typeof pageNumber !== 'number' ||
+    !Number.isInteger(pageNumber) ||
+    pageNumber < 1 ||
+    typeof limit !== 'number' ||
+    !Number.isInteger(limit) ||
+    limit < 1 ||
+    !Array.isArray(page.items)
+  ) {
+    return false;
+  }
+  return page.items.every((item) => {
+    if (!item || typeof item !== 'object') return false;
+    const product = item as Record<string, unknown>;
+    return (
+      typeof product.slug === 'string' &&
+      isIndexablePublicRenderPath(`/product/${encodeURIComponent(product.slug)}`)
     );
   });
 }
@@ -847,11 +907,15 @@ async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<
   let page = 1;
   let total = 0;
   do {
-    const result = await getApi<CatalogProductPage>(
+    const rawResult = await getApi<unknown>(
       apiOrigin,
       catalogProductsPath(`limit=100&sort=newest&page=${page}`),
       fetcher,
     );
+    if (!isCatalogProductPage(rawResult)) {
+      throw new RenderApiError(502, 'SSR API returned an invalid catalog page');
+    }
+    const result = rawResult;
     if (result.total > sitemapMaxUrlCount) {
       throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
     }

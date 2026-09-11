@@ -26,6 +26,7 @@ test('parses only the clean public rendering paths', () => {
   });
   assert.equal(parsePublicRenderPath('/category/not-a-public-audience').kind, 'unknown');
   assert.equal(parsePublicRenderPath('/product/bad%2Fslug').kind, 'unknown');
+  assert.equal(parsePublicRenderPath(`/content/${'a'.repeat(121)}`).kind, 'unknown');
   assert.equal(parsePublicRenderPath('//').kind, 'unknown');
   assert.equal(parsePublicRenderPath('///').kind, 'unknown');
 });

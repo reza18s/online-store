@@ -401,6 +401,14 @@ test('fails closed when the content sitemap source has an invalid summary', asyn
       value: { slug: 'valid-page', title: 'تاریخ نامعتبر', updatedAt: '2026-09-11' },
     },
     {
+      name: 'impossible calendar date',
+      value: {
+        slug: 'valid-page',
+        title: 'تاریخ ناممکن',
+        updatedAt: '2026-02-29T00:00:00.000Z',
+      },
+    },
+    {
       name: 'unexpected field',
       value: {
         slug: 'valid-page',
@@ -426,6 +434,22 @@ test('fails closed when the content sitemap source has an invalid summary', asyn
     assert.equal(result.status, 503, entry.name);
     assert.equal(result.headers.get('cache-control'), 'no-store', entry.name);
   }
+});
+
+test('fails closed when the catalog sitemap source has an invalid product summary', async () => {
+  const { fetcher } = fixtureFetcher({
+    '/v1/catalog/categories': [],
+    '/v1/content/pages': [],
+    '/v1/catalog/products?limit=100&sort=newest&page=1': {
+      items: [{ name: 'بدون شناسه' }],
+      total: 1,
+      page: 1,
+      limit: 100,
+    },
+  });
+  const result = await sitemapResponse({ ...optionsBase, fetcher });
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
 });
 
 test('renders home, category, and published content initial HTML from public reads', async () => {

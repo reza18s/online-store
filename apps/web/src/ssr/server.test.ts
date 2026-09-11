@@ -2,7 +2,13 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import type { CatalogCategory, CatalogProduct, ContentPage, SeoResolution } from '@nova/api-client';
+import type {
+  CatalogCategory,
+  CatalogProduct,
+  ContentPage,
+  ContentPageSummary,
+  SeoResolution,
+} from '@nova/api-client';
 
 import {
   createWebServer,
@@ -329,6 +335,7 @@ test('fails closed when sitemap resolver data is missing API metadata', async ()
   const { fetcher } = fixtureFetcher(
     {
       '/v1/catalog/categories': [],
+      '/v1/content/pages': [],
       '/v1/catalog/products?limit=100&sort=newest&page=1': {
         items: [],
         total: 0,
@@ -570,10 +577,16 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
     { id: 'women', slug: 'women', name: 'زنانه' },
     { id: 'sale', slug: 'sale', name: 'حراج' },
   ];
+  const contentPages: ContentPageSummary[] = [
+    { slug: 'shipping-policy', title: 'ارسال', updatedAt: '2026-09-11T00:00:00.000Z' },
+    { slug: 'hidden-policy', title: 'پنهان', updatedAt: '2026-09-11T00:00:00.000Z' },
+    { slug: 'redirected-policy', title: 'انتقالی', updatedAt: '2026-09-11T00:00:00.000Z' },
+  ];
   const hiddenProduct = { ...product, slug: 'hidden-product' };
   const redirectedProduct = { ...product, slug: 'redirected-product' };
   const { fetcher } = fixtureFetcher({
     '/v1/catalog/categories': categories,
+    '/v1/content/pages': contentPages,
     '/v1/catalog/products?limit=100&sort=newest&page=1': {
       items: [product, hiddenProduct, redirectedProduct],
       total: 3,
@@ -616,6 +629,32 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
         statusCode: 308,
       },
     } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fcontent%2Fshipping-policy': {
+      path: '/content/shipping-policy',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fcontent%2Fhidden-policy': {
+      path: '/content/hidden-policy',
+      metadata: {
+        path: '/content/hidden-policy',
+        title: 'پنهان',
+        description: 'برای فهرست نیست.',
+        canonicalUrl: '/content/hidden-policy',
+        noIndex: true,
+        structuredData: null,
+      },
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fcontent%2Fredirected-policy': {
+      path: '/content/redirected-policy',
+      metadata: null,
+      redirect: {
+        fromPath: '/content/redirected-policy',
+        toPath: '/content/shipping-policy',
+        statusCode: 308,
+      },
+    } satisfies SeoResolution,
   });
   const sitemap = await sitemapResponse({
     ...optionsBase,
@@ -626,9 +665,13 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
   assert.deepEqual(locations, [
     'https://nova.example/',
     'https://nova.example/category/women',
+    'https://nova.example/content/shipping-policy',
     'https://nova.example/product/linen-overshirt',
   ]);
-  assert.doesNotMatch(sitemap.body, /sale|hidden-product|redirected-product|content/);
+  assert.doesNotMatch(
+    sitemap.body,
+    /sale|hidden-product|redirected-product|hidden-policy|redirected-policy/,
+  );
 
   const robots = robotsText(optionsBase.origin);
   assert.match(robots, /Disallow: \/account/);
@@ -642,6 +685,7 @@ test('sitemap uses safe resolver canonicals and preserves null-canonical candida
   const fallbackProduct = { ...product, slug: 'fallback' };
   const { fetcher } = fixtureFetcher({
     '/v1/catalog/categories': [],
+    '/v1/content/pages': [],
     '/v1/catalog/products?limit=100&sort=newest&page=1': {
       items: [oldProduct, unsafeProduct, fallbackProduct],
       total: 3,

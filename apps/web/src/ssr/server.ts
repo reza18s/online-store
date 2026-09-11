@@ -13,6 +13,7 @@ import type {
   CatalogProduct,
   CatalogProductPage,
   ContentPage,
+  ContentPageSummary,
   ProductSummary,
   SeoResolution,
 } from '@nova/api-client';
@@ -827,9 +828,10 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
   const origin = trimOrigin(options.origin);
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
   try {
-    const [categories, products] = await Promise.all([
+    const [categories, products, contentPages] = await Promise.all([
       getApi<CatalogCategory[]>(options.apiOrigin, '/v1/catalog/categories', fetcher),
       allCatalogProducts(options.apiOrigin, fetcher),
+      getApi<ContentPageSummary[]>(options.apiOrigin, '/v1/content/pages', fetcher),
     ]);
     const paths = [
       '/',
@@ -838,6 +840,9 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
         .filter(isRecognizedSitemapPath),
       ...products
         .map((product) => `/product/${encodeURIComponent(product.slug)}`)
+        .filter(isRecognizedSitemapPath),
+      ...contentPages
+        .map((page) => `/content/${encodeURIComponent(page.slug)}`)
         .filter(isRecognizedSitemapPath),
     ];
     const indexablePaths = await indexableSitemapPaths(options.apiOrigin, paths, fetcher, origin);

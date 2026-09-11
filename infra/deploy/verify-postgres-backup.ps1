@@ -85,6 +85,107 @@ function Get-DatabaseIdentity {
     }
 }
 
+function Get-PostgresEnvironment {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ConnectionUrl
+    )
+
+    try {
+        $uri = [Uri]$ConnectionUrl
+    }
+    catch {
+        throw 'BLOCKED: the PostgreSQL connection URL is not a valid URI.'
+    }
+
+    $userInfo = $uri.UserInfo -split ':', 2
+    $databaseName = [Uri]::UnescapeDataString($uri.AbsolutePath.Trim('/'))
+    if ([string]::IsNullOrWhiteSpace($uri.Host) -or $userInfo.Count -eq 0 -or [string]::IsNullOrWhiteSpace($userInfo[0]) -or [string]::IsNullOrWhiteSpace($databaseName) -or $databaseName.Contains('/')) {
+        throw 'BLOCKED: the database URL must include a host, username, and exactly one database path segment.'
+    }
+
+    $port = if ($uri.Port -gt 0) { $uri.Port } else { 5432 }
+    $environment = @{
+        PGHOST     = $uri.Host
+        PGPORT     = [string]$port
+        PGUSER     = [Uri]::UnescapeDataString($userInfo[0])
+        PGDATABASE = $databaseName
+        PGAPPNAME  = 'nova-ops-002-backup-verify'
+    }
+
+    if ($userInfo.Count -eq 2) {
+        $environment.PGPASSWORD = [Uri]::UnescapeDataString($userInfo[1])
+    }
+
+    $query = $uri.Query.TrimStart('?')
+    if (-not [string]::IsNullOrWhiteSpace($query)) {
+        foreach ($pair in $query.Split('&')) {
+            $parts = $pair.Split('=', 2)
+            if ($parts.Count -ne 2) {
+                continue
+            }
+
+            $key = [Uri]::UnescapeDataString($parts[0]).ToLowerInvariant()
+            $value = [Uri]::UnescapeDataString($parts[1])
+            $environmentName = switch ($key) {
+                'sslmode' { 'PGSSLMODE' }
+                'sslrootcert' { 'PGSSLROOTCERT' }
+                'sslcert' { 'PGSSLCERT' }
+                'sslkey' { 'PGSSLKEY' }
+                'gssencmode' { 'PGGSSENCMODE' }
+                'channel_binding' { 'PGCHANNELBINDING' }
+                'application_name' { 'PGAPPNAME' }
+                default { $null }
+            }
+
+            if ($null -ne $environmentName) {
+                $environment[$environmentName] = $value
+            }
+        }
+    }
+
+    return $environment
+}
+
+function Invoke-PostgresProcess {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$CommandPath,
+
+        [Parameter(Mandatory = $true)]
+        [string[]]$Arguments,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    $environment = Get-PostgresEnvironment -ConnectionUrl $DatabaseUrl
+    $previous = @{}
+    foreach ($name in $environment.Keys) {
+        $previous[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+        [Environment]::SetEnvironmentVariable($name, $environment[$name], 'Process')
+    }
+
+    try {
+        $output = @(& $CommandPath @Arguments 2>&1)
+        $exitCode = $LASTEXITCODE
+    }
+    finally {
+        foreach ($name in $environment.Keys) {
+            [Environment]::SetEnvironmentVariable($name, $previous[$name], 'Process')
+        }
+    }
+
+    if ($exitCode -ne 0) {
+        throw "FAIL: $Description failed with exit code $exitCode."
+    }
+
+    return $output
+}
+
 function Invoke-PostgresCommand {
     param(
         [Parameter(Mandatory = $true)]
@@ -94,13 +195,17 @@ function Invoke-PostgresCommand {
         [string[]]$Arguments,
 
         [Parameter(Mandatory = $true)]
-        [string]$Description
+        [string]$Description,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl
     )
 
-    $null = & $CommandPath @Arguments 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "FAIL: $Description failed with exit code $LASTEXITCODE."
-    }
+    $null = Invoke-PostgresProcess `
+        -CommandPath $CommandPath `
+        -Arguments $Arguments `
+        -DatabaseUrl $DatabaseUrl `
+        -Description $Description
 }
 
 function Invoke-PostgresQuery {
@@ -118,10 +223,11 @@ function Invoke-PostgresQuery {
         [string]$Description
     )
 
-    $output = @(& $PsqlPath "--dbname=$DatabaseUrl" '--tuples-only' '--no-align' '--no-psqlrc' "--command=$Query" 2>&1)
-    if ($LASTEXITCODE -ne 0) {
-        throw "FAIL: $Description failed with exit code $LASTEXITCODE."
-    }
+    $output = @(Invoke-PostgresProcess `
+        -CommandPath $PsqlPath `
+        -Arguments @('--tuples-only', '--no-align', '--no-psqlrc', "--command=$Query") `
+        -DatabaseUrl $DatabaseUrl `
+        -Description $Description)
 
     $value = $output |
         ForEach-Object { $_.ToString().Trim() } |
@@ -191,8 +297,9 @@ try {
     Write-Event -Status 'RUNNING' -Phase 'backup' -Message 'Creating a PostgreSQL custom-format archive from the source database.'
     Invoke-PostgresCommand `
         -CommandPath $pgDumpPath `
-        -Arguments @("--dbname=$SourceDatabaseUrl", '--format=custom', "--file=$backupPath", '--no-owner', '--no-acl') `
-        -Description 'PostgreSQL backup'
+        -Arguments @('--format=custom', "--file=$backupPath", '--no-owner', '--no-acl') `
+        -Description 'PostgreSQL backup' `
+        -DatabaseUrl $SourceDatabaseUrl
 
     if (-not (Test-Path -LiteralPath $backupPath -PathType Leaf)) {
         throw 'FAIL: pg_dump completed but did not create the backup archive.'
@@ -242,8 +349,9 @@ try {
     Write-Event -Status 'RUNNING' -Phase 'restore' -Message 'Restoring the archive into the preflighted empty target database.'
     Invoke-PostgresCommand `
         -CommandPath $pgRestorePath `
-        -Arguments @("--dbname=$RestoreDatabaseUrl", '--format=custom', '--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', $backupPath) `
-        -Description 'PostgreSQL restore'
+        -Arguments @('--format=custom', '--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', $backupPath) `
+        -Description 'PostgreSQL restore' `
+        -DatabaseUrl $RestoreDatabaseUrl
 
     $restoredTableCountText = Invoke-PostgresQuery `
         -PsqlPath $psqlPath `

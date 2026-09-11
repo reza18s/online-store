@@ -2,7 +2,14 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import type { CatalogCategory, CatalogProduct, ContentPage, SeoResolution } from '@nova/api-client';
+import type {
+  CatalogCategory,
+  CatalogProduct,
+  ContentPage,
+  ContentPageSummary,
+  ProductSummary,
+  SeoResolution,
+} from '@nova/api-client';
 
 import {
   createWebServer,
@@ -40,6 +47,22 @@ const product = {
   media: [],
   attributes: [],
 } satisfies CatalogProduct;
+
+const productSummary = {
+  id: product.id,
+  slug: product.slug,
+  name: product.name,
+  priceToman: product.priceToman,
+  compareAtPriceToman: product.compareAtPriceToman,
+  available: product.available,
+  imageUrl: product.imageUrl,
+  imageAlt: product.imageAlt,
+  categories: product.categories,
+  options: product.options,
+  variants: product.variants,
+  colors: product.colors,
+  stockStatus: product.stockStatus,
+} satisfies ProductSummary;
 
 const page = {
   slug: 'size-guide',
@@ -329,6 +352,7 @@ test('fails closed when sitemap resolver data is missing API metadata', async ()
   const { fetcher } = fixtureFetcher(
     {
       '/v1/catalog/categories': [],
+      '/v1/content/pages': [],
       '/v1/catalog/products?limit=100&sort=newest&page=1': {
         items: [],
         total: 0,
@@ -347,6 +371,133 @@ test('fails closed when sitemap resolver data is missing API metadata', async ()
   const result = await sitemapResponse({ ...optionsBase, fetcher });
   assert.equal(result.status, 503);
   assert.equal(result.headers.get('cache-control'), 'no-store');
+});
+
+test('fails closed when the content sitemap source is missing API metadata', async () => {
+  const rootKey = '/v1/seo/resolve?path=%2F';
+  const { fetcher } = fixtureFetcher(
+    {
+      '/v1/catalog/categories': [],
+      '/v1/content/pages': [],
+      '/v1/catalog/products?limit=100&sort=newest&page=1': {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 100,
+      },
+      [rootKey]: {
+        path: '/',
+        metadata: null,
+        redirect: null,
+      } satisfies SeoResolution,
+    },
+    {},
+    { omitMeta: ['/v1/content/pages'] },
+  );
+  const result = await sitemapResponse({ ...optionsBase, fetcher });
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+});
+
+test('fails closed when the content sitemap source has an invalid summary', async () => {
+  const invalidSummaries: Array<{ name: string; value: unknown }> = [
+    {
+      name: 'missing slug',
+      value: { title: 'بدون شناسه', updatedAt: '2026-09-11T00:00:00.000Z' },
+    },
+    {
+      name: 'overlong slug',
+      value: {
+        slug: 'a'.repeat(121),
+        title: 'بیش از حد طولانی',
+        updatedAt: '2026-09-11T00:00:00.000Z',
+      },
+    },
+    {
+      name: 'non-RFC3339 timestamp',
+      value: { slug: 'valid-page', title: 'تاریخ نامعتبر', updatedAt: '2026-09-11' },
+    },
+    {
+      name: 'impossible calendar date',
+      value: {
+        slug: 'valid-page',
+        title: 'تاریخ ناممکن',
+        updatedAt: '2026-02-29T00:00:00.000Z',
+      },
+    },
+    {
+      name: 'unexpected field',
+      value: {
+        slug: 'valid-page',
+        title: 'فیلد اضافه',
+        updatedAt: '2026-09-11T00:00:00.000Z',
+        body: 'نباید در summary باشد',
+      },
+    },
+  ];
+
+  for (const entry of invalidSummaries) {
+    const { fetcher } = fixtureFetcher({
+      '/v1/catalog/categories': [],
+      '/v1/content/pages': [entry.value],
+      '/v1/catalog/products?limit=100&sort=newest&page=1': {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 100,
+      },
+    });
+    const result = await sitemapResponse({ ...optionsBase, fetcher });
+    assert.equal(result.status, 503, entry.name);
+    assert.equal(result.headers.get('cache-control'), 'no-store', entry.name);
+  }
+});
+
+test('fails closed when the catalog sitemap source has an invalid product summary', async () => {
+  const { fetcher } = fixtureFetcher({
+    '/v1/catalog/categories': [],
+    '/v1/content/pages': [],
+    '/v1/catalog/products?limit=100&sort=newest&page=1': {
+      items: [{ name: 'بدون شناسه' }],
+      total: 1,
+      page: 1,
+      limit: 100,
+    },
+  });
+  const result = await sitemapResponse({ ...optionsBase, fetcher });
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+});
+
+test('fails closed when catalog sitemap metadata is inconsistent', async () => {
+  const cases: Array<{ name: string; categories: unknown; products: unknown }> = [
+    {
+      name: 'invalid category shape',
+      categories: [{ slug: 'women', name: 'زنانه' }],
+      products: { items: [], total: 0, page: 1, limit: 100 },
+    },
+    {
+      name: 'items exceed total',
+      categories: [],
+      products: { items: [productSummary], total: 0, page: 1, limit: 100 },
+    },
+    {
+      name: 'wrong page number',
+      categories: [],
+      products: { items: [productSummary], total: 1, page: 2, limit: 100 },
+    },
+  ];
+
+  for (const entry of cases) {
+    const { fetcher } = fixtureFetcher({
+      '/v1/catalog/categories': entry.categories,
+      '/v1/content/pages': [],
+      '/v1/catalog/products?limit=100&sort=newest&page=1': entry.products,
+    });
+    const result = await sitemapResponse({ ...optionsBase, fetcher });
+    assert.equal(result.status, 503, entry.name);
+    assert.equal(result.headers.get('cache-control'), 'no-store', entry.name);
+  }
 });
 
 test('renders home, category, and published content initial HTML from public reads', async () => {
@@ -570,12 +721,18 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
     { id: 'women', slug: 'women', name: 'زنانه' },
     { id: 'sale', slug: 'sale', name: 'حراج' },
   ];
-  const hiddenProduct = { ...product, slug: 'hidden-product' };
-  const redirectedProduct = { ...product, slug: 'redirected-product' };
+  const contentPages: ContentPageSummary[] = [
+    { slug: 'shipping-policy', title: 'ارسال', updatedAt: '2026-09-11T00:00:00.000Z' },
+    { slug: 'hidden-policy', title: 'پنهان', updatedAt: '2026-09-11T00:00:00.000Z' },
+    { slug: 'redirected-policy', title: 'انتقالی', updatedAt: '2026-09-11T00:00:00.000Z' },
+  ];
+  const hiddenProduct = { ...productSummary, slug: 'hidden-product' };
+  const redirectedProduct = { ...productSummary, slug: 'redirected-product' };
   const { fetcher } = fixtureFetcher({
     '/v1/catalog/categories': categories,
+    '/v1/content/pages': contentPages,
     '/v1/catalog/products?limit=100&sort=newest&page=1': {
-      items: [product, hiddenProduct, redirectedProduct],
+      items: [productSummary, hiddenProduct, redirectedProduct],
       total: 3,
       page: 1,
       limit: 100,
@@ -616,6 +773,32 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
         statusCode: 308,
       },
     } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fcontent%2Fshipping-policy': {
+      path: '/content/shipping-policy',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fcontent%2Fhidden-policy': {
+      path: '/content/hidden-policy',
+      metadata: {
+        path: '/content/hidden-policy',
+        title: 'پنهان',
+        description: 'برای فهرست نیست.',
+        canonicalUrl: '/content/hidden-policy',
+        noIndex: true,
+        structuredData: null,
+      },
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/seo/resolve?path=%2Fcontent%2Fredirected-policy': {
+      path: '/content/redirected-policy',
+      metadata: null,
+      redirect: {
+        fromPath: '/content/redirected-policy',
+        toPath: '/content/shipping-policy',
+        statusCode: 308,
+      },
+    } satisfies SeoResolution,
   });
   const sitemap = await sitemapResponse({
     ...optionsBase,
@@ -626,9 +809,13 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
   assert.deepEqual(locations, [
     'https://nova.example/',
     'https://nova.example/category/women',
+    'https://nova.example/content/shipping-policy',
     'https://nova.example/product/linen-overshirt',
   ]);
-  assert.doesNotMatch(sitemap.body, /sale|hidden-product|redirected-product|content/);
+  assert.doesNotMatch(
+    sitemap.body,
+    /sale|hidden-product|redirected-product|hidden-policy|redirected-policy/,
+  );
 
   const robots = robotsText(optionsBase.origin);
   assert.match(robots, /Disallow: \/account/);
@@ -637,11 +824,12 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
 });
 
 test('sitemap uses safe resolver canonicals and preserves null-canonical candidates', async () => {
-  const oldProduct = { ...product, slug: 'old' };
-  const unsafeProduct = { ...product, slug: 'unsafe' };
-  const fallbackProduct = { ...product, slug: 'fallback' };
+  const oldProduct = { ...productSummary, slug: 'old' };
+  const unsafeProduct = { ...productSummary, slug: 'unsafe' };
+  const fallbackProduct = { ...productSummary, slug: 'fallback' };
   const { fetcher } = fixtureFetcher({
     '/v1/catalog/categories': [],
+    '/v1/content/pages': [],
     '/v1/catalog/products?limit=100&sort=newest&page=1': {
       items: [oldProduct, unsafeProduct, fallbackProduct],
       total: 3,

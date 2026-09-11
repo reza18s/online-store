@@ -1,3 +1,4 @@
+import { isPublicSlug } from '@nova/api-client';
 import type { SeoMetadata } from '@nova/api-client';
 
 import { parseHashRoute } from '../shared/hash-route';
@@ -46,12 +47,10 @@ const categoryCopy: Record<string, { label: string; description: string }> = {
   },
 };
 
-const publicSlugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
 function decodePathSegment(value: string): string | undefined {
   try {
     const decoded = decodeURIComponent(value);
-    return publicSlugPattern.test(decoded) ? decoded : undefined;
+    return isPublicSlug(decoded) ? decoded : undefined;
   } catch {
     return undefined;
   }

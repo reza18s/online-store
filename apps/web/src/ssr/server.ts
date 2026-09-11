@@ -13,9 +13,11 @@ import type {
   CatalogProduct,
   CatalogProductPage,
   ContentPage,
+  ContentPageSummary,
   ProductSummary,
   SeoResolution,
 } from '@nova/api-client';
+import { isPublicSlug } from '@nova/api-client';
 
 import {
   createSeoDocument,
@@ -64,6 +66,46 @@ const publicCache = 'public, s-maxage=60, stale-while-revalidate=300';
 const sitemapCache = 'public, s-maxage=300, stale-while-revalidate=900';
 const redirectCache = 'public, max-age=300';
 const noStoreCache = 'no-store';
+const sitemapMaxUrlCount = 50_000;
+const sitemapMaxBytes = 50 * 1024 * 1024;
+const sitemapResolverConcurrency = 16;
+const rfc3339DateTimePattern =
+  /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+const contentPageSummaryFields = new Set(['slug', 'title', 'updatedAt']);
+const catalogCategoryFields = new Set(['id', 'slug', 'name']);
+const catalogProductPageFields = new Set(['items', 'total', 'page', 'limit']);
+const productSummaryFields = new Set([
+  'id',
+  'slug',
+  'name',
+  'priceToman',
+  'compareAtPriceToman',
+  'available',
+  'imageUrl',
+  'imageAlt',
+  'categories',
+  'options',
+  'variants',
+  'colors',
+  'stockStatus',
+]);
+const productOptionFields = new Set(['id', 'key', 'name', 'sortOrder', 'values']);
+const productOptionValueFields = new Set(['id', 'key', 'label', 'sortOrder']);
+const productVariantFields = new Set([
+  'id',
+  'sku',
+  'title',
+  'size',
+  'color',
+  'colorHex',
+  'priceToman',
+  'compareAtPriceToman',
+  'optionValueIds',
+  'media',
+  'available',
+]);
+const variantMediaFields = new Set(['url', 'altText', 'sortOrder']);
+const productColorFields = new Set(['name', 'hex']);
 
 function trimOrigin(value: string): string {
   return value.replace(/\/$/, '');
@@ -91,9 +133,15 @@ function apiUrl(apiOrigin: string, path: string): string {
   return `${trimOrigin(apiOrigin)}${path}`;
 }
 
-async function getApi<T>(apiOrigin: string, path: string, fetcher: Fetcher): Promise<T> {
+async function getApi<T>(
+  apiOrigin: string,
+  path: string,
+  fetcher: Fetcher,
+  signal?: AbortSignal,
+): Promise<T> {
   const response = await fetcher(apiUrl(apiOrigin, path), {
     headers: { Accept: 'application/json' },
+    signal,
   });
   let body: unknown;
   try {
@@ -114,6 +162,184 @@ function isApiEnvelope(value: unknown): value is { data: unknown; meta: unknown 
   if (!('data' in envelope) || !envelope.meta || typeof envelope.meta !== 'object') return false;
   const meta = envelope.meta as Record<string, unknown>;
   return typeof meta.requestId === 'string' && typeof meta.timestamp === 'string';
+}
+
+function isContentPageSummaryList(value: unknown): value is ContentPageSummary[] {
+  if (!Array.isArray(value) || value.length > sitemapMaxUrlCount) return false;
+  return value.every((entry) => {
+    if (!entry || typeof entry !== 'object') return false;
+    const summary = entry as Record<string, unknown>;
+    return (
+      Object.keys(summary).every((key) => contentPageSummaryFields.has(key)) &&
+      isPublicSlug(summary.slug) &&
+      isIndexablePublicRenderPath(`/content/${encodeURIComponent(summary.slug)}`) &&
+      typeof summary.title === 'string' &&
+      summary.title.trim().length > 0 &&
+      typeof summary.updatedAt === 'string' &&
+      isRfc3339DateTime(summary.updatedAt)
+    );
+  });
+}
+
+function isRfc3339DateTime(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const match = rfc3339DateTimePattern.exec(value);
+  if (!match) return false;
+
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText, offset] = match;
+  if (!yearText || !monthText || !dayText || !hourText || !minuteText || !secondText || !offset) {
+    return false;
+  }
+  const year = Number(yearText);
+  const month = Number(monthText);
+  const day = Number(dayText);
+  const hour = Number(hourText);
+  const minute = Number(minuteText);
+  const second = Number(secondText);
+  if (year < 1 || month < 1 || month > 12 || hour > 23 || minute > 59 || second > 59) {
+    return false;
+  }
+
+  const leapYear = year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [31, leapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month - 1];
+  if (daysInMonth === undefined || day < 1 || day > daysInMonth) return false;
+
+  if (offset !== 'Z') {
+    const offsetHour = Number(offset.slice(1, 3));
+    const offsetMinute = Number(offset.slice(4, 6));
+    if (offsetHour > 23 || offsetMinute > 59) return false;
+  }
+  return Number.isFinite(Date.parse(value));
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function hasOnlyKeys(value: Record<string, unknown>, fields: ReadonlySet<string>): boolean {
+  return Object.keys(value).every((key) => fields.has(key));
+}
+
+function isNullableString(value: unknown): boolean {
+  return value === null || typeof value === 'string';
+}
+
+function isInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value);
+}
+
+function isCatalogCategory(value: unknown): value is CatalogCategory {
+  if (!isRecord(value) || !hasOnlyKeys(value, catalogCategoryFields)) return false;
+  return typeof value.id === 'string' && isPublicSlug(value.slug) && typeof value.name === 'string';
+}
+
+function isCatalogProductOptionValue(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productOptionValueFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    typeof value.key === 'string' &&
+    typeof value.label === 'string' &&
+    isInteger(value.sortOrder)
+  );
+}
+
+function isCatalogProductOption(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productOptionFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    typeof value.key === 'string' &&
+    typeof value.name === 'string' &&
+    isInteger(value.sortOrder) &&
+    Array.isArray(value.values) &&
+    value.values.every(isCatalogProductOptionValue)
+  );
+}
+
+function isCatalogVariantMedia(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, variantMediaFields)) return false;
+  return (
+    typeof value.url === 'string' && typeof value.altText === 'string' && isInteger(value.sortOrder)
+  );
+}
+
+function isCatalogProductVariant(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productVariantFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    typeof value.sku === 'string' &&
+    isNullableString(value.title) &&
+    isNullableString(value.size) &&
+    isNullableString(value.color) &&
+    isNullableString(value.colorHex) &&
+    (value.priceToman === null || isInteger(value.priceToman)) &&
+    (value.compareAtPriceToman === null || isInteger(value.compareAtPriceToman)) &&
+    Array.isArray(value.optionValueIds) &&
+    value.optionValueIds.every((id) => typeof id === 'string') &&
+    Array.isArray(value.media) &&
+    value.media.every(isCatalogVariantMedia) &&
+    typeof value.available === 'boolean'
+  );
+}
+
+function isCatalogProductColor(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productColorFields)) return false;
+  return typeof value.name === 'string' && isNullableString(value.hex);
+}
+
+function isCatalogProductSummary(value: unknown): value is ProductSummary {
+  if (!isRecord(value) || !hasOnlyKeys(value, productSummaryFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    isPublicSlug(value.slug) &&
+    typeof value.name === 'string' &&
+    isInteger(value.priceToman) &&
+    (value.compareAtPriceToman === null || isInteger(value.compareAtPriceToman)) &&
+    typeof value.available === 'boolean' &&
+    isNullableString(value.imageUrl) &&
+    isNullableString(value.imageAlt) &&
+    Array.isArray(value.categories) &&
+    value.categories.every(isCatalogCategory) &&
+    Array.isArray(value.options) &&
+    value.options.every(isCatalogProductOption) &&
+    Array.isArray(value.variants) &&
+    value.variants.every(isCatalogProductVariant) &&
+    Array.isArray(value.colors) &&
+    value.colors.every(isCatalogProductColor) &&
+    (value.stockStatus === 'IN_STOCK' ||
+      value.stockStatus === 'LOW_STOCK' ||
+      value.stockStatus === 'OUT_OF_STOCK')
+  );
+}
+
+function isCatalogCategoryList(value: unknown): value is CatalogCategory[] {
+  return (
+    Array.isArray(value) && value.length <= sitemapMaxUrlCount && value.every(isCatalogCategory)
+  );
+}
+
+function isCatalogProductPage(value: unknown): value is CatalogProductPage {
+  if (!isRecord(value) || !hasOnlyKeys(value, catalogProductPageFields)) return false;
+  const page = value as Record<string, unknown>;
+  const total = page.total;
+  const pageNumber = page.page;
+  const limit = page.limit;
+  if (
+    typeof total !== 'number' ||
+    !Number.isInteger(total) ||
+    total < 0 ||
+    typeof pageNumber !== 'number' ||
+    !Number.isInteger(pageNumber) ||
+    pageNumber < 1 ||
+    typeof limit !== 'number' ||
+    !Number.isInteger(limit) ||
+    limit < 1 ||
+    !Array.isArray(page.items) ||
+    page.items.length > limit ||
+    page.items.length > total
+  ) {
+    return false;
+  }
+  return page.items.every(isCatalogProductSummary);
 }
 
 function isSeoResolution(value: unknown): value is SeoResolution {
@@ -187,8 +413,9 @@ async function getSeoResolution(
   apiOrigin: string,
   path: string,
   fetcher: Fetcher,
+  signal?: AbortSignal,
 ): Promise<SeoResolution> {
-  const candidate = await getApi<unknown>(apiOrigin, resolverPath(path), fetcher);
+  const candidate = await getApi<unknown>(apiOrigin, resolverPath(path), fetcher, signal);
   if (!isSeoResolution(candidate)) {
     throw new RenderApiError(502, 'SSR API returned an invalid SEO resolution');
   }
@@ -794,27 +1021,76 @@ async function indexableSitemapPaths(
   origin: string,
 ): Promise<string[]> {
   const candidates = [...new Set(paths)].filter(isRecognizedSitemapPath).sort();
-  const resolved = await Promise.all(
-    candidates.map(async (path) => {
-      const resolution = await getSeoResolution(apiOrigin, path, fetcher);
-      if (resolution.redirect || resolution.metadata?.noIndex) return null;
-      return effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
+  if (candidates.length > sitemapMaxUrlCount) {
+    throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+  }
+  const resolved: Array<string | null> = new Array(candidates.length);
+  let nextIndex = 0;
+  const abortController = new AbortController();
+  await Promise.all(
+    Array.from({ length: Math.min(sitemapResolverConcurrency, candidates.length) }, async () => {
+      try {
+        while (nextIndex < candidates.length) {
+          const index = nextIndex++;
+          const path = candidates[index];
+          if (path === undefined) return;
+          const resolution = await getSeoResolution(
+            apiOrigin,
+            path,
+            fetcher,
+            abortController.signal,
+          );
+          resolved[index] =
+            resolution.redirect || resolution.metadata?.noIndex
+              ? null
+              : effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
+        }
+      } catch (error) {
+        abortController.abort();
+        throw error;
+      }
     }),
   );
   return resolved.filter((path): path is string => path !== null);
 }
 
+const catalogPageLimit = 100;
+
 async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<ProductSummary[]> {
   const products: ProductSummary[] = [];
+  const seenProductSlugs = new Set<string>();
   let page = 1;
   let total = 0;
   do {
-    const result = await getApi<CatalogProductPage>(
+    const rawResult = await getApi<unknown>(
       apiOrigin,
-      catalogProductsPath(`limit=100&sort=newest&page=${page}`),
+      catalogProductsPath(`limit=${catalogPageLimit}&sort=newest&page=${page}`),
       fetcher,
     );
-    products.push(...result.items);
+    if (!isCatalogProductPage(rawResult)) {
+      throw new RenderApiError(502, 'SSR API returned an invalid catalog page');
+    }
+    const result = rawResult;
+    if (result.total > sitemapMaxUrlCount) {
+      throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+    }
+    if (result.page !== page || result.limit !== catalogPageLimit) {
+      throw new RenderApiError(502, 'Sitemap catalog pagination is inconsistent');
+    }
+    const previousProductCount = products.length;
+    for (const product of result.items) {
+      if (seenProductSlugs.has(product.slug)) {
+        throw new RenderApiError(502, 'Sitemap catalog pagination repeated a product');
+      }
+      seenProductSlugs.add(product.slug);
+      products.push(product);
+    }
+    if (products.length > sitemapMaxUrlCount) {
+      throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+    }
+    if (products.length === previousProductCount && products.length < result.total) {
+      throw new RenderApiError(502, 'Sitemap catalog pagination made no progress');
+    }
     total = result.total;
     page += 1;
   } while (products.length < total && page <= 1000);
@@ -827,9 +1103,20 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
   const origin = trimOrigin(options.origin);
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
   try {
-    const [categories, products] = await Promise.all([
-      getApi<CatalogCategory[]>(options.apiOrigin, '/v1/catalog/categories', fetcher),
+    const [categories, products, contentPages] = await Promise.all([
+      getApi<unknown>(options.apiOrigin, '/v1/catalog/categories', fetcher).then((value) => {
+        if (!isCatalogCategoryList(value)) {
+          throw new RenderApiError(502, 'SSR API returned an invalid catalog category list');
+        }
+        return value;
+      }),
       allCatalogProducts(options.apiOrigin, fetcher),
+      getApi<unknown>(options.apiOrigin, '/v1/content/pages', fetcher).then((value) => {
+        if (!isContentPageSummaryList(value)) {
+          throw new RenderApiError(502, 'SSR API returned an invalid content index');
+        }
+        return value;
+      }),
     ]);
     const paths = [
       '/',
@@ -839,15 +1126,25 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
       ...products
         .map((product) => `/product/${encodeURIComponent(product.slug)}`)
         .filter(isRecognizedSitemapPath),
+      ...contentPages
+        .map((page) => `/content/${encodeURIComponent(page.slug)}`)
+        .filter(isRecognizedSitemapPath),
     ];
     const indexablePaths = await indexableSitemapPaths(options.apiOrigin, paths, fetcher, origin);
+    if (new Set(indexablePaths).size > sitemapMaxUrlCount) {
+      throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+    }
+    const body = sitemapXml(origin, indexablePaths);
+    if (Buffer.byteLength(body, 'utf8') > sitemapMaxBytes) {
+      throw new RenderApiError(502, 'Sitemap exceeds the byte limit');
+    }
     return {
       status: 200,
       headers: new Headers({
         'Content-Type': 'application/xml; charset=utf-8',
         'Cache-Control': sitemapCache,
       }),
-      body: sitemapXml(origin, indexablePaths),
+      body,
     };
   } catch {
     return {

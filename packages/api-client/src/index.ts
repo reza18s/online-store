@@ -1,4 +1,12 @@
 export { ApiClient, ApiClientError, apiClient, CSRF_COOKIE_NAME, CSRF_HEADER_NAME } from './client';
+export {
+  CONTENT_PAGE_SLUG_MAX_LENGTH,
+  CONTENT_PAGE_SLUG_PATTERN,
+  PUBLIC_SLUG_MAX_LENGTH,
+  PUBLIC_SLUG_PATTERN,
+  isContentPageSlug,
+  isPublicSlug,
+} from './content-contract';
 export { queryKeys } from './query-keys';
 export type {
   ApiEnvelope,

@@ -356,6 +356,48 @@ test('fails closed when sitemap resolver data is missing API metadata', async ()
   assert.equal(result.headers.get('cache-control'), 'no-store');
 });
 
+test('fails closed when the content sitemap source is missing API metadata', async () => {
+  const rootKey = '/v1/seo/resolve?path=%2F';
+  const { fetcher } = fixtureFetcher(
+    {
+      '/v1/catalog/categories': [],
+      '/v1/content/pages': [],
+      '/v1/catalog/products?limit=100&sort=newest&page=1': {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 100,
+      },
+      [rootKey]: {
+        path: '/',
+        metadata: null,
+        redirect: null,
+      } satisfies SeoResolution,
+    },
+    {},
+    { omitMeta: ['/v1/content/pages'] },
+  );
+  const result = await sitemapResponse({ ...optionsBase, fetcher });
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+});
+
+test('fails closed when the content sitemap source has an invalid summary', async () => {
+  const { fetcher } = fixtureFetcher({
+    '/v1/catalog/categories': [],
+    '/v1/content/pages': [{ title: 'بدون شناسه', updatedAt: '2026-09-11T00:00:00.000Z' }],
+    '/v1/catalog/products?limit=100&sort=newest&page=1': {
+      items: [],
+      total: 0,
+      page: 1,
+      limit: 100,
+    },
+  });
+  const result = await sitemapResponse({ ...optionsBase, fetcher });
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+});
+
 test('renders home, category, and published content initial HTML from public reads', async () => {
   const resolution = (path: string): SeoResolution => ({
     path,

@@ -102,7 +102,8 @@ boundary.
 
 SEO-001 provides useful route-specific initial HTML without moving commerce
 logic, catalog/content ownership, or client routing into the web server. The
-tradeoff is a small server deployment requirement and an explicit
-published-content sitemap limitation until a public listing contract exists.
-No live API, database, browser, CDN, or crawler validation is implied by the
-focused tests.
+tradeoff is a small server deployment requirement and a dependency on the
+complete published-content summary endpoint for content sitemap discovery. If
+that endpoint or any SEO resolver lookup fails, the server returns a
+non-cacheable 503 instead of emitting a partial sitemap. No live API, database,
+browser, CDN, or crawler validation is implied by the focused tests.

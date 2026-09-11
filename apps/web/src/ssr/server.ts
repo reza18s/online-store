@@ -117,6 +117,22 @@ function isApiEnvelope(value: unknown): value is { data: unknown; meta: unknown 
   return typeof meta.requestId === 'string' && typeof meta.timestamp === 'string';
 }
 
+function isContentPageSummaryList(value: unknown): value is ContentPageSummary[] {
+  if (!Array.isArray(value)) return false;
+  return value.every((entry) => {
+    if (!entry || typeof entry !== 'object') return false;
+    const summary = entry as Record<string, unknown>;
+    return (
+      typeof summary.slug === 'string' &&
+      isIndexablePublicRenderPath(`/content/${encodeURIComponent(summary.slug)}`) &&
+      typeof summary.title === 'string' &&
+      summary.title.trim().length > 0 &&
+      typeof summary.updatedAt === 'string' &&
+      !Number.isNaN(Date.parse(summary.updatedAt))
+    );
+  });
+}
+
 function isSeoResolution(value: unknown): value is SeoResolution {
   if (!value || typeof value !== 'object') return false;
   const resolution = value as Record<string, unknown>;
@@ -831,7 +847,12 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
     const [categories, products, contentPages] = await Promise.all([
       getApi<CatalogCategory[]>(options.apiOrigin, '/v1/catalog/categories', fetcher),
       allCatalogProducts(options.apiOrigin, fetcher),
-      getApi<ContentPageSummary[]>(options.apiOrigin, '/v1/content/pages', fetcher),
+      getApi<unknown>(options.apiOrigin, '/v1/content/pages', fetcher).then((value) => {
+        if (!isContentPageSummaryList(value)) {
+          throw new RenderApiError(502, 'SSR API returned an invalid content index');
+        }
+        return value;
+      }),
     ]);
     const paths = [
       '/',

@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { queryKeys } from '@nova/api-client';
 
 import {
+  AdminPage,
   AdminLegacyPage,
   AdminRouteUnavailablePage,
   RouteView,
@@ -60,11 +61,17 @@ test('keeps the static admin dashboard preview development-only', () => {
   );
 
   const queryClient = new QueryClient();
+  queryClient.setQueryData(queryKeys.staffAuth.current(), {
+    id: 'staff-preview',
+    email: 'staff@example.test',
+    status: 'ACTIVE',
+    roles: ['admin'],
+  });
   const markup = renderToStaticMarkup(
     createElement(
       QueryClientProvider,
       { client: queryClient },
-      createElement(AdminRouteUnavailablePage, { page: 'admin' }),
+      createElement(AdminPage, { page: 'admin' }),
     ),
   );
 

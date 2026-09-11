@@ -2468,7 +2468,7 @@ export function AdminRouteUnavailablePage({ page }: { page: string }) {
   );
 }
 
-function AdminPage({ page }: { page: string }) {
+export function AdminPage({ page }: { page: string }) {
   const isLoginPage = page === 'login';
   const staffQuery = useStaffUser(!isLoginPage);
   const authFailure = isStaffAuthFailure(staffQuery.error);

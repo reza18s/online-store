@@ -856,6 +856,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
           hashRoute: routeHash(route),
           seo,
           status: 200,
+          initialData: { kind: 'home', products },
           bodyHtml: initialBody(
             seo.title,
             seo.description,
@@ -872,7 +873,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
           getRouteApi<CatalogCategory[]>('/v1/catalog/categories'),
           getRouteApi<CatalogProductPage>(
             catalogProductsPath(
-              `audience=${encodeURIComponent(route.slug)}&limit=8&sort=newest&page=1`,
+              `audience=${encodeURIComponent(route.slug)}&limit=4&sort=newest&page=1`,
             ),
           ),
         ]);
@@ -895,6 +896,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
                 : null,
           },
           status: 200,
+          initialData: { kind: 'category', audience: route.slug, categories, products },
           bodyHtml: initialBody(
             seo.title,
             seo.description,
@@ -931,6 +933,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
             jsonLd: seo.robots === 'index, follow' ? productJsonLd(origin, product) : null,
           },
           status: 200,
+          initialData: { kind: 'product', product },
           bodyHtml: productBody(product, productDescription),
           cacheControl: publicCache,
         };
@@ -955,6 +958,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         hashRoute: routeHash(route),
         seo,
         status: 200,
+        initialData: { kind: 'content', page },
         bodyHtml: contentBody(route, page, seo.description),
         cacheControl: publicCache,
       };
@@ -1006,7 +1010,12 @@ function stripManagedHead(template: string): string {
 export function renderDocument(template: string, context: RenderContext): string {
   const cleanTemplate = stripManagedHead(template);
   const root = `<div id="root" data-nova-ssr="true"><div data-nova-ssr-shell="true">${context.bodyHtml}</div></div>`;
-  const contextScript = `<script>globalThis.__NOVA_RENDER_CONTEXT__=${safeJson({ path: context.path, hashRoute: context.hashRoute, seo: context.seo })};</script>`;
+  const contextScript = `<script>globalThis.__NOVA_RENDER_CONTEXT__=${safeJson({
+    path: context.path,
+    hashRoute: context.hashRoute,
+    seo: context.seo,
+    ...(context.initialData ? { initialData: context.initialData } : {}),
+  })};</script>`;
   return cleanTemplate
     .replace('</head>', `${renderHead(context.seo)}</head>`)
     .replace(/<div id="root"><\/div>/, root)

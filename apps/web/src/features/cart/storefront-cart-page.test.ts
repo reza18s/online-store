@@ -79,6 +79,17 @@ test('turns merge conflicts into safe quantity or removal actions', () => {
     }),
     null,
   );
+  assert.equal(
+    conflictQuantity({
+      variantId: 'v4',
+      reason: 'QUANTITY_LIMIT',
+      guestQuantity: 3,
+      customerQuantity: 98,
+      mergedQuantity: 101,
+      availableQuantity: 100,
+    }),
+    1,
+  );
 });
 
 test('classifies offline and server conflicts without claiming a successful mutation', () => {

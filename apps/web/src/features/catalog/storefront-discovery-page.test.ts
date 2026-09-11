@@ -1,0 +1,118 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+
+import {
+  buildDiscoveryHref,
+  discoveryFacetFiltersFromQuery,
+  discoveryFiltersFromQuery,
+  parseDiscoveryQuery,
+  preserveFacetSelection,
+  resolveVariant,
+} from './storefront-discovery-page';
+
+test('parses shareable discovery state and keeps invalid sort/page values safe', () => {
+  assert.deepEqual(
+    parseDiscoveryQuery(
+      '?q=%D9%BE%DB%8C%D8%B1%D8%A7%D9%87%D9%86&category=shirts&size=M&sort=unknown&page=0',
+    ),
+    {
+      q: 'پیراهن',
+      category: 'shirts',
+      size: 'M',
+      color: '',
+      material: '',
+      minPrice: undefined,
+      maxPrice: undefined,
+      inStock: false,
+      onSale: false,
+      sort: 'newest',
+      page: 1,
+    },
+  );
+  assert.equal(parseDiscoveryQuery('?category=shirts', 'accessories').category, 'accessories');
+  assert.equal(parseDiscoveryQuery('?onSale=true', 'sale').onSale, true);
+});
+
+test('builds URL state without losing stale selections and resets page for filter changes', () => {
+  assert.equal(
+    buildDiscoveryHref('#products/women', '?size=XL&page=4', { color: 'کرم' }),
+    '#products/women?size=XL&color=%DA%A9%D8%B1%D9%85',
+  );
+  assert.equal(
+    buildDiscoveryHref('#products/women', '?size=XL&page=4', { page: '5' }),
+    '#products/women?size=XL&page=5',
+  );
+});
+
+test('uses the same contextual filters for products and facets, without pagination or sort in facets', () => {
+  const state = parseDiscoveryQuery('?q=coat&category=shirts&size=M&inStock=true&page=3&sort=name');
+  assert.deepEqual(discoveryFiltersFromQuery(state, 'women'), {
+    q: 'coat',
+    category: 'shirts',
+    audience: 'women',
+    size: 'M',
+    color: undefined,
+    material: undefined,
+    minPrice: undefined,
+    maxPrice: undefined,
+    inStock: true,
+    onSale: undefined,
+    sort: 'name',
+    page: 3,
+    limit: 8,
+  });
+  assert.deepEqual(discoveryFacetFiltersFromQuery(state, 'women'), {
+    q: 'coat',
+    category: 'shirts',
+    audience: 'women',
+    size: 'M',
+    color: undefined,
+    material: undefined,
+    minPrice: undefined,
+    maxPrice: undefined,
+    inStock: true,
+    onSale: undefined,
+  });
+});
+
+test('retains a selected facet value when the contextual response no longer lists it', () => {
+  const options = [{ value: 'S', label: 'کوچک', count: 2, selected: false }];
+  assert.deepEqual(preserveFacetSelection(options, 'XL')[0], {
+    value: 'XL',
+    label: 'XL',
+    count: 0,
+    selected: true,
+  });
+  assert.deepEqual(preserveFacetSelection(options, ''), options);
+});
+
+test('resolves only a fully selected available variant for normalized options', () => {
+  const product = {
+    options: [
+      {
+        id: 'size',
+        key: 'size',
+        name: 'اندازه',
+        sortOrder: 1,
+        values: [{ id: 'm', key: 'm', label: 'M', sortOrder: 1 }],
+      },
+    ],
+    variants: [
+      {
+        id: 'v1',
+        sku: 'NOVA-M',
+        title: 'M',
+        size: null,
+        color: null,
+        colorHex: null,
+        priceToman: 100,
+        compareAtPriceToman: null,
+        optionValueIds: ['m'],
+        media: [],
+        available: true,
+      },
+    ],
+  };
+  assert.equal(resolveVariant(product, {}, '', ''), undefined);
+  assert.equal(resolveVariant(product, { size: 'm' }, '', '')?.id, 'v1');
+});

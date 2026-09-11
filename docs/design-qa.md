@@ -8,8 +8,8 @@ assistive-technology evidence because the checkout had no Playwright/browser
 dependency and no live API or storefront server. Later parent rechecks added
 bounded live runtime evidence: Chrome CDP exact-size captures, route/overflow
 checks, the staff-login default and invalid-email states, exact-size session-
-expiry captures, and a no-request validation check without entering credentials.
-Full authenticated, provider,
+expiry/loading/API-error captures, and a no-request validation check without
+entering credentials. Full authenticated, provider,
 assistive-technology and formal pixel-diff gates remain open. The original
 audit routes findings to owners and the later parent fixes are recorded below.
 
@@ -61,7 +61,7 @@ current rendered evidence.
 | Deterministic integration matrix | `PASS` | The parent recheck ran `bun run test:integration`: all 8 deterministic suites passed with no failures. |
 | Live API/storefront smoke | `PASS` (unauthenticated) / `NOT RUN` (authenticated) | The 2026-09-11 continuation ran the API and Vite storefront against isolated PostgreSQL 16/Redis 7: `/health/live` and `/health/ready` returned `200` with `database: "ok"`, public catalog endpoints returned seeded data, the default `test:e2e` root-shell preflight passed, and CUA observed live home/catalog content plus the unauthenticated admin guard. Authenticated data-backed operations remain unrun. |
 | Browser harness | `PARTIAL` | CUA supplied default-viewport AX evidence; the parent also used an isolated headless Chrome CDP runner for exact CSS viewports and bounded route/state checks. No full Playwright journey or screen-reader/AT run exists, so this is not authenticated E2E coverage. |
-| Screenshot/pixel regression | `PARTIAL` | Exact `1440x900` and `390x844` default/invalid-email/session-expiry captures were generated and visually inspected; temporary captures and runners were removed after QA. Formal crop registration and pixel-diff tolerance against the composite artifact remain open. |
+| Screenshot/pixel regression | `PARTIAL` | Exact `1440x900` and `390x844` default/invalid-email/session-expiry/loading/API-error captures were generated and visually inspected; temporary captures and runners were removed after QA. Formal crop registration and pixel-diff tolerance against the composite artifact remain open. |
 | Production code changes | `PASS` (bounded follow-up) | The current parent follow-up removes the mobile `.site-nav` display override regression, adds localized field-specific staff-login validation with accessible error associations, and preserves the safe session-expiry route marker after protected-cache clearing. No provider, package/lockfile, generated output or shared contract changed. |
 
 ## Required responsive widths
@@ -108,9 +108,9 @@ unavailable rendered-browser gate.
 
 | State | Status | Evidence |
 | --- | --- | --- |
-| Loading | `PASS` (logic/source) / `NOT RUN` (browser) | Catalog, cart, checkout, account, order, content, admin-session, and admin feature paths expose pending/loading states; focused tests passed. |
+| Loading | `PASS` (logic/source) / `PASS` (bounded exact browser) | Catalog, cart, checkout, account, order, content, admin-session, and admin feature paths expose pending/loading states; staff-login loading rendered `در حال بررسی...` with a disabled submit button at exact `1440x900` and `390x844` under a locally intercepted request. |
 | Empty | `PASS` (logic/source) / `NOT RUN` (browser) | Empty catalog/cart/account/content/admin branches and safe actions are represented; focused state tests passed. |
-| Error | `PASS` (logic/source) / `NOT RUN` (browser) | Inline alerts, retry actions, API error mapping, payment failures, and route fallback states are present; focused tests passed. |
+| Error | `PASS` (logic/source) / `PASS` (bounded exact browser) | Inline alerts, retry actions, API error mapping, payment failures, and route fallback states are present; the staff-login API-error replay fulfilled a synthetic `503` and rendered the Persian error alert with an enabled submit button at both exact viewports. |
 | Offline | `PASS` (logic/source) / `NOT RUN` (browser) | Catalog, content, and admin state helpers classify offline/network failures; tests passed. |
 | Validation | `PASS` (logic/source) / `PASS` (staff-login bounded browser state) | Address, return, checkout, staff-auth, content, SEO, redirect, and catalog validation paths are covered by source and focused tests. Exact staff-login invalid-email state rendered a Persian field error, focused the invalid field, preserved the page bounds, and made no login request. |
 | Success | `PASS` (logic/source) / `NOT RUN` (browser) | Newsletter, checkout confirmation, mutation success, publish-ready, and saved-state paths exist; no rendered confirmation was captured. |
@@ -143,8 +143,9 @@ the reference-to-render comparison and exact mobile viewport remain unverified.
 ### Staff-login target
 
 The original static variance is `SUPERSEDED` for the bounded current
-composition and invalid-email state; formal pixel runtime remains `NOT RUN`
-against `output/design-artifacts/auth-staff-login-atelier.png`:
+composition and the captured invalid-email, session-expiry, loading and
+API-error states; formal pixel runtime remains `NOT RUN` against
+`output/design-artifacts/auth-staff-login-atelier.png`:
 
 - The 2026-09-11 owner follow-up aligned the ivory editorial canvas, bordered
   central card, centered lockup, Persian hierarchy, field icons, rectangular
@@ -153,10 +154,11 @@ against `output/design-artifacts/auth-staff-login-atelier.png`:
   now renders `لطفاً یک ایمیل معتبر وارد کنید.` in a `role="alert"`, marks the
   field invalid, associates the message with `aria-describedby`, returns focus
   to the field, and prevents a login request.
-- Exact default, invalid-email and session-expiry captures at `1440x900` and
-  `390x844` were visually inspected. The supplied artifact also depicts other
-  editorial state details; formal pixel comparison, loading/API-error captures
-  and full AT remain separate gates.
+- Exact default, invalid-email, session-expiry, loading and API-error captures
+  at `1440x900` and `390x844` were visually inspected. Loading/error used a
+  browser-local synthetic interception only. The supplied artifact also
+  depicts other editorial state details; formal pixel comparison and full AT
+  remain separate gates.
 
 The target image remains evidence of intended visual composition, not proof
 of pixel parity across every state or browser.
@@ -295,10 +297,11 @@ default form, invalid-email state and session-expiry state at `1440x900` and
 `390x844`. The invalid state rendered the Persian field error, `aria-invalid`,
 the linked alert, focus on `staff-email`, no page-level overflow, and no request
 to the staff-login API. The expiry state rendered the Persian `role="status"`
-message at both viewports, with no `/v1/staff/auth` request; mobile
+message at both viewports, with no `/v1/staff/auth` request; the loading/API-
+error replay used only a browser-local synthetic `503` interception. Mobile
 `scrollWidth=375` remained within its `390px` viewport. Formal pixel diff,
-loading/API-error captures, authenticated flows and assistive-technology output
-remain open. No credentials or provider calls were used.
+authenticated flows and assistive-technology output remain open. No real
+credentials or provider calls were used.
 
 ## Findings for parent routing
 
@@ -340,15 +343,15 @@ remain open. No credentials or provider calls were used.
 
 ### `QA-001-VIS-001` — staff-login implementation is not yet target-matched
 
-- **Status:** `SUPERSEDED` for the bounded exact-size default/invalid-email/session-expiry composition; formal pixel runtime remains `NOT RUN`
+- **Status:** `SUPERSEDED` for the bounded exact-size default/invalid-email/session-expiry/loading/API-error composition; formal pixel runtime remains `NOT RUN`
 - **Suggested severity:** P2 visual fidelity
 - **Owner surface:** `apps/web/src/app.tsx` (`AdminLoginPage`)
 - **Evidence:** Commit `03ed76f` aligns the source composition with
   `output/design-artifacts/auth-staff-login-atelier.png`; the 2026-09-12 CDP
-  captures at `1440x900` and `390x844` showed the default, invalid-email and
-  session-expiry states, including the Persian error/status treatments and
-  field focus. Crop registration, pixel tolerance, loading/API-error states and
-  full AT remain unverified.
+  captures at `1440x900` and `390x844` showed the default, invalid-email,
+  session-expiry, loading and API-error states, including the Persian
+  error/status treatments and field focus. Crop registration, pixel tolerance
+  and full AT remain unverified.
 - **Impact:** The original static-variance finding no longer describes the
   current source or bounded exact-size render. Authenticated states and formal
   visual parity remain separate release gates.

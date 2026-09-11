@@ -102,7 +102,7 @@ export function parseHashRoute(route: string): HashRoute {
   }
   if (path === '#cart' || path === '#cart/empty') return { ...shared, kind: 'cart' };
   if (path === '#cart/conflict') {
-    return { ...shared, kind: 'preview-state', state: 'cart-conflict' };
+    return { ...shared, kind: 'cart' };
   }
   if (path === '#checkout/confirmation') return { ...shared, kind: 'checkout-confirmation' };
   if (path === '#checkout/payment-pending') {

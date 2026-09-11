@@ -45,10 +45,7 @@ test('resolves catalog and product routes without changing path values', () => {
 
 test('keeps cart, checkout, and account route precedence', () => {
   assertRoute('#cart/empty', { kind: 'cart' });
-  assertRoute('#cart/conflict', {
-    kind: 'preview-state',
-    state: 'cart-conflict',
-  });
+  assertRoute('#cart/conflict', { kind: 'cart' });
   assertRoute('#checkout/payment-pending', {
     kind: 'preview-state',
     state: 'payment-pending',

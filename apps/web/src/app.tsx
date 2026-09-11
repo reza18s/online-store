@@ -2,7 +2,6 @@ import {
   useDeferredValue,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type FormEvent,
   type ReactNode,
@@ -62,12 +61,7 @@ import {
   CustomerReturnPage,
 } from './features/account';
 import { PublicContentSystemPage } from './features/content/public-content-system-page';
-import {
-  useCart,
-  getCartMergeConflicts,
-  shouldMergeGuestCart,
-  useMergeGuestCart,
-} from './features/cart/cart-api';
+import { useCart } from './features/cart/cart-api';
 
 type Product = StorefrontProduct;
 
@@ -386,7 +380,7 @@ const previewStateCopy: Record<
       'پرداخت شما هنوز توسط درگاه تأیید نشده است. این صفحه را نبندید؛ وضعیت سفارش به‌صورت امن بررسی می‌شود.',
     icon: 'refresh',
     primary: 'پیگیری سفارش',
-    primaryHref: '#order/NV-1405-2481',
+    primaryHref: '#account/orders',
     secondary: 'بازگشت به خانه',
     secondaryHref: '#home',
   },
@@ -410,7 +404,7 @@ const previewStateCopy: Record<
     primary: 'ادامه پرداخت',
     primaryHref: '#checkout/payment',
     secondary: 'مشاهده سفارش',
-    secondaryHref: '#order/NV-1405-2481',
+    secondaryHref: '#account/orders',
   },
   offline: {
     eyebrow: 'NOVA / OFFLINE',
@@ -2740,6 +2734,7 @@ export function RouteView({
   cartLoading,
   cartError,
   onRetryCart,
+  customerId,
   isWishlisted,
   onToggleWishlist,
 }: {
@@ -2748,6 +2743,7 @@ export function RouteView({
   cartLoading: boolean;
   cartError: boolean;
   onRetryCart: () => void;
+  customerId?: string;
   isWishlisted: (slug: string) => boolean;
   onToggleWishlist: (slug: string) => void;
 }) {
@@ -2800,7 +2796,17 @@ export function RouteView({
         />
       );
     case 'cart':
-      return <StorefrontCartPage isWishlisted={isWishlisted} onToggleWishlist={onToggleWishlist} />;
+      return (
+        <StorefrontCartPage
+          cart={cart}
+          isLoading={cartLoading}
+          isError={cartError}
+          onRetry={onRetryCart}
+          customerId={customerId}
+          isWishlisted={isWishlisted}
+          onToggleWishlist={onToggleWishlist}
+        />
+      );
     case 'preview-state':
       if (resolved.state === 'payment-recovery') {
         return <CheckoutPaymentRecoveryPage queryString={resolved.queryString} />;
@@ -2852,14 +2858,11 @@ export function App() {
   useScrollToTop(route);
   const cartQuery = useCart(!route.startsWith('#admin'));
   const customerQuery = useCurrentCustomer(!route.startsWith('#admin'));
-  const { mutate: mergeGuestCart, isPending: isMergingGuestCart } = useMergeGuestCart();
   const cart = cartQuery.data;
   const cartCount = cart?.itemCount ?? 0;
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [toast, setToast] = useState('');
   const [wishlist, setWishlist] = useState<Set<string>>(() => new Set());
-  const cartMergeAttemptRef = useRef<string | null>(null);
 
   useEffect(() => {
     const initial = readInitialRenderContext();
@@ -2872,33 +2875,6 @@ export function App() {
     if (isDataRoute && !initialMatches) return;
     applySeoDocument(document, seo);
   }, [route]);
-
-  useEffect(() => {
-    if (!toast) return;
-    const timer = window.setTimeout(() => setToast(''), 2800);
-    return () => window.clearTimeout(timer);
-  }, [toast]);
-
-  useEffect(() => {
-    const customerId = customerQuery.data?.id;
-    const currentCart = cartQuery.data;
-    if (!currentCart || !shouldMergeGuestCart(currentCart, customerId)) return;
-
-    const attemptKey = `${customerId}:${currentCart.id ?? 'guest'}`;
-    if (cartMergeAttemptRef.current === attemptKey || isMergingGuestCart) return;
-    cartMergeAttemptRef.current = attemptKey;
-
-    mergeGuestCart(undefined, {
-      onError: (error) => {
-        if (getCartMergeConflicts(error).length > 0) {
-          setToast('بخشی از سبد خرید نیازمند بررسی است.');
-          window.location.hash = '#cart/conflict';
-          return;
-        }
-        setToast('ورود انجام شد، اما ادغام سبد خرید انجام نشد.');
-      },
-    });
-  }, [cartQuery.data, customerQuery.data?.id, isMergingGuestCart, mergeGuestCart]);
 
   useEffect(() => {
     if (route === '#search') setSearchOpen(true);
@@ -2931,23 +2907,13 @@ export function App() {
         cartLoading={cartQuery.isPending}
         cartError={cartQuery.isError}
         onRetryCart={() => void cartQuery.refetch()}
+        customerId={customerQuery.data?.id}
         isWishlisted={(slug) => wishlist.has(slug)}
         onToggleWishlist={toggleWishlist}
       />
       {!route.startsWith('#admin') ? <MobileBottomNav cartCount={cartCount} /> : null}
       <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
       <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
-      {toast ? (
-        <div
-          className="toast fixed z-[600] flex items-center bg-primary-hover text-primary-foreground shadow-float"
-          role="status"
-          aria-live="polite"
-        >
-          <Icon name="check" size={17} />
-          {toast}
-          <a href="#cart">مشاهده سبد</a>
-        </div>
-      ) : null}
     </div>
   );
 }

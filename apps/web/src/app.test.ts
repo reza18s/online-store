@@ -80,6 +80,23 @@ test('keeps the static admin dashboard preview development-only', () => {
   queryClient.clear();
 });
 
+test('does not expose a fabricated order number from the payment preview state', () => {
+  const markup = renderToStaticMarkup(
+    createElement(RouteView, {
+      route: '#checkout/payment-pending',
+      cart: undefined,
+      cartLoading: false,
+      cartError: false,
+      onRetryCart: () => undefined,
+      isWishlisted: () => false,
+      onToggleWishlist: () => undefined,
+    }),
+  );
+
+  assert.doesNotMatch(markup, /NV-1405-2481/);
+  assert.match(markup, /href="#account\/orders"/);
+});
+
 test('routes legacy editorial aliases through the published content renderer', () => {
   const queryClient = new QueryClient();
   queryClient.setQueryData(queryKeys.content.page('article'), {

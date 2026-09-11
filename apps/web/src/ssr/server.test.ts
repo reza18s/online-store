@@ -274,6 +274,56 @@ test('returns a noindex 503 for a malformed resolver payload', async () => {
   assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt']);
 });
 
+test('bounds slow public SSR reads and aborts the shared request signal', async () => {
+  const resolution: SeoResolution = {
+    path: '/product/linen-overshirt',
+    metadata: null,
+    redirect: null,
+  };
+  const calls: string[] = [];
+  let observedSignal: AbortSignal | null | undefined;
+  const fetcher: Fetcher = async (input, init) => {
+    const key = new URL(input).pathname + new URL(input).search;
+    calls.push(key);
+    observedSignal = init?.signal;
+    if (key === '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt')
+      return jsonResponse(resolution);
+    return new Promise<Response>(() => undefined);
+  };
+
+  const result = await handleRequest(
+    'https://nova.example/product/linen-overshirt',
+    { ...optionsBase, fetcher, renderTimeoutMs: 10 },
+    '<html><head></head><body><div id="root"></div></body></html>',
+  );
+
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+  assert.deepEqual(calls, [
+    '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt',
+    '/v1/catalog/products/linen-overshirt',
+  ]);
+  assert.ok(observedSignal?.aborted);
+});
+
+test('bounds sitemap source reads with the same request deadline', async () => {
+  const signals: Array<AbortSignal | null | undefined> = [];
+  const fetcher: Fetcher = async (_input, init) => {
+    signals.push(init?.signal);
+    return new Promise<Response>(() => undefined);
+  };
+
+  const result = await sitemapResponse({ ...optionsBase, fetcher, renderTimeoutMs: 10 });
+
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+  assert.equal(signals.length, 3);
+  assert.ok(signals[0]);
+  assert.ok(signals.every((signal) => signal === signals[0]));
+  assert.ok(signals[0]?.aborted);
+});
+
 test('fails closed for unsafe resolver redirect destinations', async () => {
   const unsafeDestinations = [
     'https://evil.example/account',

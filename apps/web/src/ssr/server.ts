@@ -37,6 +37,7 @@ export interface RenderOptions {
   origin: string;
   apiOrigin: string;
   fetcher?: Fetcher;
+  renderTimeoutMs?: number;
 }
 
 export interface RenderContext extends InitialRenderContext {
@@ -62,10 +63,24 @@ class RenderApiError extends Error {
   }
 }
 
+class RenderDeadlineError extends Error {
+  public constructor() {
+    super('SSR render deadline exceeded');
+    this.name = 'RenderDeadlineError';
+  }
+}
+
+interface RenderDeadline {
+  signal: AbortSignal;
+  run<T>(operation: Promise<T>): Promise<T>;
+  dispose(): void;
+}
+
 const publicCache = 'public, s-maxage=60, stale-while-revalidate=300';
 const sitemapCache = 'public, s-maxage=300, stale-while-revalidate=900';
 const redirectCache = 'public, max-age=300';
 const noStoreCache = 'no-store';
+const defaultRenderTimeoutMs = 5_000;
 const sitemapMaxUrlCount = 50_000;
 const sitemapMaxBytes = 50 * 1024 * 1024;
 const sitemapResolverConcurrency = 16;
@@ -131,6 +146,35 @@ function safeJson(value: unknown): string {
 
 function apiUrl(apiOrigin: string, path: string): string {
   return `${trimOrigin(apiOrigin)}${path}`;
+}
+
+function createRenderDeadline(timeoutMs?: number): RenderDeadline {
+  const duration =
+    timeoutMs !== undefined && Number.isFinite(timeoutMs) && timeoutMs > 0
+      ? Math.max(1, Math.floor(timeoutMs))
+      : defaultRenderTimeoutMs;
+  const controller = new AbortController();
+  let rejectDeadline: (reason?: unknown) => void = () => undefined;
+  const deadlinePromise = new Promise<never>((_, reject) => {
+    rejectDeadline = reject;
+  });
+  let disposed = false;
+  const timer = setTimeout(() => {
+    if (disposed) return;
+    controller.abort();
+    rejectDeadline(new RenderDeadlineError());
+  }, duration);
+
+  return {
+    signal: controller.signal,
+    run<T>(operation: Promise<T>): Promise<T> {
+      return Promise.race([operation, deadlinePromise]);
+    },
+    dispose() {
+      disposed = true;
+      clearTimeout(timer);
+    },
+  };
 }
 
 async function getApi<T>(
@@ -769,156 +813,158 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
     return notFoundContext(origin, route);
 
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
-  let resolution: SeoResolution;
-  try {
-    resolution = await getSeoResolution(options.apiOrigin, route.path, fetcher);
-  } catch (error) {
-    if (route.kind === 'unknown' && error instanceof RenderApiError && error.status === 404)
-      return notFoundContext(origin, route);
-    return serviceUnavailableContext(origin, route);
-  }
-
-  if (resolution.redirect) {
-    const location = safeRedirectPath(origin, resolution.redirect.toPath);
-    if (!location) return serviceUnavailableContext(origin, route);
-    return {
-      path: route.path,
-      hashRoute: routeHash(route),
-      seo: createSeoDocument({ origin, ...metadataFallback(origin, route), noIndex: true }),
-      status: 200,
-      redirect: { location, status: resolution.redirect.statusCode },
-      bodyHtml: initialBody('NOVA', 'הمسیر در حال انتقال است.'),
-      cacheControl: redirectCache,
-    };
-  }
-  if (route.kind === 'unknown') return notFoundContext(origin, route);
+  const deadline = createRenderDeadline(options.renderTimeoutMs);
+  const getRouteApi = <T>(path: string): Promise<T> =>
+    deadline.run(getApi<T>(options.apiOrigin, path, fetcher, deadline.signal));
 
   try {
-    if (route.kind === 'home') {
-      const products = await getApi<CatalogProductPage>(
-        options.apiOrigin,
-        catalogProductsPath('limit=8&sort=newest&page=1'),
-        fetcher,
+    let resolution: SeoResolution;
+    try {
+      resolution = await deadline.run(
+        getSeoResolution(options.apiOrigin, route.path, fetcher, deadline.signal),
       );
-      const fallback = metadataFallback(origin, route);
-      const seo = seoDocumentFromMetadata(origin, fallback, resolution.metadata);
+    } catch (error) {
+      if (route.kind === 'unknown' && error instanceof RenderApiError && error.status === 404)
+        return notFoundContext(origin, route);
+      return serviceUnavailableContext(origin, route);
+    }
+
+    if (resolution.redirect) {
+      const location = safeRedirectPath(origin, resolution.redirect.toPath);
+      if (!location) return serviceUnavailableContext(origin, route);
       return {
         path: route.path,
         hashRoute: routeHash(route),
-        seo,
+        seo: createSeoDocument({ origin, ...metadataFallback(origin, route), noIndex: true }),
         status: 200,
-        bodyHtml: initialBody(
-          seo.title,
-          seo.description,
-          products.items.map((product) => ({
-            href: `/product/${encodeURIComponent(product.slug)}`,
-            label: product.name,
-          })),
-        ),
-        cacheControl: publicCache,
+        redirect: { location, status: resolution.redirect.statusCode },
+        bodyHtml: initialBody('NOVA', 'הمسیر در حال انتقال است.'),
+        cacheControl: redirectCache,
       };
     }
-    if (route.kind === 'category') {
-      const [categories, products] = await Promise.all([
-        getApi<CatalogCategory[]>(options.apiOrigin, '/v1/catalog/categories', fetcher),
-        getApi<CatalogProductPage>(
-          options.apiOrigin,
-          catalogProductsPath(
-            `audience=${encodeURIComponent(route.slug)}&limit=8&sort=newest&page=1`,
+    if (route.kind === 'unknown') return notFoundContext(origin, route);
+
+    try {
+      if (route.kind === 'home') {
+        const products = await getRouteApi<CatalogProductPage>(
+          catalogProductsPath('limit=8&sort=newest&page=1'),
+        );
+        const fallback = metadataFallback(origin, route);
+        const seo = seoDocumentFromMetadata(origin, fallback, resolution.metadata);
+        return {
+          path: route.path,
+          hashRoute: routeHash(route),
+          seo,
+          status: 200,
+          bodyHtml: initialBody(
+            seo.title,
+            seo.description,
+            products.items.map((product) => ({
+              href: `/product/${encodeURIComponent(product.slug)}`,
+              label: product.name,
+            })),
           ),
-          fetcher,
-        ),
-      ]);
-      const category = categories.find((candidate) => candidate.slug === route.slug);
-      if (!category) return notFoundContext(origin, route);
+          cacheControl: publicCache,
+        };
+      }
+      if (route.kind === 'category') {
+        const [categories, products] = await Promise.all([
+          getRouteApi<CatalogCategory[]>('/v1/catalog/categories'),
+          getRouteApi<CatalogProductPage>(
+            catalogProductsPath(
+              `audience=${encodeURIComponent(route.slug)}&limit=8&sort=newest&page=1`,
+            ),
+          ),
+        ]);
+        const category = categories.find((candidate) => candidate.slug === route.slug);
+        if (!category) return notFoundContext(origin, route);
+        const fallback = metadataFallback(origin, route);
+        const seo = seoDocumentFromMetadata(
+          origin,
+          { ...fallback, title: `NOVA | ${category.name}` },
+          resolution.metadata,
+        );
+        return {
+          path: route.path,
+          hashRoute: routeHash(route),
+          seo: {
+            ...seo,
+            jsonLd:
+              seo.robots === 'index, follow'
+                ? (seo.jsonLd ?? categoryJsonLd(origin, route, products.items, category.name))
+                : null,
+          },
+          status: 200,
+          bodyHtml: initialBody(
+            seo.title,
+            seo.description,
+            products.items.map((product) => ({
+              href: `/product/${encodeURIComponent(product.slug)}`,
+              label: product.name,
+            })),
+          ),
+          cacheControl: publicCache,
+        };
+      }
+      if (route.kind === 'product') {
+        const product = await getRouteApi<CatalogProduct>(
+          `/v1/catalog/products/${encodeURIComponent(route.slug)}`,
+        );
+        const fallback = metadataFallback(origin, route);
+        const productDescription = catalogProductDescription(product);
+        const seo = seoDocumentFromMetadata(
+          origin,
+          {
+            ...fallback,
+            title: `NOVA | ${product.name}`,
+            description: productDescription,
+            imagePath: imagePath(product),
+            jsonLd: productJsonLd(origin, product),
+          },
+          resolution.metadata ? { ...resolution.metadata, structuredData: null } : null,
+        );
+        return {
+          path: route.path,
+          hashRoute: routeHash(route),
+          seo: {
+            ...seo,
+            jsonLd: seo.robots === 'index, follow' ? productJsonLd(origin, product) : null,
+          },
+          status: 200,
+          bodyHtml: productBody(product, productDescription),
+          cacheControl: publicCache,
+        };
+      }
+
+      const page = await getRouteApi<ContentPage>(
+        `/v1/content/pages/${encodeURIComponent(route.slug)}`,
+      );
       const fallback = metadataFallback(origin, route);
       const seo = seoDocumentFromMetadata(
         origin,
-        { ...fallback, title: `NOVA | ${category.name}` },
+        {
+          ...fallback,
+          title: `NOVA | ${page.title}`,
+          description: page.body?.slice(0, 320) ?? page.title,
+          jsonLd: contentJsonLd(origin, route, page),
+        },
         resolution.metadata,
       );
       return {
         path: route.path,
         hashRoute: routeHash(route),
-        seo: {
-          ...seo,
-          jsonLd:
-            seo.robots === 'index, follow'
-              ? (seo.jsonLd ?? categoryJsonLd(origin, route, products.items, category.name))
-              : null,
-        },
+        seo,
         status: 200,
-        bodyHtml: initialBody(
-          seo.title,
-          seo.description,
-          products.items.map((product) => ({
-            href: `/product/${encodeURIComponent(product.slug)}`,
-            label: product.name,
-          })),
-        ),
+        bodyHtml: contentBody(route, page, seo.description),
         cacheControl: publicCache,
       };
+    } catch (error) {
+      if (error instanceof RenderApiError && error.status === 404)
+        return notFoundContext(origin, route);
+      return serviceUnavailableContext(origin, route);
     }
-    if (route.kind === 'product') {
-      const product = await getApi<CatalogProduct>(
-        options.apiOrigin,
-        `/v1/catalog/products/${encodeURIComponent(route.slug)}`,
-        fetcher,
-      );
-      const fallback = metadataFallback(origin, route);
-      const productDescription = catalogProductDescription(product);
-      const seo = seoDocumentFromMetadata(
-        origin,
-        {
-          ...fallback,
-          title: `NOVA | ${product.name}`,
-          description: productDescription,
-          imagePath: imagePath(product),
-          jsonLd: productJsonLd(origin, product),
-        },
-        resolution.metadata ? { ...resolution.metadata, structuredData: null } : null,
-      );
-      return {
-        path: route.path,
-        hashRoute: routeHash(route),
-        seo: {
-          ...seo,
-          jsonLd: seo.robots === 'index, follow' ? productJsonLd(origin, product) : null,
-        },
-        status: 200,
-        bodyHtml: productBody(product, productDescription),
-        cacheControl: publicCache,
-      };
-    }
-
-    const page = await getApi<ContentPage>(
-      options.apiOrigin,
-      `/v1/content/pages/${encodeURIComponent(route.slug)}`,
-      fetcher,
-    );
-    const fallback = metadataFallback(origin, route);
-    const seo = seoDocumentFromMetadata(
-      origin,
-      {
-        ...fallback,
-        title: `NOVA | ${page.title}`,
-        description: page.body?.slice(0, 320) ?? page.title,
-        jsonLd: contentJsonLd(origin, route, page),
-      },
-      resolution.metadata,
-    );
-    return {
-      path: route.path,
-      hashRoute: routeHash(route),
-      seo,
-      status: 200,
-      bodyHtml: contentBody(route, page, seo.description),
-      cacheControl: publicCache,
-    };
-  } catch (error) {
-    if (error instanceof RenderApiError && error.status === 404)
-      return notFoundContext(origin, route);
-    return serviceUnavailableContext(origin, route);
+  } finally {
+    deadline.dispose();
   }
 }
 
@@ -1019,6 +1065,7 @@ async function indexableSitemapPaths(
   paths: string[],
   fetcher: Fetcher,
   origin: string,
+  signal?: AbortSignal,
 ): Promise<string[]> {
   const candidates = [...new Set(paths)].filter(isRecognizedSitemapPath).sort();
   if (candidates.length > sitemapMaxUrlCount) {
@@ -1027,6 +1074,9 @@ async function indexableSitemapPaths(
   const resolved: Array<string | null> = new Array(candidates.length);
   let nextIndex = 0;
   const abortController = new AbortController();
+  const resolverSignal = signal
+    ? AbortSignal.any([abortController.signal, signal])
+    : abortController.signal;
   await Promise.all(
     Array.from({ length: Math.min(sitemapResolverConcurrency, candidates.length) }, async () => {
       try {
@@ -1034,12 +1084,7 @@ async function indexableSitemapPaths(
           const index = nextIndex++;
           const path = candidates[index];
           if (path === undefined) return;
-          const resolution = await getSeoResolution(
-            apiOrigin,
-            path,
-            fetcher,
-            abortController.signal,
-          );
+          const resolution = await getSeoResolution(apiOrigin, path, fetcher, resolverSignal);
           resolved[index] =
             resolution.redirect || resolution.metadata?.noIndex
               ? null
@@ -1056,7 +1101,11 @@ async function indexableSitemapPaths(
 
 const catalogPageLimit = 100;
 
-async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<ProductSummary[]> {
+async function allCatalogProducts(
+  apiOrigin: string,
+  fetcher: Fetcher,
+  signal?: AbortSignal,
+): Promise<ProductSummary[]> {
   const products: ProductSummary[] = [];
   const seenProductSlugs = new Set<string>();
   let page = 1;
@@ -1066,6 +1115,7 @@ async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<
       apiOrigin,
       catalogProductsPath(`limit=${catalogPageLimit}&sort=newest&page=${page}`),
       fetcher,
+      signal,
     );
     if (!isCatalogProductPage(rawResult)) {
       throw new RenderApiError(502, 'SSR API returned an invalid catalog page');
@@ -1102,22 +1152,29 @@ async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<
 export async function sitemapResponse(options: RenderOptions): Promise<RenderResponse> {
   const origin = trimOrigin(options.origin);
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
+  const deadline = createRenderDeadline(options.renderTimeoutMs);
   try {
-    const [categories, products, contentPages] = await Promise.all([
-      getApi<unknown>(options.apiOrigin, '/v1/catalog/categories', fetcher).then((value) => {
-        if (!isCatalogCategoryList(value)) {
-          throw new RenderApiError(502, 'SSR API returned an invalid catalog category list');
-        }
-        return value;
-      }),
-      allCatalogProducts(options.apiOrigin, fetcher),
-      getApi<unknown>(options.apiOrigin, '/v1/content/pages', fetcher).then((value) => {
-        if (!isContentPageSummaryList(value)) {
-          throw new RenderApiError(502, 'SSR API returned an invalid content index');
-        }
-        return value;
-      }),
-    ]);
+    const [categories, products, contentPages] = await deadline.run(
+      Promise.all([
+        getApi<unknown>(options.apiOrigin, '/v1/catalog/categories', fetcher, deadline.signal).then(
+          (value) => {
+            if (!isCatalogCategoryList(value)) {
+              throw new RenderApiError(502, 'SSR API returned an invalid catalog category list');
+            }
+            return value;
+          },
+        ),
+        allCatalogProducts(options.apiOrigin, fetcher, deadline.signal),
+        getApi<unknown>(options.apiOrigin, '/v1/content/pages', fetcher, deadline.signal).then(
+          (value) => {
+            if (!isContentPageSummaryList(value)) {
+              throw new RenderApiError(502, 'SSR API returned an invalid content index');
+            }
+            return value;
+          },
+        ),
+      ]),
+    );
     const paths = [
       '/',
       ...categories
@@ -1130,7 +1187,9 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
         .map((page) => `/content/${encodeURIComponent(page.slug)}`)
         .filter(isRecognizedSitemapPath),
     ];
-    const indexablePaths = await indexableSitemapPaths(options.apiOrigin, paths, fetcher, origin);
+    const indexablePaths = await deadline.run(
+      indexableSitemapPaths(options.apiOrigin, paths, fetcher, origin, deadline.signal),
+    );
     if (new Set(indexablePaths).size > sitemapMaxUrlCount) {
       throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
     }
@@ -1155,6 +1214,8 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
       }),
       body: 'Sitemap temporarily unavailable',
     };
+  } finally {
+    deadline.dispose();
   }
 }
 

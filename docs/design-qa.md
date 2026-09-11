@@ -8,8 +8,9 @@ assistive-technology evidence because the checkout had no Playwright/browser
 dependency and no live API or storefront server. Later parent rechecks added
 bounded live runtime evidence: Chrome CDP exact-size captures, route/overflow
 checks, the staff-login default and invalid-email states, a source-covered safe
-session-expiry marker, and a no-request validation check without entering
-credentials. Full authenticated, provider,
+session-expiry marker, a default live browser replay of the expired state, and
+a no-request validation check without entering credentials. Full authenticated,
+provider,
 assistive-technology and formal pixel-diff gates remain open. The original
 audit routes findings to owners and the later parent fixes are recorded below.
 
@@ -61,7 +62,7 @@ current rendered evidence.
 | Deterministic integration matrix | `PASS` | The parent recheck ran `bun run test:integration`: all 8 deterministic suites passed with no failures. |
 | Live API/storefront smoke | `PASS` (unauthenticated) / `NOT RUN` (authenticated) | The 2026-09-11 continuation ran the API and Vite storefront against isolated PostgreSQL 16/Redis 7: `/health/live` and `/health/ready` returned `200` with `database: "ok"`, public catalog endpoints returned seeded data, the default `test:e2e` root-shell preflight passed, and CUA observed live home/catalog content plus the unauthenticated admin guard. Authenticated data-backed operations remain unrun. |
 | Browser harness | `PARTIAL` | CUA supplied default-viewport AX evidence; the parent also used an isolated headless Chrome CDP runner for exact CSS viewports and bounded route/state checks. No full Playwright journey or screen-reader/AT run exists, so this is not authenticated E2E coverage. |
-| Screenshot/pixel regression | `PARTIAL` | Exact `1440x900` and `390x844` default/invalid-email captures were generated and visually inspected, then removed after QA. Formal crop registration and pixel-diff tolerance against the composite artifact remain open. |
+| Screenshot/pixel regression | `PARTIAL` | Exact `1440x900` and `390x844` default/invalid-email captures plus a default-viewport session-expiry replay were generated/observed; temporary captures and runners were removed after QA. Formal crop registration, exact-size expiry capture and pixel-diff tolerance against the composite artifact remain open. |
 | Production code changes | `PASS` (bounded follow-up) | The current parent follow-up removes the mobile `.site-nav` display override regression, adds localized field-specific staff-login validation with accessible error associations, and preserves the safe session-expiry route marker after protected-cache clearing. No provider, package/lockfile, generated output or shared contract changed. |
 
 ## Required responsive widths

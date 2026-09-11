@@ -96,6 +96,7 @@ export function useAdminInventoryItem(variantId: string, enabled = true) {
 export function useAdjustAdminInventory() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminInventory.all,
     mutationFn: ({
       variantId,
       input,
@@ -113,6 +114,7 @@ export function useAdjustAdminInventory() {
 export function useUpdateAdminInventoryReorderPoint() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminInventory.all,
     mutationFn: ({
       variantId,
       input,

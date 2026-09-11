@@ -343,7 +343,10 @@ export function useStaffLogin() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: loginStaff,
-    onSuccess: (user) => queryClient.setQueryData(queryKeys.staffAuth.current(), user),
+    onSuccess: (user) => {
+      clearStaffSessionCache(queryClient);
+      queryClient.setQueryData(queryKeys.staffAuth.current(), user);
+    },
   });
 }
 
@@ -413,6 +416,7 @@ export function useAdminProductMedia(productId: string, enabled = true) {
 export function useCreateAdminCatalogCategory() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: createAdminCatalogCategory,
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: queryKeys.adminCatalog.categories() }),
@@ -422,6 +426,7 @@ export function useCreateAdminCatalogCategory() {
 export function useUpdateAdminCatalogCategory() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       categoryId,
       input,
@@ -437,6 +442,7 @@ export function useUpdateAdminCatalogCategory() {
 export function useUpdateAdminCatalogCategoryStatus() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       categoryId,
       input,
@@ -452,6 +458,7 @@ export function useUpdateAdminCatalogCategoryStatus() {
 export function useReplaceAdminProductCategories() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       input,
@@ -467,6 +474,7 @@ export function useReplaceAdminProductCategories() {
 export function useCreateAdminCatalogProduct() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: createAdminCatalogProduct,
     onSuccess: () => invalidateAdminProductList(queryClient),
   });
@@ -475,6 +483,7 @@ export function useCreateAdminCatalogProduct() {
 export function useUpdateAdminCatalogProduct() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       input,
@@ -490,6 +499,7 @@ export function useUpdateAdminCatalogProduct() {
 export function useUpdateAdminCatalogProductStatus() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       input,
@@ -505,6 +515,7 @@ export function useUpdateAdminCatalogProductStatus() {
 export function useCreateAdminProductOption() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       input,
@@ -520,6 +531,7 @@ export function useCreateAdminProductOption() {
 export function useUpdateAdminProductOption() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       optionId,
@@ -537,6 +549,7 @@ export function useUpdateAdminProductOption() {
 export function useCreateAdminProductOptionValue() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       optionId,
@@ -554,6 +567,7 @@ export function useCreateAdminProductOptionValue() {
 export function useUpdateAdminProductOptionValue() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       optionId,
@@ -573,6 +587,7 @@ export function useUpdateAdminProductOptionValue() {
 export function useCreateAdminProductVariant() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       input,
@@ -588,6 +603,7 @@ export function useCreateAdminProductVariant() {
 export function useUpdateAdminProductVariant() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       variantId,
@@ -605,6 +621,7 @@ export function useUpdateAdminProductVariant() {
 export function useCreateAdminProductMedia() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       input,
@@ -620,6 +637,7 @@ export function useCreateAdminProductMedia() {
 export function useUpdateAdminProductMedia() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({
       productId,
       mediaId,
@@ -637,6 +655,7 @@ export function useUpdateAdminProductMedia() {
 export function useDeleteAdminProductMedia() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCatalog.all,
     mutationFn: ({ productId, mediaId }: { productId: string; mediaId: string }) =>
       deleteAdminProductMedia(productId, mediaId),
     onSuccess: (_result, variables) =>

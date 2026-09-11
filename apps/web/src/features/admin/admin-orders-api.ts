@@ -114,13 +114,9 @@ export function useAdminOrder(orderNumber: string, enabled = true) {
 export function useUpdateAdminOrderStatus() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      orderNumber,
-      input,
-    }: {
-      orderNumber: string;
-      input: AdminOrderStatusInput;
-    }) => updateAdminOrderStatus(orderNumber, input),
+    mutationKey: queryKeys.adminOrders.all,
+    mutationFn: ({ orderNumber, input }: { orderNumber: string; input: AdminOrderStatusInput }) =>
+      updateAdminOrderStatus(orderNumber, input),
     onSuccess: (order) => {
       queryClient.setQueryData(queryKeys.adminOrders.detail(order.orderNumber), order);
       return queryClient.invalidateQueries({ queryKey: queryKeys.adminOrders.all });
@@ -131,6 +127,7 @@ export function useUpdateAdminOrderStatus() {
 export function useUpdateAdminOrderShipment() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminOrders.all,
     mutationFn: ({
       orderNumber,
       input,
@@ -148,13 +145,9 @@ export function useUpdateAdminOrderShipment() {
 export function useReviewAdminOrderReturn() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      orderNumber,
-      input,
-    }: {
-      orderNumber: string;
-      input: AdminReturnReviewInput;
-    }) => reviewAdminOrderReturn(orderNumber, input),
+    mutationKey: queryKeys.adminOrders.all,
+    mutationFn: ({ orderNumber, input }: { orderNumber: string; input: AdminReturnReviewInput }) =>
+      reviewAdminOrderReturn(orderNumber, input),
     onSuccess: (order) => {
       queryClient.setQueryData(queryKeys.adminOrders.detail(order.orderNumber), order);
       return queryClient.invalidateQueries({ queryKey: queryKeys.adminOrders.all });

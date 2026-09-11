@@ -34,8 +34,11 @@ import {
 import {
   useAdminCatalogCategories,
   useAdminCatalogProducts,
+  useStaffLogin,
+  useStaffLogout,
   useStaffUser,
 } from './features/admin/admin-catalog-api';
+import { isStaffAuthFailure, isStaffAuthorizationFailure } from './features/admin/admin-auth';
 import { useAdminInventory } from './features/admin/admin-inventory-api';
 import { useAdminOrders } from './features/admin/admin-orders-api';
 import {
@@ -4742,6 +4745,164 @@ function AdminDashboard() {
   );
 }
 
+function staffLoginErrorMessage(error: unknown): string {
+  if (error instanceof ApiClientError) {
+    if (error.status === 429) {
+      return 'تعداد تلاش‌ها بیش از حد مجاز است؛ کمی بعد دوباره تلاش کنید.';
+    }
+    if (error.status === 401 || error.status === 403) {
+      return 'ایمیل، رمز عبور یا کد تأیید دومرحله‌ای نادرست است.';
+    }
+    if (error.status === 422) {
+      return 'اطلاعات ورود را با قالب درست وارد کنید.';
+    }
+  }
+  return 'ورود به فضای مدیریت انجام نشد؛ دوباره تلاش کنید.';
+}
+
+function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }) {
+  const loginMutation = useStaffLogin();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [factor, setFactor] = useState('');
+  const [formError, setFormError] = useState('');
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setFormError('');
+    loginMutation.mutate(
+      { email, password, factor },
+      {
+        onSuccess: () => {
+          window.location.hash = '#admin';
+        },
+        onError: (error) => setFormError(staffLoginErrorMessage(error)),
+      },
+    );
+  };
+
+  return (
+    <main
+      className="flex min-h-svh items-center justify-center bg-primary-hover px-4 py-12"
+      dir="rtl"
+    >
+      <section className="w-full max-w-md bg-surface p-7 text-right shadow-float md:p-10">
+        <Logo />
+        <span className="section-heading__eyebrow mt-12">NOVA / ADMIN ACCESS</span>
+        <h1 className="mt-2 text-3xl leading-relaxed">ورود به فضای مدیریت</h1>
+        <p className="mt-3 text-sm leading-8 text-muted-foreground">
+          برای ادامه، رمز عبور و کد تأیید دومرحله‌ای مدیر را وارد کنید.
+        </p>
+        {sessionExpired ? (
+          <p
+            className="mt-4 border border-accent-soft bg-accent-soft/40 px-3 py-2 text-sm leading-7 text-foreground"
+            role="status"
+          >
+            نشست مدیریت منقضی شده است؛ برای ادامه دوباره وارد شوید.
+          </p>
+        ) : null}
+        <form className="mt-7 flex flex-col gap-4" onSubmit={handleSubmit}>
+          <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-email">
+            ایمیل سازمانی
+            <input
+              id="staff-email"
+              className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+              dir="ltr"
+              name="email"
+              autoComplete="username"
+              required
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="admin@example.com"
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-password">
+            رمز عبور
+            <input
+              id="staff-password"
+              className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+              dir="ltr"
+              name="password"
+              autoComplete="current-password"
+              required
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </label>
+          <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-factor">
+            کد تأیید دومرحله‌ای یا کد بازیابی
+            <input
+              id="staff-factor"
+              className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+              dir="ltr"
+              name="factor"
+              autoComplete="one-time-code"
+              inputMode="numeric"
+              required
+              type="text"
+              value={factor}
+              onChange={(event) => setFactor(event.target.value)}
+            />
+          </label>
+          {formError ? (
+            <p className="text-sm leading-7 text-primary" role="alert" aria-live="polite">
+              {formError}
+            </p>
+          ) : null}
+          <Button size="lg" type="submit" disabled={loginMutation.isPending}>
+            {loginMutation.isPending ? 'در حال بررسی...' : 'ورود به پنل'}
+          </Button>
+        </form>
+        <a className="text-link mt-5" href="#home">
+          بازگشت به فروشگاه <Icon name="arrow-left" size={15} />
+        </a>
+      </section>
+    </main>
+  );
+}
+
+function AdminLogoutButton({
+  className = '',
+  compact = false,
+  label = 'خروج از حساب',
+}: {
+  className?: string;
+  compact?: boolean;
+  label?: string;
+}) {
+  const logoutMutation = useStaffLogout();
+
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onSettled: () => {
+        window.location.hash = '#admin/login';
+      },
+    });
+  };
+
+  return (
+    <button
+      className={className}
+      type="button"
+      disabled={logoutMutation.isPending}
+      aria-busy={logoutMutation.isPending}
+      aria-label={compact ? label : undefined}
+      onClick={handleLogout}
+    >
+      <Icon name="arrow-right" size={17} />
+      {compact ? (
+        <span className="sr-only">{logoutMutation.isPending ? 'در حال خروج...' : label}</span>
+      ) : logoutMutation.isPending ? (
+        'در حال خروج...'
+      ) : (
+        label
+      )}
+    </button>
+  );
+}
+
 function AdminLegacyPage({ page }: { page: string }) {
   const titleMap: Record<string, string> = {
     admin: 'نمای کلی',
@@ -4763,49 +4924,6 @@ function AdminLegacyPage({ page }: { page: string }) {
     'orders/NV-1405-2481': 'جزئیات سفارش',
   };
   const title = titleMap[page] ?? 'پنل مدیریت';
-  if (page === 'login')
-    return (
-      <main
-        className="flex min-h-svh items-center justify-center bg-primary-hover px-4 py-12"
-        dir="rtl"
-      >
-        <section className="w-full max-w-md bg-surface p-7 text-right shadow-float md:p-10">
-          <Logo />
-          <span className="section-heading__eyebrow mt-12">NOVA / ADMIN ACCESS</span>
-          <h1 className="mt-2 text-3xl leading-relaxed">ورود به فضای مدیریت</h1>
-          <p className="mt-3 text-sm leading-8 text-muted-foreground">
-            برای ادامه، رمز عبور و کد تأیید دومرحله‌ای مدیر را وارد کنید.
-          </p>
-          <form className="mt-7 flex flex-col gap-4" onSubmit={(event) => event.preventDefault()}>
-            <label className="flex flex-col gap-2 text-sm font-medium">
-              ایمیل سازمانی
-              <input
-                className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
-                dir="ltr"
-                required
-                type="email"
-                placeholder="admin@example.com"
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm font-medium">
-              رمز عبور
-              <input
-                className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
-                dir="ltr"
-                required
-                type="password"
-              />
-            </label>
-            <Button size="lg" type="submit">
-              ادامه و دریافت کد
-            </Button>
-          </form>
-          <a className="text-link mt-5" href="#home">
-            بازگشت به فروشگاه <Icon name="arrow-left" size={15} />
-          </a>
-        </section>
-      </main>
-    );
   const nav = [
     ['admin', 'نمای کلی', 'grid'],
     ['products', 'محصولات', 'shirt'],
@@ -4832,10 +4950,7 @@ function AdminLegacyPage({ page }: { page: string }) {
             {item.label}
           </a>
         ))}
-        <a className="admin-sidebar__logout" href="#home">
-          <Icon name="arrow-right" size={17} />
-          بازگشت به فروشگاه
-        </a>
+        <AdminLogoutButton className="admin-sidebar__logout flex min-h-11 w-full items-center gap-2 border-0 bg-transparent px-[11px] text-right text-xs text-inherit transition-colors hover:bg-secondary disabled:opacity-50" />
       </aside>
       <section className="admin-content">
         <header className="admin-topbar">
@@ -5246,7 +5361,7 @@ function AdminProductsPage() {
   const [openActionSlug, setOpenActionSlug] = useState<string | null>(null);
   const deferredQuery = useDeferredValue(query);
   const staffQuery = useStaffUser();
-  const isStaffAuthenticated = Boolean(staffQuery.data);
+  const isStaffAuthenticated = Boolean(staffQuery.data) && !isStaffAuthFailure(staffQuery.error);
   const isPreview = import.meta.env.DEV && !isStaffAuthenticated;
   const productListQuery = useMemo(
     () => ({
@@ -5323,6 +5438,12 @@ function AdminProductsPage() {
   const orderPreviews = isStaffAuthenticated
     ? (ordersQuery.data?.items ?? []).map(toAdminOrderPreview)
     : adminOrderPreviews;
+  const isPermissionDenied = [
+    productsQuery.error,
+    categoriesQuery.error,
+    inventoryQuery.error,
+    ordersQuery.error,
+  ].some(isStaffAuthorizationFailure);
   const dataState = !isStaffAuthenticated
     ? staffQuery.isPending
       ? {
@@ -5335,19 +5456,25 @@ function AdminProductsPage() {
           message: 'برای مشاهده داده‌های واقعی کاتالوگ، با یک حساب مدیر وارد شوید.',
           role: 'alert' as const,
         }
-    : productsQuery.isPending && !productsQuery.data
+    : isPermissionDenied
       ? {
-          title: 'در حال دریافت محصولات',
-          message: 'فهرست محصولات از سرور در حال دریافت است.',
-          role: 'status' as const,
+          title: 'دسترسی کافی نیست',
+          message: 'نقش کاربری شما اجازه مشاهده یکی از بخش‌های این صفحه را نمی‌دهد.',
+          role: 'alert' as const,
         }
-      : productsQuery.isError && !productsQuery.data
+      : productsQuery.isPending && !productsQuery.data
         ? {
-            title: 'دریافت محصولات ناموفق بود',
-            message: 'اتصال به سرویس کاتالوگ برقرار نشد. دوباره تلاش کنید.',
-            role: 'alert' as const,
+            title: 'در حال دریافت محصولات',
+            message: 'فهرست محصولات از سرور در حال دریافت است.',
+            role: 'status' as const,
           }
-        : null;
+        : productsQuery.isError && !productsQuery.data
+          ? {
+              title: 'دریافت محصولات ناموفق بود',
+              message: 'اتصال به سرویس کاتالوگ برقرار نشد. دوباره تلاش کنید.',
+              role: 'alert' as const,
+            }
+          : null;
 
   const setQuickFilter = () => {
     setQuickFilterActive((current) => !current);
@@ -5380,13 +5507,10 @@ function AdminProductsPage() {
               </a>
             ))}
           </nav>
-          <a
-            className="mt-auto flex min-h-11 items-center gap-3 border-t border-primary-foreground/15 px-3 pt-5 text-xs text-primary-foreground/80 transition-colors hover:text-primary-foreground"
-            href="#home"
-          >
-            <Icon name="arrow-right" size={18} />
-            خروج
-          </a>
+          <AdminLogoutButton
+            label="خروج"
+            className="mt-auto flex min-h-11 items-center gap-3 border-0 border-t border-primary-foreground/15 bg-transparent px-3 pt-5 text-xs text-primary-foreground/80 transition-colors hover:text-primary-foreground disabled:opacity-50"
+          />
         </aside>
 
         <section className="min-w-0 flex-1">
@@ -5418,6 +5542,11 @@ function AdminProductsPage() {
             </div>
 
             <div className="flex items-center justify-between lg:hidden" dir="ltr">
+              <AdminLogoutButton
+                compact
+                label="خروج"
+                className="flex h-10 w-10 items-center justify-center rounded-full border-0 bg-transparent text-foreground transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-50"
+              />
               <a
                 className="flex h-10 w-10 items-center justify-center rounded-full text-foreground hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 href="#admin"
@@ -5942,7 +6071,56 @@ function AdminProductsPage() {
   );
 }
 
+function AdminSessionLoading() {
+  return (
+    <main className="flex min-h-svh items-center justify-center bg-background px-4" dir="rtl">
+      <section className="w-full max-w-md bg-surface p-8 text-right shadow-float" role="status">
+        <span className="section-heading__eyebrow">NOVA / ADMIN ACCESS</span>
+        <h1 className="mt-2 text-2xl leading-relaxed">در حال بررسی دسترسی</h1>
+        <p className="mt-3 text-sm leading-8 text-muted-foreground">
+          نشست مدیریت شما در حال بررسی است.
+        </p>
+      </section>
+    </main>
+  );
+}
+
+function AdminPermissionDeniedPage() {
+  return (
+    <main className="flex min-h-svh items-center justify-center bg-background px-4" dir="rtl">
+      <section className="w-full max-w-md bg-surface p-8 text-right shadow-float" role="alert">
+        <span className="section-heading__eyebrow">NOVA / ADMIN ACCESS</span>
+        <h1 className="mt-2 text-2xl leading-relaxed">دسترسی کافی نیست</h1>
+        <p className="mt-3 text-sm leading-8 text-muted-foreground">
+          حساب کاربری شما برای مشاهده این بخش از فضای مدیریت مجوز لازم را ندارد.
+        </p>
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <a
+            className="inline-flex min-h-11 items-center justify-center rounded-control bg-primary px-5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            href="#admin"
+          >
+            بازگشت به داشبورد
+          </a>
+          <AdminLogoutButton className="inline-flex min-h-11 items-center gap-2 border-0 bg-transparent px-2 text-xs text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50" />
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function AdminPage({ page }: { page: string }) {
+  const isLoginPage = page === 'login';
+  const staffQuery = useStaffUser(!isLoginPage);
+  const authFailure = isStaffAuthFailure(staffQuery.error);
+  const authorizationFailure = isStaffAuthorizationFailure(staffQuery.error);
+  const hasStaffSession = Boolean(staffQuery.data) && !authFailure;
+  const allowDevelopmentPreview = import.meta.env.DEV && !staffQuery.data;
+
+  if (isLoginPage) return <AdminLoginPage />;
+  if (authorizationFailure) return <AdminPermissionDeniedPage />;
+  if (staffQuery.isPending && !allowDevelopmentPreview) return <AdminSessionLoading />;
+  if (authFailure && staffQuery.data) return <AdminLoginPage sessionExpired />;
+  if (!hasStaffSession && !allowDevelopmentPreview) return <AdminLoginPage />;
   if (page === 'products') return <AdminProductsPage />;
   if (page !== 'admin') return <AdminLegacyPage page={page} />;
 
@@ -5988,13 +6166,7 @@ function AdminPage({ page }: { page: string }) {
               <small className="mt-1 block text-[9px] !text-muted-foreground">مدیر سیستم</small>
             </div>
           </div>
-          <a
-            className="mt-4 flex min-h-10 items-center gap-2 px-2 text-[10px] !text-muted-foreground transition-colors hover:!text-foreground"
-            href="#home"
-          >
-            <Icon name="arrow-right" size={16} />
-            خروج از حساب
-          </a>
+          <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-[10px] !text-muted-foreground transition-colors hover:!text-foreground disabled:opacity-50" />
         </div>
       </aside>
       <section className="admin-content min-h-svh w-full">
@@ -6003,6 +6175,11 @@ function AdminPage({ page }: { page: string }) {
           dir="ltr"
         >
           <div className="!flex !flex-row w-full items-center justify-between md:!hidden" dir="ltr">
+            <AdminLogoutButton
+              compact
+              label="خروج"
+              className="icon-button border-0 disabled:opacity-50"
+            />
             <a className="icon-button" href="#admin" aria-label="داشبورد">
               <Icon name="menu" size={20} />
             </a>

@@ -70,6 +70,7 @@ export function useAdminCoupons(query: AdminCouponListQuery = {}, enabled = true
 export function useCreateAdminCoupon() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCoupons.all,
     mutationFn: createAdminCoupon,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.adminCoupons.all }),
   });
@@ -78,6 +79,7 @@ export function useCreateAdminCoupon() {
 export function useUpdateAdminCoupon() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminCoupons.all,
     mutationFn: ({ couponId, input }: { couponId: string; input: AdminCouponUpdateInput }) =>
       updateAdminCoupon(couponId, input),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.adminCoupons.all }),

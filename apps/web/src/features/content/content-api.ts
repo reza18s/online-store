@@ -238,6 +238,7 @@ function invalidateContentQueries(queryClient: ReturnType<typeof useQueryClient>
 export function useCreateAdminContentPage() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: createAdminContentPage,
     onSuccess: () => invalidateContentQueries(queryClient),
   });
@@ -246,6 +247,7 @@ export function useCreateAdminContentPage() {
 export function useUpdateAdminContentPage() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: ({ pageId, input }: { pageId: string; input: AdminContentPageUpdateInput }) =>
       updateAdminContentPage(pageId, input),
     onSuccess: () => invalidateContentQueries(queryClient),
@@ -255,6 +257,7 @@ export function useUpdateAdminContentPage() {
 export function useUpdateAdminContentPageStatus() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: ({ pageId, input }: { pageId: string; input: AdminContentPageStatusInput }) =>
       updateAdminContentPageStatus(pageId, input),
     onSuccess: () => invalidateContentQueries(queryClient),
@@ -264,6 +267,7 @@ export function useUpdateAdminContentPageStatus() {
 export function useCreateAdminSeoMetadata() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: createAdminSeoMetadata,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.adminContent.all });
@@ -275,6 +279,7 @@ export function useCreateAdminSeoMetadata() {
 export function useUpdateAdminSeoMetadata() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: ({
       metadataId,
       input,
@@ -292,6 +297,7 @@ export function useUpdateAdminSeoMetadata() {
 export function useDeleteAdminSeoMetadata() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: deleteAdminSeoMetadata,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.adminContent.all });
@@ -312,6 +318,7 @@ export function useAdminRedirects(query: AdminRedirectListQuery = {}, enabled = 
 export function useCreateAdminRedirect() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: createAdminRedirect,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.adminContent.all });
@@ -323,6 +330,7 @@ export function useCreateAdminRedirect() {
 export function useUpdateAdminRedirect() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: ({ redirectId, input }: { redirectId: string; input: AdminRedirectUpdateInput }) =>
       updateAdminRedirect(redirectId, input),
     onSuccess: () => {
@@ -335,6 +343,7 @@ export function useUpdateAdminRedirect() {
 export function useDeleteAdminRedirect() {
   const queryClient = useQueryClient();
   return useMutation({
+    mutationKey: queryKeys.adminContent.all,
     mutationFn: deleteAdminRedirect,
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: queryKeys.adminContent.all });

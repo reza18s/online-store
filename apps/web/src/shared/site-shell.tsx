@@ -1,4 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type RefObject,
+} from 'react';
 
 import type { CatalogSearchSuggestion } from '@nova/api-client';
 
@@ -114,11 +120,93 @@ export function MobileBottomNav({ cartCount }: { cartCount: number }) {
   );
 }
 
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'area[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  'iframe',
+  'object',
+  'embed',
+  '[contenteditable="true"]',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+function getFocusableElements(container: HTMLElement) {
+  return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+    (element) =>
+      !element.hidden &&
+      !element.matches(':disabled') &&
+      !element.closest('[inert], [aria-hidden="true"]') &&
+      element.tabIndex >= 0,
+  );
+}
+
+function isFocusableElement(element: Element | null): element is HTMLElement {
+  return (
+    element instanceof HTMLElement &&
+    element.isConnected &&
+    !element.hidden &&
+    !element.matches(':disabled') &&
+    !element.closest('[inert], [aria-hidden="true"]') &&
+    element.tabIndex >= 0
+  );
+}
+
+function useDialogFocus(
+  open: boolean,
+  dialogRef: RefObject<HTMLElement | null>,
+  initialFocusRef?: RefObject<HTMLElement | null>,
+) {
+  useEffect(() => {
+    if (!open) return;
+
+    const invokingElement = document.activeElement;
+    const focusable = dialogRef.current ? getFocusableElements(dialogRef.current) : [];
+    const requestedInitialFocus = initialFocusRef?.current;
+    const initialFocus =
+      requestedInitialFocus && focusable.includes(requestedInitialFocus)
+        ? requestedInitialFocus
+        : focusable[0];
+    initialFocus?.focus();
+
+    return () => {
+      if (isFocusableElement(invokingElement)) invokingElement.focus();
+    };
+  }, [dialogRef, initialFocusRef, open]);
+
+  return (event: ReactKeyboardEvent<HTMLElement>) => {
+    if (event.key !== 'Tab') return;
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const focusable = getFocusableElements(dialog);
+    if (!focusable.length) return;
+
+    const activeIndex = focusable.indexOf(document.activeElement as HTMLElement);
+    const nextIndex = event.shiftKey
+      ? activeIndex <= 0
+        ? focusable.length - 1
+        : activeIndex - 1
+      : activeIndex === -1 || activeIndex === focusable.length - 1
+        ? 0
+        : activeIndex + 1;
+
+    event.preventDefault();
+    focusable[nextIndex]?.focus();
+  };
+}
+
 export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [recent, setRecent] = useState<string[]>([]);
+  const dialogRef = useRef<HTMLElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const handleDialogKeyDown = useDialogFocus(open, dialogRef, inputRef);
   const suggestionQuery = useCatalogSuggestions(debouncedQuery, open);
   const normalizedQuery = query.trim();
 
@@ -127,10 +215,6 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
     const timeout = window.setTimeout(() => setDebouncedQuery(nextQuery), 220);
     return () => window.clearTimeout(timeout);
   }, [query]);
-
-  useEffect(() => {
-    if (open) inputRef.current?.focus();
-  }, [open]);
 
   useEffect(() => {
     try {
@@ -188,12 +272,17 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
       }}
     >
       <section
+        ref={dialogRef}
         className="search-dialog w-full max-w-3xl bg-surface shadow-float"
         role="dialog"
         aria-modal="true"
         aria-labelledby="search-title"
         onKeyDown={(event) => {
-          if (event.key === 'Escape') onClose();
+          if (event.key === 'Escape') {
+            onClose();
+            return;
+          }
+          handleDialogKeyDown(event);
         }}
       >
         <div className="search-dialog__top">
@@ -298,14 +387,10 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
 }
 
 export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
-  useEffect(() => {
-    if (!open) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [onClose, open]);
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const handleDialogKeyDown = useDialogFocus(open, drawerRef, closeButtonRef);
+
   if (!open) return null;
   return (
     <div
@@ -316,14 +401,28 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
       }}
     >
       <aside
+        ref={drawerRef}
         className="menu-drawer h-full max-w-[380px] w-[min(86vw,380px)] bg-surface shadow-float"
         role="dialog"
         aria-modal="true"
         aria-label="منوی فروشگاه"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            onClose();
+            return;
+          }
+          handleDialogKeyDown(event);
+        }}
       >
         <div className="menu-drawer__top">
           <Logo />
-          <button className="icon-button" type="button" onClick={onClose} aria-label="بستن منو">
+          <button
+            ref={closeButtonRef}
+            className="icon-button"
+            type="button"
+            onClick={onClose}
+            aria-label="بستن منو"
+          >
             <Icon name="close" />
           </button>
         </div>

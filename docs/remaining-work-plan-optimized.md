@@ -10,7 +10,7 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 - `SEC-001` — ✅ completed and merged through PR #3; merge commit `93495aa9ee250c8cce964a76dfdf992ed7d6a1c5`.
 - `API-001` — 🟡 follow-up contract revision is complete locally at `1f0237a19a8c4e0046af4cac3170e90433d080cb`; the existing PR #2 remains open at remote `17c0de0` because GitHub DNS prevented pushing the new commit.
 - `WEB-001` — ✅ accepted and merged into local `codex/integration` at `dc54fee66f2100414e23c20077f532f8ea36e239` from Darwin's task commit `e998c08`; no remote PR was created because repository export/push access is blocked.
-- `AUTH-001` — 🟡 functional slice plus bounded follow-up are implemented locally: `03261b0` contains the factor-aware staff/session behavior and `1d67976` completes legacy-shell mobile logout coverage. A concrete staff-login design artifact, target viewport and required states remain required for final visual QA/sign-off; use the exact supplied reference when available or generate the artifact when none exists.
+- `AUTH-001` — 🟡 functional slice plus bounded follow-up are implemented locally: `03261b0` contains the factor-aware staff/session behavior, `1d67976` completes legacy-shell mobile logout coverage, and `c2a32d7` gates unfinished authenticated routes. The concrete staff-login design target is now `output/design-artifacts/auth-staff-login-atelier.png` for `1440x900` and `390x844`; same-viewport visual/state sign-off remains open.
 - `ADMIN` route safety — ✅ authenticated unfinished admin routes are now gated behind an explicit non-operational state in `c2a32d7`; development-only unauthenticated preview remains available for Atelier review. Real API-backed admin page work is still open.
 - `ADMIN-001` — 🟡 page-local catalog/inventory slice is implemented at task commit `0daabff` and locally integrated into `codex/integration` via cherry-pick `a0146b7` plus parent route/fix commit `ba864c6`. Focused page tests, web typecheck, targeted lint/format, diff-check and the client+SSR build pass. Live authenticated operations and mobile/pixel QA remain open. Direct product-by-ID loading is a known API contract gap because the current admin catalog API exposes list/create/update but no detail GET.
 - `ADMIN-002` — 🟡 page-local order-operations slice is implemented at task commit `e11e087` and locally route-integrated on `codex/integration` via `2f533f2`; focused API/page tests and web validation pass, while live authenticated operations and pixel-level mobile QA remain open.
@@ -21,13 +21,19 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 - `OPS-001` — ✅ accepted and merged locally into `codex/integration` as `808dd7634a357eb45eb61da4e9b320c7146f2d62` from task commit `9e69d54d1dbec8355d308418ca61ebae9b4f284d`; focused worker validation passed. No remote PR was created because repository export/push access is blocked. Live worker/outbox validation remains batched for the wave/integration gate, and provider delivery remains PROVIDER-002-owned.
 - `SEO-001` — ✅ final content-sitemap follow-up `770c96e` passed both independent review axes and was merged locally into `codex/integration` as `27116b72`; the published-content consumer, catalog-boundary validation, safe failure behavior and deterministic sitemap limits are now integrated. The deadline follow-up `e6ca5e6` bounds document and sitemap API reads with a shared five-second default deadline and abort signal, and `5c468df` serializes public route data into the initial context and primes the matching TanStack Query keys before client mount to prevent duplicate public catalog/content reads. Focused tests (50/50 before the deadline follow-ups; 35/35 after them), package typechecks, lint/format and web client+SSR build passed. No live browser/API/database/crawler run was performed.
 - `CONTENT-001` — ✅ commit `a147aed` passed both independent review axes and parent validation, then was merged locally into `codex/integration` as `ba5bddc`; its published summary endpoint is now consumed by the SEO-001 sitemap integration. No visual reference is required; remote push/PR creation remains blocked by repository-export access.
-- Current local integration — `codex/integration` is clean at `ba864c6`, ahead of `origin/master` by 10 commits. The catalog/inventory and content/SEO slices are locally integrated; the parent branch has not been pushed because repository export/remote synchronization remains unavailable.
-- Visual QA limitation — the supplied Atelier admin reference was adopted for the admin slices. A 12ui generation attempt was blocked by the local credential sandbox and the escalated external-design request was rejected, so no external design artifact was created or transmitted. Live authenticated rendering, mobile viewport comparison and Chromium pixel capture remain open gates.
+- `WEB-002` — 🟡 discovery/cart slices are locally integrated through `36efd32` and `47cb203`, with parent route integration in `465ce07`; focused tests and web typecheck pass, while live/browser/mobile QA remains open.
+- `WEB-003` — 🟡 account/orders/returns slice is locally integrated through `5df3fb8` and `465ce07`; focused tests and web typecheck pass, while live/authenticated/mobile QA remains open.
+- `WEB-004` — 🟡 checkout/payment-recovery slice is locally integrated through `b7e18b4` and `465ce07`; focused tests and web typecheck pass, while provider/live-payment/browser QA remains open.
+- `WEB-005` — 🟡 public content/system slice is locally integrated through `e4b756b` and `465ce07`; focused tests and web typecheck pass, while live content/API/crawler/mobile QA remains open.
+- Current local integration — `codex/integration` is at `465ce07`, ahead of `origin/master` by 19 commits. The storefront, admin, content and SEO slices are locally route-integrated; the parent branch has not been pushed because repository export/remote synchronization remains unavailable.
+- Visual QA limitation — the supplied Atelier admin reference was adopted for the admin slices, and `output/design-artifacts/auth-staff-login-atelier.png` now provides the AUTH-001 desktop/mobile design target. Same-viewport live rendering, mobile comparison and Chromium pixel capture remain open gates; no external design artifact was transmitted.
 - CI — 🔴 current `master` and PR #2 runs fail at the repository `Typecheck` step; local inspection identified missing Prisma generation in the clean-checkout workflow. Remote confirmation remains blocked until the CI fix can be pushed.
 - Live execution ledger: [`docs/remaining-work-status.md`](remaining-work-status.md). Update it after every merge, dispatch, resume/stop, PR state change, validation result or blocker.
 - Feature/provider/SEO/ops/test/QA/release tasks follow the dependency graph below.
 
 Existing implementation already covers most backend/domain foundations, Prisma migrations/seed, catalog/search/facets, cart/merge, customer/staff auth backend, checkout/order/payment logic, inventory, coupons, notification outbox, fulfillment/returns, content/SEO APIs, browser transport, admin dashboard and admin products. Main remaining work is production-connected UI, provider adapters, SSR/SEO, runtime/E2E, QA, observability/recovery and launch readiness.
+
+- `QA-001` — 🟡 integrated audit completed as `PARTIAL/BLOCKED`; report `docs/design-qa.md` records three bounded accessibility findings and unavailable browser/AT/pixel gates. Owner follow-ups A11Y-001 and A11Y-002/003 are dispatched against `site-shell.tsx` and `styles.css` respectively.
 
 ---
 
@@ -385,6 +391,8 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## WEB-002 — storefront discovery/cart
 
+**Status:** 🟡 locally integrated through task commits `36efd32` and `47cb203`, with parent route wiring in `465ce07`. Focused discovery/cart tests and web typecheck pass; live/browser/mobile QA remains open.
+
 **Goal:** finish real home/category/PLP/search/PDP/cart states without hard-coded product truth.
 
 **Own:** page-local catalog/cart UI, `catalog-api.ts`, `cart-api.ts`, coordinated route wiring, focused tests/QA.
@@ -400,6 +408,8 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 ---
 
 ## WEB-003 — account/orders/tracking/returns
+
+**Status:** 🟡 locally integrated through task commit `5df3fb8` and parent route wiring `465ce07`. Focused account tests and web typecheck pass; live/authenticated/mobile QA remains open.
 
 **Goal:** finish customer account, addresses, orders, tracking and return journeys on customer-scoped APIs.
 
@@ -417,6 +427,8 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## WEB-004 — checkout/payment recovery
 
+**Status:** 🟡 locally integrated through task commit `b7e18b4` and parent route wiring `465ce07`. Focused checkout tests and web typecheck pass; provider/live-payment/browser QA remains open.
+
 **Goal:** production-connected address/shipping/quote/coupon/payment/confirmation with explicit recovery for every commerce failure state.
 
 **Own:** page-local checkout features/components, coordinated checkout routing, focused query/cart/checkout tests + QA.
@@ -432,6 +444,8 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 ---
 
 ## WEB-005 — public content/system states
+
+**Status:** 🟡 locally integrated through task commit `e4b756b` and parent route wiring `465ce07`. Focused content tests and web typecheck pass; live content/API/crawler/mobile QA remains open.
 
 **Goal:** replace preview policy/editorial data with published content API and complete not-found/error/offline/maintenance behavior.
 
@@ -579,7 +593,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## TEST-001 — integration/E2E/concurrency
 
-**Status:** ✅ follow-up commit `44dad93c54c3510241b1d7cba1db2348443520c7` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`. Parent validation passed runner tests `3/3`, typecheck, lint, format and the full deterministic matrix (`8` suites, `131` underlying tests); live DB/Redis/provider/browser/concurrency coverage remains explicitly deferred.
+**Status:** ✅ follow-up commit `44dad93c54c3510241b1d7cba1db2348443520c7` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`. Parent validation passed runner tests `3/3`, typecheck, lint, format and the full deterministic matrix (`8` suites, `131` underlying tests). The completed safe sidecar additionally proved isolated API liveness and SSR process/static availability; Docker-backed DB/Redis readiness, worker, browser/auth/provider and concurrency coverage remains `BLOCKED` or `NOT RUN`.
 
 **Start deps:** DB-001 + API-001. **Completion deps:** integrated feature/provider paths required by the asserted journeys.
 
@@ -596,6 +610,8 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 ---
 
 ## QA-001 — responsive/RTL/a11y/visual regression
+
+**Status:** 🟡 audit complete as `PARTIAL/BLOCKED` from baseline `465ce07`; James (`01a09128-5e2b-7921-84e6-47f28a1844e8`) recorded the evidence in `docs/design-qa.md`. Deterministic web/integration gates passed, while browser widths, keyboard/AT, screenshots and exact pixel comparison were not run. The three actionable findings are routed to A11Y-001 (`site-shell.tsx`) and A11Y-002/003 (`styles.css`); the staff-login reference variance is retained as a visual follow-up only.
 
 **Goal:** independent integrated frontend quality gate; only small clearly owned fixes may land here, otherwise return findings to owner.
 
@@ -649,9 +665,9 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 4. Complete the AUTH-001 visual gate with a staff-login design artifact (use an exact supplied reference when available or generate one), viewport and required states; the functional slice is already committed locally as `03261b0`. Then smoke real protected admin routing and push/create its PR when repository access is available.
 5. Run eligible admin/storefront/provider tasks in parallel. Every visual task must create or adopt its design artifact before code; do not skip the design gate or use the artifact as a substitute for runtime QA.
 6. SEO-001 and CONTENT-001 are accepted and merged locally in `27116b72`, and the bounded OPS-002 verifier is merged in `c4f2aa6`; push/create their PRs when repository access is available, then run the batched worker/DB/API/browser/crawler gate. Execute the OPS-002 full restore verifier only after its separate-cluster, PostgreSQL 16 and exclusive-maintenance inputs are approved.
-7. Finalize `TEST-001` against the integrated runtime, using fakes plus sandbox provider smokes where available.
-8. Run `QA-001` on the integrated UI; small QA-owned fixes only, otherwise send findings back.
-9. `REL-001` is the final gate. Do not advance with task-caused failures, unreachable routes, secret exposure, unresolved migration/security/provider gaps or unverified required visuals.
+7. Review the completed `TEST-001` evidence against the integrated runtime; retain `BLOCKED`/`NOT RUN` labels for unavailable live gates.
+8. Review the completed `QA-001` report and land only the bounded A11Y owner fixes; browser/AT/pixel evidence remains a separate gate.
+9. `REL-001` is the final gate after the A11Y follow-ups and applicable live/runtime evidence. Do not advance with task-caused failures, unreachable routes, secret exposure, unresolved migration/security/provider gaps or unverified required visuals.
 10. `LAUNCH-001` remains staging/reversible until separate explicit production authority is provided.
 
 ---

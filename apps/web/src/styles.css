@@ -728,11 +728,11 @@ textarea:focus-visible {
   border-radius: 50%;
   color: var(--surface-strong);
   display: inline-flex;
-  height: 40px;
+  height: 44px;
   justify-content: center;
-  min-width: 40px;
+  min-width: 44px;
   transition: background-color 140ms ease-out, transform 140ms ease-out;
-  width: 40px;
+  width: 44px;
 }
 
 .quick-add:hover {
@@ -2699,9 +2699,9 @@ textarea:focus-visible {
   }
 
   .quick-add {
-    height: 40px;
-    min-width: 40px;
-    width: 40px;
+    height: 44px;
+    min-width: 44px;
+    width: 44px;
   }
 
   .collection-story,
@@ -3163,9 +3163,9 @@ textarea:focus-visible {
   }
 
   .quick-add {
-    height: 38px;
-    min-width: 38px;
-    width: 38px;
+    height: 44px;
+    min-width: 44px;
+    width: 44px;
   }
 
   .summary-card,
@@ -3176,6 +3176,11 @@ textarea:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .product-card:hover .product-card__media img,
+  .quick-add:hover {
+    transform: none !important;
+  }
+
   *,
   *::before,
   *::after {

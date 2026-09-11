@@ -65,6 +65,18 @@
   returned noindex/no-store and missing published content returned
   404/noindex/no-store. Published CMS content and full browser/crawler coverage
   remain open.
+- Provider-independent focused validation on 2026-09-11 passed `bun run
+  docker:config` with the declared `postgres:16-alpine`/`redis:7-alpine`
+  services, checkout tests `11/11`, worker/outbox tests `12/12`, and payment
+  fail-closed tests `14/14`. The Docker CLI emitted an access warning for
+  `C:\Users\Asus\.docker\config.json`, but the config command exited `0`;
+  no live container or provider state was changed by these checks.
+- Provider-independent focused validation on 2026-09-11 passed `bun run
+  docker:config` with the declared `postgres:16-alpine`/`redis:7-alpine`
+  services, checkout tests `11/11`, worker/outbox tests `12/12`, and payment
+  fail-closed tests `14/14`. The Docker CLI emitted an access warning for
+  `C:\Users\Asus\.docker\config.json`, but the config command exited `0`;
+  no live container or provider state was changed by these checks.
 
 - Local API-001 revision evidence: contract check `14 pass, 0 fail`; `@nova/api-client` typecheck and build passed; package tests `38 pass, 0 fail`; focused orders/payments tests `6 pass, 0 fail`; API diff-check passed. A formal external OpenAPI validator was not available in the workspace, so semantic validation is covered by the local reference-resolving contract suite and source inspection. Push of `1f0237a` failed because `github.com` could not be resolved.
 - Local integration evidence after WEB-001: root typecheck passed; root lint passed; root test suite passed `377 pass, 0 fail` across `86` files; root production build passed in the elevated local terminal; web-specific typecheck, `41 pass, 0 fail`, targeted lint/format and web production build passed. The default sandbox Vite build was denied while resolving workspace junctions; the elevated local-terminal retry passed.
@@ -166,3 +178,5 @@
 | 2026-09-11 | Provider-independent worker/outbox runtime continuation completed on the isolated project. | `bun run --cwd apps/worker health` connected successfully; `dev:worker` logged startup and empty batches, then claimed one synthetic job and recorded `retried=1` with `notification-delivery-failed` for the intentionally unconfigured sender. The synthetic row was deleted and verified absent; worker/Vite processes and temporary Compose containers were stopped, volumes retained. External provider delivery and concurrency remain unrun. |
 | 2026-09-11 | Real producer/consumer notification lifecycle was verified without a provider. | `NotificationService.enqueue` created one synthetic `PENDING` row; `processNotificationBatch` with a local no-op sender produced `claimed=1`, `sent=1`, `attempts=1`, `processedAt=true`, `lastError=null`; cleanup verified zero synthetic rows remaining. This proves the local persistence/state transition, not external delivery. |
 | 2026-09-11 | Isolated live SSR/SEO and catalog crawler endpoints were verified. | Built SSR on `127.0.0.1:4174` returned `200` for robots, sitemap, home, `/product/linen-overshirt` and `/category/women`; sitemap contained 10 seeded catalog URLs with public cache headers. `/admin` returned `200` with `noindex/no-store`; missing `/content/shipping-policy` returned `404` with `noindex/no-store`. Published CMS content was absent from the seeded database, so that consumer remains open. |
+| 2026-09-11 | Provider-independent config and regression gates were refreshed after the live continuation. | `bun run docker:config` exited `0` and rendered the exact Compose images/services; checkout focused tests passed `11/11`, worker/outbox tests `12/12`, and payment fail-closed tests `14/14`. The Docker CLI warning about `C:\Users\Asus\.docker\config.json` did not affect the result; no credentials, provider calls or container mutations were used. |
+| 2026-09-11 | Provider-independent config and regression gates were refreshed after the live continuation. | `bun run docker:config` exited `0` and rendered the exact Compose images/services; checkout focused tests passed `11/11`, worker/outbox tests `12/12`, and payment fail-closed tests `14/14`. The Docker CLI warning about `C:\Users\Asus\.docker\config.json` did not affect the result; no credentials, provider calls or container mutations were used. |

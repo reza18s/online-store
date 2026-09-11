@@ -10,7 +10,7 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 - `SEC-001` — ✅ completed and merged through PR #3; merge commit `93495aa9ee250c8cce964a76dfdf992ed7d6a1c5`.
 - `API-001` — 🟡 follow-up contract revision is complete locally at `1f0237a19a8c4e0046af4cac3170e90433d080cb`; the existing PR #2 remains open at remote `17c0de0` because GitHub DNS prevented pushing the new commit.
 - `WEB-001` — ✅ accepted and merged into local `codex/integration` at `dc54fee66f2100414e23c20077f532f8ea36e239` from Darwin's task commit `e998c08`; no remote PR was created because repository export/push access is blocked.
-- `AUTH-001` — 🟡 functional slice plus bounded follow-up are implemented locally: `03261b0` contains the factor-aware staff/session behavior, `1d67976` completes legacy-shell mobile logout coverage, and `c2a32d7` gates unfinished authenticated routes. The concrete staff-login design target is now `output/design-artifacts/auth-staff-login-atelier.png` for `1440x900` and `390x844`; same-viewport visual/state sign-off remains open.
+- `AUTH-001` — 🟡 functional slice plus bounded follow-up are implemented locally: `03261b0` contains the factor-aware staff/session behavior, `1d67976` completes legacy-shell mobile logout coverage, `c2a32d7` gates unfinished authenticated routes, and `03ed76f` aligns the staff-login composition with the concrete design target. A live CUA render at the available default viewport now matches the target's ivory canvas, bordered card, centered composition, field icons and rectangular CTA; exact `1440x900`/`390x844` state, accessibility and pixel sign-off remain open.
 - `ADMIN` route safety — ✅ authenticated unfinished admin routes are now gated behind an explicit non-operational state in `c2a32d7`; development-only unauthenticated preview remains available for Atelier review. Real API-backed admin page work is still open.
 - `ADMIN-001` — 🟡 page-local catalog/inventory slice is implemented at task commit `0daabff` and locally integrated into `codex/integration` via cherry-pick `a0146b7` plus parent route/fix commit `ba864c6`. Focused page tests, web typecheck, targeted lint/format, diff-check and the client+SSR build pass. Live authenticated operations and mobile/pixel QA remain open. Direct product-by-ID loading is a known API contract gap because the current admin catalog API exposes list/create/update but no detail GET.
 - `ADMIN-002` — 🟡 page-local order-operations slice is implemented at task commit `e11e087` and locally route-integrated on `codex/integration` via `2f533f2`; focused API/page tests and web validation pass, while live authenticated operations and pixel-level mobile QA remain open.
@@ -25,8 +25,8 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 - `WEB-003` — 🟡 account/orders/returns slice is locally integrated through `5df3fb8` and `465ce07`; focused tests and web typecheck pass, while live/authenticated/mobile QA remains open.
 - `WEB-004` — 🟡 checkout/payment-recovery slice is locally integrated through `b7e18b4` and `465ce07`; focused tests and web typecheck pass, while provider/live-payment/browser QA remains open.
 - `WEB-005` — 🟡 public content/system slice is locally integrated through `e4b756b` and `465ce07`; focused tests and web typecheck pass, while live content/API/crawler/mobile QA remains open.
-- Current local integration — `codex/integration` is at `1bad6aa`, ahead of `origin/master` by 20 commits. The storefront, admin, content and SEO slices are locally route-integrated; the parent branch has not been pushed because repository export/remote synchronization remains unavailable.
-- Visual QA limitation — the supplied Atelier admin reference was adopted for the admin slices, and `output/design-artifacts/auth-staff-login-atelier.png` now provides the AUTH-001 desktop/mobile design target. Same-viewport live rendering, mobile comparison and Chromium pixel capture remain open gates; no external design artifact was transmitted.
+- Current local integration — `codex/integration` is at `03ed76f`, ahead of `origin/master` by 22 commits. The storefront, admin, content and SEO slices are locally route-integrated; the parent branch has not been pushed because repository export/remote synchronization remains unavailable.
+- Visual QA limitation — the supplied Atelier admin reference was adopted for the admin slices, and `output/design-artifacts/auth-staff-login-atelier.png` provides the AUTH-001 desktop/mobile design target. The available CUA browser now provides a default-viewport live composition check for `#admin/login`; exact target-size captures (`1440x900`/`390x844`), full state coverage, AT verification and Chromium pixel comparison remain open gates. No external design artifact or source was transmitted to 12ui.
 - CI — 🔴 current `master` and PR #2 runs fail at the repository `Typecheck` step; local inspection identified missing Prisma generation in the clean-checkout workflow. Remote confirmation remains blocked until the CI fix can be pushed.
 - Live execution ledger: [`docs/remaining-work-status.md`](remaining-work-status.md). Update it after every merge, dispatch, resume/stop, PR state change, validation result or blocker.
 - Feature/provider/SEO/ops/test/QA/release tasks follow the dependency graph below.
@@ -309,7 +309,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## AUTH-001 — staff login/MFA/session guard
 
-**Status:** 🟡 functional slice plus bounded follow-up implemented locally in `03261b0` and `1d67976`; authenticated unfinished admin routes are gated by the related safety follow-up `c2a32d7`. A concrete staff-login design artifact, target viewport and required states are still required for final visual QA/sign-off. Use the exact user-supplied reference when available, or generate the artifact from the brief before visual implementation. The slice connects the existing backend endpoints, opaque cookie transport, CSRF, staff roles and session hooks to a factor-aware form, central admin guard, logout/cache cleanup, expiry/403 handling and focused route/session tests.
+**Status:** 🟡 functional slice plus bounded follow-up implemented locally in `03261b0` and `1d67976`; authenticated unfinished admin routes are gated by the related safety follow-up `c2a32d7`; the visual composition follow-up is integrated in `03ed76f`. The generated staff-login target was reviewed against a live CUA render at the available default viewport, with the main composition and controls aligned. Exact target viewports, invalid/expired/loading/error state renders, keyboard/AT behavior and pixel comparison are still required for final sign-off. The slice connects the existing backend endpoints, opaque cookie transport, CSRF, staff roles and session hooks to a factor-aware form, central admin guard, logout/cache cleanup, expiry/403 handling and focused route/session tests.
 
 **Goal:** connect real staff password/TOTP session lifecycle, logout, expiry and protected admin routing while keeping customer/staff sessions separate.
 
@@ -317,7 +317,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** opaque API session only; never store password/OTP/TOTP secret; handle invalid credentials, rate limit, lock, MFA required/invalid, expiry, logout, permission denied; isolate/clear admin caches; protect admin routes.
 
-**Visual:** one concrete staff-login design artifact is required before final new login UI; use a supplied reference when available or generate the artifact from the brief.
+**Visual:** `output/design-artifacts/auth-staff-login-atelier.png` is the single concrete target; use it for the remaining exact-viewport, required-state and accessibility sign-off.
 
 **Accept:** unauthenticated admin -> real login; password+MFA establishes staff session; logout/expiry clears protected data; route/cache tests pass.
 
@@ -611,7 +611,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## QA-001 — responsive/RTL/a11y/visual regression
 
-**Status:** 🟡 audit plus bounded owner fixes are integrated in `1bad6aa` from baseline `465ce07`; James (`01a09128-5e2b-7921-84e6-47f28a1844e8`) recorded the evidence in `docs/design-qa.md`. Deterministic web/integration gates passed, while browser widths, keyboard/AT, screenshots and exact pixel comparison remain `NOT RUN` or `BLOCKED`. The staff-login reference variance is retained as a visual follow-up only.
+**Status:** 🟡 audit plus bounded owner fixes are integrated in `1bad6aa` from baseline `465ce07`; James (`01a09128-5e2b-7921-84e6-47f28a1844e8`) recorded the evidence in `docs/design-qa.md`, and `03ed76f` closes the previously recorded staff-login composition variance at the available default viewport. Deterministic web/integration gates and one live CUA composition check passed, while exact browser widths, keyboard/AT, required state renders, screenshots at target sizes and exact pixel comparison remain `NOT RUN` or `BLOCKED`.
 
 **Goal:** independent integrated frontend quality gate; only small clearly owned fixes may land here, otherwise return findings to owner.
 
@@ -662,7 +662,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 1. `DB-001` is merged and its exact PostgreSQL 16 runtime gate is verified in isolated project `nova-pg-check-20260910`; keep that evidence separate from the unrelated legacy Docker stack.
 2. `SEC-001` is merged; push, review and merge the locally accepted `API-001` revision in PR #2 after GitHub DNS is available.
 3. WEB-001 is accepted and merged locally; push/create its PR when repository access is available, then keep its shared-file ownership frozen.
-4. Complete the AUTH-001 visual gate with a staff-login design artifact (use an exact supplied reference when available or generate one), viewport and required states; the functional slice is already committed locally as `03261b0`. Then smoke real protected admin routing and push/create its PR when repository access is available.
+4. Complete the AUTH-001 visual gate against the adopted staff-login artifact at the required viewports and states; the composition follow-up is locally committed in `03ed76f` and the available default-viewport CUA check is aligned. Then smoke real protected admin routing and push/create its PR when repository access is available.
 5. Run eligible admin/storefront/provider tasks in parallel. Every visual task must create or adopt its design artifact before code; do not skip the design gate or use the artifact as a substitute for runtime QA.
 6. SEO-001 and CONTENT-001 are accepted and merged locally in `27116b72`, and the bounded OPS-002 verifier is merged in `c4f2aa6`; push/create their PRs when repository access is available, then run the batched worker/DB/API/browser/crawler gate. Execute the OPS-002 full restore verifier only after its separate-cluster, PostgreSQL 16 and exclusive-maintenance inputs are approved.
 7. Review the completed `TEST-001` evidence against the integrated runtime; retain `BLOCKED`/`NOT RUN` labels for unavailable live gates.

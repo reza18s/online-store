@@ -154,6 +154,17 @@ This is a QA finding for the parent owner, not a redesign performed in this
 pass. The target image is evidence of intended visual composition, not proof
 that the current live route renders differently at every pixel.
 
+### Parent follow-up — 2026-09-11
+
+Commit `03ed76f` addressed the source-level composition variance in the
+available owner surface. A live CUA capture of `#admin/login` at the harness's
+default viewport now shows the ivory canvas, bordered centered card, centered
+logo/copy, mail/eye/shield field icons, rectangular full-width CTA and return
+link divider aligned with the target's composition. This is a bounded
+composition check, not exact `1440x900`/`390x844` evidence: invalid/expired,
+loading and API-error renders, keyboard/AT behavior and pixel comparison
+remain unverified, and no credentials were entered.
+
 ## Findings for parent routing
 
 ### `QA-001-A11Y-001` — modal focus is not trapped or restored

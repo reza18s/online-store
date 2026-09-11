@@ -41,6 +41,8 @@ import {
 import { isStaffAuthFailure, isStaffAuthorizationFailure } from './features/admin/admin-auth';
 import { useAdminInventory } from './features/admin/admin-inventory-api';
 import { useAdminOrders } from './features/admin/admin-orders-api';
+import { AdminOrderDetailPage, AdminOrdersPage } from './features/admin/admin-orders-page';
+import { AdminSupportFinancePage } from './features/admin/admin-support-finance-page';
 import {
   useCurrentCustomer,
   useLogoutCustomer,
@@ -56,6 +58,7 @@ import { useCheckoutQuote, useSubmitCheckout } from './features/checkout/checkou
 import { Icon, type IconName } from './shared/icon';
 import {
   parseHashRoute,
+  decodeHashSegment,
   useHashRoute,
   useScrollToTop,
   type Audience,
@@ -6163,6 +6166,27 @@ function AdminPage({ page }: { page: string }) {
   if (staffQuery.isPending && !allowDevelopmentPreview) return <AdminSessionLoading />;
   if (authFailure && staffQuery.data) return <AdminLoginPage sessionExpired />;
   if (!hasStaffSession && !allowDevelopmentPreview) return <AdminLoginPage />;
+  const [adminSection, ...adminPathSegments] = page.split('/');
+  const staffRoles = staffQuery.data?.roles;
+  if (adminSection === 'orders') {
+    const encodedOrderNumber = adminPathSegments.join('/');
+    return encodedOrderNumber ? (
+      <AdminOrderDetailPage
+        orderNumber={decodeHashSegment(encodedOrderNumber)}
+        staffRoles={staffRoles}
+      />
+    ) : (
+      <AdminOrdersPage staffRoles={staffRoles} />
+    );
+  }
+  if (
+    adminSection === 'payments' ||
+    adminSection === 'customers' ||
+    adminSection === 'notifications' ||
+    adminSection === 'audit'
+  ) {
+    return <AdminSupportFinancePage view={adminSection} />;
+  }
   if (page === 'products') return <AdminProductsPage />;
   if (page !== 'admin') {
     if (!allowDevelopmentPreview) return <AdminRouteUnavailablePage page={page} />;

@@ -1423,7 +1423,12 @@ function ProductPage({
         if (initialMatches) return;
         applySeoDocument(
           document,
-          clientSeoForHashRoute(`#product/${slug}`, window.location.origin),
+          createSeoDocument({
+            origin: window.location.origin,
+            title: 'NOVA | محصول',
+            description: 'در حال بارگذاری مشخصات محصول.',
+            noIndex: true,
+          }),
         );
         return;
       }
@@ -4088,7 +4093,12 @@ function PublishedContentPage({ slug }: { slug: string }) {
       if (query.isPending) {
         applySeoDocument(
           document,
-          clientSeoForHashRoute(`#content/${slug}`, window.location.origin),
+          createSeoDocument({
+            origin: window.location.origin,
+            title: 'NOVA | محتوا',
+            description: 'در حال بارگذاری محتوای منتشرشده.',
+            noIndex: true,
+          }),
         );
         return;
       }

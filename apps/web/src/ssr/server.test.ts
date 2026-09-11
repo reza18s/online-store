@@ -214,6 +214,33 @@ test('rejects protocol-relative clean paths before resolver lookup', async () =>
   assert.deepEqual(calls, []);
 });
 
+test('rejects protocol-relative request targets at the exported HTTP boundary', async () => {
+  const { fetcher, calls } = fixtureFetcher({});
+  const result = await handleRequest(
+    '//evil.example/product/linen-overshirt',
+    { ...optionsBase, fetcher },
+    '<html><head></head><body><div id="root"></div></body></html>',
+  );
+  assert.equal(result.status, 404);
+  assert.equal(result.headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.deepEqual(calls, []);
+});
+
+test('returns a noindex 503 for a malformed resolver payload', async () => {
+  const { fetcher, calls } = fixtureFetcher({
+    '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt': null,
+  });
+  const result = await handleRequest(
+    'https://nova.example/product/linen-overshirt',
+    { ...optionsBase, fetcher },
+    '<html><head></head><body><div id="root"></div></body></html>',
+  );
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+  assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt']);
+});
+
 test('renders home, category, and published content initial HTML from public reads', async () => {
   const resolution = (path: string): SeoResolution => ({
     path,

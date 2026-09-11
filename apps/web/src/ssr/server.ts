@@ -108,6 +108,41 @@ async function getApi<T>(apiOrigin: string, path: string, fetcher: Fetcher): Pro
   return (body as { data: T }).data;
 }
 
+function isSeoResolution(value: unknown): value is SeoResolution {
+  if (!value || typeof value !== 'object') return false;
+  const resolution = value as Record<string, unknown>;
+  if (typeof resolution.path !== 'string') return false;
+
+  if (resolution.metadata !== null) {
+    if (!resolution.metadata || typeof resolution.metadata !== 'object') return false;
+    const metadata = resolution.metadata as Record<string, unknown>;
+    if (
+      typeof metadata.path !== 'string' ||
+      typeof metadata.title !== 'string' ||
+      typeof metadata.description !== 'string' ||
+      (typeof metadata.canonicalUrl !== 'string' && metadata.canonicalUrl !== null) ||
+      typeof metadata.noIndex !== 'boolean' ||
+      !('structuredData' in metadata)
+    ) {
+      return false;
+    }
+  }
+
+  if (resolution.redirect !== null) {
+    if (!resolution.redirect || typeof resolution.redirect !== 'object') return false;
+    const redirect = resolution.redirect as Record<string, unknown>;
+    if (
+      typeof redirect.fromPath !== 'string' ||
+      typeof redirect.toPath !== 'string' ||
+      ![301, 302, 307, 308].includes(redirect.statusCode as number)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 function resolverPath(path: string): string {
   return `/v1/seo/resolve?path=${encodeURIComponent(path)}`;
 }
@@ -457,7 +492,11 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
   let resolution: SeoResolution;
   try {
-    resolution = await getApi<SeoResolution>(options.apiOrigin, resolverPath(route.path), fetcher);
+    const candidate = await getApi<unknown>(options.apiOrigin, resolverPath(route.path), fetcher);
+    if (!isSeoResolution(candidate)) {
+      throw new RenderApiError(502, 'SSR API returned an invalid SEO resolution');
+    }
+    resolution = candidate;
   } catch (error) {
     if (route.kind === 'unknown' && error instanceof RenderApiError && error.status === 404)
       return notFoundContext(origin, route);
@@ -772,25 +811,7 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
   }
 }
 
-export async function handleRequest(
-  url: string,
-  options: RenderOptions,
-  template: string,
-): Promise<RenderResponse> {
-  const parsed = new URL(url, options.origin);
-  if (parsed.pathname === '/robots.txt') {
-    return {
-      status: 200,
-      headers: new Headers({
-        'Content-Type': 'text/plain; charset=utf-8',
-        'Cache-Control': 'public, max-age=300',
-      }),
-      body: robotsText(options.origin),
-    };
-  }
-  if (parsed.pathname === '/sitemap.xml') return sitemapResponse(options);
-
-  const context = await renderRoute(parsed.pathname, options);
+function responseFromContext(context: RenderContext, template: string): RenderResponse {
   if (context.redirect) {
     return {
       status: context.redirect.status,
@@ -810,6 +831,44 @@ export async function handleRequest(
     }),
     body: renderDocument(template, context),
   };
+}
+
+export async function handleRequest(
+  url: string,
+  options: RenderOptions,
+  template: string,
+): Promise<RenderResponse> {
+  const rawUrl = url.trim();
+  if (rawUrl.startsWith('//')) {
+    return responseFromContext(
+      notFoundContext(trimOrigin(options.origin), { kind: 'unknown', path: rawUrl }),
+      template,
+    );
+  }
+
+  let parsed: URL;
+  try {
+    parsed = new URL(rawUrl, options.origin);
+  } catch {
+    return responseFromContext(
+      notFoundContext(trimOrigin(options.origin), { kind: 'unknown', path: rawUrl }),
+      template,
+    );
+  }
+  if (parsed.pathname === '/robots.txt') {
+    return {
+      status: 200,
+      headers: new Headers({
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'public, max-age=300',
+      }),
+      body: robotsText(options.origin),
+    };
+  }
+  if (parsed.pathname === '/sitemap.xml') return sitemapResponse(options);
+
+  const context = await renderRoute(parsed.pathname, options);
+  return responseFromContext(context, template);
 }
 
 function mimeType(path: string): string {
@@ -833,7 +892,9 @@ async function serveStatic(
   request: IncomingMessage,
   response: ServerResponse,
 ): Promise<boolean> {
-  const requestPath = new URL(request.url ?? '/', 'http://localhost').pathname;
+  const rawUrl = (request.url ?? '/').trim();
+  if (rawUrl.startsWith('//')) return false;
+  const requestPath = new URL(rawUrl, 'http://localhost').pathname;
   if (!requestPath.startsWith('/assets/')) return false;
   const normalizedRoot = normalize(staticRoot);
   const separator = process.platform === 'win32' ? '\\' : '/';
@@ -881,11 +942,7 @@ async function handleNodeRequest(
       return;
     }
     if (await serveStatic(options.staticRoot, request, response)) return;
-    const result = await handleRequest(
-      new URL(request.url ?? '/', options.origin).toString(),
-      options,
-      options.template,
-    );
+    const result = await handleRequest(request.url ?? '/', options, options.template);
     response.writeHead(result.status, Object.fromEntries(result.headers.entries()));
     response.end(request.method === 'HEAD' ? undefined : result.body);
   } catch {

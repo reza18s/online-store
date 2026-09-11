@@ -4903,7 +4903,7 @@ function AdminLogoutButton({
   );
 }
 
-function AdminLegacyPage({ page }: { page: string }) {
+export function AdminLegacyPage({ page }: { page: string }) {
   const titleMap: Record<string, string> = {
     admin: 'نمای کلی',
     products: 'محصولات',
@@ -4954,6 +4954,11 @@ function AdminLegacyPage({ page }: { page: string }) {
       </aside>
       <section className="admin-content">
         <header className="admin-topbar">
+          <AdminLogoutButton
+            compact
+            label="خروج"
+            className="icon-button border-0 md:hidden disabled:opacity-50"
+          />
           <button className="icon-button" type="button" aria-label="اعلان‌ها">
             <Icon name="bell" size={19} />
           </button>

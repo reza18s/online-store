@@ -643,7 +643,7 @@ function CheckoutPageContent({
     try {
       const order = await submitMutation.mutateAsync({
         input: checkoutInput,
-        idempotencyKey: getStableCheckoutIdempotencyKey(checkoutInput),
+        idempotencyKey: getStableCheckoutIdempotencyKey(checkoutInput, quote),
       });
       handleCheckoutOrder(order);
     } catch (error) {

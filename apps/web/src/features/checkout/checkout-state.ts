@@ -98,11 +98,22 @@ function createRandomKey(): string {
   );
 }
 
-function checkoutFingerprint(input: CheckoutRequestInput): string {
+type CheckoutIdempotencyQuote = {
+  cartId: CheckoutQuote['cartId'];
+  lines: ReadonlyArray<
+    Pick<CheckoutQuote['lines'][number], 'cartItemId' | 'variantId' | 'quantity'>
+  >;
+};
+
+function checkoutFingerprint(input: CheckoutRequestInput, quote: CheckoutIdempotencyQuote): string {
   return JSON.stringify({
     addressId: input.addressId,
     shippingMethod: input.shippingMethod,
     couponCode: input.couponCode?.trim() || undefined,
+    cartId: quote.cartId,
+    lines: quote.lines
+      .map(({ cartItemId, variantId, quantity }) => ({ cartItemId, variantId, quantity }))
+      .sort((left, right) => left.cartItemId.localeCompare(right.cartItemId)),
   });
 }
 
@@ -110,9 +121,10 @@ const idempotencyStorageKey = 'nova.checkout.idempotency.v1';
 
 export function getStableCheckoutIdempotencyKey(
   input: CheckoutRequestInput,
+  quote: CheckoutIdempotencyQuote,
   storage: Pick<Storage, 'getItem' | 'setItem'> | undefined = storageAvailable(),
 ): string {
-  const fingerprint = checkoutFingerprint(input);
+  const fingerprint = checkoutFingerprint(input, quote);
   if (storage) {
     try {
       const stored = JSON.parse(storage.getItem(idempotencyStorageKey) ?? '{}') as unknown;

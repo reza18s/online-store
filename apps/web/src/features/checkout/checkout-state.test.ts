@@ -49,7 +49,7 @@ test('keeps checkout route state normalized and preserves only safe step input',
   );
 });
 
-test('reuses the idempotency key for the same checkout input and rotates it when input changes', () => {
+test('reuses the idempotency key for the same checkout quote and rotates it when checkout state changes', () => {
   const values = new Map<string, string>();
   const storage: Storage = {
     getItem: (key) => values.get(key) ?? null,
@@ -60,10 +60,34 @@ test('reuses the idempotency key for the same checkout input and rotates it when
     length: 0,
   };
   const input = { addressId: 'address-1', shippingMethod: 'STANDARD' as const };
-  const first = getStableCheckoutIdempotencyKey(input, storage);
-  assert.equal(getStableCheckoutIdempotencyKey(input, storage), first);
+  const quote = {
+    cartId: 'cart-1',
+    lines: [
+      { cartItemId: 'line-1', variantId: 'variant-1', quantity: 1 },
+      { cartItemId: 'line-2', variantId: 'variant-2', quantity: 2 },
+    ],
+  } as const;
+  const first = getStableCheckoutIdempotencyKey(input, quote, storage);
+  assert.equal(getStableCheckoutIdempotencyKey(input, quote, storage), first);
   assert.notEqual(
-    getStableCheckoutIdempotencyKey({ ...input, shippingMethod: 'EXPRESS' }, storage),
+    getStableCheckoutIdempotencyKey({ ...input, shippingMethod: 'EXPRESS' }, quote, storage),
+    first,
+  );
+  assert.notEqual(
+    getStableCheckoutIdempotencyKey(input, { ...quote, cartId: 'cart-2' }, storage),
+    first,
+  );
+  assert.notEqual(
+    getStableCheckoutIdempotencyKey(
+      input,
+      {
+        ...quote,
+        lines: quote.lines.map((line) =>
+          line.cartItemId === 'line-1' ? { ...line, quantity: 2 } : line,
+        ),
+      },
+      storage,
+    ),
     first,
   );
 });

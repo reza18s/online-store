@@ -57,10 +57,10 @@ current rendered evidence.
 | Web focused tests | `PASS` | The parent recheck ran `bun test apps/web/src test/e2e/run.test.ts`: **134 pass, 0 fail** across 31 files. |
 | Web typecheck | `PASS` | `bun run --cwd apps/web typecheck` exited successfully. |
 | Deterministic integration matrix | `PASS` | The parent recheck ran `bun run test:integration`: all 8 deterministic suites passed with no failures. |
-| Live API/storefront smoke | `PARTIAL / BLOCKED` | The local Vite storefront rendered through the CUA browser, including `#admin/login` and the protected `#admin/catalog` route; API liveness/readiness and authenticated data-backed smoke remain unavailable. |
+| Live API/storefront smoke | `PASS` (unauthenticated) / `NOT RUN` (authenticated) | The 2026-09-11 continuation ran the API and Vite storefront against isolated PostgreSQL 16/Redis 7: `/health/live` and `/health/ready` returned `200` with `database: "ok"`, public catalog endpoints returned seeded data, the default `test:e2e` root-shell preflight passed, and CUA observed live home/catalog content plus the unauthenticated admin guard. Authenticated data-backed operations remain unrun. |
 | Browser harness | `PARTIAL` | The available CUA browser captured the default viewport and accessibility tree. No Playwright/Puppeteer/Cypress dependency or exact viewport control exists in the checkout, so browser journeys remain deferred and are not represented as passing E2E coverage. |
 | Screenshot/pixel regression | `PARTIAL / NOT RUN` | Inline CUA screenshots were observed at the available default viewport, but no `1440x900`/`390x844` capture, saved artifact, or pixel diff was generated. |
-| Production code changes | `PASS` | The original audit changed no production files. The later parent cleanup, committed as `c54817b`, changed only unreachable legacy declarations/imports in `apps/web/src/app.tsx`; no provider, package/lockfile, generated output or shared contract changed. |
+| Production code changes | `PASS` | The original audit changed no production files. The later parent cleanup, committed as `c54817b`, changed only unreachable legacy declarations/imports in `apps/web/src/app.tsx`; the 2026-09-11 continuation added only the bounded `127.0.0.1` Vite host binding in `apps/web/vite.config.ts` to align the live runner and storefront listener. No provider, package/lockfile, generated output or shared contract changed. |
 
 ## Required responsive widths
 
@@ -223,6 +223,29 @@ panel. The focused app tests pass `4/4`, and the full web/e2e suite passes
 `136/136`; no authenticated browser render, exact viewport capture, AT tree,
 or pixel comparison was claimed.
 
+### Live runtime continuation — 2026-09-11
+
+After Docker Desktop recovered, the parent started only the new isolated
+Compose project `nova-pg-check-now-20260911` on host ports `55433` and `56380`.
+Both exact images, `postgres:16-alpine` and `redis:7-alpine`, reported healthy.
+All six Prisma migrations applied, `prisma migrate status` reported the schema
+up to date, and the idempotent seed produced 9 categories, 6 products, 14
+variants, 6 media records and 14 inventory records. API liveness/readiness and
+seeded public catalog reads returned 200; the protected staff session endpoint
+returned 401 without credentials, as expected.
+
+The default `test:e2e` preflight initially exposed that Vite was listening only
+on IPv6 localhost while the runner defaulted to `127.0.0.1`. The bounded config
+fix in `apps/web/vite.config.ts` binds Vite to `127.0.0.1`; after restart, the
+unmodified default `bun run test:e2e` passed its API, database-readiness and
+storefront root-shell checks. CUA then observed the live public home/catalog
+content and the unauthenticated `#admin/catalog` login guard on that origin.
+
+This closes only the unauthenticated live runtime/root-shell evidence. It does
+not claim Playwright journeys, authenticated OTP/MFA flows, worker delivery,
+provider sandboxes, concurrency races, exact target viewports, assistive
+technology output or pixel comparison.
+
 ## Findings for parent routing
 
 ### `QA-001-A11Y-001` — modal focus is not trapped or restored
@@ -300,9 +323,9 @@ bun run test:integration
   PASS — 8 deterministic suites, 131 underlying tests, 0 failures
 
 bun run test:e2e
-  BLOCKED — API liveness/readiness at 127.0.0.1:4000 and storefront root
-  shell at 127.0.0.1:5173 were unreachable; this runner explicitly does not
-  claim browser or authenticated coverage
+  PASS — default API liveness/readiness and storefront root-shell preflight on
+  127.0.0.1:4000 and 127.0.0.1:5173 after the Vite IPv4 bind correction;
+  this runner still does not claim browser or authenticated coverage
 ```
 
 ## Unrequested issues found

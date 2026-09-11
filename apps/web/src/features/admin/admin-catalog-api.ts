@@ -31,6 +31,8 @@ import {
   type StaffUser,
 } from '@nova/api-client';
 
+import { clearStaffSessionCache } from './admin-auth';
+
 export interface AdminCatalogProductListResult extends AdminCatalogProductPage {
   items: AdminCatalogProductListItem[];
 }
@@ -349,7 +351,7 @@ export function useStaffLogout() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: logoutStaff,
-    onSuccess: () => queryClient.removeQueries({ queryKey: queryKeys.staffAuth.current() }),
+    onSettled: () => clearStaffSessionCache(queryClient),
   });
 }
 

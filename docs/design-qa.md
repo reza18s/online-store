@@ -191,6 +191,26 @@ renders, keyboard focus journeys, assistive-technology output and pixel
 comparison remain `NOT RUN` or `BLOCKED`; the CUA screenshot was observed
 inline and was not promoted to a pixel-diff artifact.
 
+### Public content route recheck — 2026-09-11
+
+The parent route correction in commit `6b86354` removes the static
+`EditorialPage` preview and sends legacy editorial hash aliases through the
+published-content owner, `PublicContentSystemPage`. The route-level regression
+test confirms that a cached published API response renders and that the old
+preview copy is absent.
+
+With the local API and Vite server running, the available CUA browser inspected
+`#article` at the same default viewport (`668 × 958`, device pixel ratio `1`).
+Because PostgreSQL was unavailable, the route rendered the API error state
+`محتوا موقتاً در دسترس نیست`, exposed the retry action, and contained neither
+of the removed preview messages. The API liveness probe returned `200`, the
+readiness probe returned `503` for the missing database, and the temporary
+listeners were stopped after the check.
+
+This is evidence for route ownership and fail-closed behavior only. It does
+not prove a published page response, authenticated CMS mutation, crawler
+output, exact target viewport, assistive-technology behavior, or pixel parity.
+
 ## Findings for parent routing
 
 ### `QA-001-A11Y-001` — modal focus is not trapped or restored

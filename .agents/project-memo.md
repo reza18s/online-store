@@ -1,5 +1,7 @@
 ## NOVA foundation
 
+- Current live continuation supersedes earlier unrun snapshots below: isolated PostgreSQL 16/Redis 7, API readiness, worker/outbox transitions and built SSR catalog/robots/sitemap probes passed on 2026-09-11; authenticated/provider delivery, published CMS content, browser viewport/AT/pixel and concurrency gates remain open.
+
 - AUTH-001 functional session boundary: `apps/web/src/features/admin/admin-auth.ts` owns scoped staff/admin cache matching and 401-only session expiry handling; `apps/web/src/main.tsx` installs the shared QueryCache/MutationCache callbacks; `apps/web/src/app.tsx` owns the factor-aware memory-only staff form, permission-denied state and responsive logout controls. Admin mutations carry scoped keys so a staff 401 removes protected query and mutation state without clearing customer/cart data; 403 preserves the session and cache. Exact staff-login visual reference, viewport and required states remain required for final QA.
 - `apps/api/src/dev.ts` is the API development process boundary: it builds compiled Nest output, watches the complete source tree including directories created after startup, debounces rebuilds, preserves the current server on build failure, restarts the compiled server after a successful build, and shuts down child/watcher resources on signals. Run it through `bun run dev:api`; direct Bun execution of Nest TypeScript source remains unsupported because decorator metadata is emitted by the compiled path.
 - Verified 2026-09-11: AUTH-001 commit `03261b0` passed focused auth/main tests `9/9`, full workspace tests `442/442` across 95 files, root typecheck, lint, elevated production build, live API health/catalog/protected-route smoke and a new-source-directory watcher restart cycle against the healthy isolated PostgreSQL 16 runtime.
@@ -68,6 +70,22 @@
 
 - Verified 2026-09-11: Docker Desktop 4.55.0 cannot keep the Linux engine running on this host. `docker desktop start --detach` briefly creates the engine pipe, then the backend crashes while initializing the Inference manager because the `dockerInference` listener path cannot be accessed/parsed; subsequent `docker info` fails with missing `dockerDesktopLinuxEngine`. Windows exposes only a stopped PostgreSQL 18 service and no Redis executable/service. Do not substitute PostgreSQL 18 for the exact PostgreSQL 16 gate or reset Docker state; live DB/Redis/runtime validation remains blocked by the host environment.
 - Verified 2026-09-11 after Docker recovered: isolated Compose project `nova-pg-check-now-20260911` on ports `55433`/`56380` ran exact `postgres:16-alpine`/`redis:7-alpine` healthy; Prisma migrations, `migrate status`, seed counts (`9/6/14/6/14`), API readiness/database, public catalog reads and Redis `PONG` passed. The default `test:e2e` preflight initially exposed a Vite IPv6-only bind mismatch; `apps/web/vite.config.ts` now binds `127.0.0.1`, after which the default preflight passed and CUA observed live home/catalog content plus the unauthenticated admin guard. Authenticated/provider/worker/concurrency and exact viewport/AT/pixel gates remain unverified.
+- Verified 2026-09-11: the isolated runtime also passed `bun run --cwd
+apps/worker health` and a long-lived `dev:worker` smoke. After one
+  synthetic `NotificationJob` row was inserted, the worker logged
+  `claimed=1`, `sent=0`, `retried=1`, `failed=0`; the row reached `attempts=2`
+  with stable `notification-delivery-failed` and was then deleted/verified
+  absent. A separate one-shot used the real `NotificationService.enqueue`
+  producer plus `processNotificationBatch` with a local no-op sender and
+  verified `PENDING → SENT`, one delivery, `attempts=1`, `processedAt` and zero
+  residue. This proves DB connectivity and provider-independent state
+  transitions only; external notification delivery and concurrency remain
+  unverified.
+- Verified 2026-09-11: built SSR on `127.0.0.1:4174` returned correct 200/indexable
+  responses for robots, sitemap, home, a seeded product and category; `/admin`
+  returned noindex/no-store and missing published content returned
+  404/noindex/no-store. Published CMS content and full browser/crawler coverage
+  remain unverified.
 
 ## Live execution ledger
 

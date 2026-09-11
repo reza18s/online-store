@@ -241,71 +241,80 @@ unmodified default `bun run test:e2e` passed its API, database-readiness and
 storefront root-shell checks. CUA then observed the live public home/catalog
 content and the unauthenticated `#admin/catalog` login guard on that origin.
 
-This closes only the unauthenticated live runtime/root-shell evidence. It does
-not claim Playwright journeys, authenticated OTP/MFA flows, worker delivery,
-provider sandboxes, concurrency races, exact target viewports, assistive
-technology output or pixel comparison.
+The same continuation also ran the worker against the isolated database. The
+worker health command connected and executed `SELECT 1`; the long-lived worker
+logged an initial empty batch, then a synthetic outbox row was claimed and
+recorded as `retried=1` with `notification-delivery-failed` because the
+provider sender is intentionally unconfigured. A separate one-shot check used
+the real `NotificationService.enqueue` producer and `processNotificationBatch`
+consumer with a local no-op sender and observed `PENDING → SENT`, one delivery,
+`attempts=1` and a non-null `processedAt`. Each synthetic row was deleted and
+verified absent before cleanup. This proves worker connectivity and the
+provider-independent outbox state transitions only; it does not prove external
+notification delivery.
+
+A bounded CUA continuation additionally observed the staff-login semantic tree
+(one heading, three labelled fields, submit and return actions), native empty
+form validation with focus returning to `#staff-email`, the basic keyboard tab
+order, and search-dialog Tab containment/Escape focus restoration. These are
+default-viewport or source-level checks, not full responsive or AT sign-off.
+
+This closes unauthenticated live runtime/root-shell and provider-independent
+worker evidence. It does not claim Playwright journeys, authenticated OTP/MFA
+flows, external provider delivery, concurrency races, exact target viewports,
+full assistive-technology output or pixel comparison.
 
 ## Findings for parent routing
 
 ### `QA-001-A11Y-001` — modal focus is not trapped or restored
 
-- **Status:** `FAIL` (source-proven; pre-existing at baseline)
+- **Status:** `CLOSED` for the implemented source and bounded default CUA state; full AT remains `NOT RUN`
 - **Suggested severity:** P1 accessibility
 - **Owner surface:** `apps/web/src/shared/site-shell.tsx`
-- **Evidence:** `SearchDialog` focuses its input when opened and listens for
-  Escape, while `MenuDrawer` listens for Escape; neither implementation traps
-  Tab focus within the modal nor returns focus to the opening search/menu
-  button on close (`site-shell.tsx:117-133`, `site-shell.tsx:177-206`,
-  `site-shell.tsx:300-329`).
-- **Impact:** Keyboard users can move focus behind an open dialog/drawer and
-  lose their place after dismissal, contrary to the Atelier dialog/sheet
-  contract in `docs/designs/atelier-editorial.md`.
-- **Browser status:** Not independently exercised because the browser gate is
-  blocked.
+- **Evidence:** `useDialogFocus` in `site-shell.tsx:158-198` cycles Tab within
+  the active dialog and restores the invoking element on close. The bounded
+  CUA continuation observed containment and Escape/focus restoration for the
+  live search dialog. Full screen-reader and cross-browser AT behavior remain
+  outside the available harness.
+- **Impact:** The previously recorded source defect is resolved; exact target
+  viewport and formal AT evidence remain separate gates.
 
 ### `QA-001-A11Y-002` — product quick-add is below the touch-target contract
 
-- **Status:** `FAIL` (source-proven; pre-existing at baseline)
+- **Status:** `CLOSED` at source level; exact 390px/360px runtime geometry remains `NOT RUN`
 - **Suggested severity:** P1 responsive accessibility
 - **Owner surface:** `apps/web/src/styles.css`
-- **Evidence:** `.quick-add` is `40px × 40px` at `styles.css:725-736`, then
-  becomes `38px × 38px` in the `max-width: 360px` rule at
-  `styles.css:3165-3169`; the Atelier contract requires a minimum `44 × 44px`
-  pointer target (`docs/designs/atelier-editorial.md`, component contract).
-- **Impact:** The primary product-card purchase affordance is undersized at
-  mobile widths, especially the required 360px viewport.
-- **Browser status:** Not independently exercised because the browser gate is
-  blocked.
+- **Evidence:** `.quick-add` is `44px × 44px` in `styles.css:725-736`, and
+  the mobile override at `styles.css:3165-3169` preserves the same minimum.
+  Exact viewport geometry and product-card rendering still require a runner
+  with explicit viewport control.
+- **Impact:** The previously recorded source defect is resolved; responsive
+  overflow and target-size runtime evidence remain open.
 
 ### `QA-001-A11Y-003` — reduced motion leaves transforms active
 
-- **Status:** `FAIL` (source-proven; pre-existing at baseline)
+- **Status:** `CLOSED` at source level; reduced-motion runtime emulation remains `NOT RUN`
 - **Suggested severity:** P2 accessibility
 - **Owner surface:** `apps/web/src/styles.css`
-- **Evidence:** Product media scales to `1.025` on hover
-  (`styles.css:610-617`) and quick-add translates on hover
-  (`styles.css:725-741`). The reduced-motion rule at `styles.css:3178-3186`
-  shortens animation/transition duration but does not reset those transforms.
-- **Impact:** Users requesting reduced motion can still receive abrupt image
-  zoom and control translation instead of the Atelier requirement to remove
-  translation/zoom while retaining only meaningful short opacity feedback.
-- **Browser status:** Not independently exercised because the browser gate is
-  blocked.
+- **Evidence:** The reduced-motion rule at `styles.css:3178-3186` now resets
+  product-media and quick-add transforms to `none !important` while preserving
+  the broader reduced-motion transition rules.
+- **Impact:** The previously recorded source defect is resolved; runtime
+  `prefers-reduced-motion` emulation remains outside the available CUA surface.
 
 ### `QA-001-VIS-001` — staff-login implementation is not yet target-matched
 
-- **Status:** `PRE-EXISTING` static variance; pixel runtime `NOT RUN`
+- **Status:** `SUPERSEDED` for the bounded default-viewport composition; exact target-size pixel runtime remains `NOT RUN`
 - **Suggested severity:** P2 visual fidelity
 - **Owner surface:** `apps/web/src/app.tsx` (`AdminLoginPage`)
-- **Evidence:** See the staff-login target section above. The source and target
-  use the same RTL fields and general hierarchy, but the canvas/card treatment,
-  error composition, and field/action affordances differ materially.
-- **Impact:** The staff-login route is not visually comparable to the supplied
-  Atelier target even though the underlying auth fields and state plumbing are
-  present.
-- **Browser status:** Exact screenshot comparison is blocked; this finding is
-  intentionally limited to source-versus-reference variance.
+- **Evidence:** Commit `03ed76f` aligns the source composition with
+  `output/design-artifacts/auth-staff-login-atelier.png`; the default-viewport
+  CUA continuation observed the ivory canvas, bordered card, centered lockup,
+  Persian hierarchy, field icons and rectangular CTA. Exact `1440x900` and
+  `390x844` captures, crop registration and pixel tolerance remain unverified.
+- **Impact:** The original static-variance finding no longer describes the
+  current source/default render. Authenticated states and exact visual parity
+  remain separate release gates.
 
 ## Commands and results
 

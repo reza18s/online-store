@@ -30,16 +30,19 @@ has these invariants:
   duration of the drill; the identity checks are fail-closed snapshots, not a
   database lock.
 - `pg_dump` reads the source. The source and target must use different simple
-  database names and separate PostgreSQL server/cluster endpoints. The verifier
-  compares their connected server/port/database identity before the archive, again
-  immediately before and after the dump, and before and after the restore.
+  database names and separate PostgreSQL cluster identities. The verifier compares
+  their connected server/port/database identity and `pg_control_system()` cluster
+  identifier before the archive, again immediately before and after the dump, and
+  before and after the restore.
 - The archive path must be new; an existing file is rejected instead of replaced.
   The archive is written to a unique partial path and atomically published to the
   requested path, so a concurrent file cannot be overwritten by the verifier.
 - Restore requires a pre-existing target database created from an approved empty
-  template (preferably `template0`) with zero user database objects. The
-  verifier never creates, drops, resets, truncates, or cleans a database and never
-  passes `pg_restore --clean`.
+  template (preferably `template0`) with an operator-attested empty state and
+  exclusive maintenance ownership. The verifier performs a broad catalog sanity
+  check, but it cannot lock out an independent writer or prove every possible
+  database object class from a separate process. It never creates, drops, resets,
+  truncates, or cleans a database and never passes `pg_restore --clean`.
 - Restore uses `--exit-on-error` and `--single-transaction`, then verifies that the
   target contains user tables and any explicitly requested expected tables.
 - The disposable restore intentionally uses `--no-owner` and `--no-acl`; this is a
@@ -67,11 +70,15 @@ The operator also needs:
   PostgreSQL major version as the source;
 - a new writable archive path with enough local capacity;
 - for a restore drill, an already-created disposable PostgreSQL database on a
-  separate PostgreSQL server/cluster endpoint, preferably created from `template0`,
-  empty of user database objects, with a different simple database name;
+  separate PostgreSQL cluster identity, preferably created from `template0`,
+  attested empty of user database objects, with a different simple database name;
 - a trusted source database and stable endpoint routing for the duration of the
   drill; do not use a multi-host/failover URL or change DNS/proxy routing while it
   runs;
+- a database role allowed to query `pg_control_system()` and the target catalog
+  sanity checks;
+- exclusive maintenance ownership of the restore target until the verifier exits;
+  if that cannot be guaranteed, use archive-only mode;
 - a record location outside this repository for the JSON output, archive SHA-256,
   source/target identities approved by the operator, and the run timestamp.
 
@@ -90,6 +97,7 @@ checked-in file or shell history:
 ```powershell
 $env:NOVA_BACKUP_SOURCE_DATABASE_URL = '<approved source URL>'
 $env:NOVA_BACKUP_RESTORE_DATABASE_URL = '<approved empty disposable target URL>'
+$env:NOVA_BACKUP_RESTORE_TARGET_EXCLUSIVE_APPROVAL = 'approved'
 
 $BackupDirectory = Join-Path (Get-Location) 'backup-evidence'
 New-Item -ItemType Directory -Path $BackupDirectory -Force | Out-Null
@@ -107,10 +115,12 @@ powershell -NoProfile -File .\infra\deploy\verify-postgres-backup.ps1 `
 For the current NOVA schema, `_prisma_migrations` is a useful minimum content
 assertion. Add further expected table names only when they are part of the
 approved recovery scope. The script’s final `PASS` event is evidence that the
-archive could be replayed into the approved separate empty target and that the
-selected table checks passed. Because the drill omits ownership and ACL replay,
-it is not evidence of production permission fidelity, media, WAL, external
-storage, or application smoke-test recovery.
+archive could be replayed into the approved separate cluster target, the target
+passed the verifier's catalog sanity checks under the operator's exclusive
+maintenance approval, and the selected table checks passed. The verifier cannot
+exclude an uncooperative concurrent writer. Because the drill omits ownership and
+ACL replay, it is not evidence of production permission fidelity, media, WAL,
+external storage, or application smoke-test recovery.
 
 Record the emitted `archivePath`, `archiveBytes`, `archiveEntries`, `sha256`,
 `restoredTables`, and the exit code in the approved operational evidence store.
@@ -140,7 +150,8 @@ target and owner decision is recorded.
 ## Evidence interpretation and failure handling
 
 `PASS` for `archive` plus `PASS` for `complete` is the minimum successful full
-verification. `PASS` with `restore: SKIPPED` is archive-only evidence and must not
+verification when the operator approval and separate cluster identity evidence are
+also retained. `PASS` with `restore: SKIPPED` is archive-only evidence and must not
 be reported as a restore drill. `BLOCKED` means the verifier refused to continue
 because a safe prerequisite or external decision was missing. `FAIL` means a
 command, archive, restore, or post-restore assertion failed and requires operator
@@ -160,6 +171,9 @@ The following are deliberately not implemented or claimed by this slice:
 - 30-day retention, daily scheduling, and backup-age alert delivery;
 - PostgreSQL WAL/archive continuity and the 15-minute RPO objective;
 - independent object/media backup and media restore verification;
+- a technical database lock against all out-of-band target writers during the
+  verifier's preflight-to-restore interval; the current contract uses explicit
+  operator maintenance ownership instead;
 - rollback of an immutable application release;
 - production monitoring provider, alert routing, and incident ownership;
 - an executed production or provider-failure recovery exercise.

@@ -12,6 +12,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $SourceDatabaseUrl = [Environment]::GetEnvironmentVariable('NOVA_BACKUP_SOURCE_DATABASE_URL', 'Process')
 $RestoreDatabaseUrl = [Environment]::GetEnvironmentVariable('NOVA_BACKUP_RESTORE_DATABASE_URL', 'Process')
+$RestoreTargetExclusiveApproval = [Environment]::GetEnvironmentVariable('NOVA_BACKUP_RESTORE_TARGET_EXCLUSIVE_APPROVAL', 'Process')
 $script:ResolvedPostgresHostAddresses = @{}
 
 function Write-Event {
@@ -309,7 +310,7 @@ function Invoke-PostgresQuery {
 
     $output = @(Invoke-PostgresProcess `
         -CommandPath $PsqlPath `
-        -Arguments @('--tuples-only', '--no-align', '--no-psqlrc', '--no-password', "--command=$Query") `
+        -Arguments @('--tuples-only', '--no-align', '--no-psqlrc', '--no-password', '--set=ON_ERROR_STOP=1', "--command=$Query") `
         -DatabaseUrl $DatabaseUrl `
         -Description $Description)
 
@@ -363,6 +364,30 @@ function Get-ConnectedServerIdentity {
         -Description $Description
 }
 
+function Get-ConnectedClusterIdentity {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    try {
+        return Invoke-PostgresQuery `
+            -PsqlPath $PsqlPath `
+            -DatabaseUrl $DatabaseUrl `
+            -Query 'SELECT system_identifier FROM pg_control_system();' `
+            -Description $Description
+    }
+    catch {
+        throw 'BLOCKED: PostgreSQL cluster identity could not be established; full restore verification requires access to pg_control_system().'
+    }
+}
+
 function Assert-ConnectedDatabaseIdentity {
     param(
         [Parameter(Mandatory = $true)]
@@ -388,6 +413,31 @@ function Assert-ConnectedDatabaseIdentity {
     }
 }
 
+function Assert-ConnectedClusterIdentity {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ExpectedIdentity,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    $actualIdentity = Get-ConnectedClusterIdentity `
+        -PsqlPath $PsqlPath `
+        -DatabaseUrl $DatabaseUrl `
+        -Description $Description
+
+    if ($actualIdentity -ne $ExpectedIdentity) {
+        throw "BLOCKED: $Description changed between the approved identity check and the next operation."
+    }
+}
+
 function Get-UserObjectCount {
     param(
         [Parameter(Mandatory = $true)]
@@ -401,12 +451,38 @@ function Get-UserObjectCount {
     )
 
     $query = @'
-SELECT
-    (SELECT count(*) FROM pg_class AS c JOIN pg_namespace AS n ON n.oid = c.relnamespace WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema') +
-    (SELECT count(*) FROM pg_proc AS p JOIN pg_namespace AS n ON n.oid = p.pronamespace WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema') +
-    (SELECT count(*) FROM pg_type AS t JOIN pg_namespace AS n ON n.oid = t.typnamespace WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema') +
-    (SELECT count(*) FROM pg_namespace WHERE nspname !~ '^pg_' AND nspname <> 'information_schema' AND nspname <> 'public') +
-    (SELECT count(*) FROM pg_extension WHERE extname <> 'plpgsql');
+WITH user_namespaces AS (
+    SELECT oid
+    FROM pg_namespace
+    WHERE nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+),
+catalog_counts AS (
+    SELECT count(*) AS object_count FROM pg_class AS c WHERE c.relnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_proc AS p WHERE p.pronamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_type AS t WHERE t.typnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_collation AS c WHERE c.collnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_conversion AS c WHERE c.connamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_operator AS o WHERE o.oprnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_opclass AS o WHERE o.opcnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_opfamily AS o WHERE o.opfnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_ts_config AS c WHERE c.cfgnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_ts_dict AS d WHERE d.dictnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_ts_parser AS p WHERE p.prsnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_ts_template AS t WHERE t.tmplnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_statistic_ext AS s WHERE s.stxnamespace IN (SELECT oid FROM user_namespaces)
+    UNION ALL SELECT count(*) FROM pg_namespace WHERE oid IN (SELECT oid FROM user_namespaces) AND nspname <> 'public'
+    UNION ALL SELECT count(*) FROM pg_extension WHERE extname <> 'plpgsql'
+    UNION ALL SELECT count(*) FROM pg_event_trigger
+    UNION ALL SELECT count(*) FROM pg_publication
+    UNION ALL SELECT count(*) FROM pg_subscription
+    UNION ALL SELECT count(*) FROM pg_largeobject_metadata
+    UNION ALL SELECT count(*) FROM pg_default_acl
+    UNION ALL SELECT count(*) FROM pg_db_role_setting
+    UNION ALL SELECT count(*) FROM pg_parameter_acl
+    UNION ALL SELECT count(*) FROM pg_seclabel
+    UNION ALL SELECT count(*) FROM pg_language WHERE lanname NOT IN ('internal', 'c', 'sql', 'plpgsql')
+)
+SELECT COALESCE(sum(object_count), 0) FROM catalog_counts;
 '@
 
     return Invoke-PostgresQuery `
@@ -423,6 +499,10 @@ try {
 
     if (-not $BackupOnly -and [string]::IsNullOrWhiteSpace($RestoreDatabaseUrl)) {
         throw 'BLOCKED: set NOVA_BACKUP_RESTORE_DATABASE_URL to an authorized empty disposable database, or pass -BackupOnly for archive-only validation.'
+    }
+
+    if (-not $BackupOnly -and $RestoreTargetExclusiveApproval -ne 'approved') {
+        throw 'BLOCKED: set NOVA_BACKUP_RESTORE_TARGET_EXCLUSIVE_APPROVAL=approved only after placing the restore target under exclusive maintenance ownership for this drill.'
     }
 
     $source = Get-DatabaseIdentity -ConnectionUrl $SourceDatabaseUrl
@@ -477,8 +557,21 @@ try {
             -DatabaseUrl $RestoreDatabaseUrl `
             -Description 'restore-target server identity check'
 
+        $sourceClusterIdentity = Get-ConnectedClusterIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $SourceDatabaseUrl `
+            -Description 'source cluster identity check'
+        $restoreClusterIdentity = Get-ConnectedClusterIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $RestoreDatabaseUrl `
+            -Description 'restore-target cluster identity check'
+
         if ($sourceServerIdentity -eq $restoreServerIdentity) {
             throw 'BLOCKED: the restore target must be on a separate PostgreSQL server or cluster endpoint from the source.'
+        }
+
+        if ($sourceClusterIdentity -eq $restoreClusterIdentity) {
+            throw 'BLOCKED: the restore target is in the same PostgreSQL cluster as the source.'
         }
 
         if ($sourceConnectionIdentity -eq $restoreConnectionIdentity) {
@@ -506,6 +599,11 @@ try {
             -DatabaseUrl $SourceDatabaseUrl `
             -ExpectedIdentity $sourceConnectionIdentity `
             -Description 'source database identity check before backup'
+        Assert-ConnectedClusterIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $SourceDatabaseUrl `
+            -ExpectedIdentity $sourceClusterIdentity `
+            -Description 'source cluster identity check before backup'
     }
 
     Write-Event -Status 'RUNNING' -Phase 'backup' -Message 'Creating a PostgreSQL custom-format archive from the source database.'
@@ -521,6 +619,11 @@ try {
             -DatabaseUrl $SourceDatabaseUrl `
             -ExpectedIdentity $sourceConnectionIdentity `
             -Description 'source database identity check after backup'
+        Assert-ConnectedClusterIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $SourceDatabaseUrl `
+            -ExpectedIdentity $sourceClusterIdentity `
+            -Description 'source cluster identity check after backup'
     }
 
     if (-not (Test-Path -LiteralPath $temporaryBackupPath -PathType Leaf)) {
@@ -581,6 +684,11 @@ try {
         -DatabaseUrl $RestoreDatabaseUrl `
         -ExpectedIdentity $restoreConnectionIdentity `
         -Description 'restore-target identity check before restore'
+    Assert-ConnectedClusterIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $RestoreDatabaseUrl `
+        -ExpectedIdentity $restoreClusterIdentity `
+        -Description 'restore-target cluster identity check before restore'
 
     $existingObjectCountText = Get-UserObjectCount `
         -PsqlPath $psqlPath `
@@ -592,10 +700,10 @@ try {
     }
 
     if ($existingObjectCount -ne 0) {
-        throw 'BLOCKED: the restore target gained user database objects before restore; the verifier will not overwrite or clean it.'
+        throw 'BLOCKED: the restore target gained user database objects before restore; the approved maintenance window is no longer valid.'
     }
 
-    Write-Event -Status 'RUNNING' -Phase 'restore' -Message 'Restoring the archive into the preflighted empty target database.'
+    Write-Event -Status 'RUNNING' -Phase 'restore' -Message 'Restoring the archive into the operator-approved target database.'
     Invoke-PostgresCommand `
         -CommandPath $pgRestorePath `
         -Arguments @("--dbname=$($restore.Database)", '--format=custom', '--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', '--no-password', $backupPath) `
@@ -607,6 +715,11 @@ try {
         -DatabaseUrl $RestoreDatabaseUrl `
         -ExpectedIdentity $restoreConnectionIdentity `
         -Description 'restore-target identity check after restore'
+    Assert-ConnectedClusterIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $RestoreDatabaseUrl `
+        -ExpectedIdentity $restoreClusterIdentity `
+        -Description 'restore-target cluster identity check after restore'
 
     $restoredTableCountText = Invoke-PostgresQuery `
         -PsqlPath $psqlPath `
@@ -638,14 +751,17 @@ try {
     Write-Event `
         -Status 'PASS' `
         -Phase 'complete' `
-        -Message 'Backup archive creation, structural verification, and isolated restore verification passed.' `
+        -Message 'Backup archive creation, structural verification, and separate-cluster restore verification passed under operator-approved target maintenance.' `
         -Data ([ordered]@{
-            restore         = 'PASS'
-            restoredTables  = $restoredTableCount
-            expectedTables  = @($ExpectedTable)
-            archivePath     = $backupPath
-            archiveBytes    = $backupInfo.Length
-            sha256          = $sha256
+            restore                    = 'PASS'
+            restoredTables             = $restoredTableCount
+            expectedTables             = @($ExpectedTable)
+            archivePath                = $backupPath
+            archiveBytes               = $backupInfo.Length
+            sha256                     = $sha256
+            sourceClusterIdentity      = $sourceClusterIdentity
+            restoreClusterIdentity     = $restoreClusterIdentity
+            targetMaintenanceApproval  = 'approved'
         })
     exit 0
 }

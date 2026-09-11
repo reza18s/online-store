@@ -1,5 +1,12 @@
 import { isPublicSlug } from '@nova/api-client';
-import type { SeoMetadata } from '@nova/api-client';
+import type {
+  CatalogCategory,
+  CatalogAudience,
+  CatalogProduct,
+  CatalogProductPage,
+  ContentPage,
+  SeoMetadata,
+} from '@nova/api-client';
 
 import { parseHashRoute } from '../shared/hash-route';
 
@@ -17,15 +24,27 @@ export interface SeoDocument {
   jsonLd: unknown | null;
 }
 
+export type InitialRenderData =
+  | { kind: 'home'; products: CatalogProductPage }
+  | {
+      kind: 'category';
+      audience: CatalogAudience;
+      categories: CatalogCategory[];
+      products: CatalogProductPage;
+    }
+  | { kind: 'product'; product: CatalogProduct }
+  | { kind: 'content'; page: ContentPage };
+
 export interface InitialRenderContext {
   path: string;
   hashRoute: string;
   seo: SeoDocument;
+  initialData?: InitialRenderData;
 }
 
 export type PublicRenderRoute =
   | { kind: 'home'; path: '/' }
-  | { kind: 'category'; path: string; slug: string }
+  | { kind: 'category'; path: string; slug: CatalogAudience }
   | { kind: 'product'; path: string; slug: string }
   | { kind: 'content'; path: string; slug: string }
   | { kind: 'private'; path: string }
@@ -70,7 +89,7 @@ export function parsePublicRenderPath(input: string): PublicRenderRoute {
     const [prefix, rawSlug] = segments;
     const slug = rawSlug ? decodePathSegment(rawSlug) : undefined;
     if (slug && prefix === 'category' && slug in categoryCopy) {
-      return { kind: 'category', path, slug };
+      return { kind: 'category', path, slug: slug as CatalogAudience };
     }
     if (slug && prefix === 'product') return { kind: 'product', path, slug };
     if (slug && prefix === 'content') return { kind: 'content', path, slug };
@@ -339,7 +358,25 @@ export function readInitialRenderContext(): InitialRenderContext | undefined {
   ) {
     return undefined;
   }
+  if (context.initialData !== undefined && !isInitialRenderData(context.initialData)) {
+    return undefined;
+  }
   return context as InitialRenderContext;
+}
+
+function isInitialRenderData(value: unknown): value is InitialRenderData {
+  if (!value || typeof value !== 'object') return false;
+  const data = value as Record<string, unknown>;
+  if (typeof data.kind !== 'string') return false;
+  if (data.kind === 'home') return Boolean(data.products && typeof data.products === 'object');
+  if (data.kind === 'category') {
+    return (
+      Array.isArray(data.categories) && Boolean(data.products && typeof data.products === 'object')
+    );
+  }
+  if (data.kind === 'product') return Boolean(data.product && typeof data.product === 'object');
+  if (data.kind === 'content') return Boolean(data.page && typeof data.page === 'object');
+  return false;
 }
 
 export const defaultSiteDescription = siteDescription;

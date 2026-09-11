@@ -128,6 +128,7 @@ test('keeps product JSON-LD catalog-first when resolver structured data conflict
 
   const context = await renderRoute('/product/linen-overshirt', { ...optionsBase, fetcher });
   assert.equal(context.status, 200);
+  assert.equal(context.initialData?.kind, 'product');
   assert.equal(context.seo.title, 'مانتوی لینن آوا | NOVA');
   assert.equal(context.seo.canonicalUrl, 'https://nova.example/product/linen-overshirt');
   assert.equal(context.seo.robots, 'index, follow');
@@ -272,6 +273,56 @@ test('returns a noindex 503 for a malformed resolver payload', async () => {
   assert.equal(result.headers.get('x-robots-tag'), 'noindex, nofollow');
   assert.equal(result.headers.get('cache-control'), 'no-store');
   assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt']);
+});
+
+test('bounds slow public SSR reads and aborts the shared request signal', async () => {
+  const resolution: SeoResolution = {
+    path: '/product/linen-overshirt',
+    metadata: null,
+    redirect: null,
+  };
+  const calls: string[] = [];
+  let observedSignal: AbortSignal | null | undefined;
+  const fetcher: Fetcher = async (input, init) => {
+    const key = new URL(input).pathname + new URL(input).search;
+    calls.push(key);
+    observedSignal = init?.signal;
+    if (key === '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt')
+      return jsonResponse(resolution);
+    return new Promise<Response>(() => undefined);
+  };
+
+  const result = await handleRequest(
+    'https://nova.example/product/linen-overshirt',
+    { ...optionsBase, fetcher, renderTimeoutMs: 10 },
+    '<html><head></head><body><div id="root"></div></body></html>',
+  );
+
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('x-robots-tag'), 'noindex, nofollow');
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+  assert.deepEqual(calls, [
+    '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt',
+    '/v1/catalog/products/linen-overshirt',
+  ]);
+  assert.ok(observedSignal?.aborted);
+});
+
+test('bounds sitemap source reads with the same request deadline', async () => {
+  const signals: Array<AbortSignal | null | undefined> = [];
+  const fetcher: Fetcher = async (_input, init) => {
+    signals.push(init?.signal);
+    return new Promise<Response>(() => undefined);
+  };
+
+  const result = await sitemapResponse({ ...optionsBase, fetcher, renderTimeoutMs: 10 });
+
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
+  assert.equal(signals.length, 3);
+  assert.ok(signals[0]);
+  assert.ok(signals.every((signal) => signal === signals[0]));
+  assert.ok(signals[0]?.aborted);
 });
 
 test('fails closed for unsafe resolver redirect destinations', async () => {
@@ -517,7 +568,7 @@ test('renders home, category, and published content initial HTML from public rea
     },
     '/v1/seo/resolve?path=%2Fcategory%2Fwomen': resolution('/category/women'),
     '/v1/catalog/categories': categories,
-    '/v1/catalog/products?audience=women&limit=8&sort=newest&page=1': {
+    '/v1/catalog/products?audience=women&limit=4&sort=newest&page=1': {
       items: [product],
       total: 1,
       page: 1,
@@ -530,15 +581,21 @@ test('renders home, category, and published content initial HTML from public rea
   const home = await renderRoute('/', { ...optionsBase, fetcher });
   assert.match(home.bodyHtml, /مانتوی لینن آوا/);
   assert.equal(home.seo.canonicalUrl, 'https://nova.example/');
+  assert.equal(home.initialData?.kind, 'home');
 
   const category = await renderRoute('/category/women', { ...optionsBase, fetcher });
   assert.match(category.bodyHtml, /مانتوی لینن آوا/);
   assert.equal((category.seo.jsonLd as { '@type': string })['@type'], 'CollectionPage');
+  assert.equal(category.initialData?.kind, 'category');
+  if (category.initialData?.kind === 'category') {
+    assert.equal(category.initialData.audience, 'women');
+  }
 
   const content = await renderRoute('/content/size-guide', { ...optionsBase, fetcher });
   assert.match(content.bodyHtml, /راهنمای اندازه/);
   assert.match(content.bodyHtml, /قد و دور سینه/);
   assert.equal((content.seo.jsonLd as { '@type': string })['@type'], 'Article');
+  assert.equal(content.initialData?.kind, 'content');
 });
 
 test('follows resolver redirects before loading catalog content', async () => {
@@ -700,6 +757,7 @@ test('renders one managed head set and safely serializes the initial context', (
       jsonLd: { '@type': 'Product', name: '</script><script>alert(1)</script>' },
     },
     status: 200,
+    initialData: { kind: 'product', product },
     bodyHtml: '<main><h1>Already escaped by renderer</h1></main>',
     cacheControl: 'public, s-maxage=60',
   };
@@ -714,6 +772,8 @@ test('renders one managed head set and safely serializes the initial context', (
   assert.match(html, /Title &lt;safe&gt;/);
   assert.match(html, /\\u003c\/script\\u003e/);
   assert.match(html, /__NOVA_RENDER_CONTEXT__/);
+  assert.match(html, /"initialData"/);
+  assert.match(html, /"linen-overshirt"/);
 });
 
 test('crawler files are deterministic, renderer-aware, and resolver-filtered', async () => {

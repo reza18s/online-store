@@ -2,9 +2,19 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import type { ReactElement } from 'react';
 
-import { ApiClientError } from '@nova/api-client';
+import { QueryClient } from '@tanstack/react-query';
+import { ApiClientError, queryKeys } from '@nova/api-client';
 
-import { createQueryClient, mountApp } from './main';
+import { createQueryClient, mountApp, seedInitialRenderData } from './main';
+
+const seo = {
+  title: 'NOVA',
+  description: 'توضیح نوا',
+  canonicalUrl: 'https://nova.example/',
+  robots: 'index, follow' as const,
+  openGraph: { type: 'website' as const, imageUrl: null },
+  jsonLd: null,
+};
 
 test('hydrates SSR roots and creates a root for client-only markup', () => {
   const calls: string[] = [];
@@ -31,6 +41,28 @@ test('hydrates SSR roots and creates a root for client-only markup', () => {
 
   assert.deepEqual(calls, ['hydrate', 'create']);
   assert.equal(handoff?.props.shellHtml, '<main data-nova-ssr-content="true"><h1>SSR</h1></main>');
+});
+
+test('seeds SSR public data under the same query keys used by the app', () => {
+  const queryClient = new QueryClient();
+  const categories = [{ id: 'women', slug: 'women', name: 'زنانه' }];
+  const products = { items: [], total: 0, page: 1, limit: 4 };
+
+  seedInitialRenderData(queryClient, {
+    path: '/category/women',
+    hashRoute: '#category/women',
+    seo,
+    initialData: { kind: 'category', audience: 'women', categories, products },
+  });
+
+  assert.deepEqual(queryClient.getQueryData(queryKeys.catalog.categories()), categories);
+  assert.deepEqual(
+    queryClient.getQueryData(
+      queryKeys.catalog.products({ audience: 'women', limit: 4, sort: 'newest' }),
+    ),
+    products,
+  );
+  queryClient.clear();
 });
 
 test('clears protected cache and redirects on session failure, not role denial', async () => {

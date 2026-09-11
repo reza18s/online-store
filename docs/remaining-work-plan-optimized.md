@@ -1,0 +1,691 @@
+# NOVA — Remaining Work Plan (Token-Optimized)
+
+> Compact execution source of truth for multi-agent delivery. Shared rules appear once; each task contains only its task-specific delta. Do not expand task prompts by repeating this file.
+
+## 0) Current status
+
+Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified merged baseline; DB-001 and SEC-001 are included).
+
+- `DB-001` — ✅ completed and merged through PR #1; exact `postgres:16-alpine` runtime was verified on 2026-09-10 in isolated Compose project `nova-pg-check-20260910`.
+- `SEC-001` — ✅ completed and merged through PR #3; merge commit `93495aa9ee250c8cce964a76dfdf992ed7d6a1c5`.
+- `API-001` — 🟡 follow-up contract revision is complete locally at `1f0237a19a8c4e0046af4cac3170e90433d080cb`; the existing PR #2 remains open at remote `17c0de0` because GitHub DNS prevented pushing the new commit.
+- `WEB-001` — ✅ accepted and merged into local `codex/integration` at `dc54fee66f2100414e23c20077f532f8ea36e239` from Darwin's task commit `e998c08`; no remote PR was created because repository export/push access is blocked.
+- `AUTH-001` — 🟡 functional non-visual slice implemented locally in `03261b0`: factor-aware staff login, central 401/403 session handling, protected cache cleanup, logout wiring and compiled API dev runner are in place. Exact staff-login reference, target viewport and required states remain required for final visual QA/sign-off.
+- `TEST-001` — ✅ follow-up commit `44dad93` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`; PR #4 remains remote-open at its older branch state because push is blocked.
+- `OPS-002` — ✅ the bounded CI prerequisite plus provider-independent backup-verification slice is accepted and merged locally into `codex/integration` as `c4f2aa6` (verifier task head `05b5c89`). Two final independent review axes accepted the verifier/runbook. No remote PR was created because repository export/push access is blocked; live PostgreSQL restore and the broader deployment, encryption, retention, WAL, media, monitoring and rollback scope remain open.
+- `OPS-001` — ✅ accepted and merged locally into `codex/integration` as `808dd7634a357eb45eb61da4e9b320c7146f2d62` from task commit `9e69d54d1dbec8355d308418ca61ebae9b4f284d`; focused worker validation passed. No remote PR was created because repository export/push access is blocked. Live worker/outbox validation remains batched for the wave/integration gate, and provider delivery remains PROVIDER-002-owned.
+- `SEO-001` — ✅ final content-sitemap follow-up `770c96e` passed both independent review axes and was merged locally into `codex/integration` as `27116b72`; the published-content consumer, catalog-boundary validation, safe failure behavior and deterministic sitemap limits are now integrated. Focused tests (50/50), package typechecks, lint/format and web client+SSR build passed. No live browser/API/database/crawler run was performed.
+- `CONTENT-001` — ✅ commit `a147aed` passed both independent review axes and parent validation, then was merged locally into `codex/integration` as `ba5bddc`; its published summary endpoint is now consumed by the SEO-001 sitemap integration. No visual reference is required; remote push/PR creation remains blocked by repository-export access.
+- CI — 🔴 current `master` and PR #2 runs fail at the repository `Typecheck` step; local inspection identified missing Prisma generation in the clean-checkout workflow. Remote confirmation remains blocked until the CI fix can be pushed.
+- Live execution ledger: [`docs/remaining-work-status.md`](remaining-work-status.md). Update it after every merge, dispatch, resume/stop, PR state change, validation result or blocker.
+- Feature/provider/SEO/ops/test/QA/release tasks follow the dependency graph below.
+
+Existing implementation already covers most backend/domain foundations, Prisma migrations/seed, catalog/search/facets, cart/merge, customer/staff auth backend, checkout/order/payment logic, inventory, coupons, notification outbox, fulfillment/returns, content/SEO APIs, browser transport, admin dashboard and admin products. Main remaining work is production-connected UI, provider adapters, SSR/SEO, runtime/E2E, QA, observability/recovery and launch readiness.
+
+---
+
+## 1) Shared execution contract — applies to every task
+
+### Git / ownership
+
+1. Start from the **latest merged integration branch**; default is `master`.
+2. Never branch from another agent's unmerged branch.
+3. Run `git status --short` and `git branch --show-current` before editing; preserve pre-existing changes.
+4. One task = one branch = one focused commit/PR unless the integration owner explicitly splits it.
+5. Branch format: `codex/<TASK-ID>-<slug>`.
+6. PR targets the current integration branch. Sub-agents **do not merge**.
+7. Touch only `Own:` paths. Anything else => stop that edit and report `BOUNDARY ISSUE`.
+8. No unrelated cleanup, global formatting, dependency upgrades or lockfile churn.
+9. If remote/PR access is unavailable, preserve branch+commit, return exact PR title/body and report `PR BLOCKED`.
+
+### Architecture / frontend
+
+- Use the repository-pinned Bun version from `package.json/packageManager`; do not hard-code a Bun version in prompts.
+- Preserve existing React/Vite, NestJS, Prisma/PostgreSQL, Redis, TanStack Query, Tailwind and `packages/ui` conventions.
+- Reuse existing production contracts, query/mutation layers and design primitives; no duplicate client/state/design system.
+- Server state stays in TanStack Query; transient UI state stays in React/Zustand.
+- No scattered raw API calls inside visual components.
+- Tailwind + existing tokens/primitives are the styling authority.
+- Use logical CSS properties for RTL. Render phone/SKU/order/tracking/URL/payment-reference/coupon values in isolated `dir="ltr"` containers.
+- Preserve Persian display copy unless the task explicitly owns copy changes.
+- Require semantic HTML, heading order, keyboard/focus-visible, reduced motion, WCAG 2.2 AA and >=44px touch targets.
+- Never replace a production path with mock/fixture/static preview data.
+
+### Visual reference gate
+
+A task marked `Visual: required` follows this rule for every **new or materially changed** page/flow/state/component family:
+
+1. Require the exact user-supplied screenshot/reference + target viewport + required states.
+2. Existing references are valid only for the screens/states they actually show; currently approved coverage includes admin dashboard and admin products only.
+3. Never invent a reference or generate a substitute image.
+4. Without a reference, safe non-visual contract/test work may continue, but final visual work returns `BLOCKED BY REFERENCE`.
+5. With a reference, implement using existing Tailwind/primitives and attach same-viewport comparison evidence to the PR.
+
+### Security / data
+
+- Never commit `.env`, production credentials, OTPs, tokens, secrets or raw provider payloads.
+- Do not weaken auth, role, CSRF, money, inventory, payment or order-state semantics without a separate approved architectural change.
+- Provider-unconfigured paths stay fail-closed; never present them as successful.
+- Public/API breaking changes require an explicit report/versioning decision.
+- Behavior changes require focused regression tests.
+
+### Shared-file locks
+
+Only one active owner may edit these at a time:
+
+- `package.json` / lockfile
+- Prisma migrations/schema
+- `apps/web/src/app.tsx`
+- global styles / Tailwind config
+- `packages/ui/**`
+- shared route registry
+
+`WEB-001` owns the frontend shared-file window. Later page agents should remain page-local.
+
+Narrow exception: SEO-001 may touch `apps/web/src/app.tsx`, `apps/web/src/shared/hash-route.ts` and their focused tests only to preserve the public content alias and metadata parity. It must not change unrelated shell/UI behavior; WEB-001 remains the owner of general shared frontend changes.
+
+**SEC/API parallel lock:** while `SEC-001` and `API-001` run in parallel, these are owned by `SEC-001` and read-only to `API-001`:
+
+- `apps/api/src/common/http/**`
+- `apps/api/src/modules/auth/**`
+- `apps/api/src/modules/staff-auth/**`
+- `apps/api/src/modules/orders/orders-admin.controller.ts`
+
+If API contract metadata is required there, `API-001` records `CONTRACT FOLLOW-UP`; apply it after SEC merge via the integration owner or a focused follow-up commit.
+
+### Validation
+
+Run the narrowest relevant tests during implementation. Before PR, run applicable root checks:
+
+```powershell
+bun run typecheck
+bun run lint
+bun test
+bun run build
+bun run docker:config
+```
+
+For DB/API/worker tasks when applicable:
+
+```powershell
+bun run db:generate
+bunx prisma migrate deploy
+bun run db:seed
+```
+
+Rules:
+
+- Never mark an unrun/failed check PASS.
+- Separate sandbox/permission/network failures from code failures.
+- `test:integration` / `test:e2e` may be reported PASS only after a real harness exists and executes.
+- Exact PostgreSQL 16 runtime evidence is required where a task says so; another major version is not a substitute.
+
+### Agent return contract
+
+Return exactly:
+
+```text
+STATUS: completed | partial | blocked | failed
+SUMMARY:
+FILES CHANGED:
+IMPLEMENTATION DETAILS:
+TESTS / QA:
+VALIDATION RUN:
+VALIDATION RESULT:
+ARCHITECTURE IMPACT:
+ASSUMPTIONS:
+RISKS / FOLLOW-UP:
+PR:
+BOUNDARY ISSUES:
+```
+
+---
+
+## 2) Dependency graph
+
+```text
+BASELINE
+  ├─ DB-001 ✅
+  ├─ SEC-001 ───────────────┐
+  └─ API-001 ──> WEB-001 ──┼─> AUTH-001
+                            │      │
+                            │      ├─> ADMIN-001..004
+                            │      └─> WEB-003
+                            │
+                            ├─> WEB-002 / WEB-004 / WEB-005
+                            ├─> SEO-001
+                            └─> PROVIDER-003
+
+DB-001 ─> PROVIDER-001 / PROVIDER-002 / PROVIDER-004
+API-001 ─> PROVIDER-001 / PROVIDER-003 / TEST-001(start)
+DB-001 + API-001 ─> CONTENT-001
+PROVIDER-002 + DB-001 ─> OPS-001
+DB-001 + provider decisions ─> OPS-002
+
+Feature/provider merges ─> TEST-001(final)
+CONTENT-001 ─> SEO-001(sitemap completion)
+All UI + SEO ─> QA-001
+TEST-001 + QA-001 + OPS-002 + accepted security/provider work ─> REL-001
+REL-001 + provider/launch decisions ─> LAUNCH-001
+```
+
+### Waves
+
+- **Wave 0 now:** review/merge `DB-001`; run `SEC-001` + `API-001` in parallel under the ownership lock.
+- **Wave 1:** merge API; run/merge `WEB-001`; after SEC+API+WEB merge, run `AUTH-001`.
+- **Wave 2:** run `ADMIN-001..004`, `WEB-002..005`, and selected `PROVIDER-001..004` in parallel where their dependencies/inputs are satisfied.
+- **Wave 3:** `SEO-001`, `OPS-001`, `OPS-002`; `TEST-001` may build its skeleton earlier but can only finish against the integrated feature/provider runtime.
+- **Wave 4:** `QA-001` -> `REL-001`.
+- **Wave 5:** `LAUNCH-001` staging/reversible scope only.
+
+---
+
+## 3) Task index
+
+| ID           | Depends on                                                        | Visual                       | Branch                                 |
+| ------------ | ----------------------------------------------------------------- | ---------------------------- | -------------------------------------- |
+| DB-001       | —                                                                 | no                           | `codex/db-001-prisma-runtime`          |
+| SEC-001      | —                                                                 | no                           | `codex/sec-001-api-admin-boundary`     |
+| API-001      | —                                                                 | no                           | `codex/api-001-contract-parity`        |
+| WEB-001      | API-001                                                           | only if visuals change       | `codex/web-001-frontend-foundation`    |
+| AUTH-001     | SEC-001, API-001, WEB-001                                         | required for new login UI    | `codex/auth-001-staff-session`         |
+| ADMIN-001    | AUTH-001                                                          | required                     | `codex/admin-001-catalog-inventory`    |
+| ADMIN-002    | AUTH-001, API-001                                                 | required                     | `codex/admin-002-orders-operations`    |
+| ADMIN-003    | AUTH-001, SEC-001                                                 | required                     | `codex/admin-003-support-finance`      |
+| ADMIN-004    | AUTH-001, API-001                                                 | required                     | `codex/admin-004-content-seo`          |
+| WEB-002      | WEB-001, API-001                                                  | required for changed screens | `codex/web-002-discovery-cart`         |
+| WEB-003      | WEB-001, AUTH-001                                                 | required                     | `codex/web-003-account-orders`         |
+| WEB-004      | WEB-001, API-001                                                  | required                     | `codex/web-004-checkout-recovery`      |
+| WEB-005      | WEB-001, API-001                                                  | required                     | `codex/web-005-content-system`         |
+| PROVIDER-001 | DB-001, API-001, gateway decision                                 | no                           | `codex/provider-001-payment`           |
+| PROVIDER-002 | DB-001, provider decision                                         | no                           | `codex/provider-002-sms-notifications` |
+| PROVIDER-003 | API-001, shipping policy                                          | no                           | `codex/provider-003-shipping`          |
+| PROVIDER-004 | DB-001, storage decision                                          | no                           | `codex/provider-004-media-storage`     |
+| SEO-001      | API-001, WEB-001                                                  | no redesign                  | `codex/seo-001-ssr-indexability`       |
+| CONTENT-001  | DB-001, API-001                                                 | no                           | `codex/content-001-published-index`    |
+| OPS-001      | DB-001, PROVIDER-002                                              | no                           | `codex/ops-001-worker-observability`   |
+| OPS-002      | DB-001, provider decisions                                        | no                           | `codex/ops-002-backup-restore`         |
+| TEST-001     | DB-001, API-001 to start; integrated features/providers to finish | no                           | `codex/test-001-commerce-e2e`          |
+| QA-001       | all UI + SEO tasks                                                | uses supplied refs           | `codex/qa-001-responsive-rtl`          |
+| REL-001      | TEST-001, QA-001, OPS-002 + accepted security/provider work       | no                           | `codex/rel-001-release-audit`          |
+| LAUNCH-001   | REL-001, providers, launch decisions                              | no                           | `codex/launch-001-staging-readiness`   |
+
+---
+
+# 4) Task deltas
+
+> Give an agent **Section 1 + its task section only**. The head agent keeps Sections 0–6. Do not paste every task into each sub-agent prompt.
+
+## DB-001 — Prisma/PostgreSQL/Redis runtime ✅
+
+**Status:** ✅ completed and merged in PR #1; exact `postgres:16-alpine` is now verified healthy in isolated Compose project `nova-pg-check-20260910` on host port `55432`. All six Prisma migrations applied, seed completed, and PostgreSQL 16.15 returned the expected base counts. Earlier Docker Hub access failures are resolved for this run; the unrelated `docker-postgres-1` container remains untouched.
+
+**Goal:** prove a clean machine can start exact `postgres:16-alpine` + `redis:7-alpine`, generate Prisma, deploy migrations in order, seed, and pass readiness checks.
+
+**Own:** `packages/db/prisma/**`, `packages/db/prisma.config.ts`, safe DB scripts in package files, `infra/docker/**`, `docs/runbooks/local-development.md`, focused DB/infra tests.
+
+**Must:** compose config; isolated exact-version startup; `db:generate`; `migrate deploy`; seed; migration history/seed counts; `/health/live`; `/health/ready`; Redis connectivity. External image/proxy/permission failure => exact `BLOCKED` evidence, never substitute another Postgres major.
+
+**Accept:** reproducible clean workflow or reproducible external blocker; migrations not reordered/deleted/destructively changed; Prisma config/seed work with declared repo version.
+
+**PR:** `chore(DB-001): verify Prisma and local runtime workflow`
+
+---
+
+## SEC-001 — API/admin security boundary
+
+**Status:** completed and merged in PR #3; admin order responses redact `payment.redirectUrl` and the focused security regression coverage passed.
+
+**Goal:** audit/fix scoped customer/staff/admin auth, authorization, CSRF, error/redaction boundaries, especially unnecessary `payment.redirectUrl` exposure.
+
+**Own:** `apps/api/src/common/http/**`, `modules/auth/**`, `modules/staff-auth/**`, `orders/orders-admin.controller.ts` + focused tests; `payments/**` only for response-redaction tests; focused security ADR if needed.
+
+**Must:** customer/staff isolation; deny-by-default roles; exact-origin/double-submit CSRF; bounded errors; no OTP/session/provider/raw leakage; redact admin `payment.redirectUrl` if exposure is demonstrated while preserving dedicated payment-inspection contract; regression-test every changed boundary.
+
+**Do not:** implement providers, alter schema, frontend, unrelated order rules or credentials.
+
+**Accept:** no validated scoped sensitive exposure; auth/CSRF/role tests pass; no weakened public contract/raw provider payload.
+
+**PR:** `fix(SEC-001): harden API and admin response boundaries`
+
+---
+
+## API-001 — API contract/OpenAPI/client parity
+
+**Status:** follow-up contract revision complete locally on branch `codex/api-001-contract-parity` at `1f0237a`; contract `14/14`, package tests `38/38`, focused orders/payments tests `6/6`, typecheck and build pass. PR #2 remains open at the older remote SHA because GitHub DNS blocked the push; it must be refreshed/reviewed/merged before WEB-001.
+
+**Goal:** establish one stable producer/consumer contract across Nest DTO/controllers, error envelope and `@nova/api-client`.
+
+**Own:** `packages/api-client/**`, API DTO/controller metadata outside the SEC parallel lock, OpenAPI source/spec/validation, required scripts, relevant ADR/docs.
+
+**Must:** inventory `/v1`; document request/response/auth/pagination/idempotency/error codes; additive/versioned public changes only; generated artifacts must derive from a source of truth; contract tests for catalog facets, cart merge conflict, checkout, customer orders, admin orders/payments/content and health.
+
+**Parallel constraint:** SEC-owned files are read-only until SEC merges; record `CONTRACT FOLLOW-UP` for metadata needed there.
+
+**Accept:** frontend agents have one reviewable contract; runtime paths/types agree; parity validation runs locally/CI.
+
+**PR:** `feat(API-001): stabilize API contract and client parity`
+
+---
+
+## WEB-001 — frontend ownership/Tailwind foundation
+
+**Status:** ✅ accepted and merged locally into `codex/integration` as `dc54fee66f2100414e23c20077f532f8ea36e239`; task commit `e998c08` on `codex/web-001-frontend-foundation`. No remote PR was created because repository export/push access is blocked. The bounded extraction covered the shared route, icon and shell ownership hotspots without a material visual redesign; parent validation confirmed existing routes and behavior remain intact.
+
+**Goal:** reduce `apps/web/src/app.tsx` conflict risk and establish page-local ownership without broad rewrite or visual regression.
+
+**Own:** `apps/web/src/app.tsx`, `apps/web/src/styles.css`, `packages/ui/**`, Tailwind config, narrow route/helpers/tests.
+
+**Must:** extract only clear ownership boundaries; preserve URLs/runtime; make later agents page-local under existing feature structure; consolidate duplicated tokens into existing authority; preserve approved dashboard/products, RTL, mixed direction, state primitives and reduced motion; add route/render tests if wiring changes.
+
+**Do not:** API/domain/Prisma/provider work, redesign approved screens, unrelated dependency upgrades.
+
+**Accept:** storefront + `#admin` + `#admin/products` remain reachable; later page agents can avoid shared files; no second styling/design system.
+
+**PR:** `refactor(WEB-001): establish frontend ownership boundaries`
+
+---
+
+## AUTH-001 — staff login/MFA/session guard
+
+**Status:** 🟡 functional non-visual slice implemented locally in `03261b0`; the exact user-supplied staff-login reference, target viewport and required states are still required for final visual QA/sign-off. The slice connects the existing backend endpoints, opaque cookie transport, CSRF, staff roles and session hooks to a factor-aware form, central admin guard, logout/cache cleanup, expiry/403 handling and focused route/session tests.
+
+**Goal:** connect real staff password/TOTP session lifecycle, logout, expiry and protected admin routing while keeping customer/staff sessions separate.
+
+**Own:** web auth/admin session/guard boundary, WEB-001 route wiring, focused tests; `api-client` only for a proven post-API-001 gap.
+
+**Must:** opaque API session only; never store password/OTP/TOTP secret; handle invalid credentials, rate limit, lock, MFA required/invalid, expiry, logout, permission denied; isolate/clear admin caches; protect admin routes.
+
+**Visual:** reference required before final new login UI.
+
+**Accept:** unauthenticated admin -> real login; password+MFA establishes staff session; logout/expiry clears protected data; route/cache tests pass.
+
+**PR:** `feat(AUTH-001): connect staff MFA session and admin route guard`
+
+---
+
+## ADMIN-001 — catalog/inventory
+
+**Goal:** production-connected product create/edit, variants, media, categories, inventory and stock movements.
+
+**Own:** page-local admin catalog/inventory components, `admin-catalog-api.ts`, `admin-inventory-api.ts`, coordinated route registration, focused tests/QA evidence.
+
+**Must:** real hooks; optimistic `updatedAt`; lifecycle/role validation; draft/invalid/saving/saved/publish-blocked; upload failure; low-stock/discrepancy; empty/table error.
+
+**Visual:** references required per missing page/state.
+
+**Accept:** product/variant/media/taxonomy/inventory actions hit real API; no static preview with staff session; missing refs => `BLOCKED BY REFERENCE`.
+
+**PR:** `feat(ADMIN-001): connect admin catalog and inventory workflows`
+
+---
+
+## ADMIN-002 — orders/fulfillment/returns/refunds
+
+**Goal:** real order list/detail, fulfillment, shipment/tracking, return review and refund actions.
+
+**Own:** page-local admin order/fulfillment/return/refund UI, `admin-orders-api.ts`, focused tests/QA evidence.
+
+**Must:** real pagination/search/status filters; role-aware actions; optimistic concurrency/stable errors; immutable snapshots; no redirect/raw provider payload; paid/pending/preparing/shipped/delayed/exception/delivered/cancelled/returned + refund pending/failed/success; confirmation + reason for consequential actions.
+
+**Visual:** references required for list/detail/return/refund states.
+
+**Accept:** authorized staff operate real fulfillment/shipment/returns/refunds; unauthorized/stale actions reject safely and remain auditable.
+
+**PR:** `feat(ADMIN-002): implement admin order operations workflows`
+
+---
+
+## ADMIN-003 — payments/customers/notifications/audit
+
+**Goal:** safe support/finance inspection against redacted APIs.
+
+**Own:** page-local payment/customer/notification/audit UI, corresponding `admin-*-api.ts`, focused tests/QA evidence.
+
+**Must:** bounded pagination/filters; permission/session/loading/empty/error states; no raw callbacks/secrets/OTP/provider credentials/job internals/unnecessary PII; safe encoded cross-links.
+
+**Visual:** references required.
+
+**Accept:** intended roles can inspect intended data; support cannot see operations-only sensitive data; list/detail/error states use real APIs.
+
+**PR:** `feat(ADMIN-003): connect admin support and finance inspection`
+
+---
+
+## ADMIN-004 — content/SEO/redirects
+
+**Goal:** real admin content pages, SEO metadata and redirect management using existing audited optimistic-concurrency APIs.
+
+**Own:** page-local content/SEO/redirect UI, `apps/web/src/features/content/content-api.ts`, focused tests/QA evidence.
+
+**Must:** draft-first transitions; usable-content-before-publish; slug policy; site-relative destinations; cycle rejection; `updatedAt` conflicts; saving/saved/validation/publish-blocked/permission/error/empty; bounded typed JSON blocks; no unsafe HTML.
+
+**Visual:** references required.
+
+**Accept:** staff can create/edit/publish/manage SEO/redirects through real API; errors preserve unsaved work; mutations audited; stale editors recover safely.
+
+**PR:** `feat(ADMIN-004): implement admin content and SEO workflows`
+
+---
+
+## WEB-002 — storefront discovery/cart
+
+**Goal:** finish real home/category/PLP/search/PDP/cart states without hard-coded product truth.
+
+**Own:** page-local catalog/cart UI, `catalog-api.ts`, `cart-api.ts`, coordinated route wiring, focused tests/QA.
+
+**Must:** contextual server facets; preserve stale selected values; hide inventory quantities; loading/slow/empty/error/offline; variant missing; low/out-of-stock; price change; cart conflict; coupon success/error/recalculation; Persian normalization; compare-at invariant; URL state/cache invalidation.
+
+**Visual:** references required for materially changed/missing PLP/PDP/cart screens.
+
+**Accept:** real API read/write; shareable filter/sort/page URLs without duplicate requests; keyboard/RTL-safe critical states.
+
+**PR:** `feat(WEB-002): complete storefront discovery and cart states`
+
+---
+
+## WEB-003 — account/orders/tracking/returns
+
+**Goal:** finish customer account, addresses, orders, tracking and return journeys on customer-scoped APIs.
+
+**Own:** account/address/order page-local features, address modules, `orders-api.ts`, coordinated route wiring, focused tests/QA.
+
+**Must:** default/loading/empty/error/offline/permission/expiry/success; server-enforced ownership; never leak another customer's order/cached cart; LTR isolate identifiers; clear protected cache on logout/customer switch/expiry.
+
+**Visual:** references required.
+
+**Accept:** customer manages addresses, list/details orders and eligible returns through real APIs; delivered/expired/ineligible states clear and safe.
+
+**PR:** `feat(WEB-003): complete customer account and order journeys`
+
+---
+
+## WEB-004 — checkout/payment recovery
+
+**Goal:** production-connected address/shipping/quote/coupon/payment/confirmation with explicit recovery for every commerce failure state.
+
+**Own:** page-local checkout features/components, coordinated checkout routing, focused query/cart/checkout tests + QA.
+
+**Must:** authoritative quote; stable idempotency; normalized coupon; server errors; saved/new/invalid address; unsupported region; shipping unavailable; quote expired; stock conflict; price change; offline; processing/redirecting; payment pending/failed/cancelled/timeout/recovery/confirmation; local payment remains fail-closed; recover from query params without duplicate submit.
+
+**Visual:** references required for all new checkout/payment states.
+
+**Accept:** browser cannot cause duplicate order/payment via duplicate submit/callback; every failure has safe next action; confirmation uses authoritative order data only.
+
+**PR:** `feat(WEB-004): complete checkout and payment recovery states`
+
+---
+
+## WEB-005 — public content/system states
+
+**Goal:** replace preview policy/editorial data with published content API and complete not-found/error/offline/maintenance behavior.
+
+**Own:** page-local content/system-state UI, `content-api.ts`, coordinated routing, focused rendering/transport tests + QA.
+
+**Must:** published blocks only; missing/unpublished safe; loading/not-found/API-error/offline/maintenance/retry; site-relative encoded links; canonical path semantics; no unsafe/unbounded HTML.
+
+**Visual:** references required for new/changed public/system pages.
+
+**Accept:** no fake preview when published API content exists; system routes reachable/keyboard/RTL-safe.
+
+**PR:** `feat(WEB-005): connect public content and system states`
+
+---
+
+## PROVIDER-001 — payment gateway
+
+**Blocked input:** selected Iranian gateway + sandbox docs/credentials outside Git.
+
+**Goal:** selected provider behind existing `PaymentGateway` for start, callback verification, refund, timeout and reconciliation.
+
+**Own:** gateway interface only for proven gaps, provider adapter, payment/checkout wiring, redacted fake fixtures/tests, env names, ADR.
+
+**Must:** toman conversion only inside adapter with provider unit documented; verify signatures/IDs; reject tampering; dedupe callback event IDs; late-callback/refund reconciliation; no raw logs/secrets; sandbox tests for success/failure/cancel/timeout/duplicate/invalid-signature/refund-failure.
+
+**Accept:** replaceable adapter, no SDK types leak to domain, existing payment tests remain valid, failure observable + fail-closed.
+
+**PR:** `feat(PROVIDER-001): add selected payment gateway adapter`
+
+---
+
+## PROVIDER-002 — SMS/notification sender
+
+**Blocked input:** selected provider + sandbox docs/credentials outside Git.
+
+**Goal:** connect OTP delivery + notification outbox to provider while preserving cooldown/retry/lease/dedupe/redaction.
+
+**Own:** OTP delivery/provider boundary, worker provider boundary, adapter files, env validation/tests/runbook.
+
+**Must:** OTP never returned/stored in browser; bounded secret-free errors; preserve dedupe/lease/retry/terminal failure; tests for timeout/retry/duplicate protection/permanent failure.
+
+**Accept:** OTP/payment notifications reach adapter; worker logs/metrics expose stable outcome codes only; unconfigured provider fail-closed.
+
+**PR:** `feat(PROVIDER-002): add SMS and notification delivery adapters`
+
+---
+
+## PROVIDER-003 — shipping
+
+**Blocked input:** provider, supported provinces, pricing, return-shipping policy, sandbox/test mode.
+
+**Goal:** selected provider behind `ShippingProvider` for quote, ETA and tracking where supported.
+
+**Own:** shipping interface for proven gaps, adapter, required checkout/shipment wiring, tests/env/ADR/runbook.
+
+**Must:** provider details stay behind interface; validate province/method/amount; bounded timeout/errors; checkout quote remains authoritative; tests for unsupported region/timeout/price change/standard-express/tracking failure.
+
+**Accept:** checkout quotes or fails safely; provider units/labels do not leak into domain; local fixed policy only explicit local/test adapter.
+
+**PR:** `feat(PROVIDER-003): add selected shipping provider adapter`
+
+---
+
+## PROVIDER-004 — object storage/media
+
+**Blocked input:** storage ownership/region/bucket policy + sandbox access outside Git.
+
+**Goal:** secure S3-compatible media storage connected to admin media records.
+
+**Own:** catalog media service/controller boundary, storage adapter, admin media transport only for proven contract gap, env/tests/runbook.
+
+**Must:** validate MIME/size/ext/dimensions/key ownership; short-lived/signed operations where appropriate; no credentials; preserve primary-image deletion and alt-text rules; upload/orphan/duplicate/derivative-failure tests.
+
+**Accept:** admin media can use real adapter; public URLs safe/cacheable; outage leaves DB/media state consistent.
+
+**PR:** `feat(PROVIDER-004): connect secure object storage media pipeline`
+
+---
+
+## SEO-001 — SSR/hybrid/indexability
+
+**Status:** ✅ final follow-up task commit `770c96e` passed both independent review axes and was merged locally into `codex/integration` as `27116b72`. The completed slice consumes the published CONTENT-001 summary index, validates catalog/content source boundaries, fails closed on malformed or unavailable sources, bounds sitemap work to standard single-document limits, and preserves the existing client UI/hash routes. Focused tests `50/50`, web/api-client/api typechecks, targeted lint/format and the web client+SSR production build passed. No live browser/API/database/crawler run was performed, so that remains a batched integration gate.
+
+**Goal:** smallest reversible SSR/prerender/hybrid path that gives important public routes useful initial HTML + deterministic metadata.
+
+**Own:** Vite/server/render entries, content integration as needed, sitemap/robots/structured-data source, one rendering ADR/runbook, focused tests.
+
+**Must:** no preference-driven framework rewrite; use catalog/content truth + `GET /v1/seo/resolve`; canonical/redirect/title/description/OG; JSON-LD where appropriate; robots + XML sitemap; safe empty/error; no duplicated hydration metadata; document cache/revalidation and noindex private routes.
+
+**Accept:** home/category/product/published-content initial HTML useful; canonical/redirect/sitemap/robots deterministic/tested; client routing preserved.
+
+**PR:** `feat(SEO-001): add hybrid rendering and indexability foundation`
+
+---
+
+## CONTENT-001 — authoritative published-content index
+
+**Status:** ✅ commit `a147aed` passed independent Standards and Spec review, parent validation, and was merged locally into `codex/integration` as `ba5bddc`. This is an API/OpenAPI contract task with no visual reference or provider dependency.
+
+**Start deps:** DB-001 + API-001. **Completion deps:** satisfied by the SEO-001 sitemap integration and independent API contract review; the local integration merge is `27116b72`.
+
+**Goal:** expose a safe, published-only content summary index so the SEO sitemap can discover every eligible public content page without an optional deployment manifest.
+
+**Own:** public content service/controller, typed `@nova/api-client` response, OpenAPI route/schema, focused API/client contract tests and one bounded ADR/update note if required.
+
+**Must:** unauthenticated `GET /v1/content/pages`; only `PUBLISHED` records; only slug/title/updatedAt-style sitemap-safe fields; deterministic order; no body/blocks/draft leakage; preserve `/v1/content/pages/:slug`; keep the response envelope and route inventory aligned.
+
+**Accept:** the endpoint is covered by focused source/service/contract tests, API typecheck/build/lint/format pass, OpenAPI references resolve, and SEO can consume the typed list without fake or incomplete content discovery.
+
+**PR:** `feat(CONTENT-001): add published content index contract`
+
+---
+
+## OPS-001 — worker observability
+
+**Status:** ✅ locally accepted and merged into `codex/integration` as `808dd7634a357eb45eb61da4e9b320c7146f2d62` from task commit `9e69d54d1dbec8355d308418ca61ebae9b4f284d`. The bounded implementation is limited to worker observability/lifecycle behavior, focused tests and its runbook; no remote PR was created because repository export/push access is blocked. Live worker/outbox validation is intentionally batched for the wave/integration gate.
+
+**Goal:** production-like safe/observable notification worker; provider implementation remains PROVIDER-002-owned.
+
+**Own:** `apps/worker/src/**`, worker scripts/config, worker-owned health/metrics/logging, tests/runbook.
+
+**Must:** preserve lease/retry delay/max-attempt/idempotency/terminal-failure semantics; secret-free claimed/sent/retried/failed counters/logs; safe SIGINT/SIGTERM, DB disconnect, tick failure, backpressure; smoke/health command.
+
+**Accept:** real outbox start/process/retry/shutdown works; no secret leakage; tests cover duplicate workers/lease expiry/terminal failure.
+
+**PR:** `feat(OPS-001): harden notification worker operations`
+
+---
+
+## OPS-002 — CI/deployment/backup/monitoring
+
+**Status:** ✅ the CI prerequisite and bounded PostgreSQL backup/restore verifier are accepted and merged locally into `codex/integration` as `c4f2aa6`. The verifier task head is `05b5c89`; two final independent review axes accepted its environment-only credential boundary, safe database selection, pinned endpoint/cluster identity, atomic archive publication, broad target sanity checks and explicit operator-maintenance gate. No remote PR was created because repository export/push access is blocked. Live backup/restore evidence and the broader deployment, encryption, retention, WAL, media, monitoring and rollback scope remain open.
+
+**Goal:** reproducible CI, staging config, probes, monitoring, backup ownership and executed restore/rollback evidence.
+
+**Own:** CI workflows, `infra/deploy/**`, `infra/monitoring/**`, deployment-safe Docker corrections, runbooks/env validation.
+
+**Must:** CI typecheck/lint/test/build/docker/migrations as applicable; define live/ready semantics without optional provider false-failures; encrypted DB/media backup/retention/ownership/restore/rollback; alerts for stale pending payments, failed/refund backlog, notification failure, reservation expiry, backup age, readiness; execute isolated restore drill. The accepted verifier is intentionally only the provider-independent archive/restore safety slice: full mode needs authorized PostgreSQL 16 credentials, a separate cluster, `pg_control_system()` access, and `NOVA_BACKUP_RESTORE_TARGET_EXCLUSIVE_APPROVAL=approved`; missing provider/operational decisions remain `BLOCKED`.
+
+**Accept:** clean PR gets reproducible CI; the bounded verifier is executable and safety-reviewed; production restore/rollback is executable and evidence-backed only after the provider/owner/runtime gates are completed; no secret/irreversible production action.
+
+**PR:** `chore(OPS-002): add CI and recovery readiness`
+
+---
+
+## TEST-001 — integration/E2E/concurrency
+
+**Status:** ✅ follow-up commit `44dad93c54c3510241b1d7cba1db2348443520c7` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`. Parent validation passed runner tests `3/3`, typecheck, lint, format and the full deterministic matrix (`8` suites, `131` underlying tests); live DB/Redis/provider/browser/concurrency coverage remains explicitly deferred.
+
+**Start deps:** DB-001 + API-001. **Completion deps:** integrated feature/provider paths required by the asserted journeys.
+
+**Goal:** executable runtime coverage for real API/web flows and commerce race/error matrix.
+
+**Own:** integration/e2e test locations, test scripts/config, explicit test fake adapters/fixtures, test-only Docker.
+
+**Must:** exact Postgres16/Redis where available; cover catalog/search/facets, cart/merge, reservation/final-stock race, checkout idempotency, price/stock conflict, payment success/failure/cancel/timeout/duplicate/delayed/late/refund, order transitions, OTP/staff MFA/CSRF/roles, notifications; Playwright critical storefront/account/checkout/order/admin journeys; isolated safe cleanup; fake deterministic providers + separate sandbox smoke hooks.
+
+**Accept:** expose `test:integration`/`test:e2e` only when real harness exists; critical races/duplicates executable; browser tests prove runtime wiring, not component existence.
+
+**PR:** `test(TEST-001): add commerce integration and E2E harness`
+
+---
+
+## QA-001 — responsive/RTL/a11y/visual regression
+
+**Goal:** independent integrated frontend quality gate; only small clearly owned fixes may land here, otherwise return findings to owner.
+
+**Own:** QA tests/fixtures/reports, small validated page fixes, `design-qa.md`, accessibility/browser config.
+
+**Must:** widths `1440/1280/1024/768/390/360`; RTL/mixed-LTR/no overflow; keyboard/focus/landmarks/reduced-motion/touch target; long Persian/large prices/realistic data; state matrix including default/loading/empty/error/offline/validation/success/permission/expiry/stock-conflict/price-change/payment/refund states; same-viewport comparison against supplied references; record capture limitations.
+
+**Accept:** no P0/P1 a11y/RTL/overflow/broken-route issue; every visual PR has evidence or explicit reference blocker; no unsupported pixel-perfect claims.
+
+**PR:** `test(QA-001): complete responsive RTL and accessibility QA`
+
+---
+
+## REL-001 — final release audit
+
+**Goal:** independently verify integrated branch against security, contract, data-integrity, accessibility, performance and completion gates.
+
+**Own:** audit/checklists, focused tests or approved narrow fixes, dependency/bundle/contract validation config, release docs.
+
+**Must:** inspect real diff/ownership/generated artifacts/lockfile/runtime wiring/PR scope; no secret/raw payload/unsafe redirect/unauthorized exposure; check bundle, duplicate requests, N+1, cache invalidation, slow/error/offline, transactions/idempotency; run all applicable checks and label each `PASS | FAIL | PRE-EXISTING FAILURE | NOT RUN | BLOCKED`; reject mock-only/unreachable/unverified/out-of-scope work.
+
+**Accept:** every applicable completion gate has evidence; blockers/decisions explicit; no task-caused validation failure.
+
+**PR:** `test(REL-001): add final release audit evidence`
+
+---
+
+## LAUNCH-001 — staging/controlled launch readiness
+
+**Goal:** reversible staging release with health/database/queue/storage/payment-sandbox/support/SEO/monitoring verification; stop before irreversible production action.
+
+**Own:** `infra/deploy/**`, staging/launch runbooks, release checklist/dashboards/config, smoke scripts.
+
+**Must:** resolve brand/domain/assortment/hosting/payment/SMS/shipping/storage/privacy/terms/support/budget/margin decisions; execute deploy/migration compatibility/safe smoke/rollback/restore/provider-timeout/network checks; verify critical web/admin/API/storage/worker/DB/payment-sandbox/monitoring/backup-age paths; define limited assortment/inventory and acquisition/payment/refund/return/margin metrics.
+
+**Never without explicit approval:** production DNS, real payment capture, live customer data, irreversible migration.
+
+**Accept:** staging reproducible; rollback+restore actually executed; critical smoke checks have PASS/BLOCKED evidence; launch recommendation includes risks/owner/rollback trigger.
+
+**PR:** `chore(LAUNCH-001): prepare staging and controlled launch gate`
+
+---
+
+## 5) Merge order / integration policy
+
+1. `DB-001` is merged and its exact PostgreSQL 16 runtime gate is verified in isolated project `nova-pg-check-20260910`; keep that evidence separate from the unrelated legacy Docker stack.
+2. `SEC-001` is merged; push, review and merge the locally accepted `API-001` revision in PR #2 after GitHub DNS is available.
+3. WEB-001 is accepted and merged locally; push/create its PR when repository access is available, then keep its shared-file ownership frozen.
+4. Complete the AUTH-001 visual gate with the exact staff-login reference/viewport/states; the functional slice is already committed locally as `03261b0`. Then smoke real protected admin routing and push/create its PR when repository access is available.
+5. Run eligible admin/storefront/provider tasks in parallel. Missing visual reference is a real blocker, not permission to guess.
+6. SEO-001 and CONTENT-001 are accepted and merged locally in `27116b72`, and the bounded OPS-002 verifier is merged in `c4f2aa6`; push/create their PRs when repository access is available, then run the batched worker/DB/API/browser/crawler gate. Execute the OPS-002 full restore verifier only after its separate-cluster, PostgreSQL 16 and exclusive-maintenance inputs are approved.
+7. Finalize `TEST-001` against the integrated runtime, using fakes plus sandbox provider smokes where available.
+8. Run `QA-001` on the integrated UI; small QA-owned fixes only, otherwise send findings back.
+9. `REL-001` is the final gate. Do not advance with task-caused failures, unreachable routes, secret exposure, unresolved migration/security/provider gaps or unverified required visuals.
+10. `LAUNCH-001` remains staging/reversible until separate explicit production authority is provided.
+
+---
+
+## 6) PR checklist
+
+```markdown
+## Objective / scope
+
+## Files changed
+
+## Contract / migration / security impact
+
+## Visual reference + viewport evidence
+
+<!-- missing required reference => BLOCKED BY REFERENCE -->
+
+## Tests / validation
+
+- [ ] focused tests
+- [ ] typecheck
+- [ ] lint
+- [ ] test
+- [ ] build
+- [ ] Docker/DB/runtime when applicable
+
+## Known blockers / limitations
+
+## Rollback / migration notes
+
+## Reviewer notes
+```
+
+## Completion gate
+
+Project is complete only when all applicable items have evidence:
+
+- All intended routes are real/reachable; no mock/static preview substitutes production.
+- API producer, `@nova/api-client`, error/auth/permission contracts agree.
+- Customer/staff sessions+caches are isolated; CSRF/roles/redaction/error boundaries verified.
+- Target PostgreSQL 16 migrations+seed are proven; release backup/restore/rollback are exercised.
+- Provider status is honestly PASS/BLOCKED; unconfigured provider never appears successful.
+- Required screen/state matrix is complete.
+- `1440/1280/1024/768/390/360`, RTL/mixed-LTR, keyboard/focus/semantics/contrast/reduced-motion/touch/screen-reader behavior are verified.
+- Integration/E2E PASS only means a real harness executed.
+- Typecheck/lint/test/build/Docker/migration results are real and reproducible.
+- Every task has isolated branch/PR/diff review; sub-agents did not self-merge.
+- User decisions, credentials/provider blockers and visual-evidence limitations are explicit.
+
+## Remaining user decisions
+
+- Keep `master` as integration branch or create a dedicated integration branch before larger parallel waves.
+- Supply exact screenshot/reference + viewport + state coverage for each remaining visual screen.
+- Select payment, SMS/notification, shipping, object storage, hosting/backup/monitoring providers and final shipping/returns policy.

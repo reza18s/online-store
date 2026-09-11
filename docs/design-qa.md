@@ -211,6 +211,18 @@ This is evidence for route ownership and fail-closed behavior only. It does
 not prove a published page response, authenticated CMS mutation, crawler
 output, exact target viewport, assistive-technology behavior, or pixel parity.
 
+### Admin dashboard safety follow-up — 2026-09-11
+
+Source inspection found that the API and `@nova/api-client` expose no
+dashboard, analytics, revenue, or metrics contract. The static `AdminDashboard`
+therefore remains a development design preview only: commit `3dd004c` makes
+`AdminPage` render it only when `import.meta.env.DEV` is true and no staff
+session exists. A staff session now receives the existing non-operational
+state, which prevents hardcoded metrics from appearing in an authenticated
+panel. The focused app tests pass `4/4`, and the full web/e2e suite passes
+`136/136`; no authenticated browser render, exact viewport capture, AT tree,
+or pixel comparison was claimed.
+
 ## Findings for parent routing
 
 ### `QA-001-A11Y-001` — modal focus is not trapped or restored

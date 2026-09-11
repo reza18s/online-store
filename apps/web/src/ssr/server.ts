@@ -102,10 +102,18 @@ async function getApi<T>(apiOrigin: string, path: string, fetcher: Fetcher): Pro
     body = undefined;
   }
   if (!response.ok) throw new RenderApiError(response.status);
-  if (!body || typeof body !== 'object' || !('data' in body)) {
+  if (!isApiEnvelope(body)) {
     throw new RenderApiError(502, 'SSR API returned an invalid envelope');
   }
-  return (body as { data: T }).data;
+  return body.data as T;
+}
+
+function isApiEnvelope(value: unknown): value is { data: unknown; meta: unknown } {
+  if (!value || typeof value !== 'object') return false;
+  const envelope = value as Record<string, unknown>;
+  if (!('data' in envelope) || !envelope.meta || typeof envelope.meta !== 'object') return false;
+  const meta = envelope.meta as Record<string, unknown>;
+  return typeof meta.requestId === 'string' && typeof meta.timestamp === 'string';
 }
 
 function isSeoResolution(value: unknown): value is SeoResolution {
@@ -171,6 +179,18 @@ function safeRedirectPath(origin: string, value: string): string | null {
     }
   } catch {
     return null;
+  }
+  return candidate;
+}
+
+async function getSeoResolution(
+  apiOrigin: string,
+  path: string,
+  fetcher: Fetcher,
+): Promise<SeoResolution> {
+  const candidate = await getApi<unknown>(apiOrigin, resolverPath(path), fetcher);
+  if (!isSeoResolution(candidate)) {
+    throw new RenderApiError(502, 'SSR API returned an invalid SEO resolution');
   }
   return candidate;
 }
@@ -524,11 +544,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
   let resolution: SeoResolution;
   try {
-    const candidate = await getApi<unknown>(options.apiOrigin, resolverPath(route.path), fetcher);
-    if (!isSeoResolution(candidate)) {
-      throw new RenderApiError(502, 'SSR API returned an invalid SEO resolution');
-    }
-    resolution = candidate;
+    resolution = await getSeoResolution(options.apiOrigin, route.path, fetcher);
   } catch (error) {
     if (route.kind === 'unknown' && error instanceof RenderApiError && error.status === 404)
       return notFoundContext(origin, route);
@@ -780,7 +796,7 @@ async function indexableSitemapPaths(
   const candidates = [...new Set(paths)].filter(isRecognizedSitemapPath).sort();
   const resolved = await Promise.all(
     candidates.map(async (path) => {
-      const resolution = await getApi<SeoResolution>(apiOrigin, resolverPath(path), fetcher);
+      const resolution = await getSeoResolution(apiOrigin, path, fetcher);
       if (resolution.redirect || resolution.metadata?.noIndex) return null;
       return effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
     }),

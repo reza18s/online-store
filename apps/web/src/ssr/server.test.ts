@@ -50,21 +50,31 @@ const page = {
   ],
 } satisfies ContentPage;
 
-function jsonResponse(data: unknown, status = 200): Response {
-  return new Response(JSON.stringify({ data }), {
+function jsonResponse(data: unknown, status = 200, includeMeta = true): Response {
+  const body = includeMeta
+    ? {
+        data,
+        meta: { requestId: 'test-request-id', timestamp: '2026-09-11T00:00:00.000Z' },
+      }
+    : { data };
+  return new Response(JSON.stringify(body), {
     status,
     headers: { 'Content-Type': 'application/json' },
   });
 }
 
-function fixtureFetcher(responses: Record<string, unknown>, statuses: Record<string, number> = {}) {
+function fixtureFetcher(
+  responses: Record<string, unknown>,
+  statuses: Record<string, number> = {},
+  options: { omitMeta?: string[] } = {},
+) {
   const calls: string[] = [];
   const fetcher: Fetcher = async (input) => {
     const url = new URL(input);
     const key = `${url.pathname}${url.search}`;
     calls.push(key);
     if (!(key in responses)) return jsonResponse({ message: 'missing fixture' }, 500);
-    return jsonResponse(responses[key], statuses[key] ?? 200);
+    return jsonResponse(responses[key], statuses[key] ?? 200, !options.omitMeta?.includes(key));
   };
   return { fetcher, calls };
 }
@@ -268,6 +278,75 @@ test('fails closed for unsafe resolver redirect destinations', async () => {
     assert.equal(result.headers.get('location'), null, toPath);
     assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Fold-catalog-path']);
   }
+});
+
+test('requires the standard API metadata on resolver, catalog, and content reads', async () => {
+  const productResolverKey = '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt';
+  const productKey = '/v1/catalog/products/linen-overshirt';
+  const contentResolverKey = '/v1/seo/resolve?path=%2Fcontent%2Fsize-guide';
+  const contentKey = '/v1/content/pages/size-guide';
+  const resolution = (path: string): SeoResolution => ({
+    path,
+    metadata: null,
+    redirect: null,
+  });
+
+  const cases = [
+    {
+      path: '/product/linen-overshirt',
+      responses: {
+        [productResolverKey]: resolution('/product/linen-overshirt'),
+        [productKey]: product,
+      },
+      omitMeta: productResolverKey,
+    },
+    {
+      path: '/product/linen-overshirt',
+      responses: {
+        [productResolverKey]: resolution('/product/linen-overshirt'),
+        [productKey]: product,
+      },
+      omitMeta: productKey,
+    },
+    {
+      path: '/content/size-guide',
+      responses: { [contentResolverKey]: resolution('/content/size-guide'), [contentKey]: page },
+      omitMeta: contentKey,
+    },
+  ];
+
+  for (const entry of cases) {
+    const { fetcher } = fixtureFetcher(entry.responses, {}, { omitMeta: [entry.omitMeta] });
+    const context = await renderRoute(entry.path, { ...optionsBase, fetcher });
+    assert.equal(context.status, 503, entry.omitMeta);
+    assert.equal(context.seo.robots, 'noindex, nofollow', entry.omitMeta);
+    assert.equal(context.seo.canonicalUrl, null, entry.omitMeta);
+  }
+});
+
+test('fails closed when sitemap resolver data is missing API metadata', async () => {
+  const rootKey = '/v1/seo/resolve?path=%2F';
+  const { fetcher } = fixtureFetcher(
+    {
+      '/v1/catalog/categories': [],
+      '/v1/catalog/products?limit=100&sort=newest&page=1': {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 100,
+      },
+      [rootKey]: {
+        path: '/',
+        metadata: null,
+        redirect: null,
+      } satisfies SeoResolution,
+    },
+    {},
+    { omitMeta: [rootKey] },
+  );
+  const result = await sitemapResponse({ ...optionsBase, fetcher });
+  assert.equal(result.status, 503);
+  assert.equal(result.headers.get('cache-control'), 'no-store');
 });
 
 test('renders home, category, and published content initial HTML from public reads', async () => {

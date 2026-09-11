@@ -2420,8 +2420,19 @@ function AdminPermissionDeniedPage() {
   );
 }
 
+export function shouldShowAdminDashboardPreview({
+  isDevelopment,
+  hasStaffSession,
+}: {
+  isDevelopment: boolean;
+  hasStaffSession: boolean;
+}): boolean {
+  return isDevelopment && !hasStaffSession;
+}
+
 export function AdminRouteUnavailablePage({ page }: { page: string }) {
   const titleMap: Record<string, string> = {
+    admin: 'داشبورد',
     categories: 'دسته‌بندی‌ها',
     inventory: 'موجودی',
     orders: 'سفارش‌ها',
@@ -2463,7 +2474,10 @@ function AdminPage({ page }: { page: string }) {
   const authFailure = isStaffAuthFailure(staffQuery.error);
   const authorizationFailure = isStaffAuthorizationFailure(staffQuery.error);
   const hasStaffSession = Boolean(staffQuery.data) && !authFailure;
-  const allowDevelopmentPreview = import.meta.env.DEV && !staffQuery.data;
+  const allowDevelopmentPreview = shouldShowAdminDashboardPreview({
+    isDevelopment: import.meta.env.DEV,
+    hasStaffSession: Boolean(staffQuery.data),
+  });
 
   if (isLoginPage) return <AdminLoginPage />;
   if (authorizationFailure) return <AdminPermissionDeniedPage />;
@@ -2537,6 +2551,7 @@ function AdminPage({ page }: { page: string }) {
     if (!allowDevelopmentPreview) return <AdminRouteUnavailablePage page={page} />;
     return <AdminLegacyPage page={page} />;
   }
+  if (!allowDevelopmentPreview) return <AdminRouteUnavailablePage page="admin" />;
 
   const nav = [
     ['admin', 'داشبورد', 'home'],

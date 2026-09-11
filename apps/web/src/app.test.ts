@@ -6,7 +6,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { queryKeys } from '@nova/api-client';
 
-import { AdminLegacyPage, AdminRouteUnavailablePage, RouteView } from './app';
+import {
+  AdminLegacyPage,
+  AdminRouteUnavailablePage,
+  RouteView,
+  shouldShowAdminDashboardPreview,
+} from './app';
 
 test('renders an accessible mobile logout control in the legacy admin shell', () => {
   const queryClient = new QueryClient();
@@ -37,6 +42,34 @@ test('renders a non-operational state instead of static data for an unfinished a
   assert.match(markup, /برای جلوگیری از نمایش اطلاعات نمونه/);
   assert.match(markup, /href="#admin"/);
   assert.doesNotMatch(markup, /سفارش‌های امروز/);
+  queryClient.clear();
+});
+
+test('keeps the static admin dashboard preview development-only', () => {
+  assert.equal(
+    shouldShowAdminDashboardPreview({ isDevelopment: true, hasStaffSession: false }),
+    true,
+  );
+  assert.equal(
+    shouldShowAdminDashboardPreview({ isDevelopment: true, hasStaffSession: true }),
+    false,
+  );
+  assert.equal(
+    shouldShowAdminDashboardPreview({ isDevelopment: false, hasStaffSession: false }),
+    false,
+  );
+
+  const queryClient = new QueryClient();
+  const markup = renderToStaticMarkup(
+    createElement(
+      QueryClientProvider,
+      { client: queryClient },
+      createElement(AdminRouteUnavailablePage, { page: 'admin' }),
+    ),
+  );
+
+  assert.match(markup, /داشبورد هنوز آماده نیست/);
+  assert.doesNotMatch(markup, /۲۹۸٬۵۰۰٬۰۰۰/);
   queryClient.clear();
 });
 

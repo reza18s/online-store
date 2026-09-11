@@ -264,6 +264,35 @@ worker evidence. It does not claim Playwright journeys, authenticated OTP/MFA
 flows, external provider delivery, concurrency races, exact target viewports,
 full assistive-technology output or pixel comparison.
 
+### Parent recheck — 2026-09-12 exact viewport and route matrix
+
+The parent recheck used Chrome DevTools Protocol emulation rather than the
+default CUA viewport. It set CSS viewports to `1440x900`, `1280x900`,
+`1024x768`, `768x900`, `390x844`, and `360x768`, then verified that
+`document.documentElement.scrollWidth` and `document.body.scrollWidth` never
+exceeded the corresponding viewport. A route matrix covering home, category,
+listing, filtered listing, product, cart, checkout, payment-pending, account,
+account orders, admin login, protected admin catalog, and the editorial alias
+returned the expected heading/guard states at `390`, `360`, and `1440` with no
+page-level horizontal overflow.
+
+The recheck found and fixed one real responsive regression in
+`apps/web/src/shared/site-shell.tsx`: the mobile media rule hid `.site-nav`,
+but the same element also carried Tailwind's `flex` display utility, which
+overrode the component rule and left the desktop navigation visible at mobile
+widths. Removing the redundant utility restored the intended hamburger/bottom
+navigation composition. The exact 390px DOM metrics now report
+`.site-nav: none`, `.site-header__menu: flex`, and `.mobile-bottom-nav: flex`;
+the exact 1440px metrics report the inverse desktop composition.
+
+Temporary exact-viewport captures of home and staff login were visually
+inspected and removed after QA. The staff-login captures match the adopted
+artifact's default composition at both target sizes, but the artifact depicts
+an invalid-email/error state while the capture was the untouched default form;
+formal pixel diff, error/loading/expiry state captures, authenticated flows and
+assistive-technology output remain open. No credentials or provider calls were
+used.
+
 ## Findings for parent routing
 
 ### `QA-001-A11Y-001` — modal focus is not trapped or restored
@@ -342,10 +371,9 @@ bun run test:e2e
 None beyond the QA findings and validation limitations listed above. No
 production fix was attempted in this audit.
 
-**Final QA-001 result:** deterministic source/test gates `PASS`; responsive
-runtime, browser accessibility, exact-width, and pixel-regression gates
-`NOT RUN`/`BLOCKED`. Four historical parent-routable findings were recorded;
-the three accessibility findings are now `CLOSED` at source/bounded-runtime
-scope, and the visual finding is `SUPERSEDED` for the bounded default viewport.
-Exact target-size, full assistive-technology and pixel-comparison gates remain
-open.
+**Final QA-001 result:** deterministic source/test gates `PASS`; exact-width
+layout/overflow evidence for the audited route matrix is now `PASS`, and the
+three accessibility findings remain `CLOSED` at source/bounded-runtime scope.
+The visual finding is `SUPERSEDED` for the audited default/exact composition,
+but formal pixel comparison, full assistive-technology output, authenticated
+state coverage and provider-backed journeys remain `NOT RUN`/`BLOCKED`.

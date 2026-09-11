@@ -55,7 +55,7 @@ export function Header({
           >
             <Icon name="menu" />
           </button>
-          <nav className="site-nav flex items-center" aria-label="دسته‌بندی‌های اصلی">
+          <nav className="site-nav" aria-label="دسته‌بندی‌های اصلی">
             {navItems.map((item) => (
               <a key={item.href} href={item.href} className="site-nav__link">
                 {item.label}

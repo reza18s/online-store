@@ -615,7 +615,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## QA-001 — responsive/RTL/a11y/visual regression
 
-**Status:** 🟡 audit plus bounded owner fixes are integrated in `1bad6aa` from baseline `465ce07`; James (`01a09128-5e2b-7921-84e6-47f28a1844e8`) recorded the evidence in `docs/design-qa.md`, and `03ed76f` closes the previously recorded staff-login composition variance at the available default viewport. Deterministic web/integration gates and one live CUA composition check passed, while exact browser widths, keyboard/AT, required state renders, screenshots at target sizes and exact pixel comparison remain `NOT RUN` or `BLOCKED`.
+**Status:** 🟡 audit plus bounded owner fixes are integrated in `1bad6aa` from baseline `465ce07`; James (`01a09128-5e2b-7921-84e6-47f28a1844e8`) recorded the evidence in `docs/design-qa.md`, `03ed76f` closes the previously recorded staff-login composition variance at the available default viewport, and the 2026-09-12 parent recheck verified exact-width route/overflow bounds with one mobile-navigation owner fix. Deterministic web/integration gates, exact viewport layout/overflow checks, and default staff-login captures passed, while formal pixel comparison, full keyboard/AT, authenticated/provider state journeys and release evidence remain `NOT RUN` or `BLOCKED`.
 
 **Goal:** independent integrated frontend quality gate; only small clearly owned fixes may land here, otherwise return findings to owner.
 

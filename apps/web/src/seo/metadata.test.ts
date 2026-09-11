@@ -26,6 +26,8 @@ test('parses only the clean public rendering paths', () => {
   });
   assert.equal(parsePublicRenderPath('/category/not-a-public-audience').kind, 'unknown');
   assert.equal(parsePublicRenderPath('/product/bad%2Fslug').kind, 'unknown');
+  assert.equal(parsePublicRenderPath('//').kind, 'unknown');
+  assert.equal(parsePublicRenderPath('///').kind, 'unknown');
 });
 
 test('metadata has one canonical source and suppresses structured data for noindex pages', () => {
@@ -75,6 +77,34 @@ test('resolver metadata overrides fallbacks without changing the route contract'
   assert.deepEqual(seo.jsonLd, { managed: true });
 });
 
+test('falls back from unsafe resolver canonicals to the recognized route canonical', () => {
+  const fallback = {
+    title: 'Fallback',
+    description: 'Fallback description',
+    canonicalPath: '/product/linen-overshirt',
+  };
+  const unsafeCanonicals = [
+    'https://evil.example/product/else',
+    'https://nova.example/product/else?utm_source=unsafe',
+    'https://nova.example/product/else#fragment',
+    'https://user:pass@nova.example/product/else',
+    '/product/else\\variant',
+    '/account/orders',
+  ];
+
+  for (const canonicalUrl of unsafeCanonicals) {
+    const seo = seoDocumentFromMetadata('https://nova.example', fallback, {
+      path: '/product/linen-overshirt',
+      title: 'Managed title',
+      description: 'Managed description',
+      canonicalUrl,
+      noIndex: false,
+      structuredData: null,
+    });
+    assert.equal(seo.canonicalUrl, 'https://nova.example/product/linen-overshirt', canonicalUrl);
+  }
+});
+
 test('client public content stays indexable while catalog compatibility routes are noindex', () => {
   const category = clientSeoForHashRoute('#category/women', 'https://nova.example');
   assert.equal(category.title, 'NOVA | زنانه');
@@ -97,8 +127,12 @@ test('client public content stays indexable while catalog compatibility routes a
   }
 
   const content = clientSeoForHashRoute('#content/size-guide', 'https://nova.example');
-  assert.equal(content.robots, 'noindex, nofollow');
-  assert.equal(content.canonicalUrl, null);
+  assert.equal(content.robots, 'index, follow');
+  assert.equal(content.canonicalUrl, 'https://nova.example/content/size-guide');
+
+  const invalidContent = clientSeoForHashRoute('#content/bad%2Fslug', 'https://nova.example');
+  assert.equal(invalidContent.robots, 'noindex, nofollow');
+  assert.equal(invalidContent.canonicalUrl, null);
 
   const editorial = clientSeoForHashRoute('#campaign', 'https://nova.example');
   assert.equal(editorial.robots, 'index, follow');

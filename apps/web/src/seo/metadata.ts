@@ -58,7 +58,9 @@ function decodePathSegment(value: string): string | undefined {
 }
 
 export function parsePublicRenderPath(input: string): PublicRenderRoute {
-  const path = input.trim().replace(/\/+$/, '') || '/';
+  const trimmed = input.trim();
+  if (trimmed.startsWith('//')) return { kind: 'unknown', path: trimmed };
+  const path = trimmed.replace(/\/+$/, '') || '/';
   if (!path.startsWith('/') || path.startsWith('//') || path.includes('\\') || path.includes('?')) {
     return { kind: 'unknown', path };
   }
@@ -81,6 +83,49 @@ export function parsePublicRenderPath(input: string): PublicRenderRoute {
   return { kind: 'unknown', path };
 }
 
+export function isIndexablePublicRenderPath(path: string): boolean {
+  const route = parsePublicRenderPath(path);
+  return (
+    route.kind === 'home' ||
+    route.kind === 'category' ||
+    route.kind === 'product' ||
+    route.kind === 'content'
+  );
+}
+
+export function normalizeCanonicalPath(
+  origin: string,
+  value: string | null | undefined,
+): string | null {
+  if (value == null) return null;
+
+  const candidate = value.trim();
+  if (!candidate || candidate.startsWith('//') || candidate.includes('\\')) return null;
+
+  let site: URL;
+  let canonical: URL;
+  try {
+    site = new URL(origin);
+    canonical = candidate.startsWith('/') ? new URL(candidate, site) : new URL(candidate);
+  } catch {
+    return null;
+  }
+
+  if (
+    !['http:', 'https:'].includes(site.protocol) ||
+    canonical.origin !== site.origin ||
+    canonical.username ||
+    canonical.password ||
+    canonical.search ||
+    canonical.hash
+  ) {
+    return null;
+  }
+
+  const path = canonical.pathname.replace(/\/+$/, '') || '/';
+  return isIndexablePublicRenderPath(path) ? path : null;
+}
+
 function absoluteUrl(origin: string, value: string): string {
   if (/^https?:\/\//i.test(value)) return value;
   return `${origin.replace(/\/$/, '')}${value.startsWith('/') ? value : `/${value}`}`;
@@ -96,7 +141,8 @@ export function createSeoDocument(input: {
   imagePath?: string | null;
   jsonLd?: unknown | null;
 }): SeoDocument {
-  const canonicalUrl = input.canonicalPath ? absoluteUrl(input.origin, input.canonicalPath) : null;
+  const canonicalPath = normalizeCanonicalPath(input.origin, input.canonicalPath);
+  const canonicalUrl = canonicalPath ? absoluteUrl(input.origin, canonicalPath) : null;
   const imageUrl = input.imagePath ? absoluteUrl(input.origin, input.imagePath) : null;
 
   return {
@@ -117,12 +163,13 @@ export function seoDocumentFromMetadata(
   fallback: Omit<Parameters<typeof createSeoDocument>[0], 'origin'>,
   metadata: SeoMetadata | null,
 ): SeoDocument {
+  const metadataCanonicalPath = normalizeCanonicalPath(origin, metadata?.canonicalUrl);
   return createSeoDocument({
     ...fallback,
     origin,
     title: metadata?.title ?? fallback.title,
     description: metadata?.description ?? fallback.description,
-    canonicalPath: metadata?.canonicalUrl ?? fallback.canonicalPath,
+    canonicalPath: metadataCanonicalPath ?? fallback.canonicalPath,
     noIndex: metadata?.noIndex ?? fallback.noIndex,
     jsonLd: metadata?.structuredData ?? fallback.jsonLd,
   });
@@ -255,11 +302,20 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
     });
   }
   if (parsed.kind === 'content') {
+    const publicPath = `/content/${encodeURIComponent(parsed.slug)}`;
+    if (!isIndexablePublicRenderPath(publicPath)) {
+      return createSeoDocument({
+        origin,
+        title: 'NOVA | محتوا',
+        description: siteDescription,
+        noIndex: true,
+      });
+    }
     return createSeoDocument({
       origin,
       title: 'NOVA | محتوا',
       description: siteDescription,
-      noIndex: true,
+      canonicalPath: publicPath,
     });
   }
 

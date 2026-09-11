@@ -172,6 +172,48 @@ test('uses catalog availability and a safe image fallback for unavailable produc
   );
 });
 
+test('keeps rendered resolver canonicals same-origin, query-free, and route-recognized', async () => {
+  const unsafeCanonicals = [
+    'https://evil.example/product/else',
+    'https://nova.example/product/else?utm_source=unsafe',
+    'https://nova.example/product/else#fragment',
+    'https://user:pass@nova.example/product/else',
+    '/product/else\\variant',
+    '/account/orders',
+  ];
+
+  for (const canonicalUrl of unsafeCanonicals) {
+    const { fetcher } = fixtureFetcher({
+      '/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt': {
+        path: '/product/linen-overshirt',
+        metadata: {
+          path: '/product/linen-overshirt',
+          title: 'عنوان مدیریت‌شده',
+          description: 'توضیح مدیریت‌شده',
+          canonicalUrl,
+          noIndex: false,
+          structuredData: null,
+        },
+        redirect: null,
+      } satisfies SeoResolution,
+      '/v1/catalog/products/linen-overshirt': product,
+    });
+
+    const context = await renderRoute('/product/linen-overshirt', { ...optionsBase, fetcher });
+    assert.equal(context.seo.canonicalUrl, 'https://nova.example/product/linen-overshirt');
+    assert.equal(context.seo.robots, 'index, follow');
+  }
+});
+
+test('rejects protocol-relative clean paths before resolver lookup', async () => {
+  const { fetcher, calls } = fixtureFetcher({});
+  const context = await renderRoute('///', { ...optionsBase, fetcher });
+  assert.equal(context.status, 404);
+  assert.equal(context.seo.robots, 'noindex, nofollow');
+  assert.equal(context.seo.canonicalUrl, null);
+  assert.deepEqual(calls, []);
+});
+
 test('renders home, category, and published content initial HTML from public reads', async () => {
   const resolution = (path: string): SeoResolution => ({
     path,

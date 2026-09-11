@@ -20,6 +20,8 @@ import type {
 import {
   createSeoDocument,
   defaultSiteDescription,
+  isIndexablePublicRenderPath,
+  normalizeCanonicalPath,
   parsePublicRenderPath,
   seoDocumentFromMetadata,
   type InitialRenderContext,
@@ -684,13 +686,7 @@ function sitemapXml(origin: string, paths: string[]): string {
 }
 
 function isRecognizedSitemapPath(path: string): boolean {
-  const route = parsePublicRenderPath(path);
-  return (
-    route.kind === 'home' ||
-    route.kind === 'category' ||
-    route.kind === 'product' ||
-    route.kind === 'content'
-  );
+  return isIndexablePublicRenderPath(path);
 }
 
 function effectiveSitemapPath(
@@ -699,32 +695,7 @@ function effectiveSitemapPath(
   canonicalUrl: string | null,
 ): string | null {
   if (canonicalUrl === null) return fallbackPath;
-
-  const value = canonicalUrl.trim();
-  if (!value || value.startsWith('//') || value.includes('\\')) return null;
-
-  let site: URL;
-  let canonical: URL;
-  try {
-    site = new URL(origin);
-    canonical = value.startsWith('/') ? new URL(value, site) : new URL(value);
-  } catch {
-    return null;
-  }
-
-  if (
-    !['http:', 'https:'].includes(site.protocol) ||
-    canonical.origin !== site.origin ||
-    canonical.username ||
-    canonical.password ||
-    canonical.search ||
-    canonical.hash
-  ) {
-    return null;
-  }
-
-  const canonicalPath = canonical.pathname.replace(/\/+$/, '') || '/';
-  return isRecognizedSitemapPath(canonicalPath) ? canonicalPath : null;
+  return normalizeCanonicalPath(origin, canonicalUrl);
 }
 
 async function indexableSitemapPaths(

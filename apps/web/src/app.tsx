@@ -4085,7 +4085,22 @@ function PublishedContentPage({ slug }: { slug: string }) {
 
     if (query.isError || !query.data) {
       if (query.isPending && initialMatches) return;
-      applySeoDocument(document, clientSeoForHashRoute(`#content/${slug}`, window.location.origin));
+      if (query.isPending) {
+        applySeoDocument(
+          document,
+          clientSeoForHashRoute(`#content/${slug}`, window.location.origin),
+        );
+        return;
+      }
+      applySeoDocument(
+        document,
+        createSeoDocument({
+          origin: window.location.origin,
+          title: 'NOVA | محتوا',
+          description: 'این صفحه محتوا پیدا نشد.',
+          noIndex: true,
+        }),
+      );
       return;
     }
     if (initialMatches) {

@@ -17,7 +17,7 @@ import type {
   ProductSummary,
   SeoResolution,
 } from '@nova/api-client';
-import { isContentPageSlug } from '@nova/api-client';
+import { isPublicSlug } from '@nova/api-client';
 
 import {
   createSeoDocument,
@@ -72,6 +72,40 @@ const sitemapResolverConcurrency = 16;
 const rfc3339DateTimePattern =
   /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
 const contentPageSummaryFields = new Set(['slug', 'title', 'updatedAt']);
+const catalogCategoryFields = new Set(['id', 'slug', 'name']);
+const catalogProductPageFields = new Set(['items', 'total', 'page', 'limit']);
+const productSummaryFields = new Set([
+  'id',
+  'slug',
+  'name',
+  'priceToman',
+  'compareAtPriceToman',
+  'available',
+  'imageUrl',
+  'imageAlt',
+  'categories',
+  'options',
+  'variants',
+  'colors',
+  'stockStatus',
+]);
+const productOptionFields = new Set(['id', 'key', 'name', 'sortOrder', 'values']);
+const productOptionValueFields = new Set(['id', 'key', 'label', 'sortOrder']);
+const productVariantFields = new Set([
+  'id',
+  'sku',
+  'title',
+  'size',
+  'color',
+  'colorHex',
+  'priceToman',
+  'compareAtPriceToman',
+  'optionValueIds',
+  'media',
+  'available',
+]);
+const variantMediaFields = new Set(['url', 'altText', 'sortOrder']);
+const productColorFields = new Set(['name', 'hex']);
 
 function trimOrigin(value: string): string {
   return value.replace(/\/$/, '');
@@ -99,9 +133,15 @@ function apiUrl(apiOrigin: string, path: string): string {
   return `${trimOrigin(apiOrigin)}${path}`;
 }
 
-async function getApi<T>(apiOrigin: string, path: string, fetcher: Fetcher): Promise<T> {
+async function getApi<T>(
+  apiOrigin: string,
+  path: string,
+  fetcher: Fetcher,
+  signal?: AbortSignal,
+): Promise<T> {
   const response = await fetcher(apiUrl(apiOrigin, path), {
     headers: { Accept: 'application/json' },
+    signal,
   });
   let body: unknown;
   try {
@@ -131,7 +171,7 @@ function isContentPageSummaryList(value: unknown): value is ContentPageSummary[]
     const summary = entry as Record<string, unknown>;
     return (
       Object.keys(summary).every((key) => contentPageSummaryFields.has(key)) &&
-      isContentPageSlug(summary.slug) &&
+      isPublicSlug(summary.slug) &&
       isIndexablePublicRenderPath(`/content/${encodeURIComponent(summary.slug)}`) &&
       typeof summary.title === 'string' &&
       summary.title.trim().length > 0 &&
@@ -172,8 +212,113 @@ function isRfc3339DateTime(value: unknown): value is string {
   return Number.isFinite(Date.parse(value));
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
+function hasOnlyKeys(value: Record<string, unknown>, fields: ReadonlySet<string>): boolean {
+  return Object.keys(value).every((key) => fields.has(key));
+}
+
+function isNullableString(value: unknown): boolean {
+  return value === null || typeof value === 'string';
+}
+
+function isInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value);
+}
+
+function isCatalogCategory(value: unknown): value is CatalogCategory {
+  if (!isRecord(value) || !hasOnlyKeys(value, catalogCategoryFields)) return false;
+  return typeof value.id === 'string' && isPublicSlug(value.slug) && typeof value.name === 'string';
+}
+
+function isCatalogProductOptionValue(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productOptionValueFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    typeof value.key === 'string' &&
+    typeof value.label === 'string' &&
+    isInteger(value.sortOrder)
+  );
+}
+
+function isCatalogProductOption(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productOptionFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    typeof value.key === 'string' &&
+    typeof value.name === 'string' &&
+    isInteger(value.sortOrder) &&
+    Array.isArray(value.values) &&
+    value.values.every(isCatalogProductOptionValue)
+  );
+}
+
+function isCatalogVariantMedia(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, variantMediaFields)) return false;
+  return (
+    typeof value.url === 'string' && typeof value.altText === 'string' && isInteger(value.sortOrder)
+  );
+}
+
+function isCatalogProductVariant(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productVariantFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    typeof value.sku === 'string' &&
+    isNullableString(value.title) &&
+    isNullableString(value.size) &&
+    isNullableString(value.color) &&
+    isNullableString(value.colorHex) &&
+    (value.priceToman === null || isInteger(value.priceToman)) &&
+    (value.compareAtPriceToman === null || isInteger(value.compareAtPriceToman)) &&
+    Array.isArray(value.optionValueIds) &&
+    value.optionValueIds.every((id) => typeof id === 'string') &&
+    Array.isArray(value.media) &&
+    value.media.every(isCatalogVariantMedia) &&
+    typeof value.available === 'boolean'
+  );
+}
+
+function isCatalogProductColor(value: unknown): boolean {
+  if (!isRecord(value) || !hasOnlyKeys(value, productColorFields)) return false;
+  return typeof value.name === 'string' && isNullableString(value.hex);
+}
+
+function isCatalogProductSummary(value: unknown): value is ProductSummary {
+  if (!isRecord(value) || !hasOnlyKeys(value, productSummaryFields)) return false;
+  return (
+    typeof value.id === 'string' &&
+    isPublicSlug(value.slug) &&
+    typeof value.name === 'string' &&
+    isInteger(value.priceToman) &&
+    (value.compareAtPriceToman === null || isInteger(value.compareAtPriceToman)) &&
+    typeof value.available === 'boolean' &&
+    isNullableString(value.imageUrl) &&
+    isNullableString(value.imageAlt) &&
+    Array.isArray(value.categories) &&
+    value.categories.every(isCatalogCategory) &&
+    Array.isArray(value.options) &&
+    value.options.every(isCatalogProductOption) &&
+    Array.isArray(value.variants) &&
+    value.variants.every(isCatalogProductVariant) &&
+    Array.isArray(value.colors) &&
+    value.colors.every(isCatalogProductColor) &&
+    (value.stockStatus === 'IN_STOCK' ||
+      value.stockStatus === 'LOW_STOCK' ||
+      value.stockStatus === 'OUT_OF_STOCK')
+  );
+}
+
+function isCatalogCategoryList(value: unknown): value is CatalogCategory[] {
+  return (
+    Array.isArray(value) && value.length <= sitemapMaxUrlCount && value.every(isCatalogCategory)
+  );
+}
+
 function isCatalogProductPage(value: unknown): value is CatalogProductPage {
-  if (!value || typeof value !== 'object') return false;
+  if (!isRecord(value) || !hasOnlyKeys(value, catalogProductPageFields)) return false;
   const page = value as Record<string, unknown>;
   const total = page.total;
   const pageNumber = page.page;
@@ -188,18 +333,13 @@ function isCatalogProductPage(value: unknown): value is CatalogProductPage {
     typeof limit !== 'number' ||
     !Number.isInteger(limit) ||
     limit < 1 ||
-    !Array.isArray(page.items)
+    !Array.isArray(page.items) ||
+    page.items.length > limit ||
+    page.items.length > total
   ) {
     return false;
   }
-  return page.items.every((item) => {
-    if (!item || typeof item !== 'object') return false;
-    const product = item as Record<string, unknown>;
-    return (
-      typeof product.slug === 'string' &&
-      isIndexablePublicRenderPath(`/product/${encodeURIComponent(product.slug)}`)
-    );
-  });
+  return page.items.every(isCatalogProductSummary);
 }
 
 function isSeoResolution(value: unknown): value is SeoResolution {
@@ -273,8 +413,9 @@ async function getSeoResolution(
   apiOrigin: string,
   path: string,
   fetcher: Fetcher,
+  signal?: AbortSignal,
 ): Promise<SeoResolution> {
-  const candidate = await getApi<unknown>(apiOrigin, resolverPath(path), fetcher);
+  const candidate = await getApi<unknown>(apiOrigin, resolverPath(path), fetcher, signal);
   if (!isSeoResolution(candidate)) {
     throw new RenderApiError(502, 'SSR API returned an invalid SEO resolution');
   }
@@ -885,31 +1026,45 @@ async function indexableSitemapPaths(
   }
   const resolved: Array<string | null> = new Array(candidates.length);
   let nextIndex = 0;
+  const abortController = new AbortController();
   await Promise.all(
     Array.from({ length: Math.min(sitemapResolverConcurrency, candidates.length) }, async () => {
-      while (nextIndex < candidates.length) {
-        const index = nextIndex++;
-        const path = candidates[index];
-        if (path === undefined) return;
-        const resolution = await getSeoResolution(apiOrigin, path, fetcher);
-        resolved[index] =
-          resolution.redirect || resolution.metadata?.noIndex
-            ? null
-            : effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
+      try {
+        while (nextIndex < candidates.length) {
+          const index = nextIndex++;
+          const path = candidates[index];
+          if (path === undefined) return;
+          const resolution = await getSeoResolution(
+            apiOrigin,
+            path,
+            fetcher,
+            abortController.signal,
+          );
+          resolved[index] =
+            resolution.redirect || resolution.metadata?.noIndex
+              ? null
+              : effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
+        }
+      } catch (error) {
+        abortController.abort();
+        throw error;
       }
     }),
   );
   return resolved.filter((path): path is string => path !== null);
 }
 
+const catalogPageLimit = 100;
+
 async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<ProductSummary[]> {
   const products: ProductSummary[] = [];
+  const seenProductSlugs = new Set<string>();
   let page = 1;
   let total = 0;
   do {
     const rawResult = await getApi<unknown>(
       apiOrigin,
-      catalogProductsPath(`limit=100&sort=newest&page=${page}`),
+      catalogProductsPath(`limit=${catalogPageLimit}&sort=newest&page=${page}`),
       fetcher,
     );
     if (!isCatalogProductPage(rawResult)) {
@@ -919,9 +1074,22 @@ async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<
     if (result.total > sitemapMaxUrlCount) {
       throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
     }
-    products.push(...result.items);
+    if (result.page !== page || result.limit !== catalogPageLimit) {
+      throw new RenderApiError(502, 'Sitemap catalog pagination is inconsistent');
+    }
+    const previousProductCount = products.length;
+    for (const product of result.items) {
+      if (seenProductSlugs.has(product.slug)) {
+        throw new RenderApiError(502, 'Sitemap catalog pagination repeated a product');
+      }
+      seenProductSlugs.add(product.slug);
+      products.push(product);
+    }
     if (products.length > sitemapMaxUrlCount) {
       throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+    }
+    if (products.length === previousProductCount && products.length < result.total) {
+      throw new RenderApiError(502, 'Sitemap catalog pagination made no progress');
     }
     total = result.total;
     page += 1;
@@ -936,7 +1104,12 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
   const fetcher = options.fetcher ?? globalThis.fetch.bind(globalThis);
   try {
     const [categories, products, contentPages] = await Promise.all([
-      getApi<CatalogCategory[]>(options.apiOrigin, '/v1/catalog/categories', fetcher),
+      getApi<unknown>(options.apiOrigin, '/v1/catalog/categories', fetcher).then((value) => {
+        if (!isCatalogCategoryList(value)) {
+          throw new RenderApiError(502, 'SSR API returned an invalid catalog category list');
+        }
+        return value;
+      }),
       allCatalogProducts(options.apiOrigin, fetcher),
       getApi<unknown>(options.apiOrigin, '/v1/content/pages', fetcher).then((value) => {
         if (!isContentPageSummaryList(value)) {

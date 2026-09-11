@@ -7,6 +7,7 @@ import type {
   CatalogProduct,
   ContentPage,
   ContentPageSummary,
+  ProductSummary,
   SeoResolution,
 } from '@nova/api-client';
 
@@ -46,6 +47,22 @@ const product = {
   media: [],
   attributes: [],
 } satisfies CatalogProduct;
+
+const productSummary = {
+  id: product.id,
+  slug: product.slug,
+  name: product.name,
+  priceToman: product.priceToman,
+  compareAtPriceToman: product.compareAtPriceToman,
+  available: product.available,
+  imageUrl: product.imageUrl,
+  imageAlt: product.imageAlt,
+  categories: product.categories,
+  options: product.options,
+  variants: product.variants,
+  colors: product.colors,
+  stockStatus: product.stockStatus,
+} satisfies ProductSummary;
 
 const page = {
   slug: 'size-guide',
@@ -452,6 +469,37 @@ test('fails closed when the catalog sitemap source has an invalid product summar
   assert.equal(result.headers.get('cache-control'), 'no-store');
 });
 
+test('fails closed when catalog sitemap metadata is inconsistent', async () => {
+  const cases: Array<{ name: string; categories: unknown; products: unknown }> = [
+    {
+      name: 'invalid category shape',
+      categories: [{ slug: 'women', name: 'زنانه' }],
+      products: { items: [], total: 0, page: 1, limit: 100 },
+    },
+    {
+      name: 'items exceed total',
+      categories: [],
+      products: { items: [productSummary], total: 0, page: 1, limit: 100 },
+    },
+    {
+      name: 'wrong page number',
+      categories: [],
+      products: { items: [productSummary], total: 1, page: 2, limit: 100 },
+    },
+  ];
+
+  for (const entry of cases) {
+    const { fetcher } = fixtureFetcher({
+      '/v1/catalog/categories': entry.categories,
+      '/v1/content/pages': [],
+      '/v1/catalog/products?limit=100&sort=newest&page=1': entry.products,
+    });
+    const result = await sitemapResponse({ ...optionsBase, fetcher });
+    assert.equal(result.status, 503, entry.name);
+    assert.equal(result.headers.get('cache-control'), 'no-store', entry.name);
+  }
+});
+
 test('renders home, category, and published content initial HTML from public reads', async () => {
   const resolution = (path: string): SeoResolution => ({
     path,
@@ -678,13 +726,13 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
     { slug: 'hidden-policy', title: 'پنهان', updatedAt: '2026-09-11T00:00:00.000Z' },
     { slug: 'redirected-policy', title: 'انتقالی', updatedAt: '2026-09-11T00:00:00.000Z' },
   ];
-  const hiddenProduct = { ...product, slug: 'hidden-product' };
-  const redirectedProduct = { ...product, slug: 'redirected-product' };
+  const hiddenProduct = { ...productSummary, slug: 'hidden-product' };
+  const redirectedProduct = { ...productSummary, slug: 'redirected-product' };
   const { fetcher } = fixtureFetcher({
     '/v1/catalog/categories': categories,
     '/v1/content/pages': contentPages,
     '/v1/catalog/products?limit=100&sort=newest&page=1': {
-      items: [product, hiddenProduct, redirectedProduct],
+      items: [productSummary, hiddenProduct, redirectedProduct],
       total: 3,
       page: 1,
       limit: 100,
@@ -776,9 +824,9 @@ test('crawler files are deterministic, renderer-aware, and resolver-filtered', a
 });
 
 test('sitemap uses safe resolver canonicals and preserves null-canonical candidates', async () => {
-  const oldProduct = { ...product, slug: 'old' };
-  const unsafeProduct = { ...product, slug: 'unsafe' };
-  const fallbackProduct = { ...product, slug: 'fallback' };
+  const oldProduct = { ...productSummary, slug: 'old' };
+  const unsafeProduct = { ...productSummary, slug: 'unsafe' };
+  const fallbackProduct = { ...productSummary, slug: 'fallback' };
   const { fetcher } = fixtureFetcher({
     '/v1/catalog/categories': [],
     '/v1/content/pages': [],

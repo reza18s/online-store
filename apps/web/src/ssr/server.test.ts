@@ -241,6 +241,35 @@ test('returns a noindex 503 for a malformed resolver payload', async () => {
   assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Fproduct%2Flinen-overshirt']);
 });
 
+test('fails closed for unsafe resolver redirect destinations', async () => {
+  const unsafeDestinations = [
+    'https://evil.example/account',
+    '//evil.example/account',
+    '/account/orders?next=https://evil.example',
+    '/account/orders#fragment',
+    '/account\\orders',
+  ];
+
+  for (const toPath of unsafeDestinations) {
+    const { fetcher, calls } = fixtureFetcher({
+      '/v1/seo/resolve?path=%2Fold-catalog-path': {
+        path: '/old-catalog-path',
+        metadata: null,
+        redirect: { fromPath: '/old-catalog-path', toPath, statusCode: 308 },
+      } satisfies SeoResolution,
+    });
+    const result = await handleRequest(
+      'https://nova.example/old-catalog-path',
+      { ...optionsBase, fetcher },
+      '<html><head></head><body><div id="root"></div></body></html>',
+    );
+    assert.equal(result.status, 503, toPath);
+    assert.equal(result.headers.get('x-robots-tag'), 'noindex, nofollow', toPath);
+    assert.equal(result.headers.get('location'), null, toPath);
+    assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Fold-catalog-path']);
+  }
+});
+
 test('renders home, category, and published content initial HTML from public reads', async () => {
   const resolution = (path: string): SeoResolution => ({
     path,

@@ -143,6 +143,38 @@ function isSeoResolution(value: unknown): value is SeoResolution {
   return true;
 }
 
+function safeRedirectPath(origin: string, value: string): string | null {
+  const candidate = value.trim();
+  if (
+    !candidate.startsWith('/') ||
+    candidate.startsWith('//') ||
+    candidate.includes('\\') ||
+    candidate.includes('?') ||
+    candidate.includes('#') ||
+    candidate.includes('\r') ||
+    candidate.includes('\n')
+  ) {
+    return null;
+  }
+
+  try {
+    const site = new URL(origin);
+    const destination = new URL(candidate, site);
+    if (
+      destination.origin !== site.origin ||
+      destination.username ||
+      destination.password ||
+      destination.search ||
+      destination.hash
+    ) {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+  return candidate;
+}
+
 function resolverPath(path: string): string {
   return `/v1/seo/resolve?path=${encodeURIComponent(path)}`;
 }
@@ -504,12 +536,14 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
   }
 
   if (resolution.redirect) {
+    const location = safeRedirectPath(origin, resolution.redirect.toPath);
+    if (!location) return serviceUnavailableContext(origin, route);
     return {
       path: route.path,
       hashRoute: routeHash(route),
       seo: createSeoDocument({ origin, ...metadataFallback(origin, route), noIndex: true }),
       status: 200,
-      redirect: { location: resolution.redirect.toPath, status: resolution.redirect.statusCode },
+      redirect: { location, status: resolution.redirect.statusCode },
       bodyHtml: initialBody('NOVA', 'הمسیر در حال انتقال است.'),
       cacheControl: redirectCache,
     };

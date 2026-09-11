@@ -2,11 +2,14 @@
 
 **Audit status:** `PARTIAL / BLOCKED`
 
-The repository-backed logic and source audit completed. Browser interaction,
-exact viewport, screenshot, pixel-diff, and assistive-technology gates were not
-completed because this checkout has no Playwright/browser dependency and no live
-API or storefront server was running. The report intentionally routes findings
-to owners; it does not modify storefront production code.
+The repository-backed logic and source audit completed. The original audit did
+not have browser interaction, exact viewport, screenshot, pixel-diff, or
+assistive-technology evidence because the checkout had no Playwright/browser
+dependency and no live API or storefront server. A later parent recheck added
+bounded default-viewport CUA evidence without entering credentials; exact-size,
+authenticated, assistive-technology and pixel gates remain open. The original
+audit routes findings to owners and did not modify storefront production code;
+the later parent cleanup is recorded separately below.
 
 ## Baseline and scope
 
@@ -25,11 +28,11 @@ to owners; it does not modify storefront production code.
   `docs/designs/quiet-grid.md`,
   `apps/web/public/design-references/atelier-admin-operations.png`, and
   `output/design-artifacts/auth-staff-login-atelier.png`.
-- Existing focused tests were inspected and run. The stale remaining-work
-  ledger was not used as evidence and was not edited.
+- Existing focused tests were inspected and run. For the original audit, the
+  stale remaining-work ledger was not used as evidence and was not edited.
 - Pre-existing worktree state preserved: untracked
   `.worktrees/web-004-checkout-recovery/` was not opened, changed, or removed.
-- At final inspection, unrelated concurrent changes were present in
+- At the original audit's final inspection, unrelated concurrent changes were present in
   `.agents/project-memo.md`, `docs/remaining-work-plan-optimized.md`,
   `docs/remaining-work-status.md`, and `output/`; this audit did not edit or
   revert them.
@@ -49,15 +52,15 @@ current rendered evidence.
 
 | Gate | Status | Evidence / boundary |
 | --- | --- | --- |
-| Requested baseline | `PASS` | `git rev-parse HEAD` matched `465ce07`; branch was `codex/integration`. |
+| Requested baseline | `PASS` | The original audit matched `465ce07` on `codex/integration`; the later parent recheck ran from the current integration checkout. |
 | Route integration ownership | `PASS` | `RouteView` dispatches the integrated public, auth, commerce, account, content, admin, and fallback route kinds; `hash-route.test.ts` passed. |
-| Web focused tests | `PASS` | `bun test apps/web/src test/e2e/run.test.ts`: **132 pass, 0 fail** across 31 files. |
+| Web focused tests | `PASS` | The parent recheck ran `bun test apps/web/src test/e2e/run.test.ts`: **134 pass, 0 fail** across 31 files. |
 | Web typecheck | `PASS` | `bun run --cwd apps/web typecheck` exited successfully. |
-| Deterministic integration matrix | `PASS` | `bun run test:integration`: all 8 suites passed, **131 underlying tests**, with no failures. |
-| Live API/storefront smoke | `BLOCKED` | `bun run test:e2e` could not reach `127.0.0.1:4000` or `127.0.0.1:5173`; API liveness, API readiness/database, and storefront root shell were unreachable. |
-| Browser harness | `NOT RUN` | No Playwright/Puppeteer/Cypress dependency or executable exists in the checkout. `test/e2e/README.md` explicitly states browser journeys are deferred and must not be represented as passing coverage. |
-| Screenshot/pixel regression | `NOT RUN` | No live render, exact viewport capture, or pixel diff was possible. No browser was installed and no screenshot artifact was generated. |
-| Production code changes | `PASS` | No `apps/web/src` production file, `app.tsx`, provider, package/lockfile, generated output, remaining-work ledger, or project memo was changed by this audit. |
+| Deterministic integration matrix | `PASS` | The parent recheck ran `bun run test:integration`: all 8 deterministic suites passed with no failures. |
+| Live API/storefront smoke | `PARTIAL / BLOCKED` | The local Vite storefront rendered through the CUA browser, including `#admin/login` and the protected `#admin/catalog` route; API liveness/readiness and authenticated data-backed smoke remain unavailable. |
+| Browser harness | `PARTIAL` | The available CUA browser captured the default viewport and accessibility tree. No Playwright/Puppeteer/Cypress dependency or exact viewport control exists in the checkout, so browser journeys remain deferred and are not represented as passing E2E coverage. |
+| Screenshot/pixel regression | `PARTIAL / NOT RUN` | Inline CUA screenshots were observed at the available default viewport, but no `1440x900`/`390x844` capture, saved artifact, or pixel diff was generated. |
+| Production code changes | `PASS` | The original audit changed no production files. The later parent cleanup, committed as `c54817b`, changed only unreachable legacy declarations/imports in `apps/web/src/app.tsx`; no provider, package/lockfile, generated output or shared contract changed. |
 
 ## Required responsive widths
 
@@ -164,6 +167,29 @@ link divider aligned with the target's composition. This is a bounded
 composition check, not exact `1440x900`/`390x844` evidence: invalid/expired,
 loading and API-error renders, keyboard/AT behavior and pixel comparison
 remain unverified, and no credentials were entered.
+
+### Parent recheck — 2026-09-11
+
+The local Vite server was inspected through the available CUA browser at its
+default viewport (`668 × 958`, device pixel ratio `1`); the harness does not
+provide the requested `1440 × 900` or `390 × 844` viewport controls. The
+following bounded runtime states were observed without entering credentials:
+
+- `#admin/login` rendered the current ivory, bordered-card composition. An
+  empty submit was attempted only to exercise native validation; the browser
+  reported `Please fill out this field.` and returned focus to the organization
+  email field. No password, OTP, recovery code or API-authenticated request
+  was submitted.
+- `#admin/catalog` first rendered the staff-session loading state and then
+  resolved to `ورود به پنل مدیریت لازم است` with a link back to the admin login
+  route. No static catalog/inventory content was exposed without a staff
+  session.
+
+This improves the evidence for the default-viewport validation and protected
+route safety only. Exact target-size captures, API-error/session-expiry
+renders, keyboard focus journeys, assistive-technology output and pixel
+comparison remain `NOT RUN` or `BLOCKED`; the CUA screenshot was observed
+inline and was not promoted to a pixel-diff artifact.
 
 ## Findings for parent routing
 

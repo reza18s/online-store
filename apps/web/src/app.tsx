@@ -85,14 +85,25 @@ import {
   type StorefrontProduct,
 } from './features/catalog/catalog-api';
 import { useContentPage } from './features/content/content-api';
+import { StorefrontDiscoveryPage } from './features/catalog/storefront-discovery-page';
+import { StorefrontCartPage } from './features/cart/storefront-cart-page';
 import {
-  useAddCartItem,
+  CheckoutConfirmationPage,
+  CheckoutPage as StorefrontCheckoutPage,
+  CheckoutPaymentRecoveryPage,
+} from './features/checkout/checkout-page';
+import {
+  CustomerAccountPage,
+  CustomerAddressBookPage,
+  CustomerOrderPage,
+  CustomerReturnPage,
+} from './features/account';
+import { PublicContentSystemPage } from './features/content/public-content-system-page';
+import {
   useCart,
   getCartMergeConflicts,
   shouldMergeGuestCart,
   useMergeGuestCart,
-  useRemoveCartItem,
-  useUpdateCartItem,
 } from './features/cart/cart-api';
 
 type Product = StorefrontProduct;
@@ -841,460 +852,6 @@ function CategoryPage({ audience, isWishlisted, onToggleWishlist, onAdd }: Listi
           مشاهده راهنمای اندازه <Icon name="arrow-left" size={16} />
         </a>
       </section>
-    </main>
-  );
-}
-
-function ProductsPage({
-  audience,
-  mode,
-  queryString = '',
-  isWishlisted,
-  onToggleWishlist,
-  onAdd,
-}: ListingProps) {
-  const searchParams = useMemo(() => new URLSearchParams(queryString), [queryString]);
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const basePath = audience ? `#products/${audience}` : mode ? `#products/${mode}` : '#products';
-  const selectedCategory = searchParams.get('category') ?? '';
-  const selectedSize = searchParams.get('size') ?? '';
-  const selectedColor = searchParams.get('color') ?? '';
-  const selectedMaterial = searchParams.get('material') ?? '';
-  const selectedSort = searchParams.get('sort') ?? 'newest';
-  const page = Math.max(1, Number(searchParams.get('page') ?? '1') || 1);
-  const minPrice = Number(searchParams.get('minPrice') ?? '') || undefined;
-  const maxPrice = Number(searchParams.get('maxPrice') ?? '') || undefined;
-  const inStock = searchParams.get('inStock') === 'true';
-  const onSale = searchParams.get('onSale') === 'true';
-  const effectiveCategory = mode === 'accessories' ? 'accessories' : selectedCategory || undefined;
-  const effectiveOnSale = mode === 'sale' || onSale ? true : undefined;
-  const displayedCategory = effectiveCategory ?? '';
-  const categoryQuery = useCatalogCategories();
-  const sort = ['newest', 'price_asc', 'price_desc', 'name'].includes(selectedSort)
-    ? (selectedSort as CatalogFilters['sort'])
-    : 'newest';
-  const catalogFilters = useMemo<CatalogFilters>(
-    () => ({
-      q: searchParams.get('q') || undefined,
-      category: effectiveCategory,
-      audience,
-      size: selectedSize || undefined,
-      color: selectedColor || undefined,
-      material: selectedMaterial || undefined,
-      minPrice,
-      maxPrice,
-      inStock: inStock ? true : undefined,
-      onSale: effectiveOnSale,
-      sort,
-      page,
-      limit: 8,
-    }),
-    [
-      audience,
-      effectiveCategory,
-      effectiveOnSale,
-      inStock,
-      maxPrice,
-      minPrice,
-      page,
-      searchParams,
-      selectedColor,
-      selectedMaterial,
-      selectedSize,
-      sort,
-    ],
-  );
-  const catalogQuery = useCatalogProducts(catalogFilters);
-  const catalogFacetFilters = useMemo<CatalogFacetFilters>(
-    () => ({
-      q: searchParams.get('q') || undefined,
-      category: effectiveCategory,
-      audience,
-      size: selectedSize || undefined,
-      color: selectedColor || undefined,
-      material: selectedMaterial || undefined,
-      minPrice,
-      maxPrice,
-      inStock: inStock ? true : undefined,
-      onSale: effectiveOnSale,
-    }),
-    [
-      audience,
-      effectiveCategory,
-      effectiveOnSale,
-      inStock,
-      maxPrice,
-      minPrice,
-      searchParams,
-      selectedColor,
-      selectedMaterial,
-      selectedSize,
-    ],
-  );
-  const facetsQuery = useCatalogFacets(catalogFacetFilters);
-
-  useEffect(() => {
-    if (!mobileFiltersOpen) return;
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMobileFiltersOpen(false);
-    };
-    window.addEventListener('keydown', closeOnEscape);
-    return () => window.removeEventListener('keydown', closeOnEscape);
-  }, [mobileFiltersOpen]);
-
-  const buildHref = (changes: Record<string, string | undefined>) => {
-    const next = new URLSearchParams(searchParams);
-    let shouldResetPage = false;
-
-    for (const [key, value] of Object.entries(changes)) {
-      if (value === undefined || value === '') next.delete(key);
-      else next.set(key, value);
-      if (key !== 'page') shouldResetPage = true;
-    }
-
-    if (shouldResetPage) next.delete('page');
-    const query = next.toString();
-    return `${basePath}${query ? `?${query}` : ''}`;
-  };
-
-  const categoryOptions = useMemo(() => {
-    const options = (categoryQuery.data ?? []).map((category) => ({
-      label: category.name,
-      value: category.slug,
-    }));
-    if (displayedCategory && !options.some((option) => option.value === displayedCategory)) {
-      options.push({ label: displayedCategory, value: displayedCategory });
-    }
-    return [{ label: 'همه', value: undefined }, ...options];
-  }, [categoryQuery.data, displayedCategory]);
-  const facetSelectOptions = (
-    key: 'size' | 'color' | 'material',
-    selected: string,
-    emptyLabel: string,
-  ) => {
-    const options = facetsQuery.data?.groups.find((group) => group.key === key)?.options ?? [];
-    const selectedOption = selected ? options.find((option) => option.selected) : undefined;
-    const visibleOptions = options.map((option) =>
-      option === selectedOption ? { label: option.label, value: selected } : option,
-    );
-
-    if (
-      selected &&
-      !selectedOption &&
-      !visibleOptions.some((option) => option.value === selected)
-    ) {
-      visibleOptions.unshift({ label: selected, value: selected });
-    }
-
-    return [{ label: emptyLabel, value: '' }, ...visibleOptions];
-  };
-  const sizeOptions = facetSelectOptions('size', selectedSize, 'همه اندازه‌ها');
-  const colorOptions = facetSelectOptions('color', selectedColor, 'همه رنگ‌ها');
-  const materialOptions = facetSelectOptions('material', selectedMaterial, 'همه متریال‌ها');
-  const activeFilterCount = [
-    selectedCategory,
-    selectedSize,
-    selectedColor,
-    selectedMaterial,
-    minPrice,
-    maxPrice,
-    inStock,
-    onSale,
-  ].filter(Boolean).length;
-  const filterPanel = (
-    <div>
-      <div className="filter-group">
-        <span>دسته‌بندی</span>
-        {categoryQuery.isPending && !categoryQuery.data ? (
-          <span className="text-xs text-muted-foreground">در حال بارگذاری دسته‌ها...</span>
-        ) : null}
-        {categoryQuery.isError && !categoryQuery.data ? (
-          <span className="text-xs text-warning">دسته‌بندی‌ها در دسترس نیستند.</span>
-        ) : null}
-        {facetsQuery.isPending && !facetsQuery.data ? (
-          <span className="text-xs text-muted-foreground">در حال بارگذاری گزینه‌های فیلتر...</span>
-        ) : null}
-        {facetsQuery.isError && !facetsQuery.data ? (
-          <span className="text-xs text-warning">گزینه‌های فیلتر در دسترس نیستند.</span>
-        ) : null}
-        {categoryOptions.map((item) => {
-          const value = item.value ?? '';
-          const selected = displayedCategory === value;
-          return (
-            <a
-              className={`flex min-h-[34px] w-full items-center justify-between px-2 text-start text-xs transition-colors ${selected ? 'bg-accent-soft text-primary' : 'text-muted-foreground hover:bg-secondary hover:text-foreground'}`}
-              href={buildHref({ category: item.value })}
-              aria-current={selected ? 'page' : undefined}
-              key={item.label}
-            >
-              {item.label}
-              {item.value ? (
-                <span className="font-latin text-[10px] text-muted-foreground">
-                  {item.value === audience ? 'این بخش' : ''}
-                </span>
-              ) : null}
-            </a>
-          );
-        })}
-      </div>
-      <div className="filter-group filter-group--compact">
-        <label className="grid gap-2 text-xs font-semibold">
-          اندازه
-          <select
-            className="min-h-10 w-full border border-border bg-surface px-2 text-xs font-normal outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
-            value={selectedSize}
-            onChange={(event) => {
-              window.location.hash = buildHref({ size: event.target.value }).slice(1);
-            }}
-          >
-            {sizeOptions.map((item) => (
-              <option value={item.value} key={item.label}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <div className="filter-group filter-group--compact">
-        <label className="grid gap-2 text-xs font-semibold">
-          رنگ
-          <select
-            className="min-h-10 w-full border border-border bg-surface px-2 text-xs font-normal outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
-            value={selectedColor}
-            onChange={(event) => {
-              window.location.hash = buildHref({ color: event.target.value }).slice(1);
-            }}
-          >
-            {colorOptions.map((item) => (
-              <option value={item.value} key={item.label}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <div className="filter-group filter-group--compact">
-        <label className="grid gap-2 text-xs font-semibold">
-          متریال
-          <select
-            className="min-h-10 w-full border border-border bg-surface px-2 text-xs font-normal outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
-            value={selectedMaterial}
-            onChange={(event) => {
-              window.location.hash = buildHref({ material: event.target.value }).slice(1);
-            }}
-          >
-            {materialOptions.map((item) => (
-              <option value={item.value} key={item.label}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <form
-        className="filter-group grid gap-2"
-        onSubmit={(event) => {
-          event.preventDefault();
-          const formData = new FormData(event.currentTarget);
-          const next = new URLSearchParams(searchParams);
-          for (const key of ['minPrice', 'maxPrice']) {
-            const value = String(formData.get(key) ?? '').trim();
-            if (value) next.set(key, value);
-            else next.delete(key);
-          }
-          next.delete('page');
-          const query = next.toString();
-          window.location.hash = `${basePath}${query ? `?${query}` : ''}`.slice(1);
-        }}
-      >
-        <span>محدوده قیمت (تومان)</span>
-        <div className="grid grid-cols-2 gap-2">
-          <input
-            className="min-h-10 min-w-0 border border-border bg-surface px-2 text-[11px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            type="number"
-            min="0"
-            name="minPrice"
-            defaultValue={minPrice ?? ''}
-            placeholder="از"
-            aria-label="حداقل قیمت"
-          />
-          <input
-            className="min-h-10 min-w-0 border border-border bg-surface px-2 text-[11px] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            type="number"
-            min="0"
-            name="maxPrice"
-            defaultValue={maxPrice ?? ''}
-            placeholder="تا"
-            aria-label="حداکثر قیمت"
-          />
-        </div>
-        <Button className="min-h-10 w-full text-xs" size="sm" type="submit" variant="secondary">
-          اعمال قیمت
-        </Button>
-      </form>
-      <div className="filter-group grid gap-3">
-        <label className="flex min-h-9 items-center gap-2 text-xs text-muted-foreground">
-          <input
-            className="h-4 w-4 accent-primary"
-            type="checkbox"
-            checked={inStock}
-            onChange={(event) => {
-              window.location.hash = buildHref({
-                inStock: event.target.checked ? 'true' : undefined,
-              }).slice(1);
-            }}
-          />
-          فقط کالاهای موجود
-        </label>
-        <label className="flex min-h-9 items-center gap-2 text-xs text-muted-foreground">
-          <input
-            className="h-4 w-4 accent-primary"
-            type="checkbox"
-            checked={effectiveOnSale === true}
-            disabled={mode === 'sale'}
-            onChange={(event) => {
-              window.location.hash = buildHref({
-                onSale: event.target.checked ? 'true' : undefined,
-              }).slice(1);
-            }}
-          />
-          فقط تخفیف‌دارها
-        </label>
-      </div>
-    </div>
-  );
-  const title =
-    mode === 'sale'
-      ? 'تخفیف‌های منتخب'
-      : mode === 'new'
-        ? 'تازه‌های آتلیه'
-        : audience
-          ? `محصولات ${audienceCopy[audience].label}`
-          : 'همه محصولات';
-  const totalLabel = catalogQuery.isPending
-    ? 'در حال بارگذاری...'
-    : `${new Intl.NumberFormat('fa-IR').format(catalogQuery.data?.total ?? 0)} مدل برای انتخاب شما`;
-
-  return (
-    <main className="shell inner-page mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background">
-      <div className="breadcrumb">
-        <a href="#home">خانه</a>
-        <span>/</span>
-        <span>فروشگاه</span>
-      </div>
-      <header className="listing-header">
-        <div>
-          <span className="section-heading__eyebrow">NOVA / CATALOG</span>
-          <h1>{title}</h1>
-          <p>{totalLabel}</p>
-        </div>
-        <label className="sort-control">
-          <span className="sr-only">مرتب‌سازی محصولات</span>
-          <select
-            className="bg-transparent outline-none"
-            value={sort}
-            onChange={(event) => {
-              window.location.hash = buildHref({ sort: event.target.value }).slice(1);
-            }}
-          >
-            <option value="newest">جدیدترین</option>
-            <option value="price_asc">ارزان‌ترین</option>
-            <option value="price_desc">گران‌ترین</option>
-            <option value="name">الفبا</option>
-          </select>
-          <Icon name="chevron-down" size={16} />
-        </label>
-      </header>
-      <div className="listing-layout lg:grid">
-        <aside className="filter-rail" aria-label="فیلتر محصولات">
-          <div className="filter-rail__heading">
-            <strong>فیلترها</strong>
-            <a className="text-xs text-primary hover:underline" href={basePath}>
-              حذف همه
-            </a>
-          </div>
-          {filterPanel}
-        </aside>
-        <div className="listing-content">
-          <div className="mobile-filter-bar">
-            <button type="button" onClick={() => setMobileFiltersOpen(true)}>
-              <Icon name="layers" size={17} /> فیلتر
-              {activeFilterCount
-                ? ` (${new Intl.NumberFormat('fa-IR').format(activeFilterCount)})`
-                : ''}
-            </button>
-            <label className="flex min-h-11 flex-1 items-center justify-center gap-2 border border-border bg-surface px-2 text-xs">
-              <span>مرتب‌سازی</span>
-              <select
-                className="min-w-0 bg-transparent outline-none"
-                value={sort}
-                onChange={(event) => {
-                  window.location.hash = buildHref({ sort: event.target.value }).slice(1);
-                }}
-                aria-label="مرتب‌سازی محصولات در موبایل"
-              >
-                <option value="newest">جدیدترین</option>
-                <option value="price_asc">ارزان‌ترین</option>
-                <option value="price_desc">گران‌ترین</option>
-                <option value="name">الفبا</option>
-              </select>
-            </label>
-          </div>
-          <CatalogGrid
-            query={catalogQuery}
-            isWishlisted={isWishlisted}
-            onToggleWishlist={onToggleWishlist}
-            onAdd={onAdd}
-            emptyTitle="محصولی در این محدوده پیدا نشد"
-          />
-          {catalogQuery.data ? (
-            <CatalogPagination
-              page={catalogQuery.data.page}
-              limit={catalogQuery.data.limit}
-              total={catalogQuery.data.total}
-              hrefForPage={(nextPage) => buildHref({ page: String(nextPage) })}
-            />
-          ) : null}
-        </div>
-      </div>
-      {mobileFiltersOpen ? (
-        <div
-          className="fixed inset-0 z-[500] flex items-end bg-foreground/40 md:hidden"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setMobileFiltersOpen(false);
-          }}
-        >
-          <section
-            className="max-h-[88svh] w-full overflow-y-auto rounded-t-2xl bg-surface p-5 shadow-float"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="mobile-catalog-filters-title"
-          >
-            <div className="mb-2 flex items-center justify-between">
-              <h2 className="text-lg" id="mobile-catalog-filters-title">
-                فیلترها
-              </h2>
-              <button
-                className="icon-button"
-                type="button"
-                onClick={() => setMobileFiltersOpen(false)}
-                aria-label="بستن فیلترها"
-              >
-                <Icon name="close" size={19} />
-              </button>
-            </div>
-            {filterPanel}
-            <Button
-              className="mt-4 w-full"
-              type="button"
-              onClick={() => setMobileFiltersOpen(false)}
-            >
-              نمایش نتایج
-            </Button>
-          </section>
-        </div>
-      ) : null}
     </main>
   );
 }
@@ -6423,29 +5980,27 @@ function RouteView({
   cartLoading,
   cartError,
   onRetryCart,
-  onUpdateCartItem,
-  onRemoveCartItem,
   isWishlisted,
   onToggleWishlist,
-  onAdd,
 }: {
   route: string;
   cart: CartView | undefined;
   cartLoading: boolean;
   cartError: boolean;
   onRetryCart: () => void;
-  onUpdateCartItem: (variantId: string, quantity: number) => void;
-  onRemoveCartItem: (variantId: string) => void;
   isWishlisted: (slug: string) => boolean;
   onToggleWishlist: (slug: string) => void;
-  onAdd: (product: Product) => void;
 }) {
   const resolved = parseHashRoute(route);
 
   switch (resolved.kind) {
     case 'home':
       return (
-        <HomePage isWishlisted={isWishlisted} onToggleWishlist={onToggleWishlist} onAdd={onAdd} />
+        <StorefrontDiscoveryPage
+          view="home"
+          isWishlisted={isWishlisted}
+          onToggleWishlist={onToggleWishlist}
+        />
       );
     case 'auth-request':
       return <AuthPage mode="request" />;
@@ -6453,54 +6008,49 @@ function RouteView({
       return <AuthPage mode="verify" queryString={resolved.queryString} />;
     case 'category':
       return (
-        <CategoryPage
+        <StorefrontDiscoveryPage
+          view="category"
           audience={resolved.audience}
           isWishlisted={isWishlisted}
           onToggleWishlist={onToggleWishlist}
-          onAdd={onAdd}
         />
       );
     case 'products':
       return (
-        <ProductsPage
+        <StorefrontDiscoveryPage
+          view="listing"
           audience={resolved.audience}
-          mode={resolved.mode}
+          mode={
+            resolved.mode === 'new' || resolved.mode === 'sale' || resolved.mode === 'accessories'
+              ? resolved.mode
+              : undefined
+          }
           queryString={resolved.queryString}
           isWishlisted={isWishlisted}
           onToggleWishlist={onToggleWishlist}
-          onAdd={onAdd}
         />
       );
     case 'product':
       return (
-        <ProductPage
-          slug={resolved.slug}
+        <StorefrontDiscoveryPage
+          view="product"
+          slug={decodeHashSegment(resolved.slug)}
           isWishlisted={isWishlisted}
           onToggleWishlist={onToggleWishlist}
-          onAdd={onAdd}
         />
       );
     case 'cart':
-      return (
-        <CartPage
-          cart={cart}
-          isLoading={cartLoading}
-          isError={cartError}
-          onRetry={onRetryCart}
-          onUpdateItem={onUpdateCartItem}
-          onRemoveItem={onRemoveCartItem}
-          isWishlisted={isWishlisted}
-          onToggleWishlist={onToggleWishlist}
-          onAdd={onAdd}
-        />
-      );
+      return <StorefrontCartPage isWishlisted={isWishlisted} onToggleWishlist={onToggleWishlist} />;
     case 'preview-state':
+      if (resolved.state === 'payment-recovery') {
+        return <CheckoutPaymentRecoveryPage queryString={resolved.queryString} />;
+      }
       return <PreviewStatePage state={resolved.state} />;
     case 'checkout-confirmation':
-      return <ConfirmationPage queryString={resolved.queryString} />;
+      return <CheckoutConfirmationPage queryString={resolved.queryString} />;
     case 'checkout':
       return (
-        <CheckoutPage
+        <StorefrontCheckoutPage
           step={resolved.step}
           queryString={resolved.queryString}
           cart={cart}
@@ -6510,26 +6060,26 @@ function RouteView({
         />
       );
     case 'account':
-      return <AccountPage section={resolved.section} />;
+      return <CustomerAccountPage section={resolved.section} />;
     case 'address-list':
-      return <AddressBookPage />;
+      return <CustomerAddressBookPage />;
     case 'address-create':
-      return <AddressBookPage mode="create" />;
+      return <CustomerAddressBookPage mode="create" />;
     case 'address-edit':
-      return <AddressBookPage mode="edit" addressId={resolved.addressId} />;
+      return <CustomerAddressBookPage mode="edit" addressId={resolved.addressId} />;
     case 'order':
-      return <OrderPage orderNumber={resolved.orderNumber} />;
+      return <CustomerOrderPage orderNumber={resolved.orderNumber} />;
     case 'return':
       return (
-        <ReturnPage
+        <CustomerReturnPage
           mode={resolved.status ? 'status' : undefined}
-          queryString={resolved.queryString}
+          orderNumber={new URLSearchParams(resolved.queryString).get('orderNumber') ?? ''}
         />
       );
     case 'editorial':
       return <EditorialPage page={resolved.page} />;
     case 'content':
-      return <PublishedContentPage slug={resolved.slug} />;
+      return <PublicContentSystemPage slug={resolved.slug} />;
     case 'admin':
       return <AdminPage page={resolved.page} />;
     case 'not-found':
@@ -6543,9 +6093,6 @@ export function App() {
   const cartQuery = useCart(!route.startsWith('#admin'));
   const customerQuery = useCurrentCustomer(!route.startsWith('#admin'));
   const { mutate: mergeGuestCart, isPending: isMergingGuestCart } = useMergeGuestCart();
-  const addCartItemMutation = useAddCartItem();
-  const updateCartItemMutation = useUpdateCartItem();
-  const removeCartItemMutation = useRemoveCartItem();
   const cart = cartQuery.data;
   const cartCount = cart?.itemCount ?? 0;
   const [searchOpen, setSearchOpen] = useState(false);
@@ -6597,44 +6144,6 @@ export function App() {
     if (route === '#search') setSearchOpen(true);
   }, [route]);
 
-  const addToCart = (product: Product) => {
-    const selectedVariant = product.selectedVariantId
-      ? product.variants?.find((variant) => variant.id === product.selectedVariantId)
-      : undefined;
-    const variant = selectedVariant ?? product.variants?.find((candidate) => candidate.available);
-    if (!variant || !variant.available) {
-      setToast('این محصول در حال حاضر قابل افزودن به سبد نیست');
-      return;
-    }
-
-    const idempotencyKey = globalThis.crypto?.randomUUID?.();
-    addCartItemMutation.mutate(
-      { variantId: variant.id, quantity: 1, idempotencyKey },
-      {
-        onSuccess: () => setToast(`«${product.name}» به سبد خرید اضافه شد`),
-        onError: (error) =>
-          setToast(error instanceof Error ? error.message : 'افزودن کالا به سبد ممکن نشد'),
-      },
-    );
-  };
-
-  const updateCartItem = (variantId: string, quantity: number) => {
-    updateCartItemMutation.mutate(
-      { variantId, quantity },
-      {
-        onError: (error) =>
-          setToast(error instanceof Error ? error.message : 'تغییر تعداد کالا ممکن نشد'),
-      },
-    );
-  };
-
-  const removeCartItem = (variantId: string) => {
-    removeCartItemMutation.mutate(variantId, {
-      onError: (error) =>
-        setToast(error instanceof Error ? error.message : 'حذف کالا از سبد ممکن نشد'),
-    });
-  };
-
   const toggleWishlist = (slug: string) => {
     setWishlist((current) => {
       const next = new Set(current);
@@ -6662,11 +6171,8 @@ export function App() {
         cartLoading={cartQuery.isPending}
         cartError={cartQuery.isError}
         onRetryCart={() => void cartQuery.refetch()}
-        onUpdateCartItem={updateCartItem}
-        onRemoveCartItem={removeCartItem}
         isWishlisted={(slug) => wishlist.has(slug)}
         onToggleWishlist={toggleWishlist}
-        onAdd={addToCart}
       />
       {!route.startsWith('#admin') ? <MobileBottomNav cartCount={cartCount} /> : null}
       <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />

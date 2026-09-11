@@ -60,6 +60,12 @@ import {
 } from './shared/hash-route';
 import { Header, Logo, MenuDrawer, MobileBottomNav, SearchDialog } from './shared/site-shell';
 import {
+  applySeoDocument,
+  clientSeoForHashRoute,
+  createSeoDocument,
+  readInitialRenderContext,
+} from './seo/metadata';
+import {
   toStorefrontProduct,
   toStorefrontProductDetail,
   useCatalogCategories,
@@ -70,6 +76,7 @@ import {
   type CatalogFilters,
   type StorefrontProduct,
 } from './features/catalog/catalog-api';
+import { useContentPage } from './features/content/content-api';
 import {
   useAddCartItem,
   useCart,
@@ -259,17 +266,6 @@ function apiErrorMessage(error: unknown, fallback: string): string {
     return error.payload.error.message;
   }
   return error instanceof Error ? error.message : fallback;
-}
-
-function setDocumentMetadata(title: string, description: string) {
-  document.title = title;
-  let descriptionTag = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-  if (!descriptionTag) {
-    descriptionTag = document.createElement('meta');
-    descriptionTag.name = 'description';
-    document.head.append(descriptionTag);
-  }
-  descriptionTag.content = description;
 }
 
 type SectionHeadingProps = {
@@ -1363,6 +1359,11 @@ function isNotFoundError(error: unknown): boolean {
   return typeof error === 'object' && error !== null && 'status' in error && error.status === 404;
 }
 
+function normalizeSeoPath(path: string): string {
+  const normalized = path.trim().replace(/\/+$/, '');
+  return normalized || '/';
+}
+
 function ProductDetailSkeleton() {
   return (
     <div
@@ -1411,13 +1412,54 @@ function ProductPage({
   }, [productQuery.data?.id]);
 
   useEffect(() => {
-    if (!productQuery.data) return;
+    const initial = readInitialRenderContext();
+    const initialMatches =
+      initial &&
+      initial.hashRoute === `#product/${slug}` &&
+      normalizeSeoPath(initial.path) === normalizeSeoPath(window.location.pathname);
+
+    if (productQuery.isError || !productQuery.data) {
+      if (productQuery.isPending) {
+        if (initialMatches) return;
+        applySeoDocument(
+          document,
+          createSeoDocument({
+            origin: window.location.origin,
+            title: 'NOVA | محصول',
+            description: 'در حال بارگذاری مشخصات محصول.',
+            noIndex: true,
+          }),
+        );
+        return;
+      }
+      applySeoDocument(
+        document,
+        createSeoDocument({
+          origin: window.location.origin,
+          title: 'NOVA | محصول',
+          description: 'جزئیات و مشخصات محصولات نوا.',
+          noIndex: true,
+        }),
+      );
+      return;
+    }
+    if (initialMatches) {
+      applySeoDocument(document, initial.seo);
+      return;
+    }
     const product = toStorefrontProductDetail(productQuery.data);
-    setDocumentMetadata(
-      `${product.name} | NOVA`,
-      product.description ?? `مشخصات و خرید ${product.name} از فروشگاه نوا.`,
+    applySeoDocument(
+      document,
+      createSeoDocument({
+        origin: window.location.origin,
+        title: `${product.name} | NOVA`,
+        description: product.description ?? `مشخصات و خرید ${product.name} از فروشگاه نوا.`,
+        canonicalPath: `/product/${encodeURIComponent(slug)}`,
+        type: 'product',
+        imagePath: product.image,
+      }),
     );
-  }, [productQuery.data]);
+  }, [productQuery.data, productQuery.isError, productQuery.isPending, slug]);
 
   if (productQuery.isPending) {
     return (
@@ -4036,6 +4078,127 @@ function EditorialPage({ page }: { page: string }) {
   );
 }
 
+function PublishedContentPage({ slug }: { slug: string }) {
+  const query = useContentPage(slug);
+
+  useEffect(() => {
+    const initial = readInitialRenderContext();
+    const initialMatches =
+      initial &&
+      initial.hashRoute === `#content/${slug}` &&
+      normalizeSeoPath(initial.path) === normalizeSeoPath(window.location.pathname);
+
+    if (query.isError || !query.data) {
+      if (query.isPending && initialMatches) return;
+      if (query.isPending) {
+        applySeoDocument(
+          document,
+          createSeoDocument({
+            origin: window.location.origin,
+            title: 'NOVA | محتوا',
+            description: 'در حال بارگذاری محتوای منتشرشده.',
+            noIndex: true,
+          }),
+        );
+        return;
+      }
+      applySeoDocument(
+        document,
+        createSeoDocument({
+          origin: window.location.origin,
+          title: 'NOVA | محتوا',
+          description: 'این صفحه محتوا پیدا نشد.',
+          noIndex: true,
+        }),
+      );
+      return;
+    }
+    if (initialMatches) {
+      applySeoDocument(document, initial.seo);
+      return;
+    }
+
+    const description = query.data.body?.slice(0, 320) ?? query.data.title;
+    const canonicalPath = `/content/${encodeURIComponent(slug)}`;
+    applySeoDocument(
+      document,
+      createSeoDocument({
+        origin: window.location.origin,
+        title: `NOVA | ${query.data.title}`,
+        description,
+        canonicalPath,
+        type: 'article',
+        jsonLd: {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: query.data.title,
+          description,
+          url: `${window.location.origin}${canonicalPath}`,
+          inLanguage: 'fa-IR',
+        },
+      }),
+    );
+  }, [query.data, query.isError, query.isPending, slug]);
+
+  if (query.isPending) {
+    return (
+      <main className="shell inner-page mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background">
+        <EmptyState
+          title="در حال بارگذاری محتوا"
+          description="محتوای منتشرشده در حال آماده‌سازی است."
+          action="بازگشت به خانه"
+          href="#home"
+        />
+      </main>
+    );
+  }
+  if (query.isError || !query.data) {
+    return query.error instanceof ApiClientError && query.error.status === 404 ? (
+      <NotFoundPage />
+    ) : (
+      <main className="shell inner-page mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background">
+        <EmptyState
+          title="محتوا در دسترس نیست"
+          description="بارگذاری این صفحه ممکن نشد؛ دوباره تلاش کنید."
+          action="بازگشت به خانه"
+          href="#home"
+        />
+      </main>
+    );
+  }
+
+  const page = query.data;
+  return (
+    <main className="shell inner-page editorial-page mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background">
+      <div className="breadcrumb">
+        <a href="#home">خانه</a>
+        <span>/</span>
+        <span>{page.title}</span>
+      </div>
+      <section className="editorial-hero">
+        <div>
+          <span className="folio-mark">NOVA / CONTENT</span>
+          <h1>{page.title}</h1>
+        </div>
+      </section>
+      <article className="reading-column">
+        {page.body ? <p>{page.body}</p> : null}
+        {page.blocks.map((block) => (
+          <p key={`${block.kind}-${block.sortOrder}`}>
+            {typeof block.payload === 'string'
+              ? block.payload
+              : typeof block.payload === 'object' &&
+                  block.payload !== null &&
+                  'text' in block.payload
+                ? String((block.payload as { text: unknown }).text)
+                : ''}
+          </p>
+        ))}
+      </article>
+    </main>
+  );
+}
+
 type AdminStatusTone = 'success' | 'info' | 'warning' | 'neutral';
 
 const adminStatusClasses: Record<AdminStatusTone, string> = {
@@ -6076,6 +6239,8 @@ function RouteView({
       );
     case 'editorial':
       return <EditorialPage page={resolved.page} />;
+    case 'content':
+      return <PublishedContentPage slug={resolved.slug} />;
     case 'admin':
       return <AdminPage page={resolved.page} />;
     case 'not-found':
@@ -6101,35 +6266,15 @@ export function App() {
   const cartMergeAttemptRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const path = route.split('?')[0] ?? '#home';
-    const audience = path.match(/^#(?:category|products)\/(women|men|children)$/)?.[1] as
-      Audience | undefined;
-    if (path.startsWith('#admin')) {
-      setDocumentMetadata('NOVA Admin', 'پنل مدیریت فروشگاه نوا.');
-      return;
-    }
-    if (audience) {
-      setDocumentMetadata(
-        `NOVA | ${audienceCopy[audience].label}`,
-        audienceCopy[audience].description,
-      );
-      return;
-    }
-    if (path.startsWith('#product/')) {
-      setDocumentMetadata('NOVA | محصول', 'جزئیات و مشخصات محصولات نوا.');
-      return;
-    }
-    if (path.startsWith('#products') || path === '#search') {
-      setDocumentMetadata(
-        'NOVA | فروشگاه پوشاک',
-        'انتخابی از لباس‌ها و اکسسوری‌های نوا برای روزهای پیش رو.',
-      );
-      return;
-    }
-    setDocumentMetadata(
-      'NOVA | Atelier Editorial',
-      'NOVA Store، فروشگاه پوشاک ایرانی برای انتخابی روشن و قابل اعتماد.',
-    );
+    const initial = readInitialRenderContext();
+    const initialMatches =
+      initial &&
+      initial.hashRoute === route &&
+      normalizeSeoPath(initial.path) === normalizeSeoPath(window.location.pathname);
+    const isDataRoute = route.startsWith('#product/') || route.startsWith('#content/');
+    const seo = initialMatches ? initial.seo : clientSeoForHashRoute(route, window.location.origin);
+    if (isDataRoute && !initialMatches) return;
+    applySeoDocument(document, seo);
   }, [route]);
 
   useEffect(() => {

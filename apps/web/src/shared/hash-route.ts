@@ -35,6 +35,7 @@ export type HashRoute =
   | { kind: 'order'; path: string; queryString: string; orderNumber: string }
   | { kind: 'return'; path: string; queryString: string; status: boolean }
   | { kind: 'editorial'; path: string; queryString: string; page: string }
+  | { kind: 'content'; path: string; queryString: string; slug: string }
   | { kind: 'admin'; path: string; queryString: string; page: string }
   | { kind: 'not-found'; path: string; queryString: string };
 
@@ -140,6 +141,9 @@ export function parseHashRoute(route: string): HashRoute {
   if (editorialRoutes.has(path)) {
     return { ...shared, kind: 'editorial', page: path.slice(1) };
   }
+  if (path.startsWith('#content/')) {
+    return { ...shared, kind: 'content', slug: decodeHashSegment(path.slice('#content/'.length)) };
+  }
   if (path === '#state/offline') return { ...shared, kind: 'preview-state', state: 'offline' };
   if (path === '#state/error') return { ...shared, kind: 'preview-state', state: 'error' };
   if (path === '#state/maintenance') {
@@ -156,7 +160,9 @@ export function parseHashRoute(route: string): HashRoute {
 }
 
 export function useHashRoute(): string {
-  const [route, setRoute] = useState(() => window.location.hash || '#home');
+  const [route, setRoute] = useState(
+    () => window.location.hash || globalThis.__NOVA_RENDER_CONTEXT__?.hashRoute || '#home',
+  );
 
   useEffect(() => {
     const onHashChange = () => setRoute(window.location.hash || '#home');

@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && vite build --ssr src/ssr/server.ts --outDir dist/ssr",
+    "start": "node dist/ssr/server.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

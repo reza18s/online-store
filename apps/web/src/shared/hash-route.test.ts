@@ -92,3 +92,13 @@ test('resolves order, return, editorial, state, admin, and fallback routes', () 
   assertRoute('#admin', { kind: 'admin', page: 'admin' });
   assertRoute('#does-not-exist', { kind: 'not-found' });
 });
+
+test('supports published content aliases without changing existing editorial routes', () => {
+  assertRoute('#content/size-guide', {
+    kind: 'content',
+    slug: 'size-guide',
+    path: '#content/size-guide',
+    queryString: '',
+  });
+  assertRoute('#size-guide', { kind: 'editorial', page: 'size-guide' });
+});

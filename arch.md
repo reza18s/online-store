@@ -3183,6 +3183,26 @@ No direction may receive a reduced feature set merely because another direction 
 
 ---
 
+# Visual design artifact workflow
+
+Every new non-trivial visual page, flow, component family, or direction must move through a design artifact before production code is written.
+
+```text
+define the exact page, states, content and target viewports
+→ inspect any user-supplied reference as the primary constraint
+→ create one concrete design image/mockup when no exact reference exists
+→ review the artifact in desktop and relevant mobile RTL compositions
+→ implement the same composition with the shared contracts and Tailwind primitives
+→ render at the target viewports
+→ compare the render with the design artifact and iterate
+```
+
+The generated image is the design target for implementation; it is not a source of product truth, a replacement for real API data, or evidence that the runtime flow is complete. Generated concepts must preserve NOVA's functional, RTL, accessibility, performance and responsive constraints. Keep one primary artifact per design decision and attach its path/reference plus same-viewport comparison evidence to the task or PR. Do not generate visual artifacts for non-visual work or create speculative variants without a concrete design decision.
+
+If an exact user reference is supplied, it remains authoritative for the requested fidelity and may be used directly as the artifact. If no reference is supplied, visual work should not wait for one: generate the artifact from the relevant product/architecture brief. Only block before visual implementation when the required design capability or a necessary product constraint is genuinely unavailable.
+
+---
+
 # Why three complete directions
 
 A homepage-only or PDP-only comparison is not sufficient for NOVA.

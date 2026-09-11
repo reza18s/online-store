@@ -10,8 +10,9 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 - `SEC-001` — ✅ completed and merged through PR #3; merge commit `93495aa9ee250c8cce964a76dfdf992ed7d6a1c5`.
 - `API-001` — 🟡 follow-up contract revision is complete locally at `1f0237a19a8c4e0046af4cac3170e90433d080cb`; the existing PR #2 remains open at remote `17c0de0` because GitHub DNS prevented pushing the new commit.
 - `WEB-001` — ✅ accepted and merged into local `codex/integration` at `dc54fee66f2100414e23c20077f532f8ea36e239` from Darwin's task commit `e998c08`; no remote PR was created because repository export/push access is blocked.
-- `AUTH-001` — 🟡 functional non-visual slice implemented locally in `03261b0`: factor-aware staff login, central 401/403 session handling, protected cache cleanup, logout wiring and compiled API dev runner are in place. Exact staff-login reference, target viewport and required states remain required for final visual QA/sign-off.
-- `TEST-001` — ✅ follow-up commit `44dad93` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`; PR #4 remains remote-open at its older branch state because push is blocked.
+- `AUTH-001` — 🟡 functional slice plus bounded follow-up are implemented locally: `03261b0` contains the factor-aware staff/session behavior and `1d67976` completes legacy-shell mobile logout coverage. A concrete staff-login design artifact, target viewport and required states remain required for final visual QA/sign-off; use the exact supplied reference when available or generate the artifact when none exists.
+- `ADMIN` route safety — ✅ authenticated unfinished admin routes are now gated behind an explicit non-operational state in `c2a32d7`; development-only unauthenticated preview remains available for Atelier review. Real API-backed admin page work is still open.
+- `TEST-001` — ✅ deterministic follow-up commit `44dad93` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`; a 2026-09-11 live sidecar additionally verified isolated PostgreSQL 16/Redis 7 setup, migrations, seed, Redis and API health, while storefront shell, browser/auth, provider and concurrency checks remain explicitly blocked or not run.
 - `OPS-002` — ✅ the bounded CI prerequisite plus provider-independent backup-verification slice is accepted and merged locally into `codex/integration` as `c4f2aa6` (verifier task head `05b5c89`). Two final independent review axes accepted the verifier/runbook. No remote PR was created because repository export/push access is blocked; live PostgreSQL restore and the broader deployment, encryption, retention, WAL, media, monitoring and rollback scope remain open.
 - `OPS-001` — ✅ accepted and merged locally into `codex/integration` as `808dd7634a357eb45eb61da4e9b320c7146f2d62` from task commit `9e69d54d1dbec8355d308418ca61ebae9b4f284d`; focused worker validation passed. No remote PR was created because repository export/push access is blocked. Live worker/outbox validation remains batched for the wave/integration gate, and provider delivery remains PROVIDER-002-owned.
 - `SEO-001` — ✅ final content-sitemap follow-up `770c96e` passed both independent review axes and was merged locally into `codex/integration` as `27116b72`; the published-content consumer, catalog-boundary validation, safe failure behavior and deterministic sitemap limits are now integrated. Focused tests (50/50), package typechecks, lint/format and web client+SSR build passed. No live browser/API/database/crawler run was performed.
@@ -51,15 +52,17 @@ Existing implementation already covers most backend/domain foundations, Prisma m
 - Require semantic HTML, heading order, keyboard/focus-visible, reduced motion, WCAG 2.2 AA and >=44px touch targets.
 - Never replace a production path with mock/fixture/static preview data.
 
-### Visual reference gate
+### Visual design gate
 
 A task marked `Visual: required` follows this rule for every **new or materially changed** page/flow/state/component family:
 
-1. Require the exact user-supplied screenshot/reference + target viewport + required states.
-2. Existing references are valid only for the screens/states they actually show; currently approved coverage includes admin dashboard and admin products only.
-3. Never invent a reference or generate a substitute image.
-4. Without a reference, safe non-visual contract/test work may continue, but final visual work returns `BLOCKED BY REFERENCE`.
-5. With a reference, implement using existing Tailwind/primitives and attach same-viewport comparison evidence to the PR.
+1. Define the exact page, states, content and target viewport(s).
+2. Inspect a user-supplied screenshot/reference when one exists; it is the primary fidelity constraint for that screen/state.
+3. Create one concrete design image/mockup before visual implementation. If no exact user reference exists, generate the artifact from the relevant product/architecture brief with the available image/design capability; do not block only because the user did not supply an image.
+4. Review the artifact in desktop and the relevant mobile RTL composition, then implement it with existing Tailwind/primitives and real contracts.
+5. Render at the target viewport(s), compare against the design artifact/reference, and iterate until materially aligned.
+6. Attach the artifact path/reference and same-viewport comparison evidence to the PR. The generated artifact is a visual target, not production data or runtime proof.
+7. Keep one primary artifact per design decision; do not generate speculative variants or artifacts for non-visual work. If the required design capability or a necessary product constraint is genuinely unavailable, report the precise blocker before visual implementation.
 
 ### Security / data
 
@@ -95,7 +98,7 @@ If API contract metadata is required there, `API-001` records `CONTRACT FOLLOW-U
 
 ### Validation
 
-Run the narrowest relevant tests during implementation. Before PR, run applicable root checks:
+Run the narrowest relevant validation during implementation. Before PR, select only the applicable root checks below; this is an option set, not a mandatory checklist:
 
 ```powershell
 bun run typecheck
@@ -115,6 +118,12 @@ bun run db:seed
 
 Rules:
 
+- Before each command, report, artifact, delegation or review, identify the concrete question it answers and use the narrowest action that can answer it. Skip it when fresh trustworthy evidence already answers that question.
+- Use one targeted discovery pass, one bounded implementation pass, one focused validation pass and one actual-diff review by default. Revisit a step only when relevant code/configuration/runtime state changes, a check fails, or risk requires stronger evidence.
+- Select validation by changed surface: focused checks for isolated work; affected package/boundary checks for shared work; only the affected broader or runtime checks for integration/high-risk work. Full suites, builds, browser/render, Docker/DB and repeated audits are not ceremony to run on every task.
+- Batch broad checks at merge-wave, release, visual or high-risk gates. Reuse passing evidence only after confirming that the later diff cannot affect its scope; rerun only invalidated checks.
+- Never lower required coverage to save tokens. Narrow, batch or defer a required check to its correct gate, or report the exact blocker; do not mark an unrun check as PASS.
+- Stop when the task acceptance criteria and required evidence are satisfied. Do not continue exploratory work "just in case" without a new question or risk signal.
 - Never mark an unrun/failed check PASS.
 - Separate sandbox/permission/network failures from code failures.
 - `test:integration` / `test:e2e` may be reported PASS only after a real harness exists and executes.
@@ -288,7 +297,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## AUTH-001 — staff login/MFA/session guard
 
-**Status:** 🟡 functional non-visual slice implemented locally in `03261b0`; the exact user-supplied staff-login reference, target viewport and required states are still required for final visual QA/sign-off. The slice connects the existing backend endpoints, opaque cookie transport, CSRF, staff roles and session hooks to a factor-aware form, central admin guard, logout/cache cleanup, expiry/403 handling and focused route/session tests.
+**Status:** 🟡 functional slice plus bounded follow-up implemented locally in `03261b0` and `1d67976`; authenticated unfinished admin routes are gated by the related safety follow-up `c2a32d7`. A concrete staff-login design artifact, target viewport and required states are still required for final visual QA/sign-off. Use the exact user-supplied reference when available, or generate the artifact from the brief before visual implementation. The slice connects the existing backend endpoints, opaque cookie transport, CSRF, staff roles and session hooks to a factor-aware form, central admin guard, logout/cache cleanup, expiry/403 handling and focused route/session tests.
 
 **Goal:** connect real staff password/TOTP session lifecycle, logout, expiry and protected admin routing while keeping customer/staff sessions separate.
 
@@ -296,7 +305,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** opaque API session only; never store password/OTP/TOTP secret; handle invalid credentials, rate limit, lock, MFA required/invalid, expiry, logout, permission denied; isolate/clear admin caches; protect admin routes.
 
-**Visual:** reference required before final new login UI.
+**Visual:** one concrete staff-login design artifact is required before final new login UI; use a supplied reference when available or generate the artifact from the brief.
 
 **Accept:** unauthenticated admin -> real login; password+MFA establishes staff session; logout/expiry clears protected data; route/cache tests pass.
 
@@ -312,9 +321,9 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** real hooks; optimistic `updatedAt`; lifecycle/role validation; draft/invalid/saving/saved/publish-blocked; upload failure; low-stock/discrepancy; empty/table error.
 
-**Visual:** references required per missing page/state.
+**Visual:** one design artifact is required per new or materially changed page/state; use a supplied reference when available or generate it before code.
 
-**Accept:** product/variant/media/taxonomy/inventory actions hit real API; no static preview with staff session; missing refs => `BLOCKED BY REFERENCE`.
+**Accept:** product/variant/media/taxonomy/inventory actions hit real API; no static preview with staff session; each visual surface has a design artifact and rendered comparison evidence.
 
 **PR:** `feat(ADMIN-001): connect admin catalog and inventory workflows`
 
@@ -328,7 +337,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** real pagination/search/status filters; role-aware actions; optimistic concurrency/stable errors; immutable snapshots; no redirect/raw provider payload; paid/pending/preparing/shipped/delayed/exception/delivered/cancelled/returned + refund pending/failed/success; confirmation + reason for consequential actions.
 
-**Visual:** references required for list/detail/return/refund states.
+**Visual:** one design artifact is required for list/detail/return/refund states; use a supplied reference when available or generate it before code.
 
 **Accept:** authorized staff operate real fulfillment/shipment/returns/refunds; unauthorized/stale actions reject safely and remain auditable.
 
@@ -344,7 +353,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** bounded pagination/filters; permission/session/loading/empty/error states; no raw callbacks/secrets/OTP/provider credentials/job internals/unnecessary PII; safe encoded cross-links.
 
-**Visual:** references required.
+**Visual:** one design artifact is required before implementation; use a supplied reference when available or generate it from the task brief.
 
 **Accept:** intended roles can inspect intended data; support cannot see operations-only sensitive data; list/detail/error states use real APIs.
 
@@ -360,7 +369,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** draft-first transitions; usable-content-before-publish; slug policy; site-relative destinations; cycle rejection; `updatedAt` conflicts; saving/saved/validation/publish-blocked/permission/error/empty; bounded typed JSON blocks; no unsafe HTML.
 
-**Visual:** references required.
+**Visual:** one design artifact is required before implementation; use a supplied reference when available or generate it from the task brief.
 
 **Accept:** staff can create/edit/publish/manage SEO/redirects through real API; errors preserve unsaved work; mutations audited; stale editors recover safely.
 
@@ -376,7 +385,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** contextual server facets; preserve stale selected values; hide inventory quantities; loading/slow/empty/error/offline; variant missing; low/out-of-stock; price change; cart conflict; coupon success/error/recalculation; Persian normalization; compare-at invariant; URL state/cache invalidation.
 
-**Visual:** references required for materially changed/missing PLP/PDP/cart screens.
+**Visual:** one design artifact is required for materially changed or missing PLP/PDP/cart screens; use a supplied reference when available or generate it before code.
 
 **Accept:** real API read/write; shareable filter/sort/page URLs without duplicate requests; keyboard/RTL-safe critical states.
 
@@ -392,7 +401,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** default/loading/empty/error/offline/permission/expiry/success; server-enforced ownership; never leak another customer's order/cached cart; LTR isolate identifiers; clear protected cache on logout/customer switch/expiry.
 
-**Visual:** references required.
+**Visual:** one design artifact is required before implementation; use a supplied reference when available or generate it from the task brief.
 
 **Accept:** customer manages addresses, list/details orders and eligible returns through real APIs; delivered/expired/ineligible states clear and safe.
 
@@ -408,7 +417,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** authoritative quote; stable idempotency; normalized coupon; server errors; saved/new/invalid address; unsupported region; shipping unavailable; quote expired; stock conflict; price change; offline; processing/redirecting; payment pending/failed/cancelled/timeout/recovery/confirmation; local payment remains fail-closed; recover from query params without duplicate submit.
 
-**Visual:** references required for all new checkout/payment states.
+**Visual:** one design artifact is required for all new checkout/payment states; use a supplied reference when available or generate it before code.
 
 **Accept:** browser cannot cause duplicate order/payment via duplicate submit/callback; every failure has safe next action; confirmation uses authoritative order data only.
 
@@ -424,7 +433,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Must:** published blocks only; missing/unpublished safe; loading/not-found/API-error/offline/maintenance/retry; site-relative encoded links; canonical path semantics; no unsafe/unbounded HTML.
 
-**Visual:** references required for new/changed public/system pages.
+**Visual:** one design artifact is required for new or changed public/system pages; use a supplied reference when available or generate it before code.
 
 **Accept:** no fake preview when published API content exists; system routes reachable/keyboard/RTL-safe.
 
@@ -586,15 +595,17 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 **Own:** QA tests/fixtures/reports, small validated page fixes, `design-qa.md`, accessibility/browser config.
 
-**Must:** widths `1440/1280/1024/768/390/360`; RTL/mixed-LTR/no overflow; keyboard/focus/landmarks/reduced-motion/touch target; long Persian/large prices/realistic data; state matrix including default/loading/empty/error/offline/validation/success/permission/expiry/stock-conflict/price-change/payment/refund states; same-viewport comparison against supplied references; record capture limitations.
+**Must:** widths `1440/1280/1024/768/390/360`; RTL/mixed-LTR/no overflow; keyboard/focus/landmarks/reduced-motion/touch target; long Persian/large prices/realistic data; state matrix including default/loading/empty/error/offline/validation/success/permission/expiry/stock-conflict/price-change/payment/refund states; same-viewport comparison against the task's design artifact (using a supplied reference when available or a generated mockup otherwise); record capture limitations.
 
-**Accept:** no P0/P1 a11y/RTL/overflow/broken-route issue; every visual PR has evidence or explicit reference blocker; no unsupported pixel-perfect claims.
+**Accept:** no P0/P1 a11y/RTL/overflow/broken-route issue; every visual PR has its design artifact and rendered comparison evidence; no unsupported pixel-perfect claims.
 
 **PR:** `test(QA-001): complete responsive RTL and accessibility QA`
 
 ---
 
 ## REL-001 — final release audit
+
+**Status:** 🟡 read-only audit completed with release blocked. The authenticated unfinished-route preview finding was addressed locally in `c2a32d7`; live runtime/provider/concurrency evidence, recovery/deployment proof, visual QA, exact-candidate remote CI and SSR request-efficiency/deadline work remain open.
 
 **Goal:** independently verify integrated branch against security, contract, data-integrity, accessibility, performance and completion gates.
 
@@ -629,8 +640,8 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 1. `DB-001` is merged and its exact PostgreSQL 16 runtime gate is verified in isolated project `nova-pg-check-20260910`; keep that evidence separate from the unrelated legacy Docker stack.
 2. `SEC-001` is merged; push, review and merge the locally accepted `API-001` revision in PR #2 after GitHub DNS is available.
 3. WEB-001 is accepted and merged locally; push/create its PR when repository access is available, then keep its shared-file ownership frozen.
-4. Complete the AUTH-001 visual gate with the exact staff-login reference/viewport/states; the functional slice is already committed locally as `03261b0`. Then smoke real protected admin routing and push/create its PR when repository access is available.
-5. Run eligible admin/storefront/provider tasks in parallel. Missing visual reference is a real blocker, not permission to guess.
+4. Complete the AUTH-001 visual gate with a staff-login design artifact (use an exact supplied reference when available or generate one), viewport and required states; the functional slice is already committed locally as `03261b0`. Then smoke real protected admin routing and push/create its PR when repository access is available.
+5. Run eligible admin/storefront/provider tasks in parallel. Every visual task must create or adopt its design artifact before code; do not skip the design gate or use the artifact as a substitute for runtime QA.
 6. SEO-001 and CONTENT-001 are accepted and merged locally in `27116b72`, and the bounded OPS-002 verifier is merged in `c4f2aa6`; push/create their PRs when repository access is available, then run the batched worker/DB/API/browser/crawler gate. Execute the OPS-002 full restore verifier only after its separate-cluster, PostgreSQL 16 and exclusive-maintenance inputs are approved.
 7. Finalize `TEST-001` against the integrated runtime, using fakes plus sandbox provider smokes where available.
 8. Run `QA-001` on the integrated UI; small QA-owned fixes only, otherwise send findings back.
@@ -648,18 +659,21 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## Contract / migration / security impact
 
-## Visual reference + viewport evidence
+## Visual design artifact + viewport evidence
 
-<!-- missing required reference => BLOCKED BY REFERENCE -->
+<!-- create/adopt the required design artifact before visual implementation; a missing user reference is not itself a blocker -->
 
 ## Tests / validation
 
-- [ ] focused tests
-- [ ] typecheck
-- [ ] lint
-- [ ] test
-- [ ] build
-- [ ] Docker/DB/runtime when applicable
+<!-- Select only checks whose scope can be affected; this is not a default run-all list. -->
+- [ ] focused tests (when behavior changed)
+- [ ] typecheck (when typed code/contracts changed)
+- [ ] lint/format (when applicable to changed files)
+- [ ] package/root test (when affected by the change or required by its gate)
+- [ ] build (when bundling/exports/integration/release risk requires it)
+- [ ] Docker/DB/runtime (only when the task changes or claims those paths)
+
+Record `PASS | FAIL | PRE-EXISTING FAILURE | NOT RUN | BLOCKED` for selected checks and for any required check that was not run, with a concise reason. Do not enumerate unrelated checks or repeat a passing check unless its relevant scope was invalidated.
 
 ## Known blockers / limitations
 
@@ -680,12 +694,12 @@ Project is complete only when all applicable items have evidence:
 - Required screen/state matrix is complete.
 - `1440/1280/1024/768/390/360`, RTL/mixed-LTR, keyboard/focus/semantics/contrast/reduced-motion/touch/screen-reader behavior are verified.
 - Integration/E2E PASS only means a real harness executed.
-- Typecheck/lint/test/build/Docker/migration results are real and reproducible.
+- Any selected typecheck/lint/test/build/Docker/migration result is real and reproducible; required but unrun checks are explicitly marked.
 - Every task has isolated branch/PR/diff review; sub-agents did not self-merge.
-- User decisions, credentials/provider blockers and visual-evidence limitations are explicit.
+- User decisions, credentials/provider blockers and visual-evidence limitations are explicit; each visual task records its supplied or generated design artifact.
 
 ## Remaining user decisions
 
 - Keep `master` as integration branch or create a dedicated integration branch before larger parallel waves.
-- Supply exact screenshot/reference + viewport + state coverage for each remaining visual screen.
+- Supply an exact screenshot/reference when a specific existing fidelity is required; otherwise the Head Agent generates one design artifact from the relevant brief before implementation, together with viewport and state coverage.
 - Select payment, SMS/notification, shipping, object storage, hosting/backup/monitoring providers and final shipping/returns policy.

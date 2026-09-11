@@ -4344,81 +4344,116 @@ function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }
   };
 
   return (
-    <main
-      className="flex min-h-svh items-center justify-center bg-primary-hover px-4 py-12"
-      dir="rtl"
-    >
-      <section className="w-full max-w-md bg-surface p-7 text-right shadow-float md:p-10">
-        <Logo />
-        <span className="section-heading__eyebrow mt-12">NOVA / ADMIN ACCESS</span>
-        <h1 className="mt-2 text-3xl leading-relaxed">ورود به فضای مدیریت</h1>
-        <p className="mt-3 text-sm leading-8 text-muted-foreground">
+    <main className="flex min-h-svh items-center justify-center bg-background px-4 py-10" dir="rtl">
+      <section className="w-full max-w-[460px] border border-border bg-surface p-7 text-right shadow-none md:p-8">
+        <div className="flex justify-center">
+          <Logo descriptor="" />
+        </div>
+        <span className="section-heading__eyebrow mt-8 block text-center">NOVA / ADMIN ACCESS</span>
+        <h1 className="mt-5 text-center text-3xl leading-relaxed">ورود به فضای مدیریت</h1>
+        <p className="mx-auto mt-3 max-w-[360px] text-center text-sm leading-8 text-muted-foreground">
           برای ادامه، رمز عبور و کد تأیید دومرحله‌ای مدیر را وارد کنید.
         </p>
         {sessionExpired ? (
           <p
-            className="mt-4 border border-accent-soft bg-accent-soft/40 px-3 py-2 text-sm leading-7 text-foreground"
+            className="mt-6 flex items-start gap-2 border border-error/20 bg-error-soft px-3 py-3 text-sm leading-7 text-error"
             role="status"
           >
+            <Icon name="warning" size={17} className="mt-1 shrink-0" />
             نشست مدیریت منقضی شده است؛ برای ادامه دوباره وارد شوید.
           </p>
         ) : null}
-        <form className="mt-7 flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="mt-7 flex flex-col gap-5" onSubmit={handleSubmit}>
           <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-email">
-            ایمیل سازمانی
-            <input
-              id="staff-email"
-              className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
-              dir="ltr"
-              name="email"
-              autoComplete="username"
-              required
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="admin@example.com"
-            />
+            <span>ایمیل سازمانی</span>
+            <span className="relative block">
+              <input
+                id="staff-email"
+                className="min-h-12 w-full border border-border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+                dir="ltr"
+                name="email"
+                autoComplete="username"
+                required
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="admin@example.com"
+              />
+              <Icon
+                name="mail"
+                size={18}
+                className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+            </span>
           </label>
           <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-password">
-            رمز عبور
-            <input
-              id="staff-password"
-              className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
-              dir="ltr"
-              name="password"
-              autoComplete="current-password"
-              required
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
+            <span>رمز عبور</span>
+            <span className="relative block">
+              <input
+                id="staff-password"
+                className="min-h-12 w-full border border-border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+                dir="ltr"
+                name="password"
+                autoComplete="current-password"
+                required
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <Icon
+                name="eye"
+                size={18}
+                className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+            </span>
           </label>
           <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-factor">
-            کد تأیید دومرحله‌ای یا کد بازیابی
-            <input
-              id="staff-factor"
-              className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
-              dir="ltr"
-              name="factor"
-              autoComplete="one-time-code"
-              inputMode="numeric"
-              required
-              type="text"
-              value={factor}
-              onChange={(event) => setFactor(event.target.value)}
-            />
+            <span>کد تأیید دومرحله‌ای یا کد بازیابی</span>
+            <span className="relative block">
+              <input
+                id="staff-factor"
+                className="min-h-12 w-full border border-border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+                dir="ltr"
+                name="factor"
+                autoComplete="one-time-code"
+                inputMode="numeric"
+                required
+                type="text"
+                value={factor}
+                onChange={(event) => setFactor(event.target.value)}
+              />
+              <Icon
+                name="shield"
+                size={18}
+                className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+            </span>
           </label>
           {formError ? (
-            <p className="text-sm leading-7 text-primary" role="alert" aria-live="polite">
+            <p
+              className="flex items-start gap-2 border border-error/20 bg-error-soft px-3 py-2 text-sm leading-7 text-error"
+              role="alert"
+              aria-live="polite"
+            >
+              <Icon name="warning" size={17} className="mt-1 shrink-0" />
               {formError}
             </p>
           ) : null}
-          <Button size="lg" type="submit" disabled={loginMutation.isPending}>
+          <Button
+            className="w-full !rounded-control"
+            size="lg"
+            type="submit"
+            disabled={loginMutation.isPending}
+          >
             {loginMutation.isPending ? 'در حال بررسی...' : 'ورود به پنل'}
+            <Icon name="arrow-right" size={17} />
           </Button>
         </form>
-        <a className="text-link mt-5" href="#home">
-          بازگشت به فروشگاه <Icon name="arrow-left" size={15} />
+        <a
+          className="mt-5 flex items-center justify-center gap-2 border-t border-border pt-5 text-sm text-muted-foreground transition-colors hover:text-primary"
+          href="#home"
+        >
+          بازگشت به فروشگاه <Icon name="arrow-right" size={15} />
         </a>
       </section>
     </main>

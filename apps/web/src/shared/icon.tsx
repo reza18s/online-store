@@ -20,6 +20,7 @@ export type IconName =
   | 'info'
   | 'instagram'
   | 'layers'
+  | 'mail'
   | 'menu'
   | 'more-vertical'
   | 'package'
@@ -29,6 +30,7 @@ export type IconName =
   | 'search'
   | 'send'
   | 'settings'
+  | 'shield'
   | 'shirt'
   | 'sparkles'
   | 'tag'
@@ -135,6 +137,12 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="m4 12 8 4.5 8-4.5M4 16.5 12 21l8-4.5" />
     </>
   ),
+  mail: (
+    <>
+      <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
+      <path d="m4.5 7 7.5 5.5L19.5 7" />
+    </>
+  ),
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
   'more-vertical': (
     <>
@@ -177,6 +185,7 @@ const iconPaths: Record<IconName, ReactNode> = {
       <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-2.6V20a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H6v-2.6h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.6V5h2.6v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v2.6H21a1.7 1.7 0 0 0-1.6 1Z" />
     </>
   ),
+  shield: <path d="M12 3.5 19 6v5.5c0 4.3-2.7 7.7-7 9-4.3-1.3-7-4.7-7-9V6l7-2.5Z" />,
   shirt: (
     <>
       <path d="m8 5 4 2 4-2 4 3-2.5 4-2-1v9h-7v-9l-2 1L4 8l4-3Z" />

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { ConflictException } from '@nestjs/common';
+import { BadRequestException, ConflictException } from '@nestjs/common';
 
 import { CartService, hashCartToken } from './cart.service';
 
@@ -402,6 +402,23 @@ test('keeps the guest cart unchanged and returns only unresolved conflicts after
       quantity: 1,
       availability: { isActive: false },
     },
+  ]);
+  assert.equal(state.ownerships.length, 0);
+});
+
+test('rejects merge resolutions that increase a guest line quantity', async () => {
+  const { service, state } = createCartService([
+    { id: 'guest-item-1', variantId: 'variant-1', quantity: 1 },
+  ]);
+
+  await assert.rejects(
+    service.mergeGuestIntoCustomer('guest-token', 'user-1', [
+      { variantId: 'variant-1', quantity: 2 },
+    ]),
+    (error: unknown) => error instanceof BadRequestException,
+  );
+  assert.deepEqual(state.carts.get('guest-1')?.items, [
+    { id: 'guest-item-1', variantId: 'variant-1', quantity: 1 },
   ]);
   assert.equal(state.ownerships.length, 0);
 });

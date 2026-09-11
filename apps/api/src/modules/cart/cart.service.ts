@@ -481,6 +481,9 @@ export class CartService {
         if (!guestItem) {
           throw new BadRequestException('تنوع انتخاب‌شده در سبد مهمان پیدا نشد.');
         }
+        if (quantity > guestItem.quantity) {
+          throw new BadRequestException('تعداد انتخاب‌شده نمی‌تواند بیشتر از سبد مهمان باشد.');
+        }
         if (quantity === 0) {
           await transaction.cartItem.deleteMany({ where: { id: guestItem.id } });
         } else if (quantity !== guestItem.quantity) {

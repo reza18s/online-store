@@ -35,7 +35,7 @@ Remote sync update (2026-09-12): read-only GitHub access is available again. `or
 
 Existing implementation already covers most backend/domain foundations, Prisma migrations/seed, catalog/search/facets, cart/merge, customer/staff auth backend, checkout/order/payment logic, inventory, coupons, notification outbox, fulfillment/returns, content/SEO APIs, browser transport, admin dashboard and admin products. Main remaining work is production-connected UI, provider adapters, remaining published-CMS-content and full browser/crawler coverage, runtime/E2E, QA, observability/recovery and launch readiness.
 
-- `QA-001` — 🟡 audit and bounded owner fixes are integrated in `1bad6aa`; report `docs/design-qa.md` records the three findings, deterministic gates pass, and browser/AT/pixel gates remain unavailable.
+- `QA-001` — 🟡 audit and bounded owner fixes are integrated in `1bad6aa`; report `docs/design-qa.md` records the three findings, deterministic gates pass, and exact route/overflow plus staff-login keyboard/AX browser evidence is now available. Full AT and formal pixel gates remain unavailable.
 
 ---
 

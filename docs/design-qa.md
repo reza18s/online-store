@@ -92,14 +92,14 @@ containment, not a formal pixel or full component-state sign-off.
 | Page direction | `PASS` (static) | `apps/web/src/index.html` declares `lang="fa" dir="rtl"`; `App` also sets `dir="rtl"`. |
 | Mixed LTR values | `PASS` (static) | Staff email/password/factor fields, newsletter email, phone numbers, order numbers, SKUs, tracking references, payment/coupon-like values, and footer Latin branding use `dir="ltr"` or a dedicated LTR class at the inspected surfaces. |
 | Persian customer money | `PASS` (static) | Customer prices use `Intl.NumberFormat('fa-IR')` and append `تومان`; the Atelier contract’s mixed-direction rule is represented in source. |
-| Landmarks and labels | `PASS` (source spot-check) | Key route surfaces expose `main`, `header`, `nav`, `footer`, labelled sections/dialogs, labelled icon controls, and form labels. Rendered landmark uniqueness and screen-reader output are `NOT RUN`. |
-| Heading order | `PASS` (source spot-check) | Reviewed route components provide a page heading and labelled section headings. Runtime DOM/heading-order audit is `NOT RUN`. |
+| Landmarks and labels | `PASS` (source + bounded staff-login browser) | Key route surfaces expose `main`, `header`, `nav`, `footer`, labelled sections/dialogs, labelled icon controls, and form labels. Exact staff-login AX smoke confirmed one `main`, a named form, one heading and all three Persian field names at both target viewports; screen-reader output and whole-route uniqueness remain `NOT RUN`. |
+| Heading order | `PASS` (source + bounded staff-login browser) | Reviewed route components provide a page heading and labelled section headings. The exact staff-login AX tree exposed the management heading at both target viewports; whole-route heading-order and screen-reader audit remain `NOT RUN`. |
 | Visible focus | `PASS` (static baseline) | Global `:focus-visible` styling covers links, buttons, inputs, selects, and textareas; the shared button uses a visible focus ring. |
 | Modal keyboard containment | `CLOSED` (bounded) | Source focus trap/restore is integrated, and the bounded CUA continuation observed search-dialog Tab containment plus Escape/focus restoration. Full AT remains open. See finding `QA-001-A11Y-001`. |
 | Touch target minimum | `CLOSED` (source) | `.quick-add` is 44px × 44px at source-level breakpoints; full rendered component geometry remains outside the current state capture. See `QA-001-A11Y-002`. |
 | Reduced motion | `CLOSED` (source) | Source neutralizes the identified hover transforms under `prefers-reduced-motion: reduce`; full browser/AT motion verification remains open. See `QA-001-A11Y-003`. |
-| Keyboard journeys | `PARTIAL` | Exact staff-login invalid-state submission returned focus to `staff-email`; the broader storefront/admin tab-order and focus-color journey is not complete. |
-| Assistive technology | `PARTIAL` | CUA AX trees and semantic labels were observed for bounded routes; no screen-reader or formal cross-browser AT run is available. |
+| Keyboard journeys | `PARTIAL` | Exact staff-login keyboard smoke at `1440x900` and `390x844` reached email → password → factor → submit → return in order, and Shift+Tab from submit returned to factor. The broader storefront/admin tab-order and focus-color journey is not complete. |
+| Assistive technology | `PARTIAL` | The exact staff-login AX tree exposed named links, heading, form, button and three textboxes at both target viewports; no screen-reader or formal cross-browser AT run is available. |
 
 ## Required state coverage
 
@@ -302,6 +302,14 @@ error replay used only a browser-local synthetic `503` interception. Mobile
 `scrollWidth=375` remained within its `390px` viewport. Formal pixel diff,
 authenticated flows and assistive-technology output remain open. No real
 credentials or provider calls were used.
+
+The follow-up exact-viewport keyboard/AX smoke at `1440x900` and `390x844`
+started focus on the branded home link and observed the expected Tab order:
+email, password, factor, submit and return link. Shift+Tab from submit returned
+to the factor field. The AX tree exposed one `main`, the management heading, a
+form, named links, the named submit button and all three Persian field names;
+both viewports were RTL and had no horizontal overflow. This is bounded browser
+evidence only; screen-reader and full cross-browser AT remain open.
 
 ## Findings for parent routing
 

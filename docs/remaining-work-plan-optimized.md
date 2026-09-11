@@ -25,7 +25,7 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 - `WEB-003` — 🟡 account/orders/returns slice is locally integrated through `5df3fb8` and `465ce07`; focused tests and web typecheck pass, while live/authenticated/mobile QA remains open.
 - `WEB-004` — 🟡 checkout/payment-recovery slice is locally integrated through `b7e18b4` and `465ce07`; focused tests and web typecheck pass, while provider/live-payment/browser QA remains open.
 - `WEB-005` — 🟡 public content/system slice is locally integrated through `e4b756b` and `465ce07`; focused tests and web typecheck pass, while live content/API/crawler/mobile QA remains open.
-- Current local integration — `codex/integration` is at `465ce07`, ahead of `origin/master` by 19 commits. The storefront, admin, content and SEO slices are locally route-integrated; the parent branch has not been pushed because repository export/remote synchronization remains unavailable.
+- Current local integration — `codex/integration` is at `1bad6aa`, ahead of `origin/master` by 20 commits. The storefront, admin, content and SEO slices are locally route-integrated; the parent branch has not been pushed because repository export/remote synchronization remains unavailable.
 - Visual QA limitation — the supplied Atelier admin reference was adopted for the admin slices, and `output/design-artifacts/auth-staff-login-atelier.png` now provides the AUTH-001 desktop/mobile design target. Same-viewport live rendering, mobile comparison and Chromium pixel capture remain open gates; no external design artifact was transmitted.
 - CI — 🔴 current `master` and PR #2 runs fail at the repository `Typecheck` step; local inspection identified missing Prisma generation in the clean-checkout workflow. Remote confirmation remains blocked until the CI fix can be pushed.
 - Live execution ledger: [`docs/remaining-work-status.md`](remaining-work-status.md). Update it after every merge, dispatch, resume/stop, PR state change, validation result or blocker.
@@ -33,7 +33,7 @@ Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified m
 
 Existing implementation already covers most backend/domain foundations, Prisma migrations/seed, catalog/search/facets, cart/merge, customer/staff auth backend, checkout/order/payment logic, inventory, coupons, notification outbox, fulfillment/returns, content/SEO APIs, browser transport, admin dashboard and admin products. Main remaining work is production-connected UI, provider adapters, SSR/SEO, runtime/E2E, QA, observability/recovery and launch readiness.
 
-- `QA-001` — 🟡 integrated audit completed as `PARTIAL/BLOCKED`; report `docs/design-qa.md` records three bounded accessibility findings and unavailable browser/AT/pixel gates. Owner follow-ups A11Y-001 and A11Y-002/003 are dispatched against `site-shell.tsx` and `styles.css` respectively.
+- `QA-001` — 🟡 audit and bounded owner fixes are integrated in `1bad6aa`; report `docs/design-qa.md` records the three findings, deterministic gates pass, and browser/AT/pixel gates remain unavailable.
 
 ---
 
@@ -611,7 +611,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## QA-001 — responsive/RTL/a11y/visual regression
 
-**Status:** 🟡 audit complete as `PARTIAL/BLOCKED` from baseline `465ce07`; James (`01a09128-5e2b-7921-84e6-47f28a1844e8`) recorded the evidence in `docs/design-qa.md`. Deterministic web/integration gates passed, while browser widths, keyboard/AT, screenshots and exact pixel comparison were not run. The three actionable findings are routed to A11Y-001 (`site-shell.tsx`) and A11Y-002/003 (`styles.css`); the staff-login reference variance is retained as a visual follow-up only.
+**Status:** 🟡 audit plus bounded owner fixes are integrated in `1bad6aa` from baseline `465ce07`; James (`01a09128-5e2b-7921-84e6-47f28a1844e8`) recorded the evidence in `docs/design-qa.md`. Deterministic web/integration gates passed, while browser widths, keyboard/AT, screenshots and exact pixel comparison remain `NOT RUN` or `BLOCKED`. The staff-login reference variance is retained as a visual follow-up only.
 
 **Goal:** independent integrated frontend quality gate; only small clearly owned fixes may land here, otherwise return findings to owner.
 

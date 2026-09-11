@@ -20,19 +20,30 @@ has these invariants:
   `NOVA_BACKUP_RESTORE_DATABASE_URL`. They are never printed in the JSON output.
 - The verifier accepts connection URLs only from those process environment
   variables; it has no credential-bearing URL parameters. It passes the selected
-  database name as a non-secret `--dbname` value and forwards credentials through
-  the PostgreSQL client process environment.
-- `pg_dump` reads the source. The source and target must use different database
-  names, and the verifier compares their connected server/port/database identity
-  before it starts the archive or restore.
+  simple database name as a non-secret `--dbname` value and forwards credentials
+  through the PostgreSQL client process environment. `--no-password`, an explicit
+  null password-file device, and a scrubbed libpq environment prevent fallback to
+  interactive prompts or ambient password/configuration files.
+- The verifier accepts one host per URL, rejects endpoint-selection query parameters,
+  resolves each host once per run, and reuses that resolved address for subsequent
+  client processes. The operator must keep the endpoint route stable for the
+  duration of the drill; the identity checks are fail-closed snapshots, not a
+  database lock.
+- `pg_dump` reads the source. The source and target must use different simple
+  database names and separate PostgreSQL server/cluster endpoints. The verifier
+  compares their connected server/port/database identity before the archive, again
+  immediately before and after the dump, and before and after the restore.
 - The archive path must be new; an existing file is rejected instead of replaced.
   The archive is written to a unique partial path and atomically published to the
   requested path, so a concurrent file cannot be overwritten by the verifier.
-- Restore requires a pre-existing target database with zero user tables. The
+- Restore requires a pre-existing target database created from an approved empty
+  template (preferably `template0`) with zero user database objects. The
   verifier never creates, drops, resets, truncates, or cleans a database and never
   passes `pg_restore --clean`.
 - Restore uses `--exit-on-error` and `--single-transaction`, then verifies that the
   target contains user tables and any explicitly requested expected tables.
+- The disposable restore intentionally uses `--no-owner` and `--no-acl`; this is a
+  schema/data replay check, not a production role or privilege-fidelity exercise.
 - The script leaves the archive in place for evidence and does not remove the
   target or its data. Failed runs may leave a `.partial.<guid>` archive beside the
   requested path for operator inspection; cleanup is an operator-owned action
@@ -55,9 +66,12 @@ The operator also needs:
 - `pg_dump`, `pg_restore`, and `psql` on `PATH`, preferably from the same
   PostgreSQL major version as the source;
 - a new writable archive path with enough local capacity;
-- for a restore drill, an already-created disposable PostgreSQL database that is
-  empty of user tables, has a different database name, and is not the source
-  database;
+- for a restore drill, an already-created disposable PostgreSQL database on a
+  separate PostgreSQL server/cluster endpoint, preferably created from `template0`,
+  empty of user database objects, with a different simple database name;
+- a trusted source database and stable endpoint routing for the duration of the
+  drill; do not use a multi-host/failover URL or change DNS/proxy routing while it
+  runs;
 - a record location outside this repository for the JSON output, archive SHA-256,
   source/target identities approved by the operator, and the run timestamp.
 
@@ -76,12 +90,15 @@ checked-in file or shell history:
 ```powershell
 $env:NOVA_BACKUP_SOURCE_DATABASE_URL = '<approved source URL>'
 $env:NOVA_BACKUP_RESTORE_DATABASE_URL = '<approved empty disposable target URL>'
+
+$BackupDirectory = Join-Path (Get-Location) 'backup-evidence'
+New-Item -ItemType Directory -Path $BackupDirectory -Force | Out-Null
+$BackupFile = Join-Path $BackupDirectory 'nova-postgres-2026-09-11.dump'
 ```
 
-Choose a new archive path, then run from the repository root:
+Run from the repository root:
 
 ```powershell
-$BackupFile = Join-Path (Get-Location) 'backup-evidence\nova-postgres-2026-09-11.dump'
 powershell -NoProfile -File .\infra\deploy\verify-postgres-backup.ps1 `
   -BackupFile $BackupFile `
   -ExpectedTable _prisma_migrations
@@ -90,9 +107,10 @@ powershell -NoProfile -File .\infra\deploy\verify-postgres-backup.ps1 `
 For the current NOVA schema, `_prisma_migrations` is a useful minimum content
 assertion. Add further expected table names only when they are part of the
 approved recovery scope. The script’s final `PASS` event is evidence that the
-archive could be replayed into an isolated empty database and that the selected
-table checks passed; it is not evidence of media, WAL, external storage, or
-application smoke-test recovery.
+archive could be replayed into the approved separate empty target and that the
+selected table checks passed. Because the drill omits ownership and ACL replay,
+it is not evidence of production permission fidelity, media, WAL, external
+storage, or application smoke-test recovery.
 
 Record the emitted `archivePath`, `archiveBytes`, `archiveEntries`, `sha256`,
 `restoredTables`, and the exit code in the approved operational evidence store.
@@ -106,7 +124,9 @@ If no authorized disposable restore target exists, do not invent one and do not
 point the command at the source database. Run the safe archive-only mode:
 
 ```powershell
-$BackupFile = Join-Path (Get-Location) 'backup-evidence\nova-postgres-2026-09-11.dump'
+$BackupDirectory = Join-Path (Get-Location) 'backup-evidence'
+New-Item -ItemType Directory -Path $BackupDirectory -Force | Out-Null
+$BackupFile = Join-Path $BackupDirectory 'nova-postgres-2026-09-11.dump'
 powershell -NoProfile -File .\infra\deploy\verify-postgres-backup.ps1 `
   -BackupFile $BackupFile `
   -BackupOnly

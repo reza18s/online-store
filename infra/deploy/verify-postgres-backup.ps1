@@ -12,6 +12,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $SourceDatabaseUrl = [Environment]::GetEnvironmentVariable('NOVA_BACKUP_SOURCE_DATABASE_URL', 'Process')
 $RestoreDatabaseUrl = [Environment]::GetEnvironmentVariable('NOVA_BACKUP_RESTORE_DATABASE_URL', 'Process')
+$script:ResolvedPostgresHostAddresses = @{}
 
 function Write-Event {
     param(
@@ -72,14 +73,48 @@ function Get-DatabaseIdentity {
     }
 
     $databaseName = [Uri]::UnescapeDataString($uri.AbsolutePath.Trim('/'))
-    if ([string]::IsNullOrWhiteSpace($uri.Host) -or [string]::IsNullOrWhiteSpace($databaseName) -or $databaseName.Contains('/')) {
-        throw 'BLOCKED: the database URL must include a host and exactly one database path segment.'
+    if ([string]::IsNullOrWhiteSpace($uri.Host) -or $uri.Host.Contains(',') -or [string]::IsNullOrWhiteSpace($databaseName) -or $databaseName.Contains('/')) {
+        throw 'BLOCKED: the database URL must include one host and exactly one database path segment; multi-host URLs are not supported.'
     }
 
+    if ($databaseName -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') {
+        throw 'BLOCKED: the database name must be a simple PostgreSQL identifier so it cannot override connection settings when passed to a client.'
+    }
+
+    $query = $uri.Query.TrimStart('?')
+    if (-not [string]::IsNullOrWhiteSpace($query)) {
+        foreach ($pair in $query.Split('&')) {
+            $parts = $pair.Split('=', 2)
+            if ($parts.Count -eq 0) {
+                continue
+            }
+
+            $key = [Uri]::UnescapeDataString($parts[0]).ToLowerInvariant()
+            if ($key -in @('host', 'hostaddr', 'port', 'service', 'servicefile', 'target_session_attrs')) {
+                throw "BLOCKED: the database URL query parameter '$key' can change endpoint selection and is not supported."
+            }
+        }
+    }
+
+    try {
+        $hostAddresses = [Net.Dns]::GetHostAddresses($uri.DnsSafeHost)
+    }
+    catch {
+        throw 'BLOCKED: the database host could not be resolved to a stable address.'
+    }
+
+    if ($hostAddresses.Count -eq 0) {
+        throw 'BLOCKED: the database host did not resolve to an address.'
+    }
+
+    $hostAddress = $hostAddresses[0].ToString()
+    $script:ResolvedPostgresHostAddresses[$ConnectionUrl] = $hostAddress
+
     return [pscustomobject]@{
-        Host     = $uri.Host.ToLowerInvariant()
-        Port     = if ($uri.Port -gt 0) { $uri.Port } else { 5432 }
-        Database = $databaseName
+        Host        = $uri.Host.ToLowerInvariant()
+        HostAddress = $hostAddress
+        Port        = if ($uri.Port -gt 0) { $uri.Port } else { 5432 }
+        Database    = $databaseName
     }
 }
 
@@ -102,14 +137,38 @@ function Get-PostgresEnvironment {
         throw 'BLOCKED: the database URL must include a host, username, and exactly one database path segment.'
     }
 
+    $hostAddress = $null
+    if ($script:ResolvedPostgresHostAddresses.ContainsKey($ConnectionUrl)) {
+        $hostAddress = $script:ResolvedPostgresHostAddresses[$ConnectionUrl]
+    }
+    else {
+        try {
+            $hostAddresses = [Net.Dns]::GetHostAddresses($uri.DnsSafeHost)
+        }
+        catch {
+            throw 'BLOCKED: the database host could not be resolved to a stable address.'
+        }
+
+        if ($hostAddresses.Count -eq 0) {
+            throw 'BLOCKED: the database host did not resolve to an address.'
+        }
+
+        $hostAddress = $hostAddresses[0].ToString()
+        $script:ResolvedPostgresHostAddresses[$ConnectionUrl] = $hostAddress
+    }
+
     $port = if ($uri.Port -gt 0) { $uri.Port } else { 5432 }
+    $nullPasswordFile = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { 'NUL' } else { '/dev/null' }
     $environment = @{
         PGHOST     = $uri.Host
+        PGHOSTADDR = $hostAddress
         PGPORT     = [string]$port
         PGUSER     = [Uri]::UnescapeDataString($userInfo[0])
         PGDATABASE = $databaseName
         PGAPPNAME  = 'nova-ops-002-backup-verify'
+        PGPASSFILE = $nullPasswordFile
         PGPASSWORD = $null
+        PGOPTIONS  = $null
     }
 
     if ($userInfo.Count -eq 2) {
@@ -179,6 +238,8 @@ function Invoke-PostgresProcess {
         'PGSSLKEY',
         'PGSSLCRL',
         'PGSSLCRLDIR',
+        'PGPASSFILE',
+        'PGOPTIONS',
         'PGGSSENCMODE',
         'PGCHANNELBINDING',
         'PGTARGETSESSIONATTRS'
@@ -248,7 +309,7 @@ function Invoke-PostgresQuery {
 
     $output = @(Invoke-PostgresProcess `
         -CommandPath $PsqlPath `
-        -Arguments @('--tuples-only', '--no-align', '--no-psqlrc', "--command=$Query") `
+        -Arguments @('--tuples-only', '--no-align', '--no-psqlrc', '--no-password', "--command=$Query") `
         -DatabaseUrl $DatabaseUrl `
         -Description $Description)
 
@@ -280,6 +341,78 @@ function Get-ConnectedDatabaseIdentity {
         -PsqlPath $PsqlPath `
         -DatabaseUrl $DatabaseUrl `
         -Query "SELECT COALESCE(inet_server_addr()::text, 'local-socket') || ':' || COALESCE(inet_server_port()::text, '0') || ':' || current_database();" `
+        -Description $Description
+}
+
+function Get-ConnectedServerIdentity {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    return Invoke-PostgresQuery `
+        -PsqlPath $PsqlPath `
+        -DatabaseUrl $DatabaseUrl `
+        -Query "SELECT COALESCE(inet_server_addr()::text, 'local-socket') || ':' || COALESCE(inet_server_port()::text, '0');" `
+        -Description $Description
+}
+
+function Assert-ConnectedDatabaseIdentity {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ExpectedIdentity,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    $actualIdentity = Get-ConnectedDatabaseIdentity `
+        -PsqlPath $PsqlPath `
+        -DatabaseUrl $DatabaseUrl `
+        -Description $Description
+
+    if ($actualIdentity -ne $ExpectedIdentity) {
+        throw "BLOCKED: $Description changed between the approved identity check and the next operation."
+    }
+}
+
+function Get-UserObjectCount {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    $query = @'
+SELECT
+    (SELECT count(*) FROM pg_class AS c JOIN pg_namespace AS n ON n.oid = c.relnamespace WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema') +
+    (SELECT count(*) FROM pg_proc AS p JOIN pg_namespace AS n ON n.oid = p.pronamespace WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema') +
+    (SELECT count(*) FROM pg_type AS t JOIN pg_namespace AS n ON n.oid = t.typnamespace WHERE n.nspname !~ '^pg_' AND n.nspname <> 'information_schema') +
+    (SELECT count(*) FROM pg_namespace WHERE nspname !~ '^pg_' AND nspname <> 'information_schema' AND nspname <> 'public') +
+    (SELECT count(*) FROM pg_extension WHERE extname <> 'plpgsql');
+'@
+
+    return Invoke-PostgresQuery `
+        -PsqlPath $PsqlPath `
+        -DatabaseUrl $DatabaseUrl `
+        -Query $query `
         -Description $Description
 }
 
@@ -335,32 +468,60 @@ try {
             -DatabaseUrl $RestoreDatabaseUrl `
             -Description 'restore-target identity check'
 
+        $sourceServerIdentity = Get-ConnectedServerIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $SourceDatabaseUrl `
+            -Description 'source server identity check'
+        $restoreServerIdentity = Get-ConnectedServerIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $RestoreDatabaseUrl `
+            -Description 'restore-target server identity check'
+
+        if ($sourceServerIdentity -eq $restoreServerIdentity) {
+            throw 'BLOCKED: the restore target must be on a separate PostgreSQL server or cluster endpoint from the source.'
+        }
+
         if ($sourceConnectionIdentity -eq $restoreConnectionIdentity) {
             throw 'BLOCKED: the restore target has the same connected server and database identity as the source.'
         }
 
-        $existingTableCountText = Invoke-PostgresQuery `
+        $existingObjectCountText = Get-UserObjectCount `
             -PsqlPath $psqlPath `
             -DatabaseUrl $RestoreDatabaseUrl `
-            -Query "SELECT count(*) FROM pg_class AS c JOIN pg_namespace AS n ON n.oid = c.relnamespace WHERE n.nspname NOT IN ('pg_catalog', 'information_schema') AND c.relkind IN ('r', 'p');" `
-            -Description 'restore-target emptiness check'
+            -Description 'restore-target user-object emptiness check'
 
-        [long]$existingTableCount = 0
-        if (-not [long]::TryParse($existingTableCountText, [Globalization.NumberStyles]::Integer, [Globalization.CultureInfo]::InvariantCulture, [ref]$existingTableCount)) {
-            throw 'FAIL: restore-target emptiness check returned a non-numeric table count.'
+        [long]$existingObjectCount = 0
+        if (-not [long]::TryParse($existingObjectCountText, [Globalization.NumberStyles]::Integer, [Globalization.CultureInfo]::InvariantCulture, [ref]$existingObjectCount)) {
+            throw 'FAIL: restore-target emptiness check returned a non-numeric user-object count.'
         }
 
-        if ($existingTableCount -ne 0) {
-            throw 'BLOCKED: the restore target already contains user tables; the verifier will not overwrite or clean it.'
+        if ($existingObjectCount -ne 0) {
+            throw 'BLOCKED: the restore target already contains user database objects; the verifier requires a genuinely empty target and will not overwrite or clean it.'
         }
+    }
+
+    if (-not $BackupOnly) {
+        Assert-ConnectedDatabaseIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $SourceDatabaseUrl `
+            -ExpectedIdentity $sourceConnectionIdentity `
+            -Description 'source database identity check before backup'
     }
 
     Write-Event -Status 'RUNNING' -Phase 'backup' -Message 'Creating a PostgreSQL custom-format archive from the source database.'
     Invoke-PostgresCommand `
         -CommandPath $pgDumpPath `
-        -Arguments @("--dbname=$($source.Database)", '--format=custom', "--file=$temporaryBackupPath", '--no-owner', '--no-acl') `
+        -Arguments @("--dbname=$($source.Database)", '--format=custom', "--file=$temporaryBackupPath", '--no-owner', '--no-acl', '--no-password') `
         -Description 'PostgreSQL backup' `
         -DatabaseUrl $SourceDatabaseUrl
+
+    if (-not $BackupOnly) {
+        Assert-ConnectedDatabaseIdentity `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $SourceDatabaseUrl `
+            -ExpectedIdentity $sourceConnectionIdentity `
+            -Description 'source database identity check after backup'
+    }
 
     if (-not (Test-Path -LiteralPath $temporaryBackupPath -PathType Leaf)) {
         throw 'FAIL: pg_dump completed but did not create the temporary backup archive.'
@@ -415,12 +576,37 @@ try {
         exit 0
     }
 
+    Assert-ConnectedDatabaseIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $RestoreDatabaseUrl `
+        -ExpectedIdentity $restoreConnectionIdentity `
+        -Description 'restore-target identity check before restore'
+
+    $existingObjectCountText = Get-UserObjectCount `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $RestoreDatabaseUrl `
+        -Description 'restore-target emptiness check before restore'
+    [long]$existingObjectCount = 0
+    if (-not [long]::TryParse($existingObjectCountText, [Globalization.NumberStyles]::Integer, [Globalization.CultureInfo]::InvariantCulture, [ref]$existingObjectCount)) {
+        throw 'FAIL: restore-target emptiness check returned a non-numeric user-object count.'
+    }
+
+    if ($existingObjectCount -ne 0) {
+        throw 'BLOCKED: the restore target gained user database objects before restore; the verifier will not overwrite or clean it.'
+    }
+
     Write-Event -Status 'RUNNING' -Phase 'restore' -Message 'Restoring the archive into the preflighted empty target database.'
     Invoke-PostgresCommand `
         -CommandPath $pgRestorePath `
-        -Arguments @("--dbname=$($restore.Database)", '--format=custom', '--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', $backupPath) `
+        -Arguments @("--dbname=$($restore.Database)", '--format=custom', '--exit-on-error', '--single-transaction', '--no-owner', '--no-acl', '--no-password', $backupPath) `
         -Description 'PostgreSQL restore' `
         -DatabaseUrl $RestoreDatabaseUrl
+
+    Assert-ConnectedDatabaseIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $RestoreDatabaseUrl `
+        -ExpectedIdentity $restoreConnectionIdentity `
+        -Description 'restore-target identity check after restore'
 
     $restoredTableCountText = Invoke-PostgresQuery `
         -PsqlPath $psqlPath `

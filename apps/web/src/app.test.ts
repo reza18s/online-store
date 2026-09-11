@@ -12,7 +12,28 @@ import {
   AdminRouteUnavailablePage,
   RouteView,
   shouldShowAdminDashboardPreview,
+  validateStaffLoginInput,
 } from './app';
+
+test('validates staff login fields with localized, field-specific errors', () => {
+  assert.deepEqual(validateStaffLoginInput('', '', ''), {
+    field: 'email',
+    message: 'ایمیل سازمانی را وارد کنید.',
+  });
+  assert.deepEqual(validateStaffLoginInput('admin@', 'secret', '123456'), {
+    field: 'email',
+    message: 'لطفاً یک ایمیل معتبر وارد کنید.',
+  });
+  assert.deepEqual(validateStaffLoginInput('admin@example.com', '', '123456'), {
+    field: 'password',
+    message: 'رمز عبور را وارد کنید.',
+  });
+  assert.deepEqual(validateStaffLoginInput('admin@example.com', 'secret', ''), {
+    field: 'factor',
+    message: 'کد تأیید دومرحله‌ای یا کد بازیابی را وارد کنید.',
+  });
+  assert.equal(validateStaffLoginInput('admin@example.com', 'secret', '123456'), null);
+});
 
 test('renders an accessible mobile logout control in the legacy admin shell', () => {
   const queryClient = new QueryClient();

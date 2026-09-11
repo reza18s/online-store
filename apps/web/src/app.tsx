@@ -1026,16 +1026,48 @@ function staffLoginErrorMessage(error: unknown): string {
   return 'ورود به فضای مدیریت انجام نشد؛ دوباره تلاش کنید.';
 }
 
+type StaffLoginField = 'email' | 'password' | 'factor';
+
+export type StaffLoginValidation = {
+  field: StaffLoginField;
+  message: string;
+};
+
+export function validateStaffLoginInput(
+  email: string,
+  password: string,
+  factor: string,
+): StaffLoginValidation | null {
+  const normalizedEmail = email.trim();
+  if (!normalizedEmail) return { field: 'email', message: 'ایمیل سازمانی را وارد کنید.' };
+  if (!/^[^\s@]+@[^\s@]+$/.test(normalizedEmail)) {
+    return { field: 'email', message: 'لطفاً یک ایمیل معتبر وارد کنید.' };
+  }
+  if (!password.trim()) return { field: 'password', message: 'رمز عبور را وارد کنید.' };
+  if (!factor.trim()) {
+    return { field: 'factor', message: 'کد تأیید دومرحله‌ای یا کد بازیابی را وارد کنید.' };
+  }
+  return null;
+}
+
 function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }) {
   const loginMutation = useStaffLogin();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [factor, setFactor] = useState('');
   const [formError, setFormError] = useState('');
+  const [fieldError, setFieldError] = useState<StaffLoginValidation | null>(null);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFormError('');
+    const validation = validateStaffLoginInput(email, password, factor);
+    if (validation) {
+      setFieldError(validation);
+      document.getElementById(`staff-${validation.field}`)?.focus();
+      return;
+    }
+    setFieldError(null);
     loginMutation.mutate(
       { email, password, factor },
       {
@@ -1067,20 +1099,25 @@ function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }
             نشست مدیریت منقضی شده است؛ برای ادامه دوباره وارد شوید.
           </p>
         ) : null}
-        <form className="mt-7 flex flex-col gap-5" onSubmit={handleSubmit}>
+        <form className="mt-7 flex flex-col gap-5" noValidate onSubmit={handleSubmit}>
           <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-email">
             <span>ایمیل سازمانی</span>
             <span className="relative block">
               <input
                 id="staff-email"
-                className="min-h-12 w-full border border-border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+                className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'email' ? 'border-destructive' : 'border-border'}`}
                 dir="ltr"
                 name="email"
                 autoComplete="username"
                 required
                 type="email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                aria-describedby={fieldError?.field === 'email' ? 'staff-email-error' : undefined}
+                aria-invalid={fieldError?.field === 'email' ? 'true' : undefined}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  if (fieldError?.field === 'email') setFieldError(null);
+                }}
                 placeholder="admin@example.com"
               />
               <Icon
@@ -1089,20 +1126,37 @@ function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }
                 className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               />
             </span>
+            {fieldError?.field === 'email' ? (
+              <span
+                id="staff-email-error"
+                className="flex items-start gap-1 text-sm leading-6 text-destructive"
+                role="alert"
+              >
+                <Icon name="warning" size={16} className="mt-1 shrink-0" />
+                {fieldError.message}
+              </span>
+            ) : null}
           </label>
           <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-password">
             <span>رمز عبور</span>
             <span className="relative block">
               <input
                 id="staff-password"
-                className="min-h-12 w-full border border-border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+                className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'password' ? 'border-destructive' : 'border-border'}`}
                 dir="ltr"
                 name="password"
                 autoComplete="current-password"
                 required
                 type="password"
                 value={password}
-                onChange={(event) => setPassword(event.target.value)}
+                aria-describedby={
+                  fieldError?.field === 'password' ? 'staff-password-error' : undefined
+                }
+                aria-invalid={fieldError?.field === 'password' ? 'true' : undefined}
+                onChange={(event) => {
+                  setPassword(event.target.value);
+                  if (fieldError?.field === 'password') setFieldError(null);
+                }}
               />
               <Icon
                 name="eye"
@@ -1110,13 +1164,23 @@ function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }
                 className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               />
             </span>
+            {fieldError?.field === 'password' ? (
+              <span
+                id="staff-password-error"
+                className="flex items-start gap-1 text-sm leading-6 text-destructive"
+                role="alert"
+              >
+                <Icon name="warning" size={16} className="mt-1 shrink-0" />
+                {fieldError.message}
+              </span>
+            ) : null}
           </label>
           <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-factor">
             <span>کد تأیید دومرحله‌ای یا کد بازیابی</span>
             <span className="relative block">
               <input
                 id="staff-factor"
-                className="min-h-12 w-full border border-border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+                className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'factor' ? 'border-destructive' : 'border-border'}`}
                 dir="ltr"
                 name="factor"
                 autoComplete="one-time-code"
@@ -1124,7 +1188,12 @@ function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }
                 required
                 type="text"
                 value={factor}
-                onChange={(event) => setFactor(event.target.value)}
+                aria-describedby={fieldError?.field === 'factor' ? 'staff-factor-error' : undefined}
+                aria-invalid={fieldError?.field === 'factor' ? 'true' : undefined}
+                onChange={(event) => {
+                  setFactor(event.target.value);
+                  if (fieldError?.field === 'factor') setFieldError(null);
+                }}
               />
               <Icon
                 name="shield"
@@ -1132,6 +1201,16 @@ function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }
                 className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
               />
             </span>
+            {fieldError?.field === 'factor' ? (
+              <span
+                id="staff-factor-error"
+                className="flex items-start gap-1 text-sm leading-6 text-destructive"
+                role="alert"
+              >
+                <Icon name="warning" size={16} className="mt-1 shrink-0" />
+                {fieldError.message}
+              </span>
+            ) : null}
           </label>
           {formError ? (
             <p

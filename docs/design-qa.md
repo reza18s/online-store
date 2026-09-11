@@ -5,11 +5,12 @@
 The repository-backed logic and source audit completed. The original audit did
 not have browser interaction, exact viewport, screenshot, pixel-diff, or
 assistive-technology evidence because the checkout had no Playwright/browser
-dependency and no live API or storefront server. A later parent recheck added
-bounded default-viewport CUA evidence without entering credentials; exact-size,
-authenticated, assistive-technology and pixel gates remain open. The original
-audit routes findings to owners and did not modify storefront production code;
-the later parent cleanup is recorded separately below.
+dependency and no live API or storefront server. Later parent rechecks added
+bounded live runtime evidence: Chrome CDP exact-size captures, route/overflow
+checks, the staff-login default and invalid-email states, and a no-request
+validation check without entering credentials. Full authenticated, provider,
+assistive-technology and formal pixel-diff gates remain open. The original
+audit routes findings to owners and the later parent fixes are recorded below.
 
 ## Baseline and scope
 
@@ -54,32 +55,34 @@ current rendered evidence.
 | --- | --- | --- |
 | Requested baseline | `PASS` | The original audit matched `465ce07` on `codex/integration`; the later parent recheck ran from the current integration checkout. |
 | Route integration ownership | `PASS` | `RouteView` dispatches the integrated public, auth, commerce, account, content, admin, and fallback route kinds; `hash-route.test.ts` passed. |
-| Web focused tests | `PASS` | The parent recheck ran `bun test apps/web/src test/e2e/run.test.ts`: **134 pass, 0 fail** across 31 files. |
+| Web focused tests | `PASS` | The current checkout reran `bun test`: **509 pass, 0 fail** across 105 files, including the staff-login validation regression. |
 | Web typecheck | `PASS` | `bun run --cwd apps/web typecheck` exited successfully. |
 | Deterministic integration matrix | `PASS` | The parent recheck ran `bun run test:integration`: all 8 deterministic suites passed with no failures. |
 | Live API/storefront smoke | `PASS` (unauthenticated) / `NOT RUN` (authenticated) | The 2026-09-11 continuation ran the API and Vite storefront against isolated PostgreSQL 16/Redis 7: `/health/live` and `/health/ready` returned `200` with `database: "ok"`, public catalog endpoints returned seeded data, the default `test:e2e` root-shell preflight passed, and CUA observed live home/catalog content plus the unauthenticated admin guard. Authenticated data-backed operations remain unrun. |
-| Browser harness | `PARTIAL` | The available CUA browser captured the default viewport and accessibility tree. No Playwright/Puppeteer/Cypress dependency or exact viewport control exists in the checkout, so browser journeys remain deferred and are not represented as passing E2E coverage. |
-| Screenshot/pixel regression | `PARTIAL / NOT RUN` | Inline CUA screenshots were observed at the available default viewport, but no `1440x900`/`390x844` capture, saved artifact, or pixel diff was generated. |
-| Production code changes | `PASS` | The original audit changed no production files. The later parent cleanup, committed as `c54817b`, changed only unreachable legacy declarations/imports in `apps/web/src/app.tsx`; the 2026-09-11 continuation added only the bounded `127.0.0.1` Vite host binding in `apps/web/vite.config.ts` to align the live runner and storefront listener. No provider, package/lockfile, generated output or shared contract changed. |
+| Browser harness | `PARTIAL` | CUA supplied default-viewport AX evidence; the parent also used an isolated headless Chrome CDP runner for exact CSS viewports and bounded route/state checks. No full Playwright journey or screen-reader/AT run exists, so this is not authenticated E2E coverage. |
+| Screenshot/pixel regression | `PARTIAL` | Exact `1440x900` and `390x844` default/invalid-email captures were generated and visually inspected, then removed after QA. Formal crop registration and pixel-diff tolerance against the composite artifact remain open. |
+| Production code changes | `PASS` (bounded follow-up) | The current parent follow-up removes the mobile `.site-nav` display override regression and adds localized, field-specific staff-login validation with accessible error associations. No provider, package/lockfile, generated output or shared contract changed. |
 
 ## Required responsive widths
 
-The source contains responsive rules for the requested width family, but the
-rendered behavior at each width is not verified without a browser.
+The source contains responsive rules for the requested width family. The
+parent's exact CDP matrix verifies page-level layout/overflow bounds; formal
+pixel comparison remains a separate gate.
 
 | Width | Static source contract | Runtime / pixel gate |
 | ---: | --- | --- |
-| `1440` | `PASS` — shell max-width is `1280px`, matching the Atelier primary desktop contract. | `NOT RUN` |
-| `1280` | `PASS` — compact desktop uses the same bounded shell and desktop layout rules. | `NOT RUN` |
-| `1024` | `PASS` — source has an explicit `max-width: 1024px` rule for navigation, hero, product detail, admin rail, and page padding. | `NOT RUN` |
-| `768` | `PASS` — source switches to mobile navigation, stacked commerce layouts, mobile bottom navigation, and compact admin layout at `max-width: 768px`. | `NOT RUN` |
-| `390` | `PASS` as a declared target — source has `max-width: 480px` refinements and a `16px` shell gutter, but no rendered capture. | `NOT RUN` |
-| `360` | `PASS` as a declared target — source has an explicit `max-width: 360px` refinement, but no rendered capture. | `NOT RUN` |
+| `1440` | `PASS` — shell max-width is `1280px`, matching the Atelier primary desktop contract. | `PASS` for bounded route/overflow and staff-login capture; formal pixel diff `NOT RUN` |
+| `1280` | `PASS` — compact desktop uses the same bounded shell and desktop layout rules. | `PASS` for bounded route/overflow; formal pixel diff `NOT RUN` |
+| `1024` | `PASS` — source has an explicit `max-width: 1024px` rule for navigation, hero, product detail, admin rail, and page padding. | `PASS` for bounded route/overflow; formal pixel diff `NOT RUN` |
+| `768` | `PASS` — source switches to mobile navigation, stacked commerce layouts, mobile bottom navigation, and compact admin layout at `max-width: 768px`. | `PASS` for bounded route/overflow; formal pixel diff `NOT RUN` |
+| `390` | `PASS` as a declared target — source has `max-width: 480px` refinements and a `16px` shell gutter. | `PASS` for bounded route/overflow and staff-login default/invalid-email capture; formal pixel diff `NOT RUN` |
+| `360` | `PASS` as a declared target — source has an explicit `max-width: 360px` refinement. | `PASS` for bounded route/overflow; formal pixel diff `NOT RUN` |
 
-The requested no-horizontal-overflow assertion was therefore not executed.
-The source does intentionally use horizontal scrolling for mobile category,
-support-card, and subcategory rails; whether those rails remain contained at
-all routes and widths requires the blocked browser check.
+The requested no-horizontal-overflow assertion was executed for the bounded
+route matrix and all audited pages stayed within the emulated viewport. The
+source still intentionally uses horizontal scrolling for mobile category,
+support-card, and subcategory rails; the assertion proves page-level
+containment, not a formal pixel or full component-state sign-off.
 
 ## RTL, mixed direction, and accessibility gates
 
@@ -91,11 +94,11 @@ all routes and widths requires the blocked browser check.
 | Landmarks and labels | `PASS` (source spot-check) | Key route surfaces expose `main`, `header`, `nav`, `footer`, labelled sections/dialogs, labelled icon controls, and form labels. Rendered landmark uniqueness and screen-reader output are `NOT RUN`. |
 | Heading order | `PASS` (source spot-check) | Reviewed route components provide a page heading and labelled section headings. Runtime DOM/heading-order audit is `NOT RUN`. |
 | Visible focus | `PASS` (static baseline) | Global `:focus-visible` styling covers links, buttons, inputs, selects, and textareas; the shared button uses a visible focus ring. |
-| Modal keyboard containment | `FAIL` | Search and menu surfaces close on Escape, but `SearchDialog` and `MenuDrawer` do not trap Tab focus or restore focus to the invoking control. See finding `QA-001-A11Y-001`. |
-| Touch target minimum | `FAIL` | The shared button/icon baseline is at least 44px, but product quick-add is 40px by default and 38px at `max-width: 360px`, below the Atelier `44 × 44px` pointer target. See `QA-001-A11Y-002`. |
-| Reduced motion | `FAIL` | The reduced-motion block shortens duration and disables smooth scroll, but does not neutralize the product image `scale(1.025)` or quick-add `translateY(-1px)` transforms. See `QA-001-A11Y-003`. |
-| Keyboard journeys | `NOT RUN` | No browser harness; tab order, focus visibility in rendered color contexts, Escape behavior, and focus return were not exercised. |
-| Assistive technology | `NOT RUN` | No screen-reader or accessibility-tree capture was available. |
+| Modal keyboard containment | `CLOSED` (bounded) | Source focus trap/restore is integrated, and the bounded CUA continuation observed search-dialog Tab containment plus Escape/focus restoration. Full AT remains open. See finding `QA-001-A11Y-001`. |
+| Touch target minimum | `CLOSED` (source) | `.quick-add` is 44px × 44px at source-level breakpoints; full rendered component geometry remains outside the current state capture. See `QA-001-A11Y-002`. |
+| Reduced motion | `CLOSED` (source) | Source neutralizes the identified hover transforms under `prefers-reduced-motion: reduce`; full browser/AT motion verification remains open. See `QA-001-A11Y-003`. |
+| Keyboard journeys | `PARTIAL` | Exact staff-login invalid-state submission returned focus to `staff-email`; the broader storefront/admin tab-order and focus-color journey is not complete. |
+| Assistive technology | `PARTIAL` | CUA AX trees and semantic labels were observed for bounded routes; no screen-reader or formal cross-browser AT run is available. |
 
 ## Required state coverage
 
@@ -108,7 +111,7 @@ unavailable rendered-browser gate.
 | Empty | `PASS` (logic/source) / `NOT RUN` (browser) | Empty catalog/cart/account/content/admin branches and safe actions are represented; focused state tests passed. |
 | Error | `PASS` (logic/source) / `NOT RUN` (browser) | Inline alerts, retry actions, API error mapping, payment failures, and route fallback states are present; focused tests passed. |
 | Offline | `PASS` (logic/source) / `NOT RUN` (browser) | Catalog, content, and admin state helpers classify offline/network failures; tests passed. |
-| Validation | `PASS` (logic/source) / `NOT RUN` (browser) | Address, return, checkout, staff-auth, content, SEO, redirect, and catalog validation paths are covered by source and focused tests. |
+| Validation | `PASS` (logic/source) / `PASS` (staff-login bounded browser state) | Address, return, checkout, staff-auth, content, SEO, redirect, and catalog validation paths are covered by source and focused tests. Exact staff-login invalid-email state rendered a Persian field error, focused the invalid field, preserved the page bounds, and made no login request. |
 | Success | `PASS` (logic/source) / `NOT RUN` (browser) | Newsletter, checkout confirmation, mutation success, publish-ready, and saved-state paths exist; no rendered confirmation was captured. |
 | Permission denied | `PASS` (logic/source) / `NOT RUN` (browser) | Admin permission-denied page and role matrices are implemented; admin role-boundary tests passed. |
 | Session expiry | `PASS` (logic/source) / `NOT RUN` (browser) | Staff session failure redirects to login and supports an expiry message; customer checkout/auth expiry mapping is tested. |
@@ -138,24 +141,24 @@ the reference-to-render comparison and exact mobile viewport remain unverified.
 
 ### Staff-login target
 
-`PRE-EXISTING` static visual variance, with pixel runtime `NOT RUN`, against
-`output/design-artifacts/auth-staff-login-atelier.png`:
+The original static variance is `SUPERSEDED` for the bounded current
+composition and invalid-email state; formal pixel runtime remains `NOT RUN`
+against `output/design-artifacts/auth-staff-login-atelier.png`:
 
-- The target presents an ivory editorial canvas with a bordered central card;
-  `AdminLoginPage` currently uses a full oxblood background and an unbordered
-  surface card (`apps/web/src/app.tsx:4346-4352`).
-- The target shows the illustrated invalid-email/error treatment and input
-  affordances in the supplied error composition; the current source only
-  renders the session-expired notice or API error after those states occur and
-  has no target-matching leading/trailing field icon treatment
-  (`apps/web/src/app.tsx:4358-4418`).
-- The target’s button and return link include the illustrated directional
-  treatment; the source uses the shared button and text-link composition
-  (`apps/web/src/app.tsx:4416-4422`).
+- The 2026-09-11 owner follow-up aligned the ivory editorial canvas, bordered
+  central card, centered lockup, Persian hierarchy, field icons, rectangular
+  CTA and return-link divider with the adopted target.
+- The 2026-09-12 follow-up adds localized field validation. An invalid email
+  now renders `لطفاً یک ایمیل معتبر وارد کنید.` in a `role="alert"`, marks the
+  field invalid, associates the message with `aria-describedby`, returns focus
+  to the field, and prevents a login request.
+- Exact default and invalid-email captures at `1440x900` and `390x844` were
+  visually inspected. The supplied artifact also depicts session-expired and
+  other editorial state details; formal pixel comparison, session-expiry/
+  loading/API-error captures and full AT remain separate gates.
 
-This is a QA finding for the parent owner, not a redesign performed in this
-pass. The target image is evidence of intended visual composition, not proof
-that the current live route renders differently at every pixel.
+The target image remains evidence of intended visual composition, not proof
+of pixel parity across every state or browser.
 
 ### Parent follow-up — 2026-09-11
 
@@ -286,10 +289,12 @@ navigation composition. The exact 390px DOM metrics now report
 the exact 1440px metrics report the inverse desktop composition.
 
 Temporary exact-viewport captures of home and staff login were visually
-inspected and removed after QA. The staff-login captures match the adopted
-artifact's default composition at both target sizes, but the artifact depicts
-an invalid-email/error state while the capture was the untouched default form;
-formal pixel diff, error/loading/expiry state captures, authenticated flows and
+inspected and removed after QA. The staff-login captures covered both the
+untouched default form and the invalid-email state at `1440x900` and `390x844`.
+The invalid state rendered the Persian field error, `aria-invalid`, the linked
+alert, focus on `staff-email`, no page-level overflow, and no request to the
+staff-login API. The artifact also depicts session-expired/error composition;
+formal pixel diff, loading/expiry/API-error captures, authenticated flows and
 assistive-technology output remain open. No credentials or provider calls were
 used.
 
@@ -333,17 +338,18 @@ used.
 
 ### `QA-001-VIS-001` — staff-login implementation is not yet target-matched
 
-- **Status:** `SUPERSEDED` for the bounded default-viewport composition; exact target-size pixel runtime remains `NOT RUN`
+- **Status:** `SUPERSEDED` for the bounded exact-size default/invalid-email composition; formal pixel runtime remains `NOT RUN`
 - **Suggested severity:** P2 visual fidelity
 - **Owner surface:** `apps/web/src/app.tsx` (`AdminLoginPage`)
 - **Evidence:** Commit `03ed76f` aligns the source composition with
-  `output/design-artifacts/auth-staff-login-atelier.png`; the default-viewport
-  CUA continuation observed the ivory canvas, bordered card, centered lockup,
-  Persian hierarchy, field icons and rectangular CTA. Exact `1440x900` and
-  `390x844` captures, crop registration and pixel tolerance remain unverified.
+  `output/design-artifacts/auth-staff-login-atelier.png`; the 2026-09-12 CDP
+  captures at `1440x900` and `390x844` showed the default and invalid-email
+  states, including the Persian error treatment and field focus. Crop
+  registration, pixel tolerance, session-expiry/loading/API-error states and
+  full AT remain unverified.
 - **Impact:** The original static-variance finding no longer describes the
-  current source/default render. Authenticated states and exact visual parity
-  remain separate release gates.
+  current source or bounded exact-size render. Authenticated states and formal
+  visual parity remain separate release gates.
 
 ## Commands and results
 

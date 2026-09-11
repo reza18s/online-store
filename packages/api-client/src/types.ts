@@ -1251,6 +1251,15 @@ export interface CartMergeConflictDetails {
   conflicts: CartMergeConflict[];
 }
 
+export interface CartMergeResolution {
+  variantId: string;
+  quantity: number;
+}
+
+export interface CartMergeInput {
+  resolutions: CartMergeResolution[];
+}
+
 export interface CartItemMutation {
   variantId: string;
   quantity: number;

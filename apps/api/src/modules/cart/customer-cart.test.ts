@@ -147,15 +147,23 @@ function createCartService(initialGuestItems: FakeItem[], initialCustomerItems: 
         if (!cart || (where.kind && cart.kind !== where.kind)) return null;
         return cartSource(cart);
       },
-      findFirst: async ({ where }: { where: { tokenHash: string; kind: 'GUEST' } }) => {
-        const cart = [...store.carts.values()].find(
-          (candidate) => candidate.tokenHash === where.tokenHash && candidate.kind === where.kind,
-        );
-        if (!cart) return null;
+      findFirst: async ({
+        where,
+      }: {
+        where: { id?: string; tokenHash?: string; kind: 'GUEST' };
+      }) => {
+        const cart = where.id
+          ? store.carts.get(where.id)
+          : [...store.carts.values()].find(
+              (candidate) =>
+                candidate.tokenHash === where.tokenHash && candidate.kind === where.kind,
+            );
+        if (!cart || cart.kind !== where.kind) return null;
         return {
           id: cart.id,
           expiresAt: cart.expiresAt,
           items: cart.items.map((item) => ({
+            id: item.id,
             variantId: item.variantId,
             quantity: item.quantity,
             variant: {
@@ -181,6 +189,14 @@ function createCartService(initialGuestItems: FakeItem[], initialCustomerItems: 
       },
     },
     cartItem: {
+      deleteMany: async ({ where }: { where: { id: string } }) => {
+        for (const cart of store.carts.values()) {
+          const originalLength = cart.items.length;
+          cart.items = cart.items.filter((item) => item.id !== where.id);
+          if (cart.items.length !== originalLength) return { count: 1 };
+        }
+        return { count: 0 };
+      },
       update: async ({ where, data }: { where: { id: string }; data: { quantity: number } }) => {
         for (const cart of store.carts.values()) {
           const item = cart.items.find((candidate) => candidate.id === where.id);
@@ -274,43 +290,120 @@ test('returns structured merge conflicts and preserves both carts when guest sto
     },
   ]);
 
-  await assert.rejects(service.mergeGuestIntoCustomer('guest-token', 'user-1'), (error: unknown) => {
-    if (!(error instanceof ConflictException)) return false;
-    const response = error.getResponse() as {
-      code?: string;
-      details?: {
-        conflicts?: Array<{
-          variantId: string;
-          reason: string;
-          availableQuantity: number | null;
-        }>;
+  await assert.rejects(
+    service.mergeGuestIntoCustomer('guest-token', 'user-1'),
+    (error: unknown) => {
+      if (!(error instanceof ConflictException)) return false;
+      const response = error.getResponse() as {
+        code?: string;
+        details?: {
+          conflicts?: Array<{
+            variantId: string;
+            reason: string;
+            availableQuantity: number | null;
+          }>;
+        };
       };
-    };
-    assert.equal(response.code, 'CART_MERGE_CONFLICT');
-    assert.deepEqual(response.details?.conflicts, [
-      {
-        variantId: 'variant-1',
-        reason: 'STOCK_LIMIT',
-        guestQuantity: 2,
-        customerQuantity: 0,
-        mergedQuantity: 2,
-        availableQuantity: 1,
-      },
-      {
-        variantId: 'variant-2',
-        reason: 'VARIANT_UNAVAILABLE',
-        guestQuantity: 1,
-        customerQuantity: 0,
-        mergedQuantity: 1,
-        availableQuantity: null,
-      },
-    ]);
-    return true;
-  });
+      assert.equal(response.code, 'CART_MERGE_CONFLICT');
+      assert.deepEqual(response.details?.conflicts, [
+        {
+          variantId: 'variant-1',
+          reason: 'STOCK_LIMIT',
+          guestQuantity: 2,
+          customerQuantity: 0,
+          mergedQuantity: 2,
+          availableQuantity: 1,
+        },
+        {
+          variantId: 'variant-2',
+          reason: 'VARIANT_UNAVAILABLE',
+          guestQuantity: 1,
+          customerQuantity: 0,
+          mergedQuantity: 1,
+          availableQuantity: null,
+        },
+      ]);
+      return true;
+    },
+  );
 
   assert.equal(state.carts.has('guest-1'), true);
   assert.equal(state.ownerships.length, 0);
   assert.equal(state.carts.get('customer-1')?.items.length, 0);
+});
+
+test('applies guest resolutions before rechecking and merging the guest cart', async () => {
+  const { service, state } = createCartService(
+    [
+      { id: 'guest-item-1', variantId: 'variant-1', quantity: 3 },
+      { id: 'guest-item-2', variantId: 'variant-2', quantity: 1 },
+    ],
+    [{ id: 'customer-item-1', variantId: 'variant-1', quantity: 2 }],
+  );
+
+  const cart = await service.mergeGuestIntoCustomer('guest-token', 'user-1', [
+    { variantId: 'variant-1', quantity: 1 },
+    { variantId: 'variant-2', quantity: 0 },
+  ]);
+
+  assert.equal(cart.itemCount, 3);
+  assert.equal(cart.items.find((item) => item.variantId === 'variant-1')?.quantity, 3);
+  assert.equal(
+    cart.items.some((item) => item.variantId === 'variant-2'),
+    false,
+  );
+  assert.equal(state.carts.has('guest-1'), false);
+});
+
+test('keeps the guest cart unchanged and returns only unresolved conflicts after a partial resolution', async () => {
+  const { service, state } = createCartService([
+    {
+      id: 'guest-item-1',
+      variantId: 'variant-1',
+      quantity: 2,
+      availability: { onHand: 1 },
+    },
+    {
+      id: 'guest-item-2',
+      variantId: 'variant-2',
+      quantity: 1,
+      availability: { isActive: false },
+    },
+  ]);
+
+  await assert.rejects(
+    service.mergeGuestIntoCustomer('guest-token', 'user-1', [
+      { variantId: 'variant-1', quantity: 1 },
+    ]),
+    (error: unknown) => {
+      if (!(error instanceof ConflictException)) return false;
+      const response = error.getResponse() as {
+        details?: { conflicts?: Array<{ variantId: string; guestQuantity: number }> };
+      };
+      assert.deepEqual(response.details?.conflicts, [
+        {
+          variantId: 'variant-2',
+          reason: 'VARIANT_UNAVAILABLE',
+          guestQuantity: 1,
+          customerQuantity: 0,
+          mergedQuantity: 1,
+          availableQuantity: null,
+        },
+      ]);
+      return true;
+    },
+  );
+
+  assert.deepEqual(state.carts.get('guest-1')?.items, [
+    { id: 'guest-item-1', variantId: 'variant-1', quantity: 2, availability: { onHand: 1 } },
+    {
+      id: 'guest-item-2',
+      variantId: 'variant-2',
+      quantity: 1,
+      availability: { isActive: false },
+    },
+  ]);
+  assert.equal(state.ownerships.length, 0);
 });
 
 test('returns an empty customer cart when an authenticated customer has not merged a guest cart', async () => {

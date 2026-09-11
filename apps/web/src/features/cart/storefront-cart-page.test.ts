@@ -66,7 +66,7 @@ test('turns merge conflicts into safe quantity or removal actions', () => {
       mergedQuantity: 4,
       availableQuantity: 2,
     }),
-    2,
+    1,
   );
   assert.equal(
     conflictQuantity({

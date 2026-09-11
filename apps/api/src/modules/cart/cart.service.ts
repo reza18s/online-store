@@ -6,7 +6,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import type { CartItemMutation, CartLine, CartMergeConflict, CartView } from '@nova/api-client';
+import type {
+  CartItemMutation,
+  CartLine,
+  CartMergeConflict,
+  CartMergeResolution,
+  CartView,
+} from '@nova/api-client';
 import { DatabaseClient, Prisma } from '@nova/db';
 
 import { DatabaseService } from '../../database/database.service';
@@ -421,6 +427,7 @@ export class CartService {
   public async mergeGuestIntoCustomer(
     guestToken: string | undefined,
     userId: string,
+    resolutions: CartMergeResolution[] = [],
   ): Promise<CartView> {
     const cart = await this.database.prisma.$transaction(async (transaction) => {
       const customerCartId = await this.ensureCustomerCart(transaction, userId);
@@ -428,13 +435,14 @@ export class CartService {
         return transaction.cart.findUnique({ where: { id: customerCartId }, select: cartSelect });
       }
 
-      const guestCart = await transaction.cart.findFirst({
+      let guestCart = await transaction.cart.findFirst({
         where: { tokenHash: hashCartToken(guestToken), kind: 'GUEST' },
         select: {
           id: true,
           expiresAt: true,
           items: {
             select: {
+              id: true,
               variantId: true,
               quantity: true,
               variant: {
@@ -450,6 +458,63 @@ export class CartService {
       });
       if (!guestCart || (guestCart.expiresAt !== null && guestCart.expiresAt <= new Date())) {
         return transaction.cart.findUnique({ where: { id: customerCartId }, select: cartSelect });
+      }
+
+      const resolutionByVariant = new Map<string, number>();
+      for (const resolution of resolutions) {
+        assertVariantId(resolution.variantId);
+        if (
+          !Number.isSafeInteger(resolution.quantity) ||
+          resolution.quantity < 0 ||
+          resolution.quantity > CART_ITEM_MAX_QUANTITY
+        ) {
+          throw new BadRequestException('تعداد انتخاب‌شده برای ادغام سبد معتبر نیست.');
+        }
+        if (resolutionByVariant.has(resolution.variantId)) {
+          throw new BadRequestException('هر تنوع فقط یک‌بار باید در تصمیم ادغام ارسال شود.');
+        }
+        resolutionByVariant.set(resolution.variantId, resolution.quantity);
+      }
+
+      for (const [variantId, quantity] of resolutionByVariant) {
+        const guestItem = guestCart.items.find((item) => item.variantId === variantId);
+        if (!guestItem) {
+          throw new BadRequestException('تنوع انتخاب‌شده در سبد مهمان پیدا نشد.');
+        }
+        if (quantity === 0) {
+          await transaction.cartItem.deleteMany({ where: { id: guestItem.id } });
+        } else if (quantity !== guestItem.quantity) {
+          await transaction.cartItem.update({
+            where: { id: guestItem.id },
+            data: { quantity },
+          });
+        }
+      }
+
+      if (resolutions.length > 0) {
+        const refreshedGuestCart = await transaction.cart.findFirst({
+          where: { id: guestCart.id, kind: 'GUEST' },
+          select: {
+            id: true,
+            expiresAt: true,
+            items: {
+              select: {
+                id: true,
+                variantId: true,
+                quantity: true,
+                variant: {
+                  select: {
+                    isActive: true,
+                    inventory: { select: { onHand: true, reserved: true } },
+                    product: { select: { status: true, archivedAt: true } },
+                  },
+                },
+              },
+            },
+          },
+        });
+        if (!refreshedGuestCart) throw new NotFoundException('سبد مهمان پیدا نشد.');
+        guestCart = refreshedGuestCart;
       }
 
       const customerCart = await transaction.cart.findUnique({

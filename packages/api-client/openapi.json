@@ -483,6 +483,10 @@
         "tags": ["cart"],
         "x-nova-schema-status": "detailed",
         "x-nova-auth": "customer",
+        "x-nova-request-dto": "CartMergeDto",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CartMerge"
+        },
         "responses": {
           "200": {
             "$ref": "#/components/responses/CartView"
@@ -5058,6 +5062,16 @@
           }
         }
       },
+      "CartMerge": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CartMerge"
+            }
+          }
+        }
+      },
       "CheckoutRequest": {
         "required": true,
         "content": {
@@ -6890,6 +6904,36 @@
         },
         "additionalProperties": false
       },
+      "CartMergeResolution": {
+        "type": "object",
+        "required": ["variantId", "quantity"],
+        "properties": {
+          "variantId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "maxLength": 128
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 99
+          }
+        },
+        "additionalProperties": false
+      },
+      "CartMerge": {
+        "type": "object",
+        "required": ["resolutions"],
+        "properties": {
+          "resolutions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CartMergeResolution"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
       "CartLine": {
         "type": "object",
         "required": [
@@ -7007,7 +7051,7 @@
             "type": "integer"
           },
           "availableQuantity": {
-            "type": ["string", "null"]
+            "type": ["integer", "null"]
           }
         },
         "additionalProperties": false

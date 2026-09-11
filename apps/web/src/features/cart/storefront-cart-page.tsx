@@ -50,7 +50,9 @@ export function cartLineAvailability(line: Pick<CartLine, 'available'>): CartLin
 export function conflictQuantity(conflict: CartMergeConflict): number | null {
   if (conflict.reason === 'VARIANT_UNAVAILABLE') return null;
   if (conflict.availableQuantity === null || conflict.availableQuantity <= 0) return null;
-  return Math.min(99, conflict.availableQuantity, conflict.mergedQuantity);
+  const availableForGuest = conflict.availableQuantity - conflict.customerQuantity;
+  if (availableForGuest <= 0) return null;
+  return Math.min(99, conflict.guestQuantity, availableForGuest);
 }
 
 export function cartActionErrorMessage(error: unknown): string {
@@ -125,13 +127,11 @@ function CartSkeleton() {
 
 function MergeConflictNotice({
   conflicts,
-  onUpdate,
-  onRemove,
+  onResolve,
   isBusy,
 }: {
   conflicts: CartMergeConflict[];
-  onUpdate: (variantId: string, quantity: number) => void;
-  onRemove: (variantId: string) => void;
+  onResolve: (variantId: string, quantity: number) => void;
   isBusy: boolean;
 }) {
   const reasonCopy: Record<CartMergeConflict['reason'], string> = {
@@ -170,27 +170,17 @@ function MergeConflictNotice({
                 </span>
                 <span className="ms-2">{reasonCopy[conflict.reason]}</span>
               </span>
-              {nextQuantity === null ? (
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  disabled={isBusy}
-                  onClick={() => onRemove(conflict.variantId)}
-                >
-                  حذف کالا
-                </Button>
-              ) : (
-                <Button
-                  type="button"
-                  size="sm"
-                  variant="outline"
-                  disabled={isBusy}
-                  onClick={() => onUpdate(conflict.variantId, nextQuantity)}
-                >
-                  تنظیم روی {new Intl.NumberFormat('fa-IR').format(nextQuantity)}
-                </Button>
-              )}
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                disabled={isBusy}
+                onClick={() => onResolve(conflict.variantId, nextQuantity ?? 0)}
+              >
+                {nextQuantity === null
+                  ? 'حذف کالا از سبد مهمان'
+                  : `نگه‌داشتن ${new Intl.NumberFormat('fa-IR').format(nextQuantity)} عدد`}
+              </Button>
             </li>
           );
         })}
@@ -362,9 +352,37 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
   const [busyVariantId, setBusyVariantId] = useState('');
   const [feedback, setFeedback] = useState<{ message: string; error?: boolean }>();
   const [mergeConflicts, setMergeConflicts] = useState<CartMergeConflict[]>([]);
+  const [mergeResolutions, setMergeResolutions] = useState<Record<string, number>>({});
   const mergeAttempt = useRef<string | undefined>(undefined);
   const isBusy = Boolean(busyVariantId) || addMutation.isPending || mergeMutation.isPending;
   const mergeEnabled = props.enableGuestMerge ?? true;
+  const guestMergeActive = Boolean(props.customerId && cart?.kind === 'GUEST');
+
+  const handleMergeSuccess = () => {
+    setMergeConflicts([]);
+    setMergeResolutions({});
+  };
+  const handleMergeError = (error: unknown) => {
+    const conflicts = getCartMergeConflicts(error);
+    if (conflicts.length) setMergeConflicts(conflicts);
+    else setFeedback({ message: cartActionErrorMessage(error), error: true });
+  };
+  const resolveMergeConflict = (variantId: string, quantity: number) => {
+    setFeedback(undefined);
+    const nextResolutions = { ...mergeResolutions, [variantId]: quantity };
+    setMergeResolutions(nextResolutions);
+    mergeMutation.mutate(
+      {
+        resolutions: Object.entries(nextResolutions).map(
+          ([resolvedVariantId, resolvedQuantity]) => ({
+            variantId: resolvedVariantId,
+            quantity: resolvedQuantity,
+          }),
+        ),
+      },
+      { onSuccess: handleMergeSuccess, onError: handleMergeError },
+    );
+  };
 
   useEffect(() => {
     if (
@@ -377,14 +395,10 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
     const attemptKey = `${props.customerId}:${cart.id ?? 'guest'}`;
     if (mergeAttempt.current === attemptKey || mergeMutation.isPending) return;
     mergeAttempt.current = attemptKey;
-    mergeMutation.mutate(undefined, {
-      onSuccess: () => setMergeConflicts([]),
-      onError: (error) => {
-        const conflicts = getCartMergeConflicts(error);
-        if (conflicts.length) setMergeConflicts(conflicts);
-        else setFeedback({ message: cartActionErrorMessage(error), error: true });
-      },
-    });
+    mergeMutation.mutate(
+      { resolutions: [] },
+      { onSuccess: handleMergeSuccess, onError: handleMergeError },
+    );
   }, [cart, mergeEnabled, mergeMutation, props.customerId]);
 
   const updateItem = (variantId: string, quantity: number) => {
@@ -499,8 +513,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
       {mergeConflicts.length ? (
         <MergeConflictNotice
           conflicts={mergeConflicts}
-          onUpdate={updateItem}
-          onRemove={removeItem}
+          onResolve={resolveMergeConflict}
           isBusy={isBusy}
         />
       ) : null}
@@ -513,7 +526,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
             <CartLineView
               key={line.id}
               line={line}
-              busy={busyVariantId === line.variantId || isBusy}
+              busy={busyVariantId === line.variantId || isBusy || guestMergeActive}
               onUpdate={updateItem}
               onRemove={removeItem}
             />
@@ -585,7 +598,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
                 key={product.slug}
                 product={product}
                 onAdd={addRecommendation}
-                busy={isBusy}
+                busy={isBusy || guestMergeActive}
               />
             ))}
           </div>

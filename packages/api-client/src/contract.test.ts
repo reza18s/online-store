@@ -219,6 +219,7 @@ function typeFields(typeName: string): Set<string> {
 const dtoSchemas: Record<string, string> = {
   CartItemMutationDto: 'CartItemMutation',
   CartItemQuantityDto: 'CartItemQuantity',
+  CartMergeDto: 'CartMerge',
   CheckoutRequestDto: 'CheckoutRequest',
   CustomerOrderCancelDto: 'CustomerOrderCancel',
   CustomerReturnRequestDto: 'CustomerReturnRequest',
@@ -233,6 +234,7 @@ const dtoSchemas: Record<string, string> = {
 const dtoFiles: Record<string, string> = {
   CartItemMutationDto: 'apps/api/src/modules/cart/dto/cart-item.mutation.ts',
   CartItemQuantityDto: 'apps/api/src/modules/cart/dto/cart-item.mutation.ts',
+  CartMergeDto: 'apps/api/src/modules/cart/dto/cart-merge.mutation.ts',
   CheckoutRequestDto: 'apps/api/src/modules/checkout/dto/checkout.dto.ts',
   CustomerOrderCancelDto: 'apps/api/src/modules/orders/dto/customer-order-cancel.dto.ts',
   CustomerReturnRequestDto: 'apps/api/src/modules/orders/dto/customer-return-request.dto.ts',

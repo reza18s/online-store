@@ -6,6 +6,7 @@ import {
   queryKeys,
   type ApiEnvelope,
   type CartItemMutation,
+  type CartMergeInput,
   type CartMergeConflict,
   type CartView,
 } from '@nova/api-client';
@@ -21,8 +22,10 @@ export async function fetchCart(): Promise<CartView> {
   return response.data;
 }
 
-export async function mergeGuestCart(): Promise<CartView> {
-  const response = await apiClient.postEnvelope<CartView>(guestCartMergePath);
+export async function mergeGuestCart(
+  input: CartMergeInput = { resolutions: [] },
+): Promise<CartView> {
+  const response = await apiClient.postEnvelope<CartView>(guestCartMergePath, input);
   return response.data;
 }
 

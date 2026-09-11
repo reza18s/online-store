@@ -24,6 +24,7 @@ import {
 import { CUSTOMER_SESSION_COOKIE_NAME, SessionService } from '../auth/session.service';
 import { CartService, CART_COOKIE_NAME, CART_MAX_AGE_SECONDS } from './cart.service';
 import { CartItemMutationDto, CartItemQuantityDto } from './dto/cart-item.mutation';
+import { CartMergeDto } from './dto/cart-merge.mutation';
 
 type CartRequest = CustomerRequest;
 
@@ -84,9 +85,14 @@ export class CartController {
   public async merge(
     @Req() request: CartRequest,
     @Res({ passthrough: true }) response: ResponseWithHeaders,
+    @Body() body: CartMergeDto,
   ): Promise<ApiEnvelope<CartView>> {
     if (!request.customer) throw new UnauthorizedException('برای ادامه وارد حساب شوید.');
-    const cart = await this.cart.mergeGuestIntoCustomer(getCartToken(request), request.customer.id);
+    const cart = await this.cart.mergeGuestIntoCustomer(
+      getCartToken(request),
+      request.customer.id,
+      body.resolutions,
+    );
     clearCartCookie(response);
     return this.envelope(request, cart);
   }

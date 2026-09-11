@@ -2834,20 +2834,22 @@ export function AdminCatalogInventoryPage({
   view,
   productId,
   variantId,
+  staffRoles,
 }: {
   view?: string;
   productId?: string;
   variantId?: string;
+  staffRoles?: readonly string[];
 }) {
   const activeView = normalizeAdminCatalogInventoryView(
     view ?? (variantId ? 'inventory' : productId ? 'product' : undefined),
   );
-  const staffQuery = useStaffUser();
+  const staffQuery = useStaffUser(staffRoles === undefined);
   if (staffQuery.isPending) return <AdminSessionState kind="loading" />;
   if (isStaffAuthFailure(staffQuery.error)) return <AdminSessionState kind="expired" />;
   if (isStaffAuthorizationFailure(staffQuery.error)) return <AdminSessionState kind="denied" />;
-  if (!staffQuery.data) return <AdminSessionState kind="missing" />;
-  const roles = staffQuery.data.roles ?? [];
+  if (staffRoles === undefined && !staffQuery.data) return <AdminSessionState kind="missing" />;
+  const roles = staffRoles ?? staffQuery.data?.roles ?? [];
   const canView = hasAdminRole(roles, ['support', 'operations', 'admin']);
   if (!canView) return <AdminSessionState kind="denied" />;
   return (

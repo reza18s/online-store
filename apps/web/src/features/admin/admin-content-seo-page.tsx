@@ -557,9 +557,8 @@ function ContentList({
       {items.length ? (
         <div className="divide-y divide-border overflow-hidden rounded-control border border-border">
           {items.map((item) => (
-            <div className="relative">
+            <div className="relative" key={item.id}>
               <button
-                key={item.id}
                 type="button"
                 onClick={() => onSelect(item.id)}
                 className={`flex min-h-16 w-full items-center justify-between gap-3 px-3 text-right transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${selectedId === item.id ? 'bg-accent-soft' : 'bg-background'}`}
@@ -772,11 +771,11 @@ function ContentEditor({
             <Button type="submit" loading={busy} disabled={!canEdit || !dirty}>
               {isNew ? 'ذخیره پیش‌نویس' : 'ذخیره تغییرات'}
             </Button>
-            {page && page.status !== 'PUBLISHED' ? (
+            {page && page.status === 'DRAFT' ? (
               <Button
                 type="button"
                 variant="outline"
-                disabled={!canEdit || busy || !dirty}
+                disabled={!canEdit || busy}
                 onClick={() => save(undefined, true)}
               >
                 بررسی و انتشار

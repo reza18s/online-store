@@ -1,4 +1,5 @@
-import { describe, expect, test } from 'bun:test';
+import assert from 'node:assert/strict';
+import { describe, test } from 'node:test';
 
 import {
   hasAdminRole,
@@ -22,40 +23,45 @@ const validProduct = {
 
 describe('admin catalog/inventory page helpers', () => {
   test('normalizes route views without inventing a route', () => {
-    expect(normalizeAdminCatalogInventoryView('categories')).toBe('categories');
-    expect(normalizeAdminCatalogInventoryView('inventory')).toBe('inventory');
-    expect(normalizeAdminCatalogInventoryView('unknown')).toBe('catalog');
+    assert.equal(normalizeAdminCatalogInventoryView('categories'), 'categories');
+    assert.equal(normalizeAdminCatalogInventoryView('inventory'), 'inventory');
+    assert.equal(normalizeAdminCatalogInventoryView('unknown'), 'catalog');
   });
 
   test('keeps mutations visible only for the matching staff roles', () => {
-    expect(hasAdminRole(['support'], ['support', 'operations', 'admin'])).toBe(true);
-    expect(hasAdminRole(['SUPPORT'], ['admin'])).toBe(false);
-    expect(hasAdminRole(['operations'], ['operations', 'admin'])).toBe(true);
-    expect(hasAdminRole(undefined, ['admin'])).toBe(false);
+    assert.equal(hasAdminRole(['support'], ['support', 'operations', 'admin']), true);
+    assert.equal(hasAdminRole(['SUPPORT'], ['admin']), false);
+    assert.equal(hasAdminRole(['operations'], ['operations', 'admin']), true);
+    assert.equal(hasAdminRole(undefined, ['admin']), false);
   });
 
   test('validates product identifiers and price ordering', () => {
-    expect(validateProductDraft(validProduct)).toEqual([]);
-    expect(validateProductDraft({ ...validProduct, slug: 'Not Valid' })).toHaveLength(1);
-    expect(validateProductDraft({ ...validProduct, compareAtPriceToman: '120000' })).toContain(
-      'قیمت قبل نباید کمتر از قیمت پایه باشد.',
+    assert.deepEqual(validateProductDraft(validProduct), []);
+    assert.equal(validateProductDraft({ ...validProduct, slug: 'Not Valid' }).length, 1);
+    assert.ok(
+      validateProductDraft({ ...validProduct, compareAtPriceToman: '120000' }).includes(
+        'قیمت قبل نباید کمتر از قیمت پایه باشد.',
+      ),
     );
-    expect(validateProductDraft({ ...validProduct, slug: 'ignored-for-edit' }, 'edit')).toEqual([]);
+    assert.deepEqual(
+      validateProductDraft({ ...validProduct, slug: 'ignored-for-edit' }, 'edit'),
+      [],
+    );
   });
 
   test('requires a non-zero inventory delta and an auditable reason', () => {
-    expect(validateInventoryAdjustment('3', 'رسید انبار')).toEqual([]);
-    expect(validateInventoryAdjustment('0', '')).toHaveLength(2);
-    expect(validateInventoryAdjustment('-2', '   ')).toContain('دلیل تغییر موجودی را وارد کنید.');
+    assert.deepEqual(validateInventoryAdjustment('3', 'رسید انبار'), []);
+    assert.equal(validateInventoryAdjustment('0', '').length, 2);
+    assert.ok(validateInventoryAdjustment('-2', '   ').includes('دلیل تغییر موجودی را وارد کنید.'));
   });
 
   test('treats media URL and alt text as the supported upload boundary', () => {
-    expect(validateMediaDraft('https://cdn.example/product.webp', 'نمای روبه‌رو')).toEqual([]);
-    expect(validateMediaDraft('', '')).toHaveLength(2);
+    assert.deepEqual(validateMediaDraft('https://cdn.example/product.webp', 'نمای روبه‌رو'), []);
+    assert.equal(validateMediaDraft('', '').length, 2);
   });
 
   test('prioritizes saving, publish blockers, invalid, saved, and draft state decisions', () => {
-    expect(
+    assert.equal(
       resolveAdminMutationState({
         isDirty: true,
         isPending: true,
@@ -64,8 +70,9 @@ describe('admin catalog/inventory page helpers', () => {
         hasInvalidFields: true,
         hasPublishBlockers: true,
       }),
-    ).toBe('saving');
-    expect(
+      'saving',
+    );
+    assert.equal(
       resolveAdminMutationState({
         isDirty: true,
         isPending: false,
@@ -74,8 +81,9 @@ describe('admin catalog/inventory page helpers', () => {
         hasInvalidFields: false,
         hasPublishBlockers: true,
       }),
-    ).toBe('publish-blocked');
-    expect(
+      'publish-blocked',
+    );
+    assert.equal(
       resolveAdminMutationState({
         isDirty: true,
         isPending: false,
@@ -83,8 +91,9 @@ describe('admin catalog/inventory page helpers', () => {
         isSuccess: false,
         hasInvalidFields: false,
       }),
-    ).toBe('invalid');
-    expect(
+      'invalid',
+    );
+    assert.equal(
       resolveAdminMutationState({
         isDirty: false,
         isPending: false,
@@ -92,8 +101,9 @@ describe('admin catalog/inventory page helpers', () => {
         isSuccess: true,
         hasInvalidFields: false,
       }),
-    ).toBe('saved');
-    expect(
+      'saved',
+    );
+    assert.equal(
       resolveAdminMutationState({
         isDirty: true,
         isPending: false,
@@ -101,11 +111,12 @@ describe('admin catalog/inventory page helpers', () => {
         isSuccess: false,
         hasInvalidFields: false,
       }),
-    ).toBe('draft');
+      'draft',
+    );
   });
 
   test('flags an inventory discrepancy only when the stock equation is inconsistent', () => {
-    expect(isInventoryDiscrepancy({ onHand: 12, reserved: 3, available: 9 })).toBe(false);
-    expect(isInventoryDiscrepancy({ onHand: 12, reserved: 3, available: 8 })).toBe(true);
+    assert.equal(isInventoryDiscrepancy({ onHand: 12, reserved: 3, available: 9 }), false);
+    assert.equal(isInventoryDiscrepancy({ onHand: 12, reserved: 3, available: 8 }), true);
   });
 });

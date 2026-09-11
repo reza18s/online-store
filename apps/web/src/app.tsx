@@ -43,6 +43,8 @@ import { useAdminInventory } from './features/admin/admin-inventory-api';
 import { useAdminOrders } from './features/admin/admin-orders-api';
 import { AdminOrderDetailPage, AdminOrdersPage } from './features/admin/admin-orders-page';
 import { AdminSupportFinancePage } from './features/admin/admin-support-finance-page';
+import { AdminCatalogInventoryPage } from './features/admin/admin-catalog-inventory-page';
+import { AdminContentSeoPage } from './features/admin/admin-content-seo-page';
 import {
   useCurrentCustomer,
   useLogoutCustomer,
@@ -6187,6 +6189,47 @@ function AdminPage({ page }: { page: string }) {
   ) {
     return <AdminSupportFinancePage view={adminSection} />;
   }
+  if (adminSection === 'catalog' || adminSection === 'inventory') {
+    const [subsection, encodedId] = adminPathSegments;
+    if (adminSection === 'catalog' && subsection === 'categories') {
+      return <AdminCatalogInventoryPage view="categories" staffRoles={staffRoles} />;
+    }
+    if (adminSection === 'catalog' && subsection === 'products' && encodedId) {
+      return (
+        <AdminCatalogInventoryPage
+          view="product"
+          productId={decodeHashSegment(encodedId)}
+          staffRoles={staffRoles}
+        />
+      );
+    }
+    if (adminSection === 'inventory') {
+      return (
+        <AdminCatalogInventoryPage
+          view="inventory"
+          variantId={encodedId ? decodeHashSegment(encodedId) : undefined}
+          staffRoles={staffRoles}
+        />
+      );
+    }
+    return <AdminCatalogInventoryPage view="catalog" staffRoles={staffRoles} />;
+  }
+  if (adminSection === 'content') {
+    const [subsection, encodedId] = adminPathSegments;
+    if (subsection === 'seo' || subsection === 'redirects') {
+      return <AdminContentSeoPage view={subsection} staffRoles={staffRoles} />;
+    }
+    if (subsection === 'pages' && encodedId) {
+      return (
+        <AdminContentSeoPage
+          view="content"
+          pageId={decodeHashSegment(encodedId)}
+          staffRoles={staffRoles}
+        />
+      );
+    }
+    return <AdminContentSeoPage view="content" staffRoles={staffRoles} />;
+  }
   if (page === 'products') return <AdminProductsPage />;
   if (page !== 'admin') {
     if (!allowDevelopmentPreview) return <AdminRouteUnavailablePage page={page} />;
@@ -6195,8 +6238,8 @@ function AdminPage({ page }: { page: string }) {
 
   const nav = [
     ['admin', 'داشبورد', 'home'],
-    ['products', 'محصولات', 'shirt'],
-    ['categories', 'دسته‌بندی‌ها', 'layers'],
+    ['catalog', 'محصولات', 'bag'],
+    ['catalog/categories', 'دسته‌بندی‌ها', 'layers'],
     ['orders', 'سفارش‌ها', 'package'],
     ['customers', 'مشتریان', 'users'],
     ['marketing', 'بازاریابی', 'send'],
@@ -6310,7 +6353,7 @@ function AdminPage({ page }: { page: string }) {
       >
         {[
           ['admin', 'داشبورد', 'home'],
-          ['products', 'محصولات', 'shirt'],
+          ['catalog', 'محصولات', 'bag'],
           ['orders', 'سفارش‌ها', 'package'],
           ['operations', 'بیشتر', 'menu'],
         ].map(([key, label, icon]) => (

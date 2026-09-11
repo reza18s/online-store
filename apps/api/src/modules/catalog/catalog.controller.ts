@@ -224,6 +224,19 @@ export class CatalogAdminController {
     });
   }
 
+  @Get('products/:productId')
+  @RequireStaffRoles('support', 'operations', 'admin')
+  public async productDetail(
+    @Param() params: ProductIdParamsDto,
+    @Req() request: StaffRequest,
+  ): Promise<ApiEnvelope<AdminCatalogProductDetail>> {
+    if (!request.staff) throw new Error('StaffAuthGuard did not attach a staff user.');
+    return this.envelope(
+      request,
+      toAdminProductDetailResponse(await this.catalog.getProduct(request.staff, params.productId)),
+    );
+  }
+
   @Post('products')
   public async createProduct(
     @Body() body: CreateAdminProductDto,

@@ -2935,6 +2935,52 @@
       }
     },
     "/v1/admin/catalog/products/{productId}": {
+      "get": {
+        "operationId": "adminCatalogProductDetail",
+        "x-nova-schema-status": "inventory-only",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AdminCatalogProductDetail"
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError401"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError403"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError404"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProductId"
+          }
+        ],
+        "security": [
+          {
+            "staffSession": []
+          }
+        ],
+        "x-nova-auth": "staff:support|operations|admin",
+        "x-nova-auth-requirement": {
+          "principal": "staff",
+          "roles": ["support", "operations", "admin"],
+          "sessionCookie": "nova_staff_session"
+        },
+        "x-nova-csrf": {
+          "required": false,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "cookieIssuedOnSafeRequest": true
+        }
+      },
       "patch": {
         "operationId": "adminCatalogProductUpdate",
         "x-nova-schema-status": "inventory-only",

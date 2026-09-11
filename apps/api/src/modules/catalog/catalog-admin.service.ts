@@ -1340,6 +1340,20 @@ export class CatalogAdminService {
     }
   }
 
+  public async getProduct(
+    staff: AuthenticatedStaff,
+    productId: string,
+  ): Promise<CatalogAdminProductDetail> {
+    assertStaffRole(staff, 'support', 'operations', 'admin');
+    const id = normalizeProductId(productId);
+    const product = await this.database.prisma.product.findUnique({
+      where: { id },
+      select: productDetailSelect,
+    });
+    if (!product) throw new NotFoundException('محصول پیدا نشد.');
+    return toProductDetail(product);
+  }
+
   public async updateProduct(
     staff: AuthenticatedStaff,
     productId: string,

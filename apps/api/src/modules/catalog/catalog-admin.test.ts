@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { ConflictException, ForbiddenException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 
@@ -15,11 +20,16 @@ interface FakeProduct {
   id: string;
   slug: string;
   name: string;
+  shortDescription: string | null;
+  description: string | null;
+  brand: string | null;
   basePriceToman: number;
   compareAtPriceToman: number | null;
   status: CatalogProductStatus;
   publishedAt: Date | null;
   archivedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
   categories: Array<{ id: string; slug: string; name: string }>;
   variants: Array<{
     id: string;
@@ -41,6 +51,8 @@ interface AuditRecord {
 function cloneProduct(product: FakeProduct): FakeProduct {
   return {
     ...product,
+    createdAt: new Date(product.createdAt),
+    updatedAt: new Date(product.updatedAt),
     publishedAt: product.publishedAt ? new Date(product.publishedAt) : null,
     archivedAt: product.archivedAt ? new Date(product.archivedAt) : null,
     categories: product.categories.map((category) => ({ ...category })),
@@ -57,11 +69,16 @@ function createProduct(overrides: Partial<FakeProduct> = {}): FakeProduct {
     id: 'product-1',
     slug: 'linen-overshirt',
     name: 'مانتوی لینن کمربندی آوا',
+    shortDescription: 'مانتوی لینن سبک برای استفاده روزمره',
+    description: 'پارچه لینن با ایستایی نرم و مناسب فصل گرم.',
+    brand: 'NOVA',
     basePriceToman: 2_490_000,
     compareAtPriceToman: 2_890_000,
     status: 'DRAFT',
     publishedAt: null,
     archivedAt: null,
+    createdAt: new Date('2026-09-07T08:00:00.000Z'),
+    updatedAt: new Date('2026-09-08T08:00:00.000Z'),
     categories: [{ id: 'category-1', slug: 'outerwear', name: 'مانتو' }],
     variants: [
       {
@@ -160,15 +177,37 @@ function createService(
           },
         ];
       },
-      findUnique: async ({ where }: { where: { id: string } }) => {
+      findUnique: async ({
+        where,
+        select,
+      }: {
+        where: { id: string };
+        select?: Record<string, unknown>;
+      }) => {
         if (where.id !== state.id) return null;
-        return {
+        const detail = {
           id: state.id,
           slug: state.slug,
           name: state.name,
+          shortDescription: state.shortDescription,
+          description: state.description,
+          brand: state.brand,
+          basePriceToman: state.basePriceToman,
+          compareAtPriceToman: state.compareAtPriceToman,
           status: state.status,
           publishedAt: state.publishedAt,
           archivedAt: state.archivedAt,
+          createdAt: state.createdAt,
+          updatedAt: state.updatedAt,
+        };
+        if (select && 'shortDescription' in select) return detail;
+        return {
+          id: detail.id,
+          slug: detail.slug,
+          name: detail.name,
+          status: detail.status,
+          publishedAt: detail.publishedAt,
+          archivedAt: detail.archivedAt,
           variants: state.variants.filter((variant) => variant.isActive).map(({ id }) => ({ id })),
           media: state.media.filter((media) => media.kind === 'PRODUCT').map(({ id }) => ({ id })),
         };
@@ -267,6 +306,42 @@ test('lists lifecycle metadata for support staff without exposing mutation acces
   assert.equal(result.items[0]?.variantCount, 1);
   assert.equal(result.items[0]?.mediaCount, 1);
   assert.equal(result.items[0]?.createdAt.toISOString(), '2026-09-07T08:00:00.000Z');
+});
+
+test('reads product details for support, operations, and admin staff', async () => {
+  for (const role of ['support', 'operations', 'admin'] as const) {
+    const { service } = createService(createProduct());
+    const result = await service.getProduct({ ...createAdmin(), roles: [role] }, 'product-1');
+
+    assert.deepEqual(result, {
+      id: 'product-1',
+      slug: 'linen-overshirt',
+      name: 'مانتوی لینن کمربندی آوا',
+      shortDescription: 'مانتوی لینن سبک برای استفاده روزمره',
+      description: 'پارچه لینن با ایستایی نرم و مناسب فصل گرم.',
+      brand: 'NOVA',
+      basePriceToman: 2_490_000,
+      compareAtPriceToman: 2_890_000,
+      status: 'DRAFT',
+      publishedAt: null,
+      archivedAt: null,
+      createdAt: new Date('2026-09-07T08:00:00.000Z'),
+      updatedAt: new Date('2026-09-08T08:00:00.000Z'),
+    });
+  }
+});
+
+test('rejects missing and invalid product detail ids', async () => {
+  const { service } = createService(createProduct());
+
+  await assert.rejects(
+    service.getProduct(createAdmin(), 'missing-product'),
+    (error: unknown) => error instanceof NotFoundException,
+  );
+  await assert.rejects(
+    service.getProduct(createAdmin(), 'invalid product id'),
+    (error: unknown) => error instanceof BadRequestException,
+  );
 });
 
 test('normalizes and validates admin catalog filters', async () => {

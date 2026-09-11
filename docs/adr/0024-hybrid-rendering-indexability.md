@@ -92,7 +92,7 @@ cacheable for five minutes. Private, 404, 503, and crawler-error responses use
 `no-store`. The reverse proxy/CDN must honor these headers and route clean
 public paths, `/robots.txt`, and `/sitemap.xml` to the web server. The standard
 Vite client build must run before the SSR build; production starts
-`apps/web/dist/ssr/server.mjs` with `NOVA_API_ORIGIN` and the public
+`apps/web/dist/ssr/server.js` with `NOVA_API_ORIGIN` and the public
 `NOVA_WEB_ORIGIN` configured. The API must be reachable from the web process.
 Catalog product image data is used as-is: no intrinsic dimensions are invented
 because `CatalogProduct` does not provide them. The existing

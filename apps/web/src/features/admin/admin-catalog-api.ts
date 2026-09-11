@@ -64,6 +64,10 @@ export function adminCatalogProductsPath(query: AdminCatalogProductListQuery = {
   return `/v1/admin/catalog/products${queryString(query)}`;
 }
 
+export function adminCatalogProductPath(productId: string): string {
+  return `/v1/admin/catalog/products/${encodeId(productId)}`;
+}
+
 export async function fetchStaffUser(): Promise<StaffUser> {
   const response = await apiClient.getEnvelope<StaffUser>('/v1/staff/auth/me');
   return response.data;
@@ -84,6 +88,15 @@ export async function fetchAdminCatalogProducts(
 ): Promise<AdminCatalogProductPage> {
   const response = await apiClient.getEnvelope<AdminCatalogProductPage>(
     adminCatalogProductsPath(query),
+  );
+  return response.data;
+}
+
+export async function fetchAdminCatalogProduct(
+  productId: string,
+): Promise<AdminCatalogProductDetail> {
+  const response = await apiClient.getEnvelope<AdminCatalogProductDetail>(
+    adminCatalogProductPath(productId),
   );
   return response.data;
 }
@@ -320,6 +333,7 @@ function invalidateAdminProductResources(
 ): Promise<void[]> {
   return Promise.all([
     invalidateAdminProductList(queryClient),
+    queryClient.invalidateQueries({ queryKey: queryKeys.adminCatalog.product(productId) }),
     queryClient.invalidateQueries({
       queryKey: queryKeys.adminCatalog.productCategories(productId),
     }),
@@ -364,6 +378,15 @@ export function useAdminCatalogProducts(query: AdminCatalogProductListQuery = {}
     queryKey: queryKeys.adminCatalog.products(normalized),
     queryFn: () => fetchAdminCatalogProducts(normalized),
     enabled,
+    staleTime: 15_000,
+  });
+}
+
+export function useAdminCatalogProduct(productId: string, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.adminCatalog.product(productId),
+    queryFn: () => fetchAdminCatalogProduct(productId),
+    enabled: enabled && Boolean(productId),
     staleTime: 15_000,
   });
 }

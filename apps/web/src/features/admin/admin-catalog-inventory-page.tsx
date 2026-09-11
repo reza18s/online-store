@@ -15,6 +15,7 @@ import { Button } from '@nova/ui';
 
 import {
   useAdminCatalogCategories,
+  useAdminCatalogProduct,
   useAdminCatalogProducts,
   useAdminProductCategories,
   useAdminProductMedia,
@@ -1682,9 +1683,8 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
   const [localProductId, setLocalProductId] = useState(productId ?? '');
   const [createdProduct, setCreatedProduct] = useState<AdminCatalogProductListItem | null>(null);
   const effectiveProductId = createdProduct?.id ?? localProductId;
-  const listQuery = useAdminCatalogProducts({ page: 1, limit: 100 });
-  const product =
-    createdProduct ?? listQuery.data?.items.find((item) => item.id === effectiveProductId);
+  const productQuery = useAdminCatalogProduct(productId ?? '', Boolean(productId));
+  const product = createdProduct ?? productQuery.data;
   const categoriesQuery = useAdminCatalogCategories();
   const productCategoriesQuery = useAdminProductCategories(effectiveProductId);
   const optionsQuery = useAdminProductOptions(effectiveProductId);
@@ -1832,15 +1832,15 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
 
   if (!canWrite && !hasAdminRole(roles, ['support', 'operations', 'admin']))
     return <PermissionPanel title="دسترسی مشاهده کاتالوگ ندارید" />;
-  if (!isCreate && listQuery.isPending && !product)
+  if (!isCreate && productQuery.isPending && !product)
     return <LoadingState label="در حال دریافت محصول..." />;
-  if (!isCreate && listQuery.isError && !product)
+  if (!isCreate && productQuery.isError && !product)
     return (
       <QueryState
         pending={false}
-        error={listQuery.error}
+        error={productQuery.error}
         hasData={false}
-        onRetry={() => void listQuery.refetch()}
+        onRetry={() => void productQuery.refetch()}
       >
         {null}
       </QueryState>

@@ -377,7 +377,9 @@ bun run --cwd apps/web typecheck
   PASS — tsc -p tsconfig.json --noEmit
 
 bun run test:integration
-  PASS — 8 deterministic suites, 131 underlying tests, 0 failures
+  PASS — 8 deterministic suites, 131 underlying tests, 0 failures at the
+  recorded parent snapshot; the current integrated matrix is 137 underlying
+  tests with 0 failures
 
 bun run test:e2e
   PASS — default API liveness/readiness and storefront root-shell preflight on

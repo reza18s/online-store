@@ -22,6 +22,7 @@
     "test": "bun test",
     "typecheck:test": "tsc -p test/tsconfig.json --noEmit",
     "test:integration": "bun run test/integration/run.ts",
+    "test:concurrency": "bun run test/integration/live-concurrency.ts",
     "test:e2e": "bun run test/e2e/run.ts",
     "build": "bun run --cwd packages/config build && bun run --cwd packages/api-client build && bun run --cwd packages/db build && bun run --cwd packages/ui build && bun run --cwd apps/api build && bun run --cwd apps/web build && bun run --cwd apps/worker build",
     "db:generate": "bun run --cwd packages/db db:generate",

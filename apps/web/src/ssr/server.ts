@@ -17,6 +17,7 @@ import type {
   ProductSummary,
   SeoResolution,
 } from '@nova/api-client';
+import { isContentPageSlug } from '@nova/api-client';
 
 import {
   createSeoDocument,
@@ -65,6 +66,12 @@ const publicCache = 'public, s-maxage=60, stale-while-revalidate=300';
 const sitemapCache = 'public, s-maxage=300, stale-while-revalidate=900';
 const redirectCache = 'public, max-age=300';
 const noStoreCache = 'no-store';
+const sitemapMaxUrlCount = 50_000;
+const sitemapMaxBytes = 50 * 1024 * 1024;
+const sitemapResolverConcurrency = 16;
+const rfc3339DateTimePattern =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
+const contentPageSummaryFields = new Set(['slug', 'title', 'updatedAt']);
 
 function trimOrigin(value: string): string {
   return value.replace(/\/$/, '');
@@ -118,17 +125,19 @@ function isApiEnvelope(value: unknown): value is { data: unknown; meta: unknown 
 }
 
 function isContentPageSummaryList(value: unknown): value is ContentPageSummary[] {
-  if (!Array.isArray(value)) return false;
+  if (!Array.isArray(value) || value.length > sitemapMaxUrlCount) return false;
   return value.every((entry) => {
     if (!entry || typeof entry !== 'object') return false;
     const summary = entry as Record<string, unknown>;
     return (
-      typeof summary.slug === 'string' &&
+      Object.keys(summary).every((key) => contentPageSummaryFields.has(key)) &&
+      isContentPageSlug(summary.slug) &&
       isIndexablePublicRenderPath(`/content/${encodeURIComponent(summary.slug)}`) &&
       typeof summary.title === 'string' &&
       summary.title.trim().length > 0 &&
       typeof summary.updatedAt === 'string' &&
-      !Number.isNaN(Date.parse(summary.updatedAt))
+      rfc3339DateTimePattern.test(summary.updatedAt) &&
+      Number.isFinite(Date.parse(summary.updatedAt))
     );
   });
 }
@@ -811,11 +820,23 @@ async function indexableSitemapPaths(
   origin: string,
 ): Promise<string[]> {
   const candidates = [...new Set(paths)].filter(isRecognizedSitemapPath).sort();
-  const resolved = await Promise.all(
-    candidates.map(async (path) => {
-      const resolution = await getSeoResolution(apiOrigin, path, fetcher);
-      if (resolution.redirect || resolution.metadata?.noIndex) return null;
-      return effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
+  if (candidates.length > sitemapMaxUrlCount) {
+    throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+  }
+  const resolved: Array<string | null> = new Array(candidates.length);
+  let nextIndex = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(sitemapResolverConcurrency, candidates.length) }, async () => {
+      while (nextIndex < candidates.length) {
+        const index = nextIndex++;
+        const path = candidates[index];
+        if (path === undefined) return;
+        const resolution = await getSeoResolution(apiOrigin, path, fetcher);
+        resolved[index] =
+          resolution.redirect || resolution.metadata?.noIndex
+            ? null
+            : effectiveSitemapPath(origin, path, resolution.metadata?.canonicalUrl ?? null);
+      }
     }),
   );
   return resolved.filter((path): path is string => path !== null);
@@ -831,7 +852,13 @@ async function allCatalogProducts(apiOrigin: string, fetcher: Fetcher): Promise<
       catalogProductsPath(`limit=100&sort=newest&page=${page}`),
       fetcher,
     );
+    if (result.total > sitemapMaxUrlCount) {
+      throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+    }
     products.push(...result.items);
+    if (products.length > sitemapMaxUrlCount) {
+      throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+    }
     total = result.total;
     page += 1;
   } while (products.length < total && page <= 1000);
@@ -867,13 +894,20 @@ export async function sitemapResponse(options: RenderOptions): Promise<RenderRes
         .filter(isRecognizedSitemapPath),
     ];
     const indexablePaths = await indexableSitemapPaths(options.apiOrigin, paths, fetcher, origin);
+    if (new Set(indexablePaths).size > sitemapMaxUrlCount) {
+      throw new RenderApiError(502, 'Sitemap exceeds the URL limit');
+    }
+    const body = sitemapXml(origin, indexablePaths);
+    if (Buffer.byteLength(body, 'utf8') > sitemapMaxBytes) {
+      throw new RenderApiError(502, 'Sitemap exceeds the byte limit');
+    }
     return {
       status: 200,
       headers: new Headers({
         'Content-Type': 'application/xml; charset=utf-8',
         'Cache-Control': sitemapCache,
       }),
-      body: sitemapXml(origin, indexablePaths),
+      body,
     };
   } catch {
     return {

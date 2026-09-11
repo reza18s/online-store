@@ -383,19 +383,49 @@ test('fails closed when the content sitemap source is missing API metadata', asy
 });
 
 test('fails closed when the content sitemap source has an invalid summary', async () => {
-  const { fetcher } = fixtureFetcher({
-    '/v1/catalog/categories': [],
-    '/v1/content/pages': [{ title: 'بدون شناسه', updatedAt: '2026-09-11T00:00:00.000Z' }],
-    '/v1/catalog/products?limit=100&sort=newest&page=1': {
-      items: [],
-      total: 0,
-      page: 1,
-      limit: 100,
+  const invalidSummaries: Array<{ name: string; value: unknown }> = [
+    {
+      name: 'missing slug',
+      value: { title: 'بدون شناسه', updatedAt: '2026-09-11T00:00:00.000Z' },
     },
-  });
-  const result = await sitemapResponse({ ...optionsBase, fetcher });
-  assert.equal(result.status, 503);
-  assert.equal(result.headers.get('cache-control'), 'no-store');
+    {
+      name: 'overlong slug',
+      value: {
+        slug: 'a'.repeat(121),
+        title: 'بیش از حد طولانی',
+        updatedAt: '2026-09-11T00:00:00.000Z',
+      },
+    },
+    {
+      name: 'non-RFC3339 timestamp',
+      value: { slug: 'valid-page', title: 'تاریخ نامعتبر', updatedAt: '2026-09-11' },
+    },
+    {
+      name: 'unexpected field',
+      value: {
+        slug: 'valid-page',
+        title: 'فیلد اضافه',
+        updatedAt: '2026-09-11T00:00:00.000Z',
+        body: 'نباید در summary باشد',
+      },
+    },
+  ];
+
+  for (const entry of invalidSummaries) {
+    const { fetcher } = fixtureFetcher({
+      '/v1/catalog/categories': [],
+      '/v1/content/pages': [entry.value],
+      '/v1/catalog/products?limit=100&sort=newest&page=1': {
+        items: [],
+        total: 0,
+        page: 1,
+        limit: 100,
+      },
+    });
+    const result = await sitemapResponse({ ...optionsBase, fetcher });
+    assert.equal(result.status, 503, entry.name);
+    assert.equal(result.headers.get('cache-control'), 'no-store', entry.name);
+  }
 });
 
 test('renders home, category, and published content initial HTML from public reads', async () => {

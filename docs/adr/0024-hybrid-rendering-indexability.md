@@ -75,7 +75,10 @@ render 404 or are not indexable from being advertised. The content endpoint
 returns only sitemap-safe slug/title/updatedAt fields, so drafts and bodies do
 not enter crawler generation. A failure in any source or resolver lookup fails
 the sitemap closed with a non-cacheable 503 response; an optional deployment
-manifest is not used as a substitute for API truth.
+manifest is not used as a substitute for API truth. Resolver lookups are
+bounded to 16 concurrent requests, and the single-document sitemap is bounded
+by the standard 50,000-URL and 50 MiB limits; an over-limit result fails closed
+until sitemap index/partition support is introduced.
 
 ## Cache and deployment assumptions
 

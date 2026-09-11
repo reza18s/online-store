@@ -6,7 +6,7 @@
 
 Baseline: `master @ 93495aa9ee250c8cce964a76dfdf992ed7d6a1c5` (latest verified merged baseline; DB-001 and SEC-001 are included).
 
-Remote sync update (2026-09-12): read-only GitHub access is available again. `origin/master` resolves to `56f301fc79e1cebf57cf272f2a7750429bf9be50`; local `codex/integration` will be 77 commits ahead after the current documentation commit and has no remote branch; only PR #5 is currently open. No remote write was performed because push/PR mutation requires explicit authorization.
+Remote sync update (2026-09-12): read-only GitHub access is available again. `origin/master` resolves to `56f301fc79e1cebf57cf272f2a7750429bf9be50`; local `codex/integration` is ahead and has no remote branch, with the exact ahead count kept in live Git status; only PR #5 is currently open. No remote write was performed because push/PR mutation requires explicit authorization.
 
 - `DB-001` — ✅ completed and merged through PR #1; exact `postgres:16-alpine` runtime was verified on 2026-09-10 in isolated Compose project `nova-pg-check-20260910`.
 - `SEC-001` — ✅ completed and merged through PR #3; merge commit `93495aa9ee250c8cce964a76dfdf992ed7d6a1c5`.

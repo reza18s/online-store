@@ -24,6 +24,7 @@ import {
   normalizeCheckoutStep,
   parseCheckoutRouteParams,
   paymentRecoveryCopy,
+  shouldShowCheckoutOrderLoading,
   type CheckoutFailure,
   type CheckoutStep,
   type PaymentRecoveryState,
@@ -909,7 +910,7 @@ export function CheckoutPaymentRecoveryPage({ queryString = '' }: { queryString?
         <span>/</span>
         <span>بازیابی پرداخت</span>
       </div>
-      {orderQuery.isPending ? (
+      {shouldShowCheckoutOrderLoading(params.orderNumber, orderQuery.isPending) ? (
         <section
           className="mx-auto max-w-2xl animate-pulse border border-border bg-surface p-8"
           role="status"
@@ -947,7 +948,7 @@ export function CheckoutConfirmationPage({ queryString = '' }: { queryString?: s
         <span>/</span>
         <span>تأیید سفارش</span>
       </div>
-      {orderQuery.isPending ? (
+      {shouldShowCheckoutOrderLoading(params.orderNumber, orderQuery.isPending) ? (
         <section
           className="mx-auto max-w-2xl animate-pulse border border-border bg-surface p-8"
           role="status"

@@ -68,6 +68,13 @@ export function parseCheckoutRouteParams(queryString = ''): CheckoutRouteParams 
   };
 }
 
+export function shouldShowCheckoutOrderLoading(
+  orderNumber: string,
+  orderPending: boolean,
+): boolean {
+  return Boolean(orderNumber) && orderPending;
+}
+
 export function buildCheckoutHref(
   step: CheckoutStep,
   input: Pick<CheckoutRequestInput, 'addressId' | 'shippingMethod' | 'couponCode'>,

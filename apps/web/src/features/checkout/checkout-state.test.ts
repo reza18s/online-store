@@ -11,6 +11,7 @@ import {
   normalizeCheckoutStep,
   parseCheckoutRouteParams,
   paymentRecoveryCopy,
+  shouldShowCheckoutOrderLoading,
 } from './checkout-state';
 
 function apiError(status: number, code: string, message: string): ApiClientError {
@@ -47,6 +48,12 @@ test('keeps checkout route state normalized and preserves only safe step input',
     }),
     '#checkout/payment?addressId=addr%2F1&shipping=EXPRESS&coupon=SAVE10',
   );
+});
+
+test('does not show order loading when the recovery link has no order number', () => {
+  assert.equal(shouldShowCheckoutOrderLoading('', true), false);
+  assert.equal(shouldShowCheckoutOrderLoading('NV-TEST-001', false), false);
+  assert.equal(shouldShowCheckoutOrderLoading('NV-TEST-001', true), true);
 });
 
 test('reuses the idempotency key for the same checkout quote and rotates it when checkout state changes', () => {

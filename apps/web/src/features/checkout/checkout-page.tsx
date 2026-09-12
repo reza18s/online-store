@@ -839,9 +839,12 @@ function OrderRecoveryState({
 }) {
   if (order.paymentStatus === 'PAID' || order.status === 'CONFIRMED')
     return <ConfirmationBody order={order} />;
-  const copy = paymentRecoveryCopy(state);
   const authoritativeState = paymentStateForOrder(order) ?? state;
   const authoritativeCopy = paymentRecoveryCopy(authoritativeState);
+  const authoritativeActionHref =
+    authoritativeState === 'timeout'
+      ? `#order/${encodeURIComponent(order.orderNumber)}`
+      : buildCheckoutHref('payment', { addressId: '', shippingMethod: 'STANDARD' });
   return (
     <section className="confirmation-card" aria-labelledby="payment-recovery-title">
       <span className="confirmation-card__icon" aria-hidden="true">
@@ -856,13 +859,11 @@ function OrderRecoveryState({
       <div className="confirmation-card__actions">
         {authoritativeState === 'pending' ? (
           <Button type="button" size="lg" onClick={refetch}>
-            {copy.actionLabel}
+            {authoritativeCopy.actionLabel}
           </Button>
         ) : (
           <Button asChild size="lg">
-            <a href={buildCheckoutHref('payment', { addressId: '', shippingMethod: 'STANDARD' })}>
-              بازگشت به پرداخت
-            </a>
+            <a href={authoritativeActionHref}>{authoritativeCopy.actionLabel}</a>
           </Button>
         )}
         <Button asChild variant="outline" size="lg">

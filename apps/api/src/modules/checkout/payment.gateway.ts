@@ -29,6 +29,7 @@ export interface PaymentCallbackResult {
 export interface PaymentRefundInput {
   orderNumber: string;
   amountToman: number;
+  isFullRefund?: boolean;
   providerTransactionId?: string;
   idempotencyKey: string;
   reason: string;

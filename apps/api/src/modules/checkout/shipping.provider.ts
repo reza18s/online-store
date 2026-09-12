@@ -22,17 +22,17 @@ export interface ShippingProvider {
 }
 
 /**
- * Local V1 policy matching the approved Atelier checkout fixture.
- * Provider integration and the final nationwide pricing decision remain replaceable.
+ * Deterministic local/test policy. It deliberately has no transport dependency so
+ * local checkout never makes a provider request.
  */
 @Injectable()
-export class FixedShippingProvider implements ShippingProvider {
+export class LocalShippingProvider implements ShippingProvider {
   public async quote(input: ShippingQuoteInput): Promise<ShippingQuote> {
     if (input.method === 'EXPRESS') {
       return {
         method: input.method,
         amountToman: 89_000,
-        label: 'ارسال سریع',
+        label: 'اکسپرس',
         estimate: 'تحویل ۱ تا ۲ روز کاری',
       };
     }
@@ -40,8 +40,14 @@ export class FixedShippingProvider implements ShippingProvider {
     return {
       method: input.method,
       amountToman: 0,
-      label: 'ارسال عادی',
+      label: 'پیشتاز',
       estimate: 'تحویل بین ۲ تا ۴ روز کاری · سراسر ایران',
     };
   }
 }
+
+/**
+ * Compatibility name for existing checkout unit fixtures. Production wiring uses
+ * the explicit local/test or Tapin selection in checkout.module.ts.
+ */
+export class FixedShippingProvider extends LocalShippingProvider {}

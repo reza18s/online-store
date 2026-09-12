@@ -98,4 +98,17 @@ export default tseslint.config(
       '@typescript-eslint/no-misused-promises': 'off',
     },
   },
+  {
+    files: ['playwright.config.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: false,
+        projectService: false,
+      },
+    },
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-misused-promises': 'off',
+    },
+  },
 );

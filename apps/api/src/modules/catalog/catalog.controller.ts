@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import type {
@@ -52,11 +53,14 @@ import { CatalogFacetQueryDto } from './dto/catalog-facet.query';
 import {
   CreateAdminProductDto,
   CreateAdminProductMediaDto,
+  CompleteAdminProductMediaDto,
+  PresignAdminProductMediaDto,
   CreateAdminProductVariantDto,
   UpdateAdminProductDto,
   UpdateAdminProductMediaDto,
   UpdateAdminProductVariantDto,
 } from './dto/admin-product.dto';
+import type { CatalogMediaUploadPlan } from './catalog-media.storage';
 import {
   CreateAdminCategoryDto,
   CreateAdminProductOptionDto,
@@ -104,6 +108,14 @@ export class CatalogController {
     @Req() request: RequestWithId,
   ): Promise<ApiEnvelope<CatalogProduct>> {
     return this.envelope(request, await this.catalog.getProduct(slug));
+  }
+
+  @Get('media/:mediaId')
+  public async mediaAsset(
+    @Param('mediaId') mediaId: string,
+    @Res() response: { redirect(status: number, url: string): void },
+  ): Promise<void> {
+    response.redirect(302, await this.catalog.getMediaUrl(mediaId));
   }
 
   private envelope<T>(request: RequestWithId, data: T): ApiEnvelope<T> {
@@ -420,6 +432,34 @@ export class CatalogAdminController {
     if (!request.staff) throw new Error('StaffAuthGuard did not attach a staff user.');
     const media = await this.catalog.listMedia(request.staff, productId);
     return this.envelope(request, media.map(toAdminProductMediaResponse));
+  }
+
+  @Post('products/:productId/media/presign')
+  public async presignMedia(
+    @Param('productId') productId: string,
+    @Body() body: PresignAdminProductMediaDto,
+    @Req() request: StaffRequest,
+  ): Promise<ApiEnvelope<CatalogMediaUploadPlan>> {
+    if (!request.staff) throw new Error('StaffAuthGuard did not attach a staff user.');
+    return this.envelope(
+      request,
+      await this.catalog.presignMedia(request.staff, productId, body),
+    );
+  }
+
+  @Post('products/:productId/media/complete')
+  public async completeMedia(
+    @Param('productId') productId: string,
+    @Body() body: CompleteAdminProductMediaDto,
+    @Req() request: StaffRequest,
+  ): Promise<ApiEnvelope<AdminCatalogProductMedia>> {
+    if (!request.staff) throw new Error('StaffAuthGuard did not attach a staff user.');
+    return this.envelope(
+      request,
+      toAdminProductMediaResponse(
+        await this.catalog.completeMedia(request.staff, productId, body),
+      ),
+    );
   }
 
   @Post('products/:productId/media')

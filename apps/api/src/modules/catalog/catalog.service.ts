@@ -1,4 +1,11 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  Optional,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import type {
   CatalogCategory,
   CatalogFacetKey,
@@ -21,6 +28,12 @@ import {
 } from './dto/search-suggestions.query';
 import type { CatalogFacetQueryDto } from './dto/catalog-facet.query';
 import { normalizeSearchText, type ProductListQueryDto } from './dto/product-list.query';
+import {
+  CATALOG_MEDIA_STORAGE,
+  DisabledCatalogMediaStorage,
+  CatalogMediaStorageError,
+  type CatalogMediaStorage,
+} from './catalog-media.storage';
 
 interface InventorySnapshot {
   onHand: number;
@@ -278,7 +291,44 @@ function toVariant(
 
 @Injectable()
 export class CatalogService {
-  public constructor(private readonly database: DatabaseService) {}
+  private readonly storage: CatalogMediaStorage;
+
+  public constructor(
+    private readonly database: DatabaseService,
+    @Optional() @Inject(CATALOG_MEDIA_STORAGE) storage?: CatalogMediaStorage,
+  ) {
+    this.storage = storage ?? new DisabledCatalogMediaStorage();
+  }
+
+  public async getMediaUrl(mediaId: string): Promise<string> {
+    const media = await this.database.prisma.productMedia.findUnique({
+      where: { id: mediaId },
+      select: {
+        id: true,
+        productId: true,
+        storageStatus: true,
+        derivativeKey: true,
+      },
+    });
+    if (!media || media.storageStatus !== 'READY' || media.derivativeKey === null) {
+      throw new NotFoundException('رسانه پیدا نشد.');
+    }
+    try {
+      return await this.storage.createDerivativeReadUrl({
+        mediaId: media.id,
+        productId: media.productId,
+        derivativeKey: media.derivativeKey,
+      });
+    } catch (error) {
+      if (error instanceof CatalogMediaStorageError) {
+        throw new ServiceUnavailableException({
+          code: 'PRODUCT_MEDIA_STORAGE_UNAVAILABLE',
+          message: 'ذخیره‌سازی تصویر موقتاً در دسترس نیست.',
+        });
+      }
+      throw error;
+    }
+  }
 
   public async listCategories(): Promise<CatalogCategory[]> {
     const categories = await this.database.prisma.category.findMany({
@@ -647,6 +697,7 @@ export class CatalogService {
           FROM "ProductMedia" m
           WHERE m."productId" = p."id"
             AND m."kind" = 'PRODUCT'
+            AND m."storageStatus" <> 'QUARANTINED'
           ORDER BY m."sortOrder" ASC, m."id" ASC
           LIMIT 1
         ) media ON true
@@ -919,7 +970,7 @@ export class CatalogService {
           select: { category: { select: { id: true, slug: true, name: true } } },
         },
         media: {
-          where: { kind: 'PRODUCT' },
+          where: { kind: 'PRODUCT', storageStatus: { not: 'QUARANTINED' } },
           orderBy: { sortOrder: 'asc' },
           take: 1,
           select: { url: true, altText: true },
@@ -1015,6 +1066,7 @@ export class CatalogService {
           },
         },
         media: {
+          where: { storageStatus: { not: 'QUARANTINED' } },
           orderBy: { sortOrder: 'asc' },
           select: {
             url: true,

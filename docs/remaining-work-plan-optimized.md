@@ -18,7 +18,7 @@ Remote sync update (2026-09-12): read-only GitHub access is available again. `or
 - `ADMIN-002` — 🟡 page-local order-operations slice is implemented at task commit `e11e087` and locally route-integrated on `codex/integration` via `2f533f2`; focused API/page tests and web validation pass, while live authenticated operations and pixel-level mobile QA remain open.
 - `ADMIN-003` — 🟡 page-local support/finance inspection slice is implemented at task commit `3b9f58d` and locally integrated via `89cf11b` plus the shared route wiring `2f533f2`; focused tests and web validation pass, while live authenticated inspection and mobile/pixel QA remain open.
 - `ADMIN-004` — 🟡 page-local content/SEO/redirect slice is implemented at task commit `e525ac8` and locally integrated into `codex/integration` via cherry-pick `ede0745` plus parent route/fix commit `ba864c6`. Focused page tests, web typecheck, targeted lint/format, diff-check and the client+SSR build pass. Live authenticated mutations and mobile/pixel QA remain open.
-- `TEST-001` — ✅ deterministic follow-up commit `44dad93` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`; the 2026-09-11 live recheck on isolated project `nova-pg-check-now-20260911` verified exact PostgreSQL 16/Redis 7, migrations, seed, Redis/API health, the default storefront root-shell preflight, worker health/startup and both provider-independent outbox paths: fail-closed retry and local-sender `PENDING → SENT`. The 2026-09-12 explicit-`DATABASE_URL` `test:concurrency` run against healthy PostgreSQL 16 verified one-success/one-conflict reservation behavior with exact cleanup and baseline restoration; the live `test:e2e` preflight verified API health/readiness plus the temporary Vite root shell; and the built SSR smoke verified robots, sitemap, public category/product routes and private/unknown noindex behavior. Playwright journeys, authenticated flows and external provider delivery remain explicitly blocked or not run.
+- `TEST-001` — ✅ deterministic follow-up commit `44dad93` passed both independent review axes and parent validation, then was merged locally in `f34cbb5`; the 2026-09-11 live recheck on isolated project `nova-pg-check-now-20260911` verified exact PostgreSQL 16/Redis 7, migrations, seed, Redis/API health, the default storefront root-shell preflight, worker health/startup and both provider-independent outbox paths: fail-closed retry and local-sender `PENDING → SENT`. The 2026-09-12 explicit-`DATABASE_URL` `test:concurrency` run against healthy PostgreSQL 16 verified one-success/one-conflict reservation behavior with exact cleanup and baseline restoration; the live `test:e2e` preflight verified API health/readiness plus the temporary Vite root shell; the built SSR smoke verified robots, sitemap, public category/product routes and private/unknown noindex behavior; and the local Playwright suite now covers seven public/unauthenticated journeys, including protected admin redirect, client-side empty staff-login validation and account/order/return/checkout recovery boundaries, with `7/7` Chromium tests passing. Authenticated flows, storage upload, external provider delivery, formal visual comparison and full AT remain open.
 - `OPS-002` — ✅ the bounded CI prerequisite plus provider-independent backup-verification slice is accepted and merged locally into `codex/integration` as `c4f2aa6` (verifier task head `05b5c89`). Two final independent review axes accepted the verifier/runbook. No remote PR was created because repository export/push access is blocked; live PostgreSQL restore and the broader deployment, encryption, retention, WAL, media, monitoring and rollback scope remain open.
 - `OPS-001` — ✅ accepted and merged locally into `codex/integration` as `808dd7634a357eb45eb61da4e9b320c7146f2d62` from task commit `9e69d54d1dbec8355d308418ca61ebae9b4f284d`; focused worker validation passed. No remote PR was created because repository export/push access is blocked. The batched live gate now includes worker health and provider-independent outbox state-transition evidence; external provider delivery remains PROVIDER-002-owned.
 - `SEO-001` — ✅ final content-sitemap follow-up `770c96e` passed both independent review axes and was merged locally into `codex/integration` as `27116b72`; the published-content consumer, catalog-boundary validation, safe failure behavior and deterministic sitemap limits are now integrated. The deadline follow-up `e6ca5e6` bounds document and sitemap API reads with a shared five-second default deadline and abort signal, and `5c468df` serializes public route data into the initial context and primes the matching TanStack Query keys before client mount to prevent duplicate public catalog/content reads. Focused tests (50/50 before the deadline follow-ups; 35/35 after them), package typechecks, lint/format and web client+SSR build passed. The 2026-09-12 live SSR smoke rechecked robots, catalog sitemap, home, public category/product routes and private/unknown noindex behavior against the user-started API; published CMS content and full browser/crawler coverage remain open.
@@ -36,6 +36,21 @@ Remote sync update (2026-09-12): read-only GitHub access is available again. `or
 Existing implementation already covers most backend/domain foundations, Prisma migrations/seed, catalog/search/facets, cart/merge, customer/staff auth backend, checkout/order/payment logic, inventory, coupons, notification outbox, fulfillment/returns, content/SEO APIs, browser transport, admin dashboard and admin products. Main remaining work is production-connected UI, provider adapters, remaining published-CMS-content and full browser/crawler coverage, runtime/E2E, QA, observability/recovery and launch readiness.
 
 - `QA-001` — 🟡 audit and bounded owner fixes are integrated in `1bad6aa`; report `docs/design-qa.md` records the three findings, deterministic gates pass, and exact route/overflow plus staff-login keyboard/AX browser evidence is now available. Full AT and formal pixel gates remain unavailable.
+
+### Confirmed decision register — 2026-09-12
+
+The user-approved decisions from the provider and infrastructure grill are now execution inputs rather than unresolved blockers:
+
+- **Playwright:** use the approved registry or mirror, pin `@playwright/test@1.59.1`, and install Chromium with `npx playwright install chromium`; machine-local browser/cache state is not the repository solution.
+- **Payment:** ZarinPal official sandbox behind the existing gateway boundary; keep Rial/Toman conversion inside the adapter, verify authority/status, deduplicate callbacks, and exercise sandbox refund behavior.
+- **SMS:** SMS.ir Sandbox API Key behind the notification boundary; keep OTPs and provider secrets out of browser responses, logs and persisted application state.
+- **Shipping:** Tapin for the production adapter plus a deterministic no-network local sandbox; `STANDARD=پیشتاز`, `EXPRESS=اکسپرس` only where supported, prepaid/online only, and no COD in V1. The real quote remains authoritative.
+- **Returns:** seven days after delivery; full line-item returns only; the store pays reverse shipping and refunds original shipping for damaged/wrong/defective items, while size/color/change-of-mind returns are customer-paid and do not refund original shipping.
+- **Object storage:** local/staging use a host-local MinIO S3-compatible container with separate environment buckets/credentials; originals remain private, derivatives are public/read-only only after `READY`, and MinIO/DB/Redis are never directly public. No external object-storage backup is required for the current scope.
+- **Storage lifecycle/security:** no S3 versioning in V1; the local MinIO sandbox uses an explicit server-wide stale multipart-upload expiry of 24 hours with a 6-hour cleanup scan because this image does not accept `AbortIncompleteMultipartUpload` through `PutBucketLifecycle`; do not add a complete-object expiration rule; use quarantine before hard deletion; local may use loopback HTTP, while staging/production use HTTPS, encrypted volumes and rotated environment-specific credentials.
+- **CI/CD:** staging deploys automatically after CI; production requires manual approval; build once with a commit-SHA/digest image, promote the same digest, and roll back by redeploying the previous known-good image. The release gate includes typecheck/test/build, API/database/storage smoke checks and sandbox-only provider checks.
+
+Exact reverse-proxy tool, deployment-host wiring and CI provider/registry wiring remain implementation details to select when their host/repository constraints are known; they are not product/provider decision blockers.
 
 ---
 
@@ -192,14 +207,15 @@ TEST-001 + QA-001 + OPS-002 + accepted security/provider work ─> REL-001
 REL-001 + provider/launch decisions ─> LAUNCH-001
 ```
 
-### Waves
+### Current execution lanes (2026-09-12)
 
-- **Wave 0 now:** review/merge `DB-001`; run `SEC-001` + `API-001` in parallel under the ownership lock.
-- **Wave 1:** merge API; run/merge `WEB-001`; after SEC+API+WEB merge, run `AUTH-001`.
-- **Wave 2:** run `ADMIN-001..004`, `WEB-002..005`, and selected `PROVIDER-001..004` in parallel where their dependencies/inputs are satisfied.
-- **Wave 3:** `SEO-001`, `OPS-001`, `OPS-002`; `TEST-001` may build its skeleton earlier but can only finish against the integrated feature/provider runtime.
-- **Wave 4:** `QA-001` -> `REL-001`.
-- **Wave 5:** `LAUNCH-001` staging/reversible scope only.
+- **Remote hygiene (independent track):** reconcile the locally newer `API-001`, `WEB-001`, `OPS-001`, `OPS-002`, `SEO-001` and `CONTENT-001` revisions with their remote PR/branch state when remote write authorization is available. This does not block local implementation, but it is required before treating the remote branch as the release source.
+- **Gate 1:** finish the remaining `AUTH-001` authenticated login/MFA, full keyboard/AT and formal pixel evidence. This is the main prerequisite for protected admin and customer journeys.
+- **Parallel provider lane:** run `PROVIDER-001`, `PROVIDER-002` and `PROVIDER-004` with their approved sandbox/local inputs. Keep `PROVIDER-003` blocked until the official Tapin HTTP and parcel contract is verified; its deterministic local adapter remains available.
+- **Parallel product lane:** after the `AUTH-001` gate, run `ADMIN-001..004` and the authenticated part of `WEB-003` in parallel. `WEB-002`, `WEB-004` and `WEB-005` can continue their public and fail-closed work in parallel, while their protected/provider-backed journeys wait for the relevant inputs.
+- **Parallel operations lane:** execute the full `OPS-002` PostgreSQL 16 backup/restore and deployment/recovery evidence independently when an approved source, separate target and exclusive-maintenance gate exist.
+- **Joint final evidence:** after the UI/provider work is integrated, run `QA-001` and the protected/final `TEST-001` browser, storage-upload, provider and crawler gates; current deterministic tests and public browser smoke remain valid evidence but do not replace these gates.
+- **Release sequence:** `REL-001` follows the completed QA, TEST, provider and OPS evidence; `LAUNCH-001` follows REL and remains staging/reversible until explicit production authority is provided.
 
 ---
 
@@ -220,14 +236,14 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 | WEB-003      | WEB-001, AUTH-001                                                 | required                     | `codex/web-003-account-orders`         |
 | WEB-004      | WEB-001, API-001                                                  | required                     | `codex/web-004-checkout-recovery`      |
 | WEB-005      | WEB-001, API-001                                                  | required                     | `codex/web-005-content-system`         |
-| PROVIDER-001 | DB-001, API-001, gateway decision                                 | no                           | `codex/provider-001-payment`           |
-| PROVIDER-002 | DB-001, provider decision                                         | no                           | `codex/provider-002-sms-notifications` |
-| PROVIDER-003 | API-001, shipping policy                                          | no                           | `codex/provider-003-shipping`          |
-| PROVIDER-004 | DB-001, storage decision                                          | no                           | `codex/provider-004-media-storage`     |
+| PROVIDER-001 | DB-001, API-001, ZarinPal sandbox input                           | no                           | `codex/provider-001-payment`           |
+| PROVIDER-002 | DB-001, SMS.ir sandbox input                                     | no                           | `codex/provider-002-sms-notifications` |
+| PROVIDER-003 | API-001, Tapin and approved shipping policy                       | no                           | `codex/provider-003-shipping`          |
+| PROVIDER-004 | DB-001, local MinIO/S3 storage policy                             | no                           | `codex/provider-004-media-storage`     |
 | SEO-001      | API-001, WEB-001                                                  | no redesign                  | `codex/seo-001-ssr-indexability`       |
 | CONTENT-001  | DB-001, API-001                                                 | no                           | `codex/content-001-published-index`    |
 | OPS-001      | DB-001, PROVIDER-002                                              | no                           | `codex/ops-001-worker-observability`   |
-| OPS-002      | DB-001, provider decisions                                        | no                           | `codex/ops-002-backup-restore`         |
+| OPS-002      | DB-001, approved CI/CD and storage operations policy              | no                           | `codex/ops-002-backup-restore`         |
 | TEST-001     | DB-001, API-001 to start; integrated features/providers to finish | no                           | `codex/test-001-commerce-e2e`          |
 | QA-001       | all UI + SEO tasks                                                | uses supplied refs           | `codex/qa-001-responsive-rtl`          |
 | REL-001      | TEST-001, QA-001, OPS-002 + accepted security/provider work       | no                           | `codex/rel-001-release-audit`          |
@@ -467,7 +483,9 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## PROVIDER-001 — payment gateway
 
-**Blocked input:** selected Iranian gateway + sandbox docs/credentials outside Git.
+**Status (2026-09-12):** 🟡 local deterministic gate strengthened: explicit `Status=NOK` callbacks now fail closed without provider verification and regression coverage confirms that a successful provider response cannot upgrade the callback to `PAID`. The focused provider suite, full unit matrix, integration matrix, typechecks, lint, build and live runtime smoke pass; ZarinPal sandbox credentials/transaction remain required for the external gate.
+
+**Decision:** ZarinPal official sandbox. Provider documentation and credentials remain outside Git.
 
 **Goal:** selected provider behind existing `PaymentGateway` for start, callback verification, refund, timeout and reconciliation.
 
@@ -483,7 +501,9 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## PROVIDER-002 — SMS/notification sender
 
-**Blocked input:** selected provider + sandbox docs/credentials outside Git.
+**Status (2026-09-12):** 🟡 local deterministic gate strengthened: API and worker SMS.ir base URLs are trimmed before endpoint construction, and the worker now rejects cleartext `http://` configuration. The focused API/worker provider tests, full unit matrix, integration matrix, typechecks, lint, build and live runtime smoke pass; SMS.ir sandbox credentials/template/recipient remain required for the external gate.
+
+**Decision:** SMS.ir sandbox. Provider documentation and credentials remain outside Git.
 
 **Goal:** connect OTP delivery + notification outbox to provider while preserving cooldown/retry/lease/dedupe/redaction.
 
@@ -499,7 +519,7 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## PROVIDER-003 — shipping
 
-**Blocked input:** provider, supported provinces, pricing, return-shipping policy, sandbox/test mode.
+**Decision:** Tapin production adapter plus a deterministic no-network local shipping sandbox; the approved province/method/pricing and return-shipping policy are recorded above. Provider credentials remain outside Git.
 
 **Goal:** selected provider behind `ShippingProvider` for quote, ETA and tracking where supported.
 
@@ -515,7 +535,9 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## PROVIDER-004 — object storage/media
 
-**Blocked input:** storage ownership/region/bucket policy + sandbox access outside Git.
+**Status (2026-09-12):** 🟡 local deterministic gate strengthened: S3 SigV4 canonical headers/query values use bytewise ordering and media object IDs reject trailing line terminators/non-string runtime values. Focused media/admin-asset tests, full unit matrix, integration matrix, typechecks, lint, build and live runtime smoke pass; authenticated API presign/upload/complete against MinIO remains required.
+
+**Decision:** host-local MinIO S3-compatible sandbox with separate environment buckets/credentials; no external object-storage backup is required for the current scope. Provider credentials remain outside Git.
 
 **Goal:** secure S3-compatible media storage connected to admin media records.
 
@@ -581,15 +603,15 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## OPS-002 — CI/deployment/backup/monitoring
 
-**Status:** ✅ the CI prerequisite and bounded PostgreSQL backup/restore verifier are accepted and merged locally into `codex/integration` as `c4f2aa6`. The verifier task head is `05b5c89`; two final independent review axes accepted its environment-only credential boundary, safe database selection, pinned endpoint/cluster identity, atomic archive publication, broad target sanity checks and explicit operator-maintenance gate. No remote PR was created because repository export/push access is blocked. Live backup/restore evidence and the broader deployment, encryption, retention, WAL, media, monitoring and rollback scope remain open.
+**Status:** ✅ the CI prerequisite and bounded PostgreSQL backup/restore verifier are accepted and merged locally into `codex/integration` as `c4f2aa6`. The verifier task head is `05b5c89`; two final independent review axes accepted its environment-only credential boundary, safe database selection, pinned endpoint/cluster identity, atomic archive publication, broad target sanity checks and explicit operator-maintenance gate. The 2026-09-12 decision register now fixes CI/CD promotion, host-managed secrets, production image digests, manual production approval and previous-digest rollback. No external object-storage backup is required for the current MinIO scope; Docker volume persistence is not represented as backup. No remote PR was created because repository export/push access is blocked. Live deployment/rollback evidence and the remaining monitoring/recovery gates remain open.
 
-**Goal:** reproducible CI, staging config, probes, monitoring, backup ownership and executed restore/rollback evidence.
+**Goal:** reproducible CI/CD, staging configuration, probes, monitoring and executable deployment/rollback evidence under the approved storage and provider policies.
 
 **Own:** CI workflows, `infra/deploy/**`, `infra/monitoring/**`, deployment-safe Docker corrections, runbooks/env validation.
 
-**Must:** CI typecheck/lint/test/build/docker/migrations as applicable; define live/ready semantics without optional provider false-failures; encrypted DB/media backup/retention/ownership/restore/rollback; alerts for stale pending payments, failed/refund backlog, notification failure, reservation expiry, backup age, readiness; execute isolated restore drill. The accepted verifier is intentionally only the provider-independent archive/restore safety slice: full mode needs authorized PostgreSQL 16 credentials, a separate cluster, `pg_control_system()` access, and `NOVA_BACKUP_RESTORE_TARGET_EXCLUSIVE_APPROVAL=approved`; missing provider/operational decisions remain `BLOCKED`.
+**Must:** CI typecheck/lint/test/build/docker/migrations as applicable; deploy staging automatically after CI and production only after manual approval; build once and promote an immutable commit-SHA/digest image; keep live/ready semantics independent of optional provider false-failures; inject staging/production secrets from host-managed secret storage; preserve a previous-digest rollback path; monitor stale pending payments, failed/refund backlog, notification failure, reservation expiry and readiness. The accepted verifier remains the provider-independent PostgreSQL archive/restore safety slice: full mode needs authorized PostgreSQL 16 credentials, a separate cluster, `pg_control_system()` access, and `NOVA_BACKUP_RESTORE_TARGET_EXCLUSIVE_APPROVAL=approved`. No external object-storage backup is a current requirement.
 
-**Accept:** clean PR gets reproducible CI; the bounded verifier is executable and safety-reviewed; production restore/rollback is executable and evidence-backed only after the provider/owner/runtime gates are completed; no secret/irreversible production action.
+**Accept:** clean PR gets reproducible CI; staging promotion and production manual approval are executable; image promotion uses one immutable digest; the previous-digest rollback path is documented/tested; the bounded verifier remains executable and safety-reviewed; no secret or irreversible production action is performed without the required gate.
 
 **PR:** `chore(OPS-002): add CI and recovery readiness`
 
@@ -663,16 +685,15 @@ REL-001 + provider/launch decisions ─> LAUNCH-001
 
 ## 5) Merge order / integration policy
 
-1. `DB-001` is merged and its exact PostgreSQL 16 runtime gate is verified in isolated project `nova-pg-check-20260910`; keep that evidence separate from the unrelated legacy Docker stack.
-2. `SEC-001` is merged; push, review and merge the locally accepted `API-001` revision in PR #2 after GitHub DNS is available.
-3. WEB-001 is accepted and merged locally; push/create its PR when repository access is available, then keep its shared-file ownership frozen.
-4. Complete the AUTH-001 visual gate against the adopted staff-login artifact at the required viewports and states; the composition follow-up is locally committed in `03ed76f` and the available default-viewport CUA check is aligned. Then smoke real protected admin routing and push/create its PR when repository access is available.
-5. Run eligible admin/storefront/provider tasks in parallel. Every visual task must create or adopt its design artifact before code; do not skip the design gate or use the artifact as a substitute for runtime QA.
-6. SEO-001 and CONTENT-001 are accepted and merged locally in `27116b72`, and the bounded OPS-002 verifier is merged in `c4f2aa6`; push/create their PRs when repository access is available, then run the batched worker/DB/API/browser/crawler gate. Execute the OPS-002 full restore verifier only after its separate-cluster, PostgreSQL 16 and exclusive-maintenance inputs are approved.
-7. Review the completed `TEST-001` evidence against the integrated runtime; retain `BLOCKED`/`NOT RUN` labels for unavailable live gates.
-8. Review the completed `QA-001` report and land only the bounded A11Y owner fixes; browser/AT/pixel evidence remains a separate gate.
-9. `REL-001` is the final gate after the A11Y follow-ups and applicable live/runtime evidence. Do not advance with task-caused failures, unreachable routes, secret exposure, unresolved migration/security/provider gaps or unverified required visuals.
-10. `LAUNCH-001` remains staging/reversible until separate explicit production authority is provided.
+1. Keep the exact `DB-001` and `SEC-001` runtime/security evidence as the baseline; do not reopen completed local work.
+2. Reconcile the locally newer contract and accepted-task revisions with remote PR/branch state when explicit remote-write authorization is available. `API-001` remote review is the first synchronization item, but local feature work can continue against the integrated contract.
+3. Complete `AUTH-001` final authenticated, keyboard/AT and formal visual evidence, then keep the protected route boundary in place.
+4. Run `PROVIDER-001`, `PROVIDER-002` and `PROVIDER-004` in parallel with the approved non-production inputs. Do not substitute an invented Tapin contract for the `PROVIDER-003` blocker.
+5. Run `ADMIN-001..004`, `WEB-002..005` and their relevant live/provider checks in parallel once each dependency is satisfied; every visual task must retain its design artifact and runtime evidence.
+6. Execute the full `OPS-002` restore/deployment/recovery gate independently when the separate PostgreSQL 16 target and maintenance approval exist.
+7. Batch the integrated `QA-001` and final protected `TEST-001` evidence, preserving `PASS | BLOCKED | NOT RUN` labels for credentials, provider, storage, AT and pixel gates that are unavailable.
+8. Run `REL-001` only after the applicable UI, provider, QA, TEST and OPS evidence is complete and reviewed.
+9. Run `LAUNCH-001` as a reversible staging gate; do not perform production DNS, payment capture, live-customer-data operations or irreversible migrations without explicit approval.
 
 ---
 
@@ -726,6 +747,6 @@ Project is complete only when all applicable items have evidence:
 
 ## Remaining user decisions
 
-- Keep `master` as integration branch or create a dedicated integration branch before larger parallel waves.
-- Supply an exact screenshot/reference when a specific existing fidelity is required; otherwise the Head Agent generates one design artifact from the relevant brief before implementation, together with viewport and state coverage.
-- Select payment, SMS/notification, shipping, object storage, hosting/backup/monitoring providers and final shipping/returns policy.
+No blocking product/provider decision remains from the 2026-09-12 grill. The current local integration branch is `codex/integration`; the supplied Atelier references remain the design inputs where applicable.
+
+Deferred implementation details are intentionally kept out of this decision register: the exact reverse-proxy tool, deployment-host wiring and CI provider/registry wiring should be selected when their host/repository constraints are known. They must not reopen the already-approved provider, storage, security or CI/CD policies.

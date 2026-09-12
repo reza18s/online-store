@@ -14,6 +14,12 @@ import {
   MinLength,
 } from 'class-validator';
 
+import {
+  CATALOG_MEDIA_CONTENT_TYPES,
+  CATALOG_MEDIA_MAX_BYTES,
+  type CatalogMediaContentType,
+} from '../catalog-media.storage';
+
 export const ADMIN_PRODUCT_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const POSTGRES_INT_MAX = 2_147_483_647;
 export const ADMIN_PRODUCT_MEDIA_KINDS = ['PRODUCT', 'DETAIL', 'SWATCH'] as const;
@@ -264,4 +270,46 @@ export class UpdateAdminProductMediaDto {
   @Min(1)
   @Max(10_000)
   public height?: number | null;
+}
+
+export class PresignAdminProductMediaDto {
+  @IsIn(CATALOG_MEDIA_CONTENT_TYPES)
+  public contentType!: CatalogMediaContentType;
+
+  @IsInt()
+  @Min(1)
+  @Max(CATALOG_MEDIA_MAX_BYTES)
+  public sizeBytes!: number;
+
+  @IsInt()
+  @Min(1)
+  @Max(10_000)
+  public width!: number;
+
+  @IsInt()
+  @Min(1)
+  @Max(10_000)
+  public height!: number;
+}
+
+export class CompleteAdminProductMediaDto extends PresignAdminProductMediaDto {
+  @IsString()
+  @MinLength(1)
+  @MaxLength(128)
+  public assetId!: string;
+
+  @IsString()
+  @MinLength(1)
+  @MaxLength(240)
+  public altText!: string;
+
+  @IsOptional()
+  @IsIn(ADMIN_PRODUCT_MEDIA_KINDS)
+  public kind?: AdminProductMediaKind;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(100_000)
+  public sortOrder?: number;
 }

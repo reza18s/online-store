@@ -39,12 +39,43 @@ $env:NOVA_E2E_WEB_URL = 'http://127.0.0.1:5173'
 bun run test:e2e
 ```
 
-This checkout has no Playwright dependency and no safe automated source of
-customer OTP, CAPTCHA, SMS, or staff MFA values. Therefore Playwright
-interaction journeys, authenticated checkout, payment redirects/callbacks,
-and admin mutations are explicitly `NOT RUN`/`BLOCKED`, not skipped passing
-tests. Add a browser runner only after the repository adopts an approved
-Playwright setup and user-controlled test credentials/fixtures.
+The repository now has a pinned Playwright browser runner. Install the
+workspace dependencies and the Chromium browser once:
+
+```powershell
+bun install
+npx playwright install chromium
+```
+
+Start the API and Vite storefront using the runbook above, then run the
+anonymous browser smoke:
+
+```powershell
+bun run test:e2e:browser
+```
+
+The browser runner uses `NOVA_E2E_WEB_URL` (default
+`http://127.0.0.1:5173`), keeps browser reports in ignored output folders, and
+currently covers only the public RTL storefront shell. It does not enter or
+invent customer OTP, CAPTCHA, SMS, staff MFA, payment-provider, or other
+authenticated values. Authenticated checkout, payment redirects/callbacks,
+and admin mutations remain explicitly `NOT RUN`/`BLOCKED`, not skipped passing
+tests.
+
+If the pinned Playwright Chromium download is unavailable on a local machine,
+an operator may use the installed Chrome channel for a local smoke only:
+
+```powershell
+$env:NOVA_E2E_BROWSER_CHANNEL = 'chrome'
+bun run test:e2e:browser
+```
+
+An already-installed Chromium-compatible executable can be selected with
+`NOVA_E2E_BROWSER_PATH` instead. Set only one of these two overrides at a
+time; neither changes the repository default.
+
+The repository default remains the pinned Playwright Chromium browser; this
+override is not a substitute for the reproducible browser install in CI.
 
 The runner rejects URL credentials, query strings, and fragments and logs only
 the parsed origin. It keeps the local API readiness and storefront prerequisite

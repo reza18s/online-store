@@ -1,12 +1,22 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { BadRequestException, ConflictException, ForbiddenException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  ForbiddenException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 
 import { AuditService } from '../audit/audit.service';
 import type { AuthenticatedStaff } from '../auth/session.service';
 import { CatalogAdminService } from './catalog-admin.service';
 import {
+  CatalogMediaStorageError,
+  type CatalogMediaStorage,
+} from './catalog-media.storage';
+import {
+  CompleteAdminProductMediaDto,
   CreateAdminProductMediaDto,
   CreateAdminProductVariantDto,
   UpdateAdminProductMediaDto,
@@ -46,6 +56,59 @@ interface FakeMedia {
   sortOrder: number;
   width: number | null;
   height: number | null;
+  storageStatus?: 'LEGACY' | 'READY' | 'QUARANTINED';
+  originalKey?: string | null;
+  derivativeKey?: string | null;
+  contentType?: string | null;
+  sizeBytes?: number | null;
+}
+
+class FakeMediaStorage implements CatalogMediaStorage {
+  public completeError: CatalogMediaStorageError | null = null;
+  public failDatabaseCreate = false;
+  public readonly quarantineCalls: Array<{ mediaId: string; productId: string }> = [];
+
+  public async createUpload(input: {
+    assetId: string;
+    productId: string;
+    contentType: 'image/avif' | 'image/gif' | 'image/jpeg' | 'image/png' | 'image/webp';
+    sizeBytes: number;
+    width: number;
+    height: number;
+  }) {
+    return {
+      assetId: input.assetId,
+      original: { key: `catalog/products/${input.productId}/${input.assetId}/original.jpg`, url: 'https://upload.test/original', headers: {} },
+      derivative: { key: `catalog/products/${input.productId}/${input.assetId}/derivative.jpg`, url: 'https://upload.test/derivative', headers: {} },
+      expiresInSeconds: 900,
+      multipartExpiresHours: 24,
+    };
+  }
+
+  public async completeUpload(input: {
+    assetId: string;
+    productId: string;
+    contentType: 'image/avif' | 'image/gif' | 'image/jpeg' | 'image/png' | 'image/webp';
+    sizeBytes: number;
+    width: number;
+    height: number;
+  }) {
+    if (this.completeError) throw this.completeError;
+    return {
+      originalKey: `catalog/products/${input.productId}/${input.assetId}/original.jpg`,
+      derivativeKey: `catalog/products/${input.productId}/${input.assetId}/derivative.jpg`,
+      contentType: input.contentType,
+      sizeBytes: input.sizeBytes,
+    };
+  }
+
+  public async createDerivativeReadUrl(): Promise<string> {
+    return 'https://cdn.test/ready.webp';
+  }
+
+  public async quarantine(input: { mediaId: string; productId: string }): Promise<void> {
+    this.quarantineCalls.push(input);
+  }
 }
 
 interface AuditRecord {
@@ -101,6 +164,11 @@ function createMedia(overrides: Partial<FakeMedia> = {}): FakeMedia {
     sortOrder: 0,
     width: 1200,
     height: 1600,
+    storageStatus: 'LEGACY',
+    originalKey: null,
+    derivativeKey: null,
+    contentType: null,
+    sizeBytes: null,
     ...overrides,
   };
 }
@@ -122,6 +190,8 @@ function createService(
     media?: FakeMedia[];
     optionValues?: FakeOptionValue[];
     forcedVariantUpdateCount?: number;
+    storage?: CatalogMediaStorage;
+    failDatabaseCreate?: boolean;
   } = {},
 ) {
   const product = {
@@ -223,6 +293,13 @@ function createService(
     },
     productMedia: {
       findMany: async () => media.map(cloneMedia),
+      findFirst: async ({ where }: { where: { OR: Array<{ originalKey?: string; derivativeKey?: string }> } }) => {
+        const keys = where.OR.flatMap((entry) => Object.values(entry));
+        const item = media.find(
+          (candidate) => keys.includes(candidate.originalKey ?? '') || keys.includes(candidate.derivativeKey ?? ''),
+        );
+        return item ? { id: item.id } : null;
+      },
       findUnique: async ({ where }: { where: { id: string } }) => {
         const item = media.find((candidate) => candidate.id === where.id);
         return item
@@ -230,8 +307,9 @@ function createService(
           : null;
       },
       create: async ({ data }: { data: Record<string, unknown> }) => {
+        if (options.failDatabaseCreate) throw new Error('database create failed');
         const item = createMedia({
-          id: 'media-2',
+          id: (data.id as string | undefined) ?? 'media-2',
           productId: product.id,
           url: data.url as string,
           altText: data.altText as string,
@@ -239,6 +317,11 @@ function createService(
           sortOrder: data.sortOrder as number,
           width: data.width as number | null,
           height: data.height as number | null,
+          storageStatus: data.storageStatus as FakeMedia['storageStatus'],
+          originalKey: data.originalKey as string | null,
+          derivativeKey: data.derivativeKey as string | null,
+          contentType: data.contentType as string | null,
+          sizeBytes: data.sizeBytes as number | null,
         });
         media.push(item);
         return cloneMedia(item);
@@ -283,7 +366,7 @@ function createService(
       callback(transaction),
   };
   const audit = new AuditService({ prisma } as never);
-  const service = new CatalogAdminService({ prisma } as never, audit);
+  const service = new CatalogAdminService({ prisma } as never, audit, options.storage);
 
   return { service, variants, media, audits };
 }
@@ -459,4 +542,133 @@ test('allows staff to read assets but keeps asset writes admin-only', async () =
     service.createVariant(support, 'product-1', new CreateAdminProductVariantDto()),
     (error: unknown) => error instanceof ForbiddenException,
   );
+});
+
+test('presigns private original and derivative uploads, then attaches only READY media', async () => {
+  const storage = new FakeMediaStorage();
+  const { service, media, audits } = createService({ storage });
+  const upload = await service.presignMedia(createAdmin(), 'product-1', {
+    contentType: 'image/jpeg',
+    sizeBytes: 240_000,
+    width: 1200,
+    height: 1600,
+  });
+  assert.equal(upload.expiresInSeconds, 900);
+  assert.equal(upload.multipartExpiresHours, 24);
+  assert.match(upload.original.key, /\/original\.jpg$/);
+  assert.match(upload.derivative.key, /\/derivative\.jpg$/);
+
+  const created = await service.completeMedia(createAdmin(), 'product-1', {
+    assetId: upload.assetId,
+    contentType: 'image/jpeg',
+    sizeBytes: 240_000,
+    width: 1200,
+    height: 1600,
+    altText: 'نمای جلوی مانتوی لینن',
+  });
+
+  assert.equal(created.url, `/v1/catalog/media/${created.id}`);
+  assert.equal(media.at(-1)?.storageStatus, 'READY');
+  assert.equal(audits.at(-1)?.action, 'catalog.product.media_created');
+});
+
+test('fails closed for private media operations when storage is not configured', async () => {
+  const { service } = createService();
+
+  await assert.rejects(
+    service.presignMedia(createAdmin(), 'product-1', {
+      contentType: 'image/png',
+      sizeBytes: 12_000,
+      width: 800,
+      height: 800,
+    }),
+    (error: unknown) =>
+      error instanceof ServiceUnavailableException &&
+      (error.getResponse() as { code?: string }).code === 'PRODUCT_MEDIA_STORAGE_UNAVAILABLE',
+  );
+});
+
+test('quarantines uploaded objects when the media row cannot be created', async () => {
+  const storage = new FakeMediaStorage();
+  const { service } = createService({ storage, failDatabaseCreate: true });
+  const input = Object.assign(new CompleteAdminProductMediaDto(), {
+    assetId: 'asset-orphan',
+    contentType: 'image/webp',
+    sizeBytes: 20_000,
+    width: 600,
+    height: 800,
+    altText: 'تصویر موقت',
+  });
+
+  await assert.rejects(service.completeMedia(createAdmin(), 'product-1', input));
+  assert.equal(storage.quarantineCalls.length, 1);
+  assert.equal(storage.quarantineCalls[0]?.productId, 'product-1');
+  assert.match(storage.quarantineCalls[0]?.mediaId ?? '', /^[A-Za-z0-9-]{36}$/);
+});
+
+test('rejects duplicate attachment and derivative-not-ready completion without writes', async () => {
+  const storage = new FakeMediaStorage();
+  const fixture = createService({ storage });
+  const upload = await fixture.service.presignMedia(createAdmin(), 'product-1', {
+    contentType: 'image/png',
+    sizeBytes: 20_000,
+    width: 600,
+    height: 800,
+  });
+  const input = Object.assign(new CompleteAdminProductMediaDto(), {
+    assetId: upload.assetId,
+    contentType: 'image/png',
+    sizeBytes: 20_000,
+    width: 600,
+    height: 800,
+    altText: 'تصویر محصول',
+  });
+  await fixture.service.completeMedia(createAdmin(), 'product-1', input);
+  await assert.rejects(
+    fixture.service.completeMedia(createAdmin(), 'product-1', input),
+    (error: unknown) =>
+      error instanceof ConflictException &&
+      (error.getResponse() as { code?: string }).code === 'PRODUCT_MEDIA_ASSET_ALREADY_ATTACHED',
+  );
+
+  const failingStorage = new FakeMediaStorage();
+  failingStorage.completeError = new CatalogMediaStorageError(
+    'MEDIA_OBJECT_NOT_READY',
+    'derivative is not ready',
+  );
+  const failing = createService({ storage: failingStorage });
+  await assert.rejects(
+    failing.service.completeMedia(createAdmin(), 'product-1', input),
+    (error: unknown) =>
+      error instanceof ConflictException &&
+      (error.getResponse() as { code?: string }).code === 'PRODUCT_MEDIA_OBJECT_NOT_READY',
+  );
+});
+
+test('quarantines READY originals and derivatives before deleting stored media', async () => {
+  const storage = new FakeMediaStorage();
+  const fixture = createService({
+    storage,
+    media: [
+      createMedia({
+        storageStatus: 'READY',
+        originalKey: 'catalog/products/product-1/media-1/original.webp',
+        derivativeKey: 'catalog/products/product-1/media-1/derivative.webp',
+        contentType: 'image/webp',
+        sizeBytes: 30_000,
+      }),
+      createMedia({ id: 'media-2', kind: 'DETAIL' }),
+    ],
+  });
+
+  await fixture.service.deleteMedia(createAdmin(), 'product-1', 'media-1');
+  assert.deepEqual(storage.quarantineCalls, [
+    {
+      mediaId: 'media-1',
+      productId: 'product-1',
+      originalKey: 'catalog/products/product-1/media-1/original.webp',
+      derivativeKey: 'catalog/products/product-1/media-1/derivative.webp',
+    },
+  ]);
+  assert.equal(fixture.media.some((media) => media.id === 'media-1'), false);
 });

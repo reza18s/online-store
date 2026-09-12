@@ -308,6 +308,7 @@ export class PaymentService {
       result = await this.gateway.refundPayment({
         orderNumber: input.orderNumber,
         amountToman: input.amountToman,
+        isFullRefund: input.amountToman === order.totalToman,
         providerTransactionId: input.providerTransactionId,
         idempotencyKey: input.idempotencyKey,
         reason,
@@ -745,6 +746,7 @@ export class PaymentService {
       const result = await this.gateway.refundPayment({
         orderNumber: callback.orderNumber,
         amountToman: attempt.amountToman,
+        isFullRefund: true,
         providerTransactionId:
           callback.providerTransactionId ?? attempt.providerTransactionId ?? undefined,
         idempotencyKey: `late-payment:${attempt.id}`,

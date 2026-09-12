@@ -301,6 +301,48 @@
         }
       }
     },
+    "/v1/catalog/media/{mediaId}": {
+      "get": {
+        "operationId": "catalogMediaAsset",
+        "tags": ["catalog"],
+        "x-nova-schema-status": "inventory-only",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/MediaId"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "Redirect to a short-lived private derivative URL.",
+            "headers": {
+              "Location": {
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError404"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "security": [],
+        "x-nova-csrf": {
+          "required": false,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "cookieIssuedOnSafeRequest": true
+        }
+      }
+    },
     "/v1/search": {
       "get": {
         "operationId": "catalogSearch",
@@ -2627,6 +2669,44 @@
           "headerName": "x-csrf-token",
           "reason": "Provider callback is signature-validated and marked @SkipCsrf."
         }
+      },
+      "get": {
+        "operationId": "paymentCallbackRedirect",
+        "x-nova-schema-status": "inventory-only",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/PaymentCallbackResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError404"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError409"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Provider"
+          }
+        ],
+        "x-nova-callback": {
+          "payload": "provider-specific query parameters",
+          "csrfBypass": "@SkipCsrf"
+        },
+        "security": [],
+        "x-nova-csrf": {
+          "required": false,
+          "skipped": true,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "reason": "Provider redirect callback is verified by the configured gateway and marked @SkipCsrf."
+        }
       }
     },
     "/v1/admin/catalog/categories": {
@@ -3674,6 +3754,121 @@
         "x-nova-request-dto": "CreateAdminProductMediaDto",
         "requestBody": {
           "$ref": "#/components/requestBodies/CreateAdminProductMedia"
+        },
+        "security": [
+          {
+            "staffSession": [],
+            "csrfToken": []
+          }
+        ],
+        "x-nova-auth": "staff:admin",
+        "x-nova-auth-requirement": {
+          "principal": "staff",
+          "roles": ["admin"],
+          "sessionCookie": "nova_staff_session"
+        },
+        "x-nova-csrf": {
+          "required": true,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "originHeader": "origin",
+          "originValidation": "configured web origin"
+        }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/media/presign": {
+      "post": {
+        "operationId": "adminCatalogProductMediaPresign",
+        "x-nova-schema-status": "inventory-only",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/CatalogMediaUploadPlan"
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError401"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError403"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError404"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError503"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProductId"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PresignAdminProductMedia"
+        },
+        "security": [
+          {
+            "staffSession": [],
+            "csrfToken": []
+          }
+        ],
+        "x-nova-auth": "staff:admin",
+        "x-nova-auth-requirement": {
+          "principal": "staff",
+          "roles": ["admin"],
+          "sessionCookie": "nova_staff_session"
+        },
+        "x-nova-csrf": {
+          "required": true,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "originHeader": "origin",
+          "originValidation": "configured web origin"
+        }
+      }
+    },
+    "/v1/admin/catalog/products/{productId}/media/complete": {
+      "post": {
+        "operationId": "adminCatalogProductMediaComplete",
+        "x-nova-schema-status": "inventory-only",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AdminCatalogProductMedia"
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError401"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError403"
+          },
+          "404": {
+            "$ref": "#/components/responses/ApiError404"
+          },
+          "409": {
+            "$ref": "#/components/responses/ApiError409"
+          },
+          "503": {
+            "$ref": "#/components/responses/ApiError503"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/ProductId"
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CompleteAdminProductMedia"
         },
         "security": [
           {
@@ -5392,6 +5587,26 @@
           }
         }
       },
+      "PresignAdminProductMedia": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PresignAdminProductMedia"
+            }
+          }
+        }
+      },
+      "CompleteAdminProductMedia": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CompleteAdminProductMedia"
+            }
+          }
+        }
+      },
       "ProductStatus": {
         "required": true,
         "content": {
@@ -5840,6 +6055,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ApiEnvelopeAdminCatalogProductMedia"
+            }
+          }
+        }
+      },
+      "CatalogMediaUploadPlan": {
+        "description": "Private catalog media upload plan envelope",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiEnvelopeCatalogMediaUploadPlan"
             }
           }
         }
@@ -9545,6 +9770,78 @@
         },
         "additionalProperties": false
       },
+      "PresignAdminProductMedia": {
+        "type": "object",
+        "required": ["contentType", "sizeBytes", "width", "height"],
+        "properties": {
+          "contentType": {
+            "type": "string",
+            "enum": ["image/avif", "image/gif", "image/jpeg", "image/png", "image/webp"]
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 15728640
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          }
+        },
+        "additionalProperties": false
+      },
+      "CompleteAdminProductMedia": {
+        "type": "object",
+        "required": ["assetId", "contentType", "sizeBytes", "width", "height", "altText"],
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "contentType": {
+            "type": "string",
+            "enum": ["image/avif", "image/gif", "image/jpeg", "image/png", "image/webp"]
+          },
+          "sizeBytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 15728640
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "altText": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["PRODUCT", "DETAIL", "SWATCH"]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100000
+          }
+        },
+        "additionalProperties": false
+      },
       "ProductStatus": {
         "type": "object",
         "required": ["status"],
@@ -11284,6 +11581,73 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/AdminCatalogProductMedia"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ApiMeta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatalogMediaUploadPlan": {
+        "type": "object",
+        "required": [
+          "assetId",
+          "original",
+          "derivative",
+          "expiresInSeconds",
+          "multipartExpiresHours"
+        ],
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          },
+          "original": {
+            "$ref": "#/components/schemas/CatalogMediaUploadTarget"
+          },
+          "derivative": {
+            "$ref": "#/components/schemas/CatalogMediaUploadTarget"
+          },
+          "expiresInSeconds": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "multipartExpiresHours": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "CatalogMediaUploadTarget": {
+        "type": "object",
+        "required": ["key", "url", "headers"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "headers": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApiEnvelopeCatalogMediaUploadPlan": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/CatalogMediaUploadPlan"
           },
           "meta": {
             "$ref": "#/components/schemas/ApiMeta"

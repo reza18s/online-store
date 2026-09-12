@@ -353,7 +353,7 @@ test('builds an authoritative quote with live cart prices and express shipping',
   assert.equal(result.subtotalToman, 200_000);
   assert.equal(result.shippingToman, 89_000);
   assert.equal(result.totalToman, 289_000);
-  assert.equal(result.shippingLabel, 'ارسال سریع');
+  assert.equal(result.shippingLabel, 'اکسپرس');
   assert.equal(result.lines[0]?.selectedOptions[0]?.valueLabel, 'متوسط');
   assert.equal(
     result.lines[0]?.variantSnapshot && typeof result.lines[0].variantSnapshot,

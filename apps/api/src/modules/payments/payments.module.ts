@@ -11,12 +11,29 @@ import { PaymentAdminController } from './payment-admin.controller';
 import { PaymentAdminService } from './payment-admin.service';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
-import { PAYMENT_GATEWAY, UnconfiguredPaymentGateway } from '../checkout/payment.gateway';
+import { PAYMENT_GATEWAY } from '../checkout/payment.gateway';
+import { environment } from '@nova/config';
+import { ZarinPalPaymentGateway } from './zarinpal.payment.gateway';
 
 @Module({
-  imports: [AuditModule, AuthModule, CouponsModule, DatabaseModule, InventoryModule, NotificationsModule, StaffAuthModule],
+  imports: [
+    AuditModule,
+    AuthModule,
+    CouponsModule,
+    DatabaseModule,
+    InventoryModule,
+    NotificationsModule,
+    StaffAuthModule,
+  ],
   controllers: [PaymentAdminController, PaymentController],
-  providers: [PaymentAdminService, PaymentService, { provide: PAYMENT_GATEWAY, useClass: UnconfiguredPaymentGateway }],
+  providers: [
+    PaymentAdminService,
+    PaymentService,
+    {
+      provide: PAYMENT_GATEWAY,
+      useFactory: () => new ZarinPalPaymentGateway(environment),
+    },
+  ],
   exports: [PAYMENT_GATEWAY, PaymentService],
 })
 export class PaymentsModule {}

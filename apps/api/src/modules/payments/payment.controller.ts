@@ -1,4 +1,4 @@
-import { Body, Controller, Headers, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Query, Req } from '@nestjs/common';
 import type { ApiEnvelope, PaymentCallbackResponse } from '@nova/api-client';
 
 import { SkipCsrf } from '../../common/http/csrf.guard';
@@ -18,6 +18,23 @@ export class PaymentController {
     @Req() request: RequestWithId,
   ): Promise<ApiEnvelope<PaymentCallbackResponse>> {
     const result = await this.payments.handleCallback({ provider, payload, signature });
+    return {
+      data: result,
+      meta: {
+        requestId: request.requestId ?? 'unknown',
+        timestamp: new Date().toISOString(),
+      },
+    };
+  }
+
+  @Get(':provider/callback')
+  @SkipCsrf()
+  public async callbackRedirect(
+    @Param('provider') provider: string,
+    @Query() payload: Record<string, string | undefined>,
+    @Req() request: RequestWithId,
+  ): Promise<ApiEnvelope<PaymentCallbackResponse>> {
+    const result = await this.payments.handleCallback({ provider, payload });
     return {
       data: result,
       meta: {

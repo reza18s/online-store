@@ -3,7 +3,11 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
+  Inject,
+  ServiceUnavailableException,
 } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
 import { Prisma } from '@nova/db';
 import type { ProductStatus } from '@nova/db';
 
@@ -26,6 +30,10 @@ import type {
   UpdateAdminProductMediaDto,
   UpdateAdminProductVariantDto,
 } from './dto/admin-product.dto';
+import type {
+  CompleteAdminProductMediaDto,
+  PresignAdminProductMediaDto,
+} from './dto/admin-product.dto';
 import {
   ADMIN_CATALOG_KEY_PATTERN,
   ADMIN_CATEGORY_SLUG_PATTERN,
@@ -40,6 +48,14 @@ import {
 } from './dto/admin-taxonomy.dto';
 import { normalizeSearchText } from './dto/product-list.query';
 import { CATALOG_PRODUCT_STATUSES, type CatalogProductStatus } from './dto/product-status.dto';
+import {
+  CATALOG_MEDIA_STORAGE,
+  DisabledCatalogMediaStorage,
+  CatalogMediaStorageError,
+  type CatalogMediaCompletedAsset,
+  type CatalogMediaStorage,
+  type CatalogMediaUploadInput,
+} from './catalog-media.storage';
 
 const PRODUCT_SLUG_MAX_LENGTH = 120;
 const PRODUCT_NAME_MAX_LENGTH = 200;
@@ -53,6 +69,7 @@ const CATEGORY_NAME_MAX_LENGTH = 200;
 const OPTION_KEY_MAX_LENGTH = 64;
 const OPTION_NAME_MAX_LENGTH = 120;
 const OPTION_SORT_ORDER_MAX = 100_000;
+const MEDIA_ASSET_ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 
 const ALLOWED_STATUS_TRANSITIONS: Record<CatalogProductStatus, readonly CatalogProductStatus[]> = {
   DRAFT: ['PUBLISHED', 'ARCHIVED'],
@@ -829,6 +846,61 @@ function mediaKind(value: unknown): AdminProductMediaKind {
   return value as AdminProductMediaKind;
 }
 
+function mediaAssetId(value: unknown): string {
+  if (typeof value !== 'string') throw new BadRequestException('شناسه فایل تصویر معتبر نیست.');
+  const normalized = value.trim().normalize('NFKC');
+  if (!MEDIA_ASSET_ID_PATTERN.test(normalized)) {
+    throw new BadRequestException('شناسه فایل تصویر معتبر نیست.');
+  }
+  return normalized;
+}
+
+function mediaStorageInput(
+  productId: string,
+  assetId: string,
+  input: PresignAdminProductMediaDto | CompleteAdminProductMediaDto,
+): CatalogMediaUploadInput {
+  return {
+    productId,
+    assetId,
+    contentType: input.contentType,
+    sizeBytes: input.sizeBytes,
+    width: input.width,
+    height: input.height,
+  };
+}
+
+function rethrowMediaStorageError(error: unknown): never {
+  if (!(error instanceof CatalogMediaStorageError)) throw error;
+  if (
+    error.code === 'MEDIA_CONTENT_TYPE_INVALID' ||
+    error.code === 'MEDIA_SIZE_INVALID' ||
+    error.code === 'MEDIA_DIMENSIONS_INVALID' ||
+    error.code === 'MEDIA_KEY_INVALID' ||
+    error.code === 'MEDIA_CONTENT_TYPE_MISMATCH' ||
+    error.code === 'MEDIA_SIZE_MISMATCH' ||
+    error.code === 'MEDIA_METADATA_MISMATCH'
+  ) {
+    throw new BadRequestException({ code: error.code, message: 'اطلاعات فایل تصویر معتبر نیست.' });
+  }
+  if (error.code === 'MEDIA_OBJECT_NOT_READY') {
+    throw new ConflictException({
+      code: 'PRODUCT_MEDIA_OBJECT_NOT_READY',
+      message: 'فایل اصلی و مشتق تصویر هنوز آماده نیستند.',
+    });
+  }
+  if (error.code === 'MEDIA_QUARANTINE_FAILED') {
+    throw new ServiceUnavailableException({
+      code: 'PRODUCT_MEDIA_QUARANTINE_UNAVAILABLE',
+      message: 'پاک‌سازی امن تصویر موقتاً در دسترس نیست.',
+    });
+  }
+  throw new ServiceUnavailableException({
+    code: 'PRODUCT_MEDIA_STORAGE_UNAVAILABLE',
+    message: 'ذخیره‌سازی تصویر موقتاً در دسترس نیست.',
+  });
+}
+
 function catalogKey(value: unknown, field: string): string {
   if (typeof value !== 'string') throw new BadRequestException(`${field} معتبر نیست.`);
   const normalized = value.trim().normalize('NFKC').toLocaleLowerCase('en-US');
@@ -1043,6 +1115,19 @@ function normalizeMediaUpdateInput(input: UpdateAdminProductMediaDto) {
   return data;
 }
 
+function normalizeStoredMediaCreateInput(input: CompleteAdminProductMediaDto) {
+  return {
+    altText: requiredText(input.altText, 'متن جایگزین تصویر', 240),
+    kind: input.kind === undefined ? ('PRODUCT' as const) : mediaKind(input.kind),
+    sortOrder:
+      input.sortOrder === undefined
+        ? 0
+        : integerInRange(input.sortOrder, 'ترتیب تصویر', 0, 100_000),
+    width: optionalPositiveDimension(input.width, 'عرض تصویر') ?? null,
+    height: optionalPositiveDimension(input.height, 'ارتفاع تصویر') ?? null,
+  };
+}
+
 async function assertCategoryParent(
   transaction: Prisma.TransactionClient,
   parentId: string | null,
@@ -1121,10 +1206,15 @@ async function assertVariantOptionValues(
 
 @Injectable()
 export class CatalogAdminService {
+  private readonly storage: CatalogMediaStorage;
+
   public constructor(
     private readonly database: DatabaseService,
     private readonly audit: AuditService,
-  ) {}
+    @Optional() @Inject(CATALOG_MEDIA_STORAGE) storage?: CatalogMediaStorage,
+  ) {
+    this.storage = storage ?? new DisabledCatalogMediaStorage();
+  }
 
   public async listCategories(staff: AuthenticatedStaff): Promise<CatalogAdminCategory[]> {
     assertStaffRole(staff, 'support', 'operations', 'admin');
@@ -1940,12 +2030,119 @@ export class CatalogAdminService {
       const product = await transaction.product.findUnique({ where: { id }, select: { id: true } });
       if (!product) throw new NotFoundException('محصول پیدا نشد.');
       const media = await transaction.productMedia.findMany({
-        where: { productId: id },
+        where: { productId: id, storageStatus: { not: 'QUARANTINED' } },
         orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
         select: productMediaSelect,
       });
       return media.map(toProductMedia);
     });
+  }
+
+  public async presignMedia(
+    staff: AuthenticatedStaff,
+    productId: string,
+    input: PresignAdminProductMediaDto,
+  ) {
+    assertStaffRole(staff, 'admin');
+    const product = normalizeProductId(productId);
+    const productExists = await this.database.prisma.product.findUnique({
+      where: { id: product },
+      select: { id: true },
+    });
+    if (!productExists) throw new NotFoundException('محصول پیدا نشد.');
+
+    const assetId = randomUUID();
+    try {
+      return await this.storage.createUpload(mediaStorageInput(product, assetId, input));
+    } catch (error) {
+      rethrowMediaStorageError(error);
+    }
+  }
+
+  public async completeMedia(
+    staff: AuthenticatedStaff,
+    productId: string,
+    input: CompleteAdminProductMediaDto,
+  ): Promise<CatalogAdminProductMedia> {
+    assertStaffRole(staff, 'admin');
+    const product = normalizeProductId(productId);
+    const assetId = mediaAssetId(input.assetId);
+    const uploadInput = mediaStorageInput(product, assetId, input);
+    const productExists = await this.database.prisma.product.findUnique({
+      where: { id: product },
+      select: { id: true },
+    });
+    if (!productExists) throw new NotFoundException('محصول پیدا نشد.');
+
+    let asset: CatalogMediaCompletedAsset;
+    try {
+      asset = await this.storage.completeUpload(uploadInput);
+    } catch (error) {
+      rethrowMediaStorageError(error);
+    }
+
+    const fields = normalizeStoredMediaCreateInput(input);
+    const mediaId = randomUUID();
+    try {
+      return await this.database.prisma.$transaction(async (transaction) => {
+        const duplicate = await transaction.productMedia.findFirst({
+          where: {
+            OR: [
+              { originalKey: asset.originalKey },
+              { derivativeKey: asset.derivativeKey },
+            ],
+          },
+          select: { id: true },
+        });
+        if (duplicate) {
+          throw new ConflictException({
+            code: 'PRODUCT_MEDIA_ASSET_ALREADY_ATTACHED',
+            message: 'این فایل تصویر قبلاً به یک رسانه متصل شده است.',
+          });
+        }
+
+        const media = await transaction.productMedia.create({
+          data: {
+            id: mediaId,
+            ...fields,
+            url: `/v1/catalog/media/${mediaId}`,
+            storageStatus: 'READY',
+            originalKey: asset.originalKey,
+            derivativeKey: asset.derivativeKey,
+            contentType: asset.contentType,
+            sizeBytes: asset.sizeBytes,
+            product: { connect: { id: product } },
+          },
+          select: productMediaSelect,
+        });
+        await this.audit.record(
+          {
+            actorType: 'STAFF',
+            actorUserId: staff.id,
+            action: 'catalog.product.media_created',
+            resourceType: 'ProductMedia',
+            resourceId: media.id,
+            metadata: { productId: product, kind: media.kind, storageStatus: 'READY' },
+          },
+          transaction,
+        );
+        return toProductMedia(media);
+      });
+    } catch (error) {
+      if (error instanceof ConflictException) throw error;
+      try {
+        await this.storage.quarantine({
+          mediaId,
+          productId: product,
+          originalKey: asset.originalKey,
+          derivativeKey: asset.derivativeKey,
+        });
+      } catch {
+        // The original database error remains authoritative; the objects stay
+        // unreferenced and are eligible for the storage quarantine sweep.
+      }
+      throw error;
+    }
   }
 
   public async createMedia(
@@ -1996,6 +2193,9 @@ export class CatalogAdminService {
         where: { id: media },
         select: {
           ...productMediaSelect,
+          storageStatus: true,
+          originalKey: true,
+          derivativeKey: true,
           product: { select: { id: true, status: true } },
         },
       });
@@ -2065,34 +2265,70 @@ export class CatalogAdminService {
     const product = normalizeProductId(productId);
     const media = normalizeProductId(mediaId);
 
-    return this.database.prisma.$transaction(async (transaction) => {
-      const current = await transaction.productMedia.findUnique({
-        where: { id: media },
-        select: {
-          id: true,
-          productId: true,
-          kind: true,
-          product: { select: { status: true } },
-        },
+    const current = await this.database.prisma.productMedia.findUnique({
+      where: { id: media },
+      select: {
+        id: true,
+        productId: true,
+        kind: true,
+        storageStatus: true,
+        originalKey: true,
+        derivativeKey: true,
+        product: { select: { status: true } },
+      },
+    });
+    if (!current || current.productId !== product) {
+      throw new NotFoundException('تصویر محصول پیدا نشد.');
+    }
+
+    if (current.product.status === 'PUBLISHED' && current.kind === 'PRODUCT') {
+      const primaryCount = await this.database.prisma.productMedia.count({
+        where: { productId: product, kind: 'PRODUCT', storageStatus: { not: 'QUARANTINED' } },
       });
-      if (!current || current.productId !== product) {
-        throw new NotFoundException('تصویر محصول پیدا نشد.');
-      }
-
-      if (current.product.status === 'PUBLISHED' && current.kind === 'PRODUCT') {
-        const primaryCount = await transaction.productMedia.count({
-          where: { productId: product, kind: 'PRODUCT' },
+      if (primaryCount <= 1) {
+        throw new ConflictException({
+          code: 'PRODUCT_PRIMARY_MEDIA_REQUIRED',
+          message: 'محصول منتشرشده باید حداقل یک تصویر اصلی داشته باشد.',
         });
-        if (primaryCount <= 1) {
-          throw new ConflictException({
-            code: 'PRODUCT_PRIMARY_MEDIA_REQUIRED',
-            message: 'محصول منتشرشده باید حداقل یک تصویر اصلی داشته باشد.',
-          });
-        }
       }
+    }
 
+    const hasStoredObjects =
+      current.storageStatus === 'READY' &&
+      current.originalKey !== null &&
+      current.derivativeKey !== null;
+    if (hasStoredObjects) {
+      const originalKey = current.originalKey as string;
+      const derivativeKey = current.derivativeKey as string;
+      const quarantined = await this.database.prisma.productMedia.updateMany({
+        where: { id: media, productId: product, storageStatus: 'READY' },
+        data: { storageStatus: 'QUARANTINED' },
+      });
+      if (quarantined.count !== 1) {
+        throw new ConflictException({
+          code: 'PRODUCT_MEDIA_DELETE_CONFLICT',
+          message: 'تصویر محصول هم‌زمان تغییر کرده است؛ دوباره تلاش کنید.',
+        });
+      }
+      try {
+        await this.storage.quarantine({
+          mediaId: media,
+          productId: product,
+          originalKey,
+          derivativeKey,
+        });
+      } catch (error) {
+        rethrowMediaStorageError(error);
+      }
+    }
+
+    return this.database.prisma.$transaction(async (transaction) => {
       const deleted = await transaction.productMedia.deleteMany({
-        where: { id: media, productId: product },
+        where: {
+          id: media,
+          productId: product,
+          ...(hasStoredObjects ? { storageStatus: 'QUARANTINED' } : {}),
+        },
       });
       if (deleted.count !== 1) {
         throw new ConflictException({

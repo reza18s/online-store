@@ -7,8 +7,8 @@
 3. unauthenticated public catalog categories and one product listing return the
    expected envelope shapes;
 4. unauthenticated customer session lookup returns `data: null`;
-5. customer order and staff session endpoints fail closed with `401` and the
-   stable `UNAUTHORIZED` error code;
+5. customer order, staff session, and admin catalog endpoints fail closed with
+   `401` and the stable `UNAUTHORIZED` error code;
 6. the Vite/preview storefront serves one HTML root shell with the expected
    RTL application root.
 

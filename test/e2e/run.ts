@@ -132,6 +132,12 @@ async function checkUnauthenticatedApiBoundaries(apiEndpoint: E2eEndpoint): Prom
       expectedStatus: 401,
       bodyMarker: '"code":"UNAUTHORIZED"',
     },
+    {
+      label: 'admin catalog boundary',
+      path: '/v1/admin/catalog/products?limit=1',
+      expectedStatus: 401,
+      bodyMarker: '"code":"UNAUTHORIZED"',
+    },
   ] as const;
   const failures: string[] = [];
 

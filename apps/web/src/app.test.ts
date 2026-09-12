@@ -62,6 +62,9 @@ test('renders an accessible mobile logout control in the legacy admin shell', ()
 
   assert.match(markup, /aria-label="خروج"/);
   assert.match(markup, /icon-button border-0 md:hidden disabled:opacity-50/);
+  assert.match(markup, /NOVA \/ ADMIN · DEV PREVIEW/);
+  assert.match(markup, /NV-DEMO-001/);
+  assert.doesNotMatch(markup, /NV-1405-2481/);
   queryClient.clear();
 });
 

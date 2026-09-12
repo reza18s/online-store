@@ -140,6 +140,8 @@ const products: Product[] = [
   },
 ];
 
+const ADMIN_PREVIEW_NOTICE = 'پیش‌نمایش توسعه · همه رکوردها و اعداد ساختگی هستند.';
+
 function formatToman(amount: number) {
   return `${new Intl.NumberFormat('fa-IR').format(amount)} تومان`;
 }
@@ -620,11 +622,11 @@ function AdminSalesChart() {
 
 function AdminOrderStatus() {
   const statuses = [
-    { label: 'در حال پردازش', value: '۲۸٪', color: 'bg-[#d9d1c8]' },
-    { label: 'ارسال شده', value: '۴۵٪', color: 'bg-primary' },
-    { label: 'تحویل شده', value: '۱۸٪', color: 'bg-[#989492]' },
-    { label: 'لغو شده', value: '۶٪', color: 'bg-[#ef7a9d]' },
-    { label: 'بازگشت', value: '۳٪', color: 'bg-[#e5ddd5]' },
+    { label: 'در حال پردازش', value: 'نمونه', color: 'bg-[#d9d1c8]' },
+    { label: 'ارسال شده', value: 'نمونه', color: 'bg-primary' },
+    { label: 'تحویل شده', value: 'نمونه', color: 'bg-[#989492]' },
+    { label: 'لغو شده', value: 'نمونه', color: 'bg-[#ef7a9d]' },
+    { label: 'بازگشت', value: 'نمونه', color: 'bg-[#e5ddd5]' },
   ];
   return (
     <section
@@ -643,7 +645,7 @@ function AdminOrderStatus() {
             className="h-full w-full -rotate-90"
             viewBox="0 0 120 120"
             role="img"
-            aria-label="۸۴۲ سفارش کل"
+            aria-label="داده نمایشی سفارش‌ها"
           >
             <circle cx="60" cy="60" r="42" fill="none" stroke="#f1ece6" strokeWidth="16" />
             <circle
@@ -693,7 +695,7 @@ function AdminOrderStatus() {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <span className="text-[10px] text-muted-foreground">کل سفارش‌ها</span>
-            <strong className="mt-1 font-display text-2xl">۸۴۲</strong>
+            <strong className="mt-1 font-display text-2xl">نمونه</strong>
           </div>
         </div>
         <ul className="flex min-w-0 flex-1 flex-col gap-3 text-[10px] text-muted-foreground">
@@ -714,44 +716,44 @@ function AdminOrderStatus() {
 
 const adminLatestOrders = [
   {
-    id: '#10042',
-    customer: 'علی محمدی',
-    amount: '۱٬۲۴۰٬۰۰۰ تومان',
+    id: '#DEMO-001',
+    customer: 'مشتری نمونه ۱',
+    amount: 'نمونه ۱٬۲۴۰٬۰۰۰ تومان',
     status: 'در حال پردازش',
     tone: 'info' as AdminStatusTone,
-    time: 'امروز ۱۴:۳۲',
+    time: 'زمان نمونه ۱',
   },
   {
-    id: '#10041',
-    customer: 'سارا رضایی',
-    amount: '۳٬۸۵۰٬۰۰۰ تومان',
+    id: '#DEMO-002',
+    customer: 'مشتری نمونه ۲',
+    amount: 'نمونه ۳٬۸۵۰٬۰۰۰ تومان',
     status: 'ارسال شده',
     tone: 'success' as AdminStatusTone,
-    time: 'امروز ۱۴:۱۸',
+    time: 'زمان نمونه ۲',
   },
   {
-    id: '#10040',
-    customer: 'مهدی حسینی',
-    amount: '۹۸۰٬۰۰۰ تومان',
+    id: '#DEMO-003',
+    customer: 'مشتری نمونه ۳',
+    amount: 'نمونه ۹۸۰٬۰۰۰ تومان',
     status: 'در انتظار پرداخت',
     tone: 'warning' as AdminStatusTone,
-    time: 'امروز ۱۴:۰۶',
+    time: 'زمان نمونه ۳',
   },
   {
-    id: '#10039',
-    customer: 'نازنین احمدی',
-    amount: '۴٬۲۹۰٬۰۰۰ تومان',
+    id: '#DEMO-004',
+    customer: 'مشتری نمونه ۴',
+    amount: 'نمونه ۴٬۲۹۰٬۰۰۰ تومان',
     status: 'تکمیل شد',
     tone: 'success' as AdminStatusTone,
-    time: 'دیروز ۲۲:۴۱',
+    time: 'زمان نمونه ۴',
   },
   {
-    id: '#10038',
-    customer: 'رضا کریمی',
-    amount: '۲٬۱۱۰٬۰۰۰ تومان',
+    id: '#DEMO-005',
+    customer: 'مشتری نمونه ۵',
+    amount: 'نمونه ۲٬۱۱۰٬۰۰۰ تومان',
     status: 'ارسال شده',
     tone: 'success' as AdminStatusTone,
-    time: 'دیروز ۱۸:۵۵',
+    time: 'زمان نمونه ۵',
   },
 ];
 
@@ -797,33 +799,33 @@ function AdminLatestOrders({ className = '' }: { className?: string }) {
 function AdminNewCustomers() {
   const customers = [
     {
-      name: 'آرمان صادقی',
-      email: 'arman.sadeghi@gmail.com',
-      time: 'امروز ۱۳:۳۰',
+      name: 'کاربر نمونه ۱',
+      email: 'demo-customer-1@example.test',
+      time: 'زمان نمونه ۱',
       image: '/assets/nova-hero-men.webp',
     },
     {
-      name: 'نگین مرادی',
-      email: 'negin.moradi@gmail.com',
-      time: 'امروز ۱۱:۴۵',
+      name: 'کاربر نمونه ۲',
+      email: 'demo-customer-2@example.test',
+      time: 'زمان نمونه ۲',
       image: '/assets/nova-women-lifestyle.webp',
     },
     {
-      name: 'علی کاظمی',
-      email: 'ali.kazemi@gmail.com',
-      time: 'امروز ۱۰:۱۸',
+      name: 'کاربر نمونه ۳',
+      email: 'demo-customer-3@example.test',
+      time: 'زمان نمونه ۳',
       image: '/assets/nova-children-lifestyle.webp',
     },
     {
-      name: 'مهسا محمدی',
-      email: 'mahsa.mohammadi@gmail.com',
-      time: 'دیروز ۱۷:۳۶',
+      name: 'کاربر نمونه ۴',
+      email: 'demo-customer-4@example.test',
+      time: 'زمان نمونه ۴',
       image: '/assets/nova-materials.webp',
     },
     {
-      name: 'سینا رضایی',
-      email: 'sina.rezaei@gmail.com',
-      time: 'دیروز ۱۵:۱۲',
+      name: 'کاربر نمونه ۵',
+      email: 'demo-customer-5@example.test',
+      time: 'زمان نمونه ۵',
       image: '/assets/nova-product-oxford-shirt.webp',
     },
   ];
@@ -866,7 +868,7 @@ function AdminNewCustomers() {
 }
 
 function AdminPopularProducts() {
-  const sales = ['۳۴۸', '۲۹۱', '۱۸۶', '۱۷۳', '۱۵۹'];
+  const sales = ['نمونه', 'نمونه', 'نمونه', 'نمونه', 'نمونه'];
   return (
     <section
       className="border border-border bg-surface p-4 shadow-card md:p-5"
@@ -937,32 +939,32 @@ function AdminDashboard() {
   const metrics = [
     {
       label: 'محصولات فعال',
-      value: '۱٬۲۴۶',
-      note: '↑ ۵٪ از ماه گذشته',
+      value: 'نمونه',
+      note: 'داده نمایشی',
       icon: 'package' as IconName,
       iconTone: 'bg-[#f3e7e9] text-primary',
       orderClass: 'order-3 xl:order-1',
     },
     {
       label: 'درآمد کل',
-      value: '۲۹۸٬۵۰۰٬۰۰۰',
-      note: '↑ ۱۸٪ از ماه گذشته',
+      value: 'نمونه',
+      note: 'داده نمایشی',
       icon: 'tag' as IconName,
       iconTone: 'bg-warning-100 text-warning',
       orderClass: 'order-4 xl:order-2',
     },
     {
       label: 'مشتریان جدید',
-      value: '۳۴۲',
-      note: '↑ ۸٪ از ماه گذشته',
+      value: 'نمونه',
+      note: 'داده نمایشی',
       icon: 'user' as IconName,
       iconTone: 'bg-[#f3e7e9] text-primary',
       orderClass: 'order-1 xl:order-3',
     },
     {
       label: 'سفارش‌های جدید',
-      value: '۱۲۸',
-      note: '↑ ۱۲٪ از ماه گذشته',
+      value: 'نمونه',
+      note: 'داده نمایشی',
       icon: 'bag' as IconName,
       iconTone: 'bg-[#f3e7e9] text-primary',
       orderClass: 'order-2 xl:order-4',
@@ -972,13 +974,11 @@ function AdminDashboard() {
     <div className="mx-auto max-w-[1120px] space-y-4 md:space-y-5">
       <header className="flex flex-col gap-4 py-1 md:flex-row md:items-end md:justify-between">
         <div className="text-right">
-          <span className="section-heading__eyebrow">NOVA / ADMIN DASHBOARD</span>
+          <span className="section-heading__eyebrow">NOVA / ADMIN DASHBOARD · DEV PREVIEW</span>
           <h1 className="mt-1 text-2xl leading-relaxed md:text-3xl">
-            خوش آمدید، رضا <span aria-hidden="true">👋</span>
+            خوش آمدید، مدیر نمونه <span aria-hidden="true">👋</span>
           </h1>
-          <p className="mt-1 text-xs leading-7 text-muted-foreground">
-            امروز روز خوبی برای ساختن یک برند بهتر است.
-          </p>
+          <p className="mt-1 text-xs leading-7 text-muted-foreground">{ADMIN_PREVIEW_NOTICE}</p>
         </div>
         <button
           className="inline-flex min-h-10 w-max items-center gap-2 border border-border bg-surface px-3 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
@@ -1301,7 +1301,7 @@ export function AdminLegacyPage({ page }: { page: string }) {
     'products/linen-overshirt/edit': 'ویرایش محصول',
     'products/linen-overshirt/variants': 'تنوع‌ها',
     'products/linen-overshirt/media': 'رسانه محصول',
-    'orders/NV-1405-2481': 'جزئیات سفارش',
+    'orders/NV-DEMO-001': 'جزئیات سفارش نمونه',
   };
   const title = titleMap[page] ?? 'پنل مدیریت';
   const nav = [
@@ -1343,15 +1343,16 @@ export function AdminLegacyPage({ page }: { page: string }) {
             <Icon name="bell" size={19} />
           </button>
           <div>
-            <span>سلام، مدیر نوا</span>
-            <small>آخرین ورود: امروز ۱۰:۲۴</small>
+            <span>سلام، مدیر نمونه</span>
+            <small>آخرین ورود: داده نمایشی</small>
           </div>
         </header>
         <div className="admin-page">
           <div className="admin-page__heading">
             <div>
-              <span className="section-heading__eyebrow">NOVA / ADMIN</span>
+              <span className="section-heading__eyebrow">NOVA / ADMIN · DEV PREVIEW</span>
               <h1>{title}</h1>
+              <p className="mt-2 text-[10px] text-muted-foreground">{ADMIN_PREVIEW_NOTICE}</p>
             </div>
             <div className="admin-page__actions">
               <button className="admin-secondary" type="button">
@@ -1371,23 +1372,23 @@ export function AdminLegacyPage({ page }: { page: string }) {
           <div className="admin-stat-grid">
             <div>
               <span>سفارش‌های امروز</span>
-              <strong>۲۴</strong>
-              <small className="stat-up">+۱۲٪ نسبت به دیروز</small>
+              <strong>نمونه</strong>
+              <small className="stat-up">داده نمایشی</small>
             </div>
             <div>
               <span>در انتظار بررسی</span>
-              <strong>۸</strong>
-              <small>۳ پرداخت نیازمند توجه</small>
+              <strong>نمونه</strong>
+              <small>داده نمایشی</small>
             </div>
             <div>
               <span>موجودی کم</span>
-              <strong>۶</strong>
-              <small className="stat-warning">نیازمند اقدام</small>
+              <strong>نمونه</strong>
+              <small className="stat-warning">داده نمایشی</small>
             </div>
             <div>
               <span>فروش این ماه</span>
-              <strong>۲۴۹٬۸۰۰٬۰۰۰</strong>
-              <small>تومان</small>
+              <strong>نمونه</strong>
+              <small>داده نمایشی</small>
             </div>
           </div>
           <div className="admin-panels">
@@ -1405,9 +1406,9 @@ export function AdminLegacyPage({ page }: { page: string }) {
                 </a>
               </div>
               {[
-                ['NV-1405-2481', 'مانتوی لینن کمربندی آوا', 'در حال آماده‌سازی'],
-                ['NV-1405-2478', 'پیراهن آکسفورد مردانه', 'پرداخت تأیید شد'],
-                ['NV-1405-2472', 'ست دورس و شلوار کودک', 'در انتظار پرداخت'],
+                ['NV-DEMO-001', 'محصول نمونه ۱', 'وضعیت نمونه'],
+                ['NV-DEMO-002', 'محصول نمونه ۲', 'وضعیت نمونه'],
+                ['NV-DEMO-003', 'محصول نمونه ۳', 'وضعیت نمونه'],
               ].map(([id, name, status]) => (
                 <div className="admin-row" key={id}>
                   <span dir="ltr">{id}</span>
@@ -1480,70 +1481,70 @@ const adminProductRows: AdminProductRow[] = [
   {
     id: 'preview-linen-overshirt',
     slug: 'linen-overshirt',
-    name: 'مانتوی لینن کمربندی آوا',
-    category: 'مانتو',
+    name: 'محصول نمونه ۱',
+    category: 'دسته نمونه ۱',
     categorySlug: 'outerwear',
-    price: 2490000,
-    compareAtPrice: 2890000,
-    stock: 24,
+    price: 0,
+    compareAtPrice: null,
+    stock: 0,
     image: '/assets/nova-product-linen-overshirt.webp',
-    alt: 'مانتوی لینن روشن با کمربند پارچه‌ای',
+    alt: 'تصویر محصول نمونه ۱',
     lifecycleStatus: 'PUBLISHED',
     stockStatus: 'IN_STOCK',
   },
   {
     id: 'preview-knit-cardigan',
     slug: 'knit-cardigan',
-    name: 'ژاکت بافت یقه‌گرد',
-    category: 'بافت',
+    name: 'محصول نمونه ۲',
+    category: 'دسته نمونه ۲',
     categorySlug: 'knitwear',
-    price: 4200000,
+    price: 0,
     compareAtPrice: null,
-    stock: 3,
+    stock: 0,
     image: '/assets/nova-product-knit-cardigan.webp',
-    alt: 'ژاکت بافتنی قهوه‌ای روشن',
+    alt: 'تصویر محصول نمونه ۲',
     lifecycleStatus: 'PUBLISHED',
     stockStatus: 'LOW_STOCK',
   },
   {
     id: 'preview-oxford-shirt',
     slug: 'oxford-shirt',
-    name: 'پیراهن آکسفورد مردانه',
-    category: 'پیراهن',
+    name: 'محصول نمونه ۳',
+    category: 'دسته نمونه ۳',
     categorySlug: 'shirts',
-    price: 3650000,
+    price: 0,
     compareAtPrice: null,
-    stock: 15,
+    stock: 0,
     image: '/assets/nova-product-oxford-shirt.webp',
-    alt: 'پیراهن آکسفورد آبی روشن',
+    alt: 'تصویر محصول نمونه ۳',
     lifecycleStatus: 'PUBLISHED',
     stockStatus: 'IN_STOCK',
   },
   {
     id: 'preview-textured-scarf',
     slug: 'textured-scarf',
-    name: 'شال بافت برجسته',
-    category: 'اکسسوری',
+    name: 'محصول نمونه ۴',
+    category: 'دسته نمونه ۴',
     categorySlug: 'accessories',
-    price: 890000,
+    price: 0,
     compareAtPrice: null,
-    stock: 2,
+    stock: 0,
     image: '/assets/nova-product-textured-scarf.webp',
-    alt: 'شال بافتنی با رنگ خنثی',
+    alt: 'تصویر محصول نمونه ۴',
     lifecycleStatus: 'PUBLISHED',
     stockStatus: 'LOW_STOCK',
   },
   {
     id: 'preview-soft-trousers',
     slug: 'soft-trousers',
-    name: 'شلوار نرم و راسته',
-    category: 'شلوار',
+    name: 'محصول نمونه ۵',
+    category: 'دسته نمونه ۵',
     categorySlug: 'trousers',
-    price: 2900000,
+    price: 0,
     compareAtPrice: null,
-    stock: 8,
+    stock: 0,
     image: '/assets/nova-product-soft-trousers.webp',
-    alt: 'شلوار پارچه‌ای نرم به رنگ خاکی',
+    alt: 'تصویر محصول نمونه ۵',
     lifecycleStatus: 'PUBLISHED',
     stockStatus: 'IN_STOCK',
   },
@@ -1553,74 +1554,74 @@ const adminLowStockItems: AdminLowStockItem[] = [
   {
     productId: 'preview-knit-cardigan',
     slug: 'knit-cardigan',
-    name: 'ژاکت بافت یقه‌گرد',
-    stock: 3,
+    name: 'محصول نمونه ۲',
+    stock: 0,
     image: '/assets/nova-product-knit-cardigan.webp',
-    alt: 'ژاکت بافتنی قهوه‌ای روشن',
+    alt: 'تصویر محصول نمونه ۲',
   },
   {
     productId: 'preview-textured-scarf',
     slug: 'textured-scarf',
-    name: 'شال بافت برجسته',
-    stock: 2,
+    name: 'محصول نمونه ۴',
+    stock: 0,
     image: '/assets/nova-product-textured-scarf.webp',
-    alt: 'شال بافتنی با رنگ خنثی',
+    alt: 'تصویر محصول نمونه ۴',
   },
   {
     productId: 'preview-soft-trousers',
     slug: 'soft-trousers',
-    name: 'شلوار نرم و راسته',
-    stock: 4,
+    name: 'محصول نمونه ۵',
+    stock: 0,
     image: '/assets/nova-product-soft-trousers.webp',
-    alt: 'شلوار پارچه‌ای نرم به رنگ خاکی',
+    alt: 'تصویر محصول نمونه ۵',
   },
 ];
 
 const adminOrderPreviews: AdminOrderPreview[] = [
   {
-    id: '#13445',
-    orderNumber: 'NV-1405-2481',
-    customer: 'نگار محمدی',
-    amount: 9800000,
-    status: 'در حال آماده‌سازی',
+    id: '#DEMO-001',
+    orderNumber: 'NV-DEMO-001',
+    customer: 'مشتری نمونه ۱',
+    amount: 0,
+    status: 'وضعیت نمونه',
     statusTone: 'warning',
-    date: '۱۴۰۵/۰۲/۲۵',
+    date: 'تاریخ نمونه',
   },
   {
-    id: '#13444',
-    orderNumber: 'NV-1405-2480',
-    customer: 'بهزاد رضایی',
-    amount: 4200000,
-    status: 'فعال',
+    id: '#DEMO-002',
+    orderNumber: 'NV-DEMO-002',
+    customer: 'مشتری نمونه ۲',
+    amount: 0,
+    status: 'وضعیت نمونه',
     statusTone: 'success',
-    date: '۱۴۰۵/۰۲/۲۴',
+    date: 'تاریخ نمونه',
   },
   {
-    id: '#13443',
-    orderNumber: 'NV-1405-2479',
-    customer: 'سارا حسینی',
-    amount: 7650000,
-    status: 'در حال آماده‌سازی',
+    id: '#DEMO-003',
+    orderNumber: 'NV-DEMO-003',
+    customer: 'مشتری نمونه ۳',
+    amount: 0,
+    status: 'وضعیت نمونه',
     statusTone: 'warning',
-    date: '۱۴۰۵/۰۲/۲۴',
+    date: 'تاریخ نمونه',
   },
   {
-    id: '#13442',
-    orderNumber: 'NV-1405-2478',
-    customer: 'مهدی کریمی',
-    amount: 2900000,
-    status: 'فعال',
+    id: '#DEMO-004',
+    orderNumber: 'NV-DEMO-004',
+    customer: 'مشتری نمونه ۴',
+    amount: 0,
+    status: 'وضعیت نمونه',
     statusTone: 'success',
-    date: '۱۴۰۵/۰۲/۲۳',
+    date: 'تاریخ نمونه',
   },
   {
-    id: '#13441',
-    orderNumber: 'NV-1405-2477',
-    customer: 'آتنا موسوی',
-    amount: 5500000,
-    status: 'در حال آماده‌سازی',
+    id: '#DEMO-005',
+    orderNumber: 'NV-DEMO-005',
+    customer: 'مشتری نمونه ۵',
+    amount: 0,
+    status: 'وضعیت نمونه',
     statusTone: 'warning',
-    date: '۱۴۰۵/۰۲/۲۳',
+    date: 'تاریخ نمونه',
   },
 ];
 
@@ -1914,8 +1915,8 @@ function AdminProductsPage() {
                 alt=""
               />
               <div className="text-right" dir="rtl">
-                <strong className="block text-xs font-medium">الهام احمدی</strong>
-                <span className="mt-1 block text-[10px] text-muted-foreground">مدیر فروشگاه</span>
+                <strong className="block text-xs font-medium">مدیر نمونه</strong>
+                <span className="mt-1 block text-[10px] text-muted-foreground">حساب نمایشی</span>
               </div>
             </div>
 
@@ -2036,7 +2037,7 @@ function AdminProductsPage() {
 
             {isPreview ? (
               <p className="mt-3 text-right text-[10px] text-muted-foreground" role="status">
-                پیش‌نمایش محلی · برای داده‌های واقعی، نشست مدیر را برقرار کنید.
+                {ADMIN_PREVIEW_NOTICE} · برای داده‌های واقعی، نشست مدیر را برقرار کنید.
               </p>
             ) : null}
 
@@ -2108,7 +2109,9 @@ function AdminProductsPage() {
                               {item.name}
                             </strong>
                             <small className="mt-1 block text-[10px] text-warning">
-                              {formatPersianNumber(item.stock)} عدد باقی مانده
+                              {isPreview
+                                ? 'موجودی نمونه'
+                                : `${formatPersianNumber(item.stock)} عدد باقی مانده`}
                             </small>
                           </span>
                           <Icon
@@ -2166,7 +2169,7 @@ function AdminProductsPage() {
                           </span>
                           <span className="text-left">
                             <strong className="block whitespace-nowrap text-[10px] font-medium">
-                              {formatToman(order.amount)}
+                              {isPreview ? 'مبلغ نمونه' : formatToman(order.amount)}
                             </strong>
                             <small
                               className={`mt-1 block whitespace-nowrap rounded px-1.5 py-1 text-[9px] ${order.statusTone === 'warning' ? 'bg-warning-100 text-warning' : order.statusTone === 'danger' ? 'bg-destructive-100 text-destructive' : 'bg-success-100 text-success'}`}
@@ -2270,10 +2273,10 @@ function AdminProductsPage() {
                               {product.category}
                             </td>
                             <td className="whitespace-nowrap px-3 py-3 text-[10px]">
-                              {formatToman(product.price)}
+                              {isPreview ? 'قیمت نمونه' : formatToman(product.price)}
                             </td>
                             <td className="px-3 py-3 font-medium">
-                              {formatPersianNumber(product.stock)}
+                              {isPreview ? 'موجودی نمونه' : formatPersianNumber(product.stock)}
                             </td>
                             <td className="px-3 py-3">
                               <span
@@ -2363,12 +2366,16 @@ function AdminProductsPage() {
                             {product.name}
                           </a>
                           <span className="mt-1 block text-[10px] text-muted-foreground">
-                            {product.category} · {formatToman(product.price)}
+                            {product.category} ·{' '}
+                            {isPreview ? 'قیمت نمونه' : formatToman(product.price)}
                           </span>
                           <span
                             className={`mt-2 inline-flex rounded-control px-2 py-1 text-[9px] ${product.lifecycleStatus !== 'PUBLISHED' ? 'bg-secondary text-muted-foreground' : product.stockStatus === 'LOW_STOCK' ? 'bg-warning-100 text-warning' : product.stockStatus === 'OUT_OF_STOCK' ? 'bg-destructive-100 text-destructive' : 'bg-success-100 text-success'}`}
                           >
-                            {formatPersianNumber(product.stock)} موجودی ·{' '}
+                            {isPreview
+                              ? 'موجودی نمونه'
+                              : `${formatPersianNumber(product.stock)} موجودی`}{' '}
+                            ·{' '}
                             {product.lifecycleStatus !== 'PUBLISHED'
                               ? adminLifecycleStatusLabel(product.lifecycleStatus)
                               : adminStockStatusLabel(product.stockStatus)}
@@ -2665,8 +2672,8 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
               alt=""
             />
             <div className="min-w-0 text-right">
-              <strong className="block truncate text-xs !text-foreground">رضا سواری</strong>
-              <small className="mt-1 block text-[9px] !text-muted-foreground">مدیر سیستم</small>
+              <strong className="block truncate text-xs !text-foreground">مدیر نمونه</strong>
+              <small className="mt-1 block text-[9px] !text-muted-foreground">حساب نمایشی</small>
             </div>
           </div>
           <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-[10px] !text-muted-foreground transition-colors hover:!text-foreground disabled:opacity-50" />
@@ -2720,11 +2727,9 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
             <img
               className="h-9 w-9 rounded-full bg-secondary object-cover"
               src="/assets/nova-hero-men.webp"
-              alt="پروفایل رضا سواری"
+              alt="پروفایل مدیر نمونه"
             />
-            <span className="hidden text-xs text-muted-foreground lg:inline">
-              پنجشنبه ۲۵ شهریور ۱۴۰۵
-            </span>
+            <span className="hidden text-xs text-muted-foreground lg:inline">تاریخ نمایشی</span>
             <button
               className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors hover:bg-accent-soft"
               type="button"

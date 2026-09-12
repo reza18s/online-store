@@ -5,12 +5,7 @@ import type { ContentPage } from '@nova/api-client';
 
 import { Icon } from '../../shared/icon';
 import { useContentPage } from './content-api';
-import {
-  getRenderableContentBlocks,
-  safeSiteRelativeHref,
-  type RenderableContentBlock,
-  type RenderableContentBlocks,
-} from './content-blocks';
+import { getRenderableContentBlocks, type RenderableContentBlock } from './content-blocks';
 
 export { getRenderableContentBlocks, safeSiteRelativeHref } from './content-blocks';
 export type { RenderableContentBlock, RenderableContentBlocks } from './content-blocks';

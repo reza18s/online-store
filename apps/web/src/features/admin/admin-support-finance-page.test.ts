@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import {
   adminCustomerLookupHref,
+  adminCustomerLookupQuery,
   adminOrderHref,
   canStaffInspectView,
   normalizeAdminSupportFinanceView,
@@ -38,6 +39,14 @@ test('encodes operational cross-links instead of interpolating identifiers', () 
     adminCustomerLookupHref('person+support@example.test'),
     '#admin/customers?q=person%2Bsupport%40example.test',
   );
+});
+
+test('restores an encoded customer lookup into the customer filter', () => {
+  assert.equal(
+    adminCustomerLookupQuery('q=person%2Bsupport%40example.test'),
+    'person+support@example.test',
+  );
+  assert.equal(adminCustomerLookupQuery('status=ACTIVE'), '');
 });
 
 test('summarizes audit metadata without rendering the payload', () => {

@@ -24,6 +24,27 @@ type AdminFulfillmentOrderStatus = AdminOrderStatusInput['status'];
 
 type AdminStaffRole = 'support' | 'operations' | 'admin';
 
+const MODAL_FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(',');
+
+export function getModalFocusWrapIndex(
+  activeIndex: number,
+  focusableCount: number,
+  reverse: boolean,
+): number | null {
+  if (focusableCount <= 0) return null;
+  const outsideDialog = activeIndex < 0 || activeIndex >= focusableCount;
+  if (reverse && (outsideDialog || activeIndex === 0)) return focusableCount - 1;
+  if (!reverse && (outsideDialog || activeIndex === focusableCount - 1)) return 0;
+  return null;
+}
+
 const ORDER_STATUS_LABELS: Record<string, string> = {
   PENDING_PAYMENT: 'در انتظار پرداخت',
   CONFIRMED: 'تأیید شده',
@@ -270,11 +291,25 @@ function Modal({
   children: ReactNode;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose();
+      if (event.key !== 'Tab') return;
+
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(MODAL_FOCUSABLE_SELECTOR),
+      ).filter((element) => !element.hidden && element.getClientRects().length > 0);
+      const activeIndex = focusable.indexOf(document.activeElement as HTMLElement);
+      const wrapIndex = getModalFocusWrapIndex(activeIndex, focusable.length, event.shiftKey);
+      if (wrapIndex === null) return;
+
+      event.preventDefault();
+      focusable[wrapIndex]?.focus();
     };
     document.addEventListener('keydown', onKeyDown);
     return () => {
@@ -293,6 +328,7 @@ function Modal({
         aria-modal="true"
         className="w-full max-w-xl border border-border bg-surface p-5 shadow-float md:p-7"
         role="dialog"
+        ref={dialogRef}
       >
         <div className="flex items-start justify-between gap-4 border-b border-border pb-4">
           <div>

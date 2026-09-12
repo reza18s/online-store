@@ -2584,7 +2584,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
     adminSection === 'notifications' ||
     adminSection === 'audit'
   ) {
-    return <AdminSupportFinancePage view={adminSection} />;
+    return <AdminSupportFinancePage view={adminSection} queryString={queryString} />;
   }
   if (adminSection === 'catalog' || adminSection === 'inventory') {
     const [subsection, encodedId] = adminPathSegments;

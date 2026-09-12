@@ -6,6 +6,7 @@ import {
   adminOrderErrorMessage,
   adminOrderStatusLabel,
   adminOrderStatusTone,
+  getModalFocusWrapIndex,
   hasAdminStaffRole,
   isSafeTrackingReference,
   normalizeTrackingReference,
@@ -42,4 +43,14 @@ test('maps authorization and optimistic-concurrency failures to stable staff cop
     adminOrderErrorMessage(new ApiClientError(403), 'fallback'),
     'شما اجازه انجام این عملیات را ندارید.',
   );
+});
+
+test('keeps modal keyboard focus inside the dialog boundary', () => {
+  assert.equal(getModalFocusWrapIndex(2, 3, false), 0);
+  assert.equal(getModalFocusWrapIndex(0, 3, true), 2);
+  assert.equal(getModalFocusWrapIndex(-1, 3, false), 0);
+  assert.equal(getModalFocusWrapIndex(-1, 3, true), 2);
+  assert.equal(getModalFocusWrapIndex(1, 3, false), null);
+  assert.equal(getModalFocusWrapIndex(1, 3, true), null);
+  assert.equal(getModalFocusWrapIndex(0, 0, false), null);
 });

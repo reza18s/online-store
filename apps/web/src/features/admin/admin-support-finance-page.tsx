@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 
 import {
   type AdminAuditListQuery,
@@ -99,6 +99,10 @@ export function adminOrderHref(orderNumber: string): string {
 
 export function adminCustomerLookupHref(value: string): string {
   return `#admin/customers?q=${encodeURIComponent(value)}`;
+}
+
+export function adminCustomerLookupQuery(queryString: string): string {
+  return new URLSearchParams(queryString).get('q')?.trim() ?? '';
 }
 
 export function safeAuditMetadataLabel(metadata: unknown): string {
@@ -661,11 +665,20 @@ function DetailField({ label, children }: { label: string; children: ReactNode }
   );
 }
 
-function CustomerInspection() {
-  const [draftQ, setDraftQ] = useState('');
+function CustomerInspection({ initialQuery = '' }: { initialQuery?: string }) {
+  const [draftQ, setDraftQ] = useState(initialQuery);
   const [draftStatus, setDraftStatus] = useState('');
-  const [filters, setFilters] = useState<AdminCustomerListQuery>({ page: 1, limit: 12 });
+  const [filters, setFilters] = useState<AdminCustomerListQuery>(() => ({
+    page: 1,
+    limit: 12,
+    ...(initialQuery ? { q: initialQuery } : {}),
+  }));
   const query = useAdminCustomers(filters);
+  useEffect(() => {
+    setDraftQ(initialQuery);
+    setFilters({ page: 1, limit: 12, ...(initialQuery ? { q: initialQuery } : {}) });
+  }, [initialQuery]);
+
   const applyFilters = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setFilters({
@@ -1030,7 +1043,13 @@ function AdminSessionState({ kind }: { kind: 'loading' | 'expired' | 'denied' | 
   );
 }
 
-export function AdminSupportFinancePage({ view = 'payments' }: { view?: string }) {
+export function AdminSupportFinancePage({
+  view = 'payments',
+  queryString = '',
+}: {
+  view?: string;
+  queryString?: string;
+}) {
   const activeView = normalizeAdminSupportFinanceView(view);
   const staffQuery = useStaffUser();
   const roles = staffQuery.data?.roles ?? [];
@@ -1086,7 +1105,9 @@ export function AdminSupportFinancePage({ view = 'payments' }: { view?: string }
         </nav>
         <div className="mt-5">
           {activeView === 'payments' ? <PaymentInspection /> : null}
-          {activeView === 'customers' ? <CustomerInspection /> : null}
+          {activeView === 'customers' ? (
+            <CustomerInspection initialQuery={adminCustomerLookupQuery(queryString)} />
+          ) : null}
           {activeView === 'notifications' ? <NotificationInspection /> : null}
           {activeView === 'audit' ? <AuditInspection /> : null}
         </div>

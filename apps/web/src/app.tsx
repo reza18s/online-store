@@ -2520,13 +2520,15 @@ function AdminPermissionDeniedPage() {
 }
 
 export function shouldShowAdminDashboardPreview({
+  page,
   isDevelopment,
   hasStaffSession,
 }: {
+  page: string;
   isDevelopment: boolean;
   hasStaffSession: boolean;
 }): boolean {
-  return isDevelopment && !hasStaffSession;
+  return page === 'admin' && isDevelopment && !hasStaffSession;
 }
 
 export function AdminRouteUnavailablePage({ page }: { page: string }) {
@@ -2575,6 +2577,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
   const authorizationFailure = isStaffAuthorizationFailure(staffQuery.error);
   const hasStaffSession = Boolean(staffQuery.data) && !authFailure;
   const allowDevelopmentPreview = shouldShowAdminDashboardPreview({
+    page,
     isDevelopment: import.meta.env.DEV,
     hasStaffSession: Boolean(staffQuery.data),
   });

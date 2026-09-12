@@ -111,15 +111,27 @@ test('renders a non-operational state instead of static data for an unfinished a
 
 test('keeps the static admin dashboard preview development-only', () => {
   assert.equal(
-    shouldShowAdminDashboardPreview({ isDevelopment: true, hasStaffSession: false }),
+    shouldShowAdminDashboardPreview({ page: 'admin', isDevelopment: true, hasStaffSession: false }),
     true,
   );
   assert.equal(
-    shouldShowAdminDashboardPreview({ isDevelopment: true, hasStaffSession: true }),
+    shouldShowAdminDashboardPreview({ page: 'admin', isDevelopment: true, hasStaffSession: true }),
     false,
   );
   assert.equal(
-    shouldShowAdminDashboardPreview({ isDevelopment: false, hasStaffSession: false }),
+    shouldShowAdminDashboardPreview({
+      page: 'admin',
+      isDevelopment: false,
+      hasStaffSession: false,
+    }),
+    false,
+  );
+  assert.equal(
+    shouldShowAdminDashboardPreview({
+      page: 'orders',
+      isDevelopment: true,
+      hasStaffSession: false,
+    }),
     false,
   );
 

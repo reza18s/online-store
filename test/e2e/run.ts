@@ -47,6 +47,14 @@ interface ProbeResult {
   readonly detail: string;
 }
 
+export function probeMatches(
+  result: Pick<ProbeResult, 'status' | 'body'>,
+  expectedStatus: number,
+  bodyMarker: string,
+): boolean {
+  return result.status === expectedStatus && result.body.includes(bodyMarker);
+}
+
 async function probe(url: string): Promise<ProbeResult> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
@@ -92,6 +100,53 @@ async function checkApiHealth(apiEndpoint: E2eEndpoint): Promise<string[]> {
   return failures;
 }
 
+async function checkUnauthenticatedApiBoundaries(apiEndpoint: E2eEndpoint): Promise<string[]> {
+  const checks = [
+    {
+      label: 'public catalog categories',
+      path: '/v1/catalog/categories',
+      expectedStatus: 200,
+      bodyMarker: '"data":[',
+    },
+    {
+      label: 'public catalog products',
+      path: '/v1/catalog/products?limit=1',
+      expectedStatus: 200,
+      bodyMarker: '"items":[',
+    },
+    {
+      label: 'unauthenticated customer session',
+      path: '/v1/auth/me',
+      expectedStatus: 200,
+      bodyMarker: '"data":null',
+    },
+    {
+      label: 'customer order ownership boundary',
+      path: '/v1/account/orders/NOPE',
+      expectedStatus: 401,
+      bodyMarker: '"code":"UNAUTHORIZED"',
+    },
+    {
+      label: 'staff session boundary',
+      path: '/v1/staff/auth/me',
+      expectedStatus: 401,
+      bodyMarker: '"code":"UNAUTHORIZED"',
+    },
+  ] as const;
+  const failures: string[] = [];
+
+  for (const check of checks) {
+    const result = await probe(endpointUrl(apiEndpoint, check.path));
+    if (!probeMatches(result, check.expectedStatus, check.bodyMarker)) {
+      failures.push(`${check.label} ${apiEndpoint.safeOrigin} (${result.status ?? 'unreachable'})`);
+    } else {
+      console.log(`[PASS] ${check.label}: ${apiEndpoint.safeOrigin}`);
+    }
+  }
+
+  return failures;
+}
+
 async function checkStorefrontRootShell(webEndpoint: E2eEndpoint): Promise<string[]> {
   const failures: string[] = [];
   const result = await probe(endpointUrl(webEndpoint, '/'));
@@ -125,11 +180,12 @@ async function main(): Promise<void> {
   console.log(`web origin: ${webEndpoint.safeOrigin}`);
   console.log(`api origin: ${apiEndpoint.safeOrigin}`);
   console.log(
-    'scope: API health/readiness plus one HTML root-shell availability probe; no browser interaction is claimed',
+    'scope: API health/readiness, public/unauthenticated boundary probes, and one HTML root-shell availability probe; no browser interaction is claimed',
   );
 
   const failures = [
     ...(await checkApiHealth(apiEndpoint)),
+    ...(await checkUnauthenticatedApiBoundaries(apiEndpoint)),
     ...(await checkStorefrontRootShell(webEndpoint)),
   ];
   if (failures.length) {

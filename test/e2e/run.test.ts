@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { endpointUrl, parseE2eEndpoint } from './run';
+import { endpointUrl, parseE2eEndpoint, probeMatches } from './run';
 
 test('keeps E2E endpoint logs at the safe origin boundary', () => {
   const endpoint = parseE2eEndpoint(
@@ -26,4 +26,18 @@ test('rejects E2E URL credentials, queries, and fragments without echoing them',
       return true;
     },
   );
+});
+
+test('matches expected HTTP boundaries including intentional unauthenticated 401 responses', () => {
+  assert.equal(probeMatches({ status: 200, body: '{"data":[]}' }, 200, '"data":['), true);
+  assert.equal(
+    probeMatches(
+      { status: 401, body: '{"error":{"code":"UNAUTHORIZED"}}' },
+      401,
+      '"code":"UNAUTHORIZED"',
+    ),
+    true,
+  );
+  assert.equal(probeMatches({ status: 200, body: '{"data":null}' }, 401, 'UNAUTHORIZED'), false);
+  assert.equal(probeMatches({ status: null, body: '' }, 200, '"data":['), false);
 });

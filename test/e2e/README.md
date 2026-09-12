@@ -4,13 +4,18 @@
 
 1. `GET /health/live` returns `200`;
 2. `GET /health/ready` returns `200` with `database: "ok"`;
-3. the Vite/preview storefront serves one HTML root shell with the expected
+3. unauthenticated public catalog categories and one product listing return the
+   expected envelope shapes;
+4. unauthenticated customer session lookup returns `data: null`;
+5. customer order and staff session endpoints fail closed with `401` and the
+   stable `UNAUTHORIZED` error code;
+6. the Vite/preview storefront serves one HTML root shell with the expected
    RTL application root.
 
 The root-shell check intentionally does not append hash routes before using
 `fetch`: fragments are not sent in an HTTP request, so a fetch-based probe
-cannot establish route-level rendering. This command reports one named
-root-shell availability result only; browser route journeys remain deferred.
+cannot establish route-level rendering. These checks are HTTP contract smoke
+only; browser route journeys remain deferred.
 
 The command exits with code `2` and prints `BLOCKED` when the API, exact
 PostgreSQL-backed readiness, or storefront is unavailable. It does not start

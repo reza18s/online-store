@@ -45,7 +45,12 @@ import {
   type PreviewState,
 } from './shared/hash-route';
 import { Header, Logo, MenuDrawer, MobileBottomNav, SearchDialog } from './shared/site-shell';
-import { applySeoDocument, clientSeoForHashRoute, readInitialRenderContext } from './seo/metadata';
+import {
+  applySeoDocument,
+  clientSeoForHashRoute,
+  readInitialRenderContext,
+  type InitialRenderContext,
+} from './seo/metadata';
 import type { StorefrontProduct } from './features/catalog/catalog-api';
 import { StorefrontDiscoveryPage } from './features/catalog/storefront-discovery-page';
 import { StorefrontCartPage } from './features/cart/storefront-cart-page';
@@ -160,6 +165,20 @@ function apiErrorMessage(error: unknown, fallback: string): string {
 function normalizeSeoPath(path: string): string {
   const normalized = path.trim().replace(/\/+$/, '');
   return normalized || '/';
+}
+
+export function resolveSeoDocumentForRoute(
+  route: string,
+  initial: InitialRenderContext | undefined,
+  pathname: string,
+  origin: string,
+) {
+  const initialMatches =
+    initial &&
+    initial.hashRoute === route &&
+    normalizeSeoPath(initial.path) === normalizeSeoPath(pathname);
+
+  return initialMatches ? initial.seo : clientSeoForHashRoute(route, origin);
 }
 
 const authPhoneStorageKey = 'nova.auth.phone';
@@ -2950,14 +2969,12 @@ export function App() {
   const [wishlist, setWishlist] = useState<Set<string>>(() => new Set());
 
   useEffect(() => {
-    const initial = readInitialRenderContext();
-    const initialMatches =
-      initial &&
-      initial.hashRoute === route &&
-      normalizeSeoPath(initial.path) === normalizeSeoPath(window.location.pathname);
-    const isDataRoute = route.startsWith('#product/') || route.startsWith('#content/');
-    const seo = initialMatches ? initial.seo : clientSeoForHashRoute(route, window.location.origin);
-    if (isDataRoute && !initialMatches) return;
+    const seo = resolveSeoDocumentForRoute(
+      route,
+      readInitialRenderContext(),
+      window.location.pathname,
+      window.location.origin,
+    );
     applySeoDocument(document, seo);
   }, [route]);
 

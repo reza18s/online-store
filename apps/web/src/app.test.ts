@@ -6,11 +6,13 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { queryKeys } from '@nova/api-client';
 
+import { createSeoDocument } from './seo/metadata';
 import {
   AdminPage,
   AdminLegacyPage,
   AdminRouteUnavailablePage,
   RouteView,
+  resolveSeoDocumentForRoute,
   shouldShowAdminDashboardPreview,
   validateStaffLoginInput,
 } from './app';
@@ -33,6 +35,28 @@ test('validates staff login fields with localized, field-specific errors', () =>
     message: 'کد تأیید دومرحله‌ای یا کد بازیابی را وارد کنید.',
   });
   assert.equal(validateStaffLoginInput('admin@example.com', 'secret', '123456'), null);
+});
+
+test('uses client SEO metadata after navigating from another public data route', () => {
+  const seo = resolveSeoDocumentForRoute(
+    '#product/linen-overshirt',
+    {
+      path: '/category/women',
+      hashRoute: '#category/women',
+      seo: createSeoDocument({
+        origin: 'https://nova.example',
+        title: 'NOVA | زنانه',
+        description: 'دسته زنانه',
+        canonicalPath: '/category/women',
+      }),
+    },
+    '/category/women',
+    'https://nova.example',
+  );
+
+  assert.equal(seo.title, 'NOVA | محصول');
+  assert.equal(seo.canonicalUrl, 'https://nova.example/product/linen-overshirt');
+  assert.equal(seo.robots, 'index, follow');
 });
 
 test('renders the session-expired staff login state from the safe route marker', () => {

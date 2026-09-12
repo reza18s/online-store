@@ -27,7 +27,7 @@ bun run docker:config
 bun run dev
 ```
 
-The web shell runs at `http://localhost:5173`. To run the API or worker independently:
+The web shell runs at `http://127.0.0.1:5173`. To run the API or worker independently:
 
 ```powershell
 bun run dev:api

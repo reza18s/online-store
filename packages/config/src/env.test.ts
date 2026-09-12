@@ -8,7 +8,11 @@ test('environment validation supplies safe local defaults', () => {
 
   assert.equal(environment.NODE_ENV, 'development');
   assert.equal(environment.API_PORT, 4000);
-  assert.equal(environment.DATABASE_URL, 'postgresql://nova:nova_local_only@localhost:5432/nova?schema=public');
+  assert.equal(environment.WEB_ORIGIN, 'http://127.0.0.1:5173');
+  assert.equal(
+    environment.DATABASE_URL,
+    'postgresql://nova:nova_local_only@localhost:5432/nova?schema=public',
+  );
 });
 
 test('environment validation coerces a valid port and preserves URLs', () => {

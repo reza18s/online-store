@@ -6,7 +6,7 @@ export const DEFAULT_STAFF_TOTP_ENCRYPTION_KEY = 'nova-local-only-staff-totp-key
 const environmentSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'staging', 'production']).default('development'),
   API_PORT: z.coerce.number().int().min(1).max(65_535).default(4000),
-  WEB_ORIGIN: z.string().url().default('http://localhost:5173'),
+  WEB_ORIGIN: z.string().url().default('http://127.0.0.1:5173'),
   DATABASE_URL: z
     .string()
     .url()

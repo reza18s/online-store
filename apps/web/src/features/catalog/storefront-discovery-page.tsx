@@ -228,6 +228,10 @@ export function productAddButtonLabel(
   return available ? 'افزودن به سبد خرید' : 'ناموجود';
 }
 
+export function shouldShowProductLoading(slug: string, isPending: boolean): boolean {
+  return Boolean(slug) && isPending;
+}
+
 function routeTo(hash: string): void {
   if (typeof window !== 'undefined') window.location.hash = hash.replace(/^#/, '');
 }
@@ -1092,7 +1096,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
     setMediaIndex(0);
     setFeedback(undefined);
   }, [productQuery.data?.id]);
-  if (productQuery.isPending && !productQuery.data)
+  if (shouldShowProductLoading(slug, productQuery.isPending) && !productQuery.data)
     return (
       <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background py-6">
         <ProductSkeleton count={1} />

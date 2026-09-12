@@ -41,6 +41,7 @@ test('resolves catalog and product routes without changing path values', () => {
     kind: 'product',
     slug: 'linen-overshirt',
   });
+  assertRoute('#product/', { kind: 'not-found' });
 });
 
 test('keeps cart, checkout, and account route precedence', () => {

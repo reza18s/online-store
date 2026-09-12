@@ -9,6 +9,7 @@ import {
   preserveFacetSelection,
   productAddButtonLabel,
   resolveVariant,
+  shouldShowProductLoading,
   structuredVariantOptions,
 } from './storefront-discovery-page';
 
@@ -165,4 +166,10 @@ test('asks for a variant before presenting an unavailable add-to-cart state', ()
   assert.equal(productAddButtonLabel(3, true, true), 'افزودن به سبد خرید');
   assert.equal(productAddButtonLabel(3, true, false), 'ناموجود');
   assert.equal(productAddButtonLabel(0, false, false), 'ناموجود');
+});
+
+test('does not treat a disabled product query as loading without a slug', () => {
+  assert.equal(shouldShowProductLoading('', true), false);
+  assert.equal(shouldShowProductLoading('linen-overshirt', false), false);
+  assert.equal(shouldShowProductLoading('linen-overshirt', true), true);
 });

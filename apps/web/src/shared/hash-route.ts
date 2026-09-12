@@ -98,7 +98,8 @@ export function parseHashRoute(route: string): HashRoute {
     };
   }
   if (path.startsWith('#product/')) {
-    return { ...shared, kind: 'product', slug: path.split('/')[1] ?? '' };
+    const slug = path.split('/')[1] ?? '';
+    if (slug) return { ...shared, kind: 'product', slug };
   }
   if (path === '#cart' || path === '#cart/empty') return { ...shared, kind: 'cart' };
   if (path === '#cart/conflict') {

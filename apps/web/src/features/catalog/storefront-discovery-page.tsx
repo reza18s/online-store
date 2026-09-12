@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import type {
   CatalogAudience,
   CatalogFacetOption,
+  CatalogProductOption,
   CatalogSort,
   CatalogProductVariant,
 } from '@nova/api-client';
@@ -173,6 +174,17 @@ export function preserveFacetSelection(
   return [{ value: selected, label: selected, count: 0, selected: true }, ...options];
 }
 
+export function structuredVariantOptions(
+  product: Pick<StorefrontProduct, 'variants' | 'options'>,
+): CatalogProductOption[] {
+  const variants = product.variants ?? [];
+  return (product.options ?? []).filter((option) =>
+    option.values.some((value) =>
+      variants.some((variant) => variant.optionValueIds.includes(value.id)),
+    ),
+  );
+}
+
 export function resolveVariant(
   product: Pick<StorefrontProduct, 'variants' | 'options'>,
   selectedOptionValues: Record<string, string>,
@@ -181,11 +193,7 @@ export function resolveVariant(
 ): CatalogProductVariant | undefined {
   const variants = product.variants ?? [];
   if (!variants.length) return undefined;
-  const optionKeys = (product.options ?? []).filter((option) =>
-    option.values.some((value) =>
-      variants.some((variant) => variant.optionValueIds.includes(value.id)),
-    ),
-  );
+  const optionKeys = structuredVariantOptions(product);
   if (optionKeys.length && variants.some((variant) => variant.optionValueIds.length)) {
     if (!optionKeys.every((option) => Boolean(selectedOptionValues[option.key]))) return undefined;
     return variants.find((variant) =>
@@ -1106,6 +1114,27 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
     );
   const product = toStorefrontProductDetail(productQuery.data);
   const variants = product.variants ?? [];
+  const variantOptions = structuredVariantOptions(product);
+  const usesStructuredVariantOptions =
+    variantOptions.length > 0 && variants.some((variant) => variant.optionValueIds.length > 0);
+  const legacySizes = usesStructuredVariantOptions
+    ? []
+    : [
+        ...new Set(
+          variants
+            .map((variant) => variant.size)
+            .filter((value): value is string => Boolean(value)),
+        ),
+      ];
+  const legacyColors = usesStructuredVariantOptions
+    ? []
+    : [
+        ...new Set(
+          variants
+            .map((variant) => variant.color)
+            .filter((value): value is string => Boolean(value)),
+        ),
+      ];
   const selectedVariant = resolveVariant(
     product,
     selectedOptionValues,
@@ -1233,7 +1262,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
                   : 'موجود'
                 : 'ناموجود'}
           </p>
-          {product.options?.map((option) => (
+          {variantOptions.map((option) => (
             <fieldset className="space-y-2" key={option.id}>
               <legend className="text-sm font-semibold">{option.name}</legend>
               <div className="flex flex-wrap gap-2">
@@ -1253,23 +1282,11 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
               </div>
             </fieldset>
           ))}
-          {[
-            ...new Set(
-              variants
-                .map((variant) => variant.size)
-                .filter((value): value is string => Boolean(value)),
-            ),
-          ].length ? (
+          {legacySizes.length ? (
             <fieldset className="space-y-2">
               <legend className="text-sm font-semibold">اندازه</legend>
               <div className="flex flex-wrap gap-2">
-                {[
-                  ...new Set(
-                    variants
-                      .map((variant) => variant.size)
-                      .filter((value): value is string => Boolean(value)),
-                  ),
-                ].map((value) => (
+                {legacySizes.map((value) => (
                   <button
                     className={`min-h-11 min-w-11 border px-3 text-sm ${selectedSize === value ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
                     type="button"
@@ -1283,23 +1300,11 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
               </div>
             </fieldset>
           ) : null}
-          {[
-            ...new Set(
-              variants
-                .map((variant) => variant.color)
-                .filter((value): value is string => Boolean(value)),
-            ),
-          ].length ? (
+          {legacyColors.length ? (
             <fieldset className="space-y-2">
               <legend className="text-sm font-semibold">رنگ</legend>
               <div className="flex flex-wrap gap-2">
-                {[
-                  ...new Set(
-                    variants
-                      .map((variant) => variant.color)
-                      .filter((value): value is string => Boolean(value)),
-                  ),
-                ].map((value) => (
+                {legacyColors.map((value) => (
                   <button
                     className={`min-h-11 min-w-11 border px-3 text-sm ${selectedColor === value ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
                     type="button"

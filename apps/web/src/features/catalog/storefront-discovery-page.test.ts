@@ -8,6 +8,7 @@ import {
   parseDiscoveryQuery,
   preserveFacetSelection,
   resolveVariant,
+  structuredVariantOptions,
 } from './storefront-discovery-page';
 
 test('parses shareable discovery state and keeps invalid sort/page values safe', () => {
@@ -115,4 +116,45 @@ test('resolves only a fully selected available variant for normalized options', 
   };
   assert.equal(resolveVariant(product, {}, '', ''), undefined);
   assert.equal(resolveVariant(product, { size: 'm' }, '', '')?.id, 'v1');
+});
+
+test('exposes only option groups backed by variant option values', () => {
+  const product = {
+    options: [
+      {
+        id: 'size',
+        key: 'size',
+        name: 'اندازه',
+        sortOrder: 1,
+        values: [{ id: 'm', key: 'm', label: 'M', sortOrder: 1 }],
+      },
+      {
+        id: 'material',
+        key: 'material',
+        name: 'جنس',
+        sortOrder: 2,
+        values: [{ id: 'cotton', key: 'cotton', label: 'پنبه', sortOrder: 1 }],
+      },
+    ],
+    variants: [
+      {
+        id: 'v1',
+        sku: 'NOVA-M',
+        title: 'M',
+        size: 'M',
+        color: null,
+        colorHex: null,
+        priceToman: 100,
+        compareAtPriceToman: null,
+        optionValueIds: ['m'],
+        media: [],
+        available: true,
+      },
+    ],
+  };
+
+  assert.deepEqual(
+    structuredVariantOptions(product).map((option) => option.key),
+    ['size'],
+  );
 });

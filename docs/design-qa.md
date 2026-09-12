@@ -98,7 +98,7 @@ containment, not a formal pixel or full component-state sign-off.
 | Modal keyboard containment | `CLOSED` (bounded) | Source focus trap/restore is integrated, and the bounded CUA continuation observed search-dialog Tab containment plus Escape/focus restoration. Full AT remains open. See finding `QA-001-A11Y-001`. |
 | Touch target minimum | `CLOSED` (source) | `.quick-add` is 44px × 44px at source-level breakpoints; full rendered component geometry remains outside the current state capture. See `QA-001-A11Y-002`. |
 | Reduced motion | `CLOSED` (source) | Source neutralizes the identified hover transforms under `prefers-reduced-motion: reduce`; full browser/AT motion verification remains open. See `QA-001-A11Y-003`. |
-| Keyboard journeys | `PARTIAL` | Exact staff-login keyboard smoke at `1440x900` and `390x844` reached email → password → factor → submit → return in order, and Shift+Tab from submit returned to factor. The broader storefront/admin tab-order and focus-color journey is not complete. |
+| Keyboard journeys | `PARTIAL` | Exact staff-login keyboard smoke at `1440x900` and `390x844` reached email → password → factor → submit → return in order, and Shift+Tab from submit returned to factor. A bounded live CUA follow-up also covered the storefront home cycle, search-dialog containment, product option selection, empty cart/payment/account states and the unauthenticated admin guard. The broader storefront/admin tab-order and focus-color journey is not complete. |
 | Assistive technology | `PARTIAL` | The exact staff-login AX tree exposed named links, heading, form, button and three textboxes at both target viewports; no screen-reader or formal cross-browser AT run is available. |
 
 ## Required state coverage
@@ -320,6 +320,19 @@ to the factor field. The AX tree exposed one `main`, the management heading, a
 form, named links, the named submit button and all three Persian field names;
 both viewports were RTL and had no horizontal overflow. This is bounded browser
 evidence only; screen-reader and full cross-browser AT remain open.
+
+A further default-viewport CUA follow-up found that the seeded
+`knit-cardigan` product returned normalized option groups plus legacy `size` /
+`color` fields, and the PDP rendered both representations. That duplicated the
+color and size controls in the accessibility tree and left the legacy controls
+disconnected from structured variant resolution. The product page now derives
+its displayed option groups from the variant `optionValueIds` and suppresses
+the legacy fallback controls whenever structured options are active. The live
+route now exposes one color group and one size group; keyboard activation of
+`قهوه‌ای` and `M` reports `موجود` and enables `افزودن به سبد خرید`, while the
+page remains within its viewport. The focused catalog test passes `6/6` and
+the web typecheck/targeted format checks pass. Full AT and formal pixel
+comparison remain separate gates.
 
 ## Findings for parent routing
 

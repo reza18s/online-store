@@ -7,6 +7,7 @@ import {
   discoveryFiltersFromQuery,
   parseDiscoveryQuery,
   preserveFacetSelection,
+  productAddButtonLabel,
   resolveVariant,
   structuredVariantOptions,
 } from './storefront-discovery-page';
@@ -157,4 +158,11 @@ test('exposes only option groups backed by variant option values', () => {
     structuredVariantOptions(product).map((option) => option.key),
     ['size'],
   );
+});
+
+test('asks for a variant before presenting an unavailable add-to-cart state', () => {
+  assert.equal(productAddButtonLabel(3, false, false), 'انتخاب کنید');
+  assert.equal(productAddButtonLabel(3, true, true), 'افزودن به سبد خرید');
+  assert.equal(productAddButtonLabel(3, true, false), 'ناموجود');
+  assert.equal(productAddButtonLabel(0, false, false), 'ناموجود');
 });

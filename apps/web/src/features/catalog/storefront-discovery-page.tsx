@@ -219,6 +219,15 @@ function availabilityLabel(product: StorefrontProduct): string {
   return product.stock ?? (product.available === false ? 'ناموجود' : 'موجود');
 }
 
+export function productAddButtonLabel(
+  variantCount: number,
+  hasSelectedVariant: boolean,
+  available: boolean,
+): string {
+  if (variantCount > 0 && !hasSelectedVariant) return 'انتخاب کنید';
+  return available ? 'افزودن به سبد خرید' : 'ناموجود';
+}
+
 function routeTo(hash: string): void {
   if (typeof window !== 'undefined') window.location.hash = hash.replace(/^#/, '');
 }
@@ -1326,7 +1335,8 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
             loading={adder.isPending}
             onClick={submitAdd}
           >
-            {available ? 'افزودن به سبد خرید' : 'ناموجود'} <Icon name="bag" size={17} />
+            {productAddButtonLabel(variants.length, Boolean(selectedVariant), available)}{' '}
+            <Icon name="bag" size={17} />
           </Button>
           {feedback ? <AddToCartFeedback {...feedback} /> : null}
           <div className="border-t border-border pt-4 text-sm leading-7 text-muted-foreground">

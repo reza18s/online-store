@@ -598,6 +598,35 @@ test('renders home, category, and published content initial HTML from public rea
   assert.equal(content.initialData?.kind, 'content');
 });
 
+test('renders supported content links in escaped SSR HTML', async () => {
+  const contentPage = {
+    ...page,
+    blocks: [
+      {
+        kind: 'link',
+        payload: { label: '<راهنمای اندازه>', href: '/content/size guide?from=help' },
+        sortOrder: 1,
+      },
+    ],
+  } satisfies ContentPage;
+  const { fetcher } = fixtureFetcher({
+    '/v1/seo/resolve?path=%2Fcontent%2Fsize-guide': {
+      path: '/content/size-guide',
+      metadata: null,
+      redirect: null,
+    } satisfies SeoResolution,
+    '/v1/content/pages/size-guide': contentPage,
+  });
+
+  const content = await renderRoute('/content/size-guide', { ...optionsBase, fetcher });
+  assert.equal(content.status, 200);
+  assert.match(
+    content.bodyHtml,
+    /<a href="\/content\/size%20guide\?from=help">&lt;راهنمای اندازه&gt;<\/a>/,
+  );
+  assert.doesNotMatch(content.bodyHtml, /<راهنمای اندازه>/);
+});
+
 test('follows resolver redirects before loading catalog content', async () => {
   const { fetcher, calls } = fixtureFetcher({
     '/v1/seo/resolve?path=%2Fproduct%2Fold': {

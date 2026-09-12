@@ -30,6 +30,10 @@ import {
   type PublicRenderRoute,
   type SeoDocument,
 } from '../seo/metadata';
+import {
+  getRenderableContentBlocks,
+  type RenderableContentBlock,
+} from '../features/content/content-blocks';
 
 export type Fetcher = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -705,19 +709,24 @@ function productBody(product: CatalogProduct, description: string): string {
 
 function contentBody(route: PublicRenderRoute, page: ContentPage, description: string): string {
   const body = page.body ? `<p>${escapeHtml(page.body)}</p>` : '';
-  const blocks = page.blocks
-    .map((block) => {
-      const payload =
-        typeof block.payload === 'string'
-          ? block.payload
-          : typeof block.payload === 'object' && block.payload !== null && 'text' in block.payload
-            ? String((block.payload as { text: unknown }).text)
-            : '';
-      return payload ? `<p>${escapeHtml(payload)}</p>` : '';
-    })
-    .join('');
+  const blocks = getRenderableContentBlocks(page.blocks).blocks.map(renderContentBlock).join('');
   const canonical = route.kind === 'content' ? route.path : '/';
   return `<main data-nova-ssr-content="true"><article><a href="${escapeHtml(canonical)}"><h1>${escapeHtml(page.title)}</h1></a><p>${escapeHtml(description)}</p>${body}${blocks}</article></main>`;
+}
+
+function renderContentBlock(block: RenderableContentBlock): string {
+  switch (block.kind) {
+    case 'text':
+      return `<p>${escapeHtml(block.text)}</p>`;
+    case 'heading':
+      return `<h${block.level}>${escapeHtml(block.text)}</h${block.level}>`;
+    case 'quote':
+      return `<blockquote><p>${escapeHtml(block.text)}</p>${
+        block.cite ? `<cite>${escapeHtml(block.cite)}</cite>` : ''
+      }</blockquote>`;
+    case 'link':
+      return `<p><a href="${escapeHtml(block.href)}">${escapeHtml(block.label)}</a></p>`;
+  }
 }
 
 function metadataFallback(

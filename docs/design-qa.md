@@ -56,7 +56,7 @@ current rendered evidence.
 | --- | --- | --- |
 | Requested baseline | `PASS` | The original audit matched `465ce07` on `codex/integration`; the later parent recheck ran from the current integration checkout. |
 | Route integration ownership | `PASS` | `RouteView` dispatches the integrated public, auth, commerce, account, content, admin, and fallback route kinds; `hash-route.test.ts` passed. |
-| Web focused tests | `PASS` | The current checkout reran `bun test`: **517 pass, 0 fail** across 106 files, including the staff-login validation, safe session-expiry, SSR content-link, admin modal-focus, and customer-lookup regressions. |
+| Web focused tests | `PASS` | The current checkout reran `bun test`: **518 pass, 0 fail** across 106 files, including the staff-login validation, safe session-expiry, SSR content-link, admin modal-focus, customer-lookup, and stale payment-recovery-success regressions. |
 | Web typecheck | `PASS` | `bun run --cwd apps/web typecheck` exited successfully. |
 | Deterministic integration matrix | `PASS` | The parent recheck ran `bun run test:integration`: all 8 deterministic suites passed with no failures. |
 | Live API/storefront smoke | `PASS` (unauthenticated) / `NOT RUN` (authenticated) | The continuation ran the API and Vite storefront against isolated PostgreSQL 16/Redis 7: `/health/live` and `/health/ready` returned `200` with `database: "ok"`, public catalog endpoints returned seeded data, the default `test:e2e` root-shell preflight passed, and CUA observed live home/catalog content plus the unauthenticated admin guard. A 2026-09-12 built-SSR smoke also returned `200` for robots, sitemap, home, product and supported public category routes, while account/private and unknown routes stayed noindex/fail-closed. Authenticated data-backed operations remain unrun. |
@@ -341,10 +341,10 @@ links are present and escaped in initial HTML. Commit `0915763` traps Tab and
 Shift+Tab within the admin order-operation modal while preserving Escape and
 focus restoration, and passes the encoded customer lookup query through the
 admin route so the intended customer filter is initialized. The focused admin
-suite passed `11/11`; the full workspace suite passed `517/517`. These source
+suite passed `11/11`; the full workspace suite passed `518/518`. These source
 fixes do not close the separate authenticated browser, full AT, provider, or
 formal pixel gates. The route-wiring regression was then covered by the app
-render test (`8/8`), bringing the full workspace suite to `517/517`.
+render test (`8/8`), bringing the full workspace suite to `518/518`.
 
 ## Findings for parent routing
 

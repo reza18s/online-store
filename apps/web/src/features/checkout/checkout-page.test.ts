@@ -49,3 +49,11 @@ test('sends timed-out recovery to the authoritative order status', () => {
   assert.match(markup, /href="#order\/NV-1"[^>]*>مشاهده وضعیت سفارش/);
   assert.doesNotMatch(markup, /href="#checkout\/payment"/);
 });
+
+test('shows confirmation when a stale recovery URL points to a paid order', () => {
+  const markup = renderRecoveryPage(orderWithPayment('PAID', 'CONFIRMED'), 'failed');
+
+  assert.match(markup, /سفارش شما با موفقیت تأیید شد/);
+  assert.match(markup, /پیگیری سفارش/);
+  assert.doesNotMatch(markup, /پرداخت ناموفق بود|بازگشت به پرداخت/);
+});

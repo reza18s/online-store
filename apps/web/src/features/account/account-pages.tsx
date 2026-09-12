@@ -38,6 +38,7 @@ import {
   orderStatusCopy,
   returnReasonCopy,
   returnRequestStatusCopy,
+  shouldShowCustomerOrderLoading,
   useCustomerCacheBoundary,
   useOnlineStatus,
 } from './account-state';
@@ -1033,7 +1034,14 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
   const [cancelSuccess, setCancelSuccess] = useState(false);
   useCustomerCacheBoundary(customerQuery.data?.id, isUnauthorizedError(customerQuery.error));
 
-  if (customerQuery.isPending || orderQuery.isPending)
+  if (
+    shouldShowCustomerOrderLoading({
+      customerPending: customerQuery.isPending,
+      customerActive: isCustomerActive(customerQuery.data),
+      hasOrderNumber: Boolean(orderNumber),
+      orderPending: orderQuery.isPending,
+    })
+  )
     return (
       <PageFrame>
         <LoadingState label="در حال بارگذاری سفارش" rows={2} />

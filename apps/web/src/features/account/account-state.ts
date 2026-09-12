@@ -79,6 +79,20 @@ export function isCustomerActive(
   return Boolean(customer && customer.status === 'ACTIVE');
 }
 
+export function shouldShowCustomerOrderLoading({
+  customerPending,
+  customerActive,
+  hasOrderNumber,
+  orderPending,
+}: {
+  customerPending: boolean;
+  customerActive: boolean;
+  hasOrderNumber: boolean;
+  orderPending: boolean;
+}): boolean {
+  return customerPending || (customerActive && hasOrderNumber && orderPending);
+}
+
 export function isUnauthorizedError(error: unknown): boolean {
   return error instanceof ApiClientError && error.status === 401;
 }

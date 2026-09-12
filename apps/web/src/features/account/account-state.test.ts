@@ -8,6 +8,7 @@ import {
   CUSTOMER_RETURN_WINDOW_DAYS,
   canCancelCustomerOrder,
   getReturnEligibility,
+  shouldShowCustomerOrderLoading,
 } from './account-state';
 
 function order(overrides: Partial<CustomerOrderDetail> = {}): CustomerOrderDetail {
@@ -90,4 +91,34 @@ test('requires every server-required address field before allowing a save', () =
   };
   assert.equal(addressFormIsComplete(form), true);
   assert.equal(addressFormIsComplete({ ...form, city: '  ' }), false);
+});
+
+test('does not let a disabled order query keep an unauthenticated route in loading', () => {
+  assert.equal(
+    shouldShowCustomerOrderLoading({
+      customerPending: false,
+      customerActive: false,
+      hasOrderNumber: true,
+      orderPending: true,
+    }),
+    false,
+  );
+  assert.equal(
+    shouldShowCustomerOrderLoading({
+      customerPending: false,
+      customerActive: true,
+      hasOrderNumber: true,
+      orderPending: true,
+    }),
+    true,
+  );
+  assert.equal(
+    shouldShowCustomerOrderLoading({
+      customerPending: false,
+      customerActive: true,
+      hasOrderNumber: false,
+      orderPending: true,
+    }),
+    false,
+  );
 });

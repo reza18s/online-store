@@ -119,6 +119,39 @@ test('keeps the static admin dashboard preview development-only', () => {
   queryClient.clear();
 });
 
+test('passes encoded admin customer lookup queries into the customer filter', () => {
+  const queryClient = new QueryClient();
+  const lookup = 'person+support@example.test';
+  queryClient.setQueryData(queryKeys.staffAuth.current(), {
+    id: 'staff-support',
+    email: 'support@example.test',
+    status: 'ACTIVE',
+    roles: ['support'],
+  });
+  queryClient.setQueryData(queryKeys.adminCustomers.list({ page: 1, limit: 12, q: lookup }), {
+    items: [],
+    total: 0,
+    page: 1,
+    limit: 12,
+  });
+
+  const markup = renderToStaticMarkup(
+    createElement(
+      QueryClientProvider,
+      { client: queryClient },
+      createElement(AdminPage, {
+        page: 'customers',
+        queryString: 'q=person%2Bsupport%40example.test',
+      }),
+    ),
+  );
+
+  assert.match(markup, /for="customer-query">ایمیل، تلفن یا شناسه مشتری/);
+  assert.match(markup, /id="customer-query"/);
+  assert.match(markup, /value="person\+support@example\.test"/);
+  queryClient.clear();
+});
+
 test('does not expose a fabricated order number from the payment preview state', () => {
   const markup = renderToStaticMarkup(
     createElement(RouteView, {

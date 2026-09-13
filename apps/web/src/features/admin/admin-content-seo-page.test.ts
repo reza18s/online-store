@@ -5,6 +5,7 @@ import {
   canManageAdminContent,
   getAdminContentSeoState,
   getPublishReadiness,
+  isAdminContentSeoEditorInputDisabled,
   isSafeSiteRelativePath,
   normalizeAdminContentSeoView,
   normalizeSiteRelativePath,
@@ -112,4 +113,10 @@ test('chooses permission, loading, offline, error, empty and ready states determ
   );
   assert.equal(getAdminContentSeoState({ hasItems: false }, ['admin']), 'empty');
   assert.equal(getAdminContentSeoState({ hasItems: true }, ['admin']), 'ready');
+});
+
+test('locks every editor input while a content mutation is pending', () => {
+  assert.equal(isAdminContentSeoEditorInputDisabled(true, true), true);
+  assert.equal(isAdminContentSeoEditorInputDisabled(true, false), false);
+  assert.equal(isAdminContentSeoEditorInputDisabled(false, false), true);
 });

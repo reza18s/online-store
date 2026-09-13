@@ -44,7 +44,8 @@ has these invariants:
   database object class from a separate process. It never creates, drops, resets,
   truncates, or cleans a database and never passes `pg_restore --clean`.
 - Restore uses `--exit-on-error` and `--single-transaction`, then verifies that the
-  target contains user tables and any explicitly requested expected tables.
+  target contains user tables (excluding `pg_catalog`, `information_schema` and
+  `pg_toast`) and any explicitly requested expected tables.
 - The disposable restore intentionally uses `--no-owner` and `--no-acl`; this is a
   schema/data replay check, not a production role or privilege-fidelity exercise.
 - The script leaves the archive in place for evidence and does not remove the
@@ -66,8 +67,10 @@ to the PostgreSQL client processes and never emits them.
 
 The operator also needs:
 
-- `pg_dump`, `pg_restore`, and `psql` on `PATH`, preferably from the same
-  PostgreSQL major version as the source;
+- `pg_dump`, `pg_restore`, and `psql` on `PATH`, all from the same PostgreSQL
+  major version as one another and as the source (and restore target for a full
+  drill); the verifier blocks before dump/restore when a major-version mismatch
+  is detected;
 - a new writable archive path with enough local capacity;
 - for a restore drill, an already-created disposable PostgreSQL database on a
   separate PostgreSQL cluster identity, preferably created from `template0`,
@@ -122,8 +125,13 @@ exclude an uncooperative concurrent writer. Because the drill omits ownership an
 ACL replay, it is not evidence of production permission fidelity, media, WAL,
 external storage, or application smoke-test recovery.
 
-Record the emitted `archivePath`, `archiveBytes`, `archiveEntries`, `sha256`,
-`restoredTables`, and the exit code in the approved operational evidence store.
+For a successful archive event, assert that the emitted evidence includes
+`postgresClientMajorVersion` and `sourceServerMajorVersion`, and for a full
+restore also assert `restoreServerMajorVersion`; these values must all match the
+approved PostgreSQL major for the drill. Record those version fields together
+with `archivePath`, `archiveBytes`, `archiveEntries`, `sha256`, `restoredTables`,
+and the exit code in the approved operational evidence store. This preserves
+evidence of the version-compatibility gate without recording credentials.
 Keep the archive and restored database under the same approved retention and
 access-control policy as the test environment; this repository does not define
 that policy.

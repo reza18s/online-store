@@ -19,6 +19,7 @@ import { useCheckoutQuote, useSubmitCheckout } from './checkout-api';
 import {
   buildCheckoutHref,
   classifyCheckoutFailure,
+  checkoutRetryTarget,
   getStableCheckoutIdempotencyKey,
   isQuoteExpired,
   normalizeCheckoutStep,
@@ -534,8 +535,6 @@ function CheckoutPageContent({
       ? errorFailure(quoteQuery.error, 'دریافت قیمت نهایی سفارش ممکن نشد.')
       : null;
   const quote = quoteExpired ? undefined : quoteQuery.data;
-  const activeFailure =
-    failureSource === 'submit' || failureSource === 'address' ? failure : quoteFailure;
   const currentIndex = steps.findIndex((item) => item.key === currentStep);
 
   const setFailureFrom = (next: CheckoutFailure, source: 'quote' | 'submit' | 'address') => {
@@ -705,6 +704,9 @@ function CheckoutPageContent({
     }
     void submitOrder();
   };
+  const activeFailure =
+    failureSource === 'submit' || failureSource === 'address' ? failure : quoteFailure;
+  const retryTarget = checkoutRetryTarget(activeFailure, failureSource);
   return (
     <CheckoutShell>
       <div className="breadcrumb">
@@ -799,7 +801,11 @@ function CheckoutPageContent({
               failure={activeFailure}
               input={checkoutInput}
               onRetry={
-                activeFailure.action === 'retry' ? () => void quoteQuery.refetch() : undefined
+                retryTarget === 'submit'
+                  ? () => void submitOrder()
+                  : retryTarget === 'quote'
+                    ? () => void quoteQuery.refetch()
+                    : undefined
               }
             />
           ) : null}

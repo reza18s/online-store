@@ -85,6 +85,18 @@ test('uses bytewise canonical query ordering for S3-compatible signatures', asyn
   );
 });
 
+test('does not sign a derivative read URL for a different owned object', async () => {
+  await assert.rejects(
+    storage().createDerivativeReadUrl({
+      mediaId: 'media-1',
+      productId: 'product-1',
+      derivativeKey: 'catalog/products/product-1/media-1/original.webp',
+    }),
+    (error: unknown) =>
+      error instanceof CatalogMediaStorageError && error.code === 'MEDIA_KEY_INVALID',
+  );
+});
+
 test('completes only when original and derivative metadata match the request', async () => {
   const calls: string[] = [];
   const fakeFetch: typeof fetch = async (url) => {
@@ -107,4 +119,150 @@ test('completes only when original and derivative metadata match the request', a
   const completed = await storage(fakeFetch).completeUpload(input);
   assert.equal(completed.derivativeKey, 'catalog/products/product-1/asset-1/derivative.webp');
   assert.equal(calls.length, 2);
+});
+
+test('round-trips synthetic presigned PUTs before completing the upload', async () => {
+  const objects = new Map<
+    string,
+    { contentType: string; sizeBytes: number; metadata: Record<string, string> }
+  >();
+  const fakeFetch: typeof fetch = async (url, init) => {
+    const requestUrl = new URL(String(url));
+    const method = init?.method?.toUpperCase() ?? 'GET';
+    const objectKey = requestUrl.pathname.replace(/^\/nova-media-test\//, '');
+    const headers = new Headers(init?.headers);
+
+    if (method === 'PUT') {
+      assert.equal(requestUrl.searchParams.get('X-Amz-Signature')?.length, 64);
+      const body = init?.body;
+      const sizeBytes = body instanceof Uint8Array ? body.byteLength : 0;
+      const metadata: Record<string, string> = {};
+      headers.forEach((value, name) => {
+        if (name.startsWith('x-amz-meta-')) {
+          metadata[name.slice('x-amz-meta-'.length)] = value;
+        }
+      });
+      objects.set(objectKey, {
+        contentType: headers.get('content-type') ?? '',
+        sizeBytes,
+        metadata,
+      });
+      return new Response(null, { status: 200 });
+    }
+
+    if (method === 'HEAD') {
+      assert.match(headers.get('authorization') ?? '', /Signature=[a-f0-9]{64}$/);
+      const object = objects.get(objectKey);
+      if (!object) return new Response(null, { status: 404 });
+      return new Response(null, {
+        status: 200,
+        headers: {
+          'content-type': object.contentType,
+          'content-length': String(object.sizeBytes),
+          ...Object.fromEntries(
+            Object.entries(object.metadata).map(([name, value]) => [`x-amz-meta-${name}`, value]),
+          ),
+        },
+      });
+    }
+
+    throw new Error(`Unexpected synthetic object-store method: ${method}`);
+  };
+
+  const storageClient = storage(fakeFetch);
+  const plan = await storageClient.createUpload(input);
+  const originalPut = await fakeFetch(plan.original.url, {
+    method: 'PUT',
+    headers: plan.original.headers,
+    body: new Uint8Array(input.sizeBytes),
+  });
+  const derivativePut = await fakeFetch(plan.derivative.url, {
+    method: 'PUT',
+    headers: plan.derivative.headers,
+    body: new Uint8Array(12),
+  });
+
+  assert.equal(originalPut.status, 200);
+  assert.equal(derivativePut.status, 200);
+  assert.equal(objects.size, 2);
+
+  const completed = await storageClient.completeUpload(input);
+
+  assert.deepEqual(completed, {
+    originalKey: 'catalog/products/product-1/asset-1/original.webp',
+    derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+    contentType: 'image/webp',
+    sizeBytes: input.sizeBytes,
+  });
+});
+
+test('quarantines each owned object by signed copy before deleting its source', async () => {
+  const calls: Array<{ method: string; url: URL; headers: Headers }> = [];
+  const fakeFetch: typeof fetch = async (url, init) => {
+    calls.push({
+      method: init?.method ?? 'GET',
+      url: new URL(String(url)),
+      headers: new Headers(init?.headers),
+    });
+    return new Response(null, { status: 200 });
+  };
+
+  await storage(fakeFetch).quarantine({
+    mediaId: 'asset-1',
+    productId: 'product-1',
+    originalKey: 'catalog/products/product-1/asset-1/original.webp',
+    derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+  });
+
+  assert.deepEqual(
+    calls.map(({ method }) => method),
+    ['PUT', 'DELETE', 'PUT', 'DELETE'],
+  );
+  assert.match(
+    calls[0]?.url.pathname ?? '',
+    /^\/nova-media-test\/catalog\/quarantine\/product-1\/asset-1\/\d+\/original\.webp$/,
+  );
+  assert.equal(
+    calls[1]?.url.pathname,
+    '/nova-media-test/catalog/products/product-1/asset-1/original.webp',
+  );
+  assert.match(
+    calls[2]?.url.pathname ?? '',
+    /^\/nova-media-test\/catalog\/quarantine\/product-1\/asset-1\/\d+\/derivative\.webp$/,
+  );
+  assert.equal(
+    calls[3]?.url.pathname,
+    '/nova-media-test/catalog/products/product-1/asset-1/derivative.webp',
+  );
+  assert.equal(
+    calls[0]?.headers.get('x-amz-copy-source'),
+    '/nova-media-test/catalog/products/product-1/asset-1/original.webp',
+  );
+  assert.match(calls[0]?.headers.get('authorization') ?? '', /Signature=[a-f0-9]{64}$/);
+  assert.equal(calls[1]?.headers.has('x-amz-copy-source'), false);
+  assert.match(calls[1]?.headers.get('authorization') ?? '', /Signature=[a-f0-9]{64}$/);
+  assert.equal(
+    calls[2]?.headers.get('x-amz-copy-source'),
+    '/nova-media-test/catalog/products/product-1/asset-1/derivative.webp',
+  );
+});
+
+test('does not delete a source when its quarantine copy fails', async () => {
+  const calls: string[] = [];
+  const fakeFetch: typeof fetch = async (_url, init) => {
+    calls.push(init?.method ?? 'GET');
+    return new Response(null, { status: 503 });
+  };
+
+  await assert.rejects(
+    storage(fakeFetch).quarantine({
+      mediaId: 'asset-1',
+      productId: 'product-1',
+      originalKey: 'catalog/products/product-1/asset-1/original.webp',
+      derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+    }),
+    (error: unknown) =>
+      error instanceof CatalogMediaStorageError && error.code === 'MEDIA_QUARANTINE_FAILED',
+  );
+  assert.deepEqual(calls, ['PUT']);
 });

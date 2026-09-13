@@ -5,7 +5,6 @@ test.use({ viewport: { width: 1440, height: 900 } });
 test('renders the anonymous RTL storefront shell', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
   const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle');
 
   expect(response?.ok()).toBeTruthy();
   await expect(page).toHaveTitle('NOVA | Atelier Editorial');
@@ -25,7 +24,6 @@ test('renders public category, listing, and product routes', async ({ page }) =>
 
   for (const route of routes) {
     const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
 
     if (response) expect(response.ok()).toBeTruthy();
     await expect(page.locator('main h1')).toContainText(route.heading);
@@ -34,7 +32,6 @@ test('renders public category, listing, and product routes', async ({ page }) =>
   const productResponse = await page.goto('/#product/linen-overshirt', {
     waitUntil: 'domcontentloaded',
   });
-  await page.waitForLoadState('networkidle');
 
   if (productResponse) expect(productResponse.ok()).toBeTruthy();
   await expect(page.locator('main h1')).toBeVisible();
@@ -44,7 +41,6 @@ test('renders public category, listing, and product routes', async ({ page }) =>
 test('renders the empty anonymous cart shell', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
   const response = await page.goto('/#cart', { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle');
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.locator('main h1')).toHaveText('سبد خرید');
@@ -85,7 +81,6 @@ test('recovers the cart shell through the visible retry action after a controlle
   });
 
   const response = await page.goto('/#cart', { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle');
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.getByRole('heading', { name: 'سبد خرید بارگذاری نشد' })).toBeVisible({
@@ -111,7 +106,6 @@ test('keeps protected admin navigation on the staff login form without credentia
   });
 
   const response = await page.goto('/#admin/orders', { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle');
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.getByRole('heading', { name: 'ورود به فضای مدیریت' })).toBeVisible();
@@ -131,7 +125,6 @@ test('validates an empty staff login client-side without sending credentials', a
   });
 
   const response = await page.goto('/#admin/login?expired=1', { waitUntil: 'domcontentloaded' });
-  await page.waitForLoadState('networkidle');
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.getByRole('status')).toContainText('نشست مدیریت منقضی شده است');
@@ -160,7 +153,6 @@ test('settles unauthenticated account and recovery routes without permanent load
 
   for (const route of sessionRoutes) {
     const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
 
     if (response) expect(response.ok()).toBeTruthy();
     await expect(page.getByRole('heading', { name: route.heading })).toBeVisible();
@@ -174,7 +166,6 @@ test('settles unauthenticated account and recovery routes without permanent load
 
   for (const route of recoveryRoutes) {
     const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
-    await page.waitForLoadState('networkidle');
 
     if (response) expect(response.ok()).toBeTruthy();
     await expect(page.getByRole('alert')).toContainText(route.copy);

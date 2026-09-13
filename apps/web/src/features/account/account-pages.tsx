@@ -566,6 +566,23 @@ function toAddressForm(address: CustomerAddress): AddressFormState {
   };
 }
 
+function decodeAddressRouteId(addressId: string): string {
+  try {
+    return decodeURIComponent(addressId);
+  } catch {
+    return addressId;
+  }
+}
+
+export function findCustomerAddressByRouteId(
+  addresses: CustomerAddress[],
+  addressId?: string,
+): CustomerAddress | undefined {
+  if (!addressId) return addresses.find((item) => item.isDefault) ?? addresses[0];
+  const decodedAddressId = decodeAddressRouteId(addressId);
+  return addresses.find((item) => item.id === decodedAddressId);
+}
+
 export function addressFormIsComplete(form: AddressFormState): boolean {
   return [
     form.label,
@@ -847,12 +864,7 @@ export function CustomerAddressBookPage({
     );
 
   const addresses = addressesQuery.data ?? [];
-  const selected =
-    mode === 'edit'
-      ? addressId
-        ? addresses.find((item) => item.id === addressId)
-        : (addresses.find((item) => item.isDefault) ?? addresses[0])
-      : undefined;
+  const selected = mode === 'edit' ? findCustomerAddressByRouteId(addresses, addressId) : undefined;
   const isMutating = setDefaultMutation.isPending || removeMutation.isPending;
   const changeDefault = async (id: string) => {
     setActionError('');

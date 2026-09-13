@@ -90,8 +90,23 @@ test('rejects unsupported kinds and OTP-shaped persisted payloads without HTTP',
   };
   const sender = new SmsIrNotificationSender({ ...configured, transport });
 
-  await assert.rejects(sender.send(job({ kind: 'WELCOME' })));
-  await assert.rejects(sender.send(job({ payload: { orderNumber: 'NV-100', code: '123456' } })));
+  await assert.rejects(sender.send(job({ kind: 'WELCOME' })), {
+    message: 'sms-ir-unsupported-notification-kind',
+  });
+  await assert.rejects(
+    sender.send(
+      job({
+        payload: {
+          orderNumber: 'NV-100',
+          otp: '123456',
+          secret: 'must-not-appear-in-errors',
+        },
+      }),
+    ),
+    {
+      message: 'sms-ir-invalid-notification-payload',
+    },
+  );
   assert.equal(calls, 0);
 });
 
@@ -100,8 +115,15 @@ test('fails closed for missing or invalid sandbox configuration', async () => {
     { ...configured, apiKey: undefined },
     { ...configured, templateId: undefined },
     { ...configured, baseUrl: undefined },
+    { ...configured, apiKey: '  ' },
+    { ...configured, templateId: 1.5 },
+    { ...configured, templateId: Number.NaN },
     { ...configured, baseUrl: 'not-a-url' },
+    { ...configured, baseUrl: '   ' },
     { ...configured, baseUrl: 'http://api.sms.ir/v1' },
+    { ...configured, baseUrl: 'https://user:password@api.sms.ir/v1' },
+    { ...configured, baseUrl: 'https://api.sms.ir/v1?token=secret' },
+    { ...configured, baseUrl: 'https://api.sms.ir/v1#secret' },
     { ...configured, sandbox: false },
   ];
 
@@ -121,26 +143,60 @@ test('fails closed for missing or invalid sandbox configuration', async () => {
 });
 
 test('sanitizes malformed and provider error responses', async () => {
-  for (const receivedResponse of [
-    response(200, { message: 'malformed' }),
-    response(400, { status: 0, message: 'api-key=sandbox-api-key mobile=+989123456789' }),
-    {
-      status: 200,
-      json: async () => {
-        throw new Error('provider body');
-      },
-    } satisfies SmsIrNotificationHttpResponse,
+  for (const [receivedResponse, expectedMessage] of [
+    [response(Number.NaN, { status: 1 }), 'sms-ir-provider-error'],
+    [response(200, { message: 'malformed' }), 'sms-ir-provider-error'],
+    [
+      response(400, { status: 0, message: 'api-key=sandbox-api-key mobile=+989123456789' }),
+      'sms-ir-provider-error',
+    ],
+    [
+      {
+        status: 200,
+        json: async () => {
+          throw new Error('provider body');
+        },
+      } satisfies SmsIrNotificationHttpResponse,
+      'sms-ir-malformed-response',
+    ],
   ]) {
     const sender = new SmsIrNotificationSender({
       ...configured,
-      transport: async () => receivedResponse,
+      transport: async () => receivedResponse as SmsIrNotificationHttpResponse,
     });
-    await assert.rejects(sender.send(job()), (error: unknown) => {
-      return (
-        error instanceof Error &&
-        !error.message.includes('sandbox-api-key') &&
-        !error.message.includes('989123456789')
-      );
-    });
+    await assert.rejects(sender.send(job()), { message: expectedMessage });
   }
+});
+
+test('maps abort-shaped transport failures to a sanitized request error', async () => {
+  const sender = new SmsIrNotificationSender({
+    ...configured,
+    transport: async () => {
+      throw new DOMException(
+        'The operation was aborted: apiKey=sandbox-api-key mobile=+989123456789 order=NV-100',
+        'AbortError',
+      );
+    },
+  });
+
+  await assert.rejects(sender.send(job()), (error: unknown) => {
+    return (
+      error instanceof Error &&
+      error.message === 'sms-ir-request-failed' &&
+      !/sandbox-api-key|989123456789|NV-100/.test(error.message)
+    );
+  });
+});
+
+test('does not trust a transport error message that resembles an internal error code', async () => {
+  const sender = new SmsIrNotificationSender({
+    ...configured,
+    transport: async () => {
+      throw new Error('sms-ir-provider-error otp=123456 apiKey=sandbox-api-key');
+    },
+  });
+
+  await assert.rejects(sender.send(job()), {
+    message: 'sms-ir-request-failed',
+  });
 });

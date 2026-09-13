@@ -118,3 +118,25 @@ test('renders the controlled cart page with an accessible heading and isolated S
   assert.match(markup, /dir="ltr"[^>]*>NOVA-LINEN-1/);
   assert.doesNotMatch(markup, /موجودی:|موجودی ۲/);
 });
+
+test('keeps cached cart contents visible when a refresh fails', () => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const markup = renderToStaticMarkup(
+    createElement(
+      QueryClientProvider,
+      { client },
+      createElement(StorefrontCartPage, {
+        cart,
+        isLoading: false,
+        isError: true,
+        onRetry: () => undefined,
+        enableGuestMerge: false,
+      }),
+    ),
+  );
+
+  assert.match(markup, /<h1[^>]*>سبد خرید<\/h1>/);
+  assert.match(markup, /به‌روزرسانی سبد خرید انجام نشد/);
+  assert.match(markup, /تلاش دوباره/);
+  assert.doesNotMatch(markup, /سبد خرید بارگذاری نشد/);
+});

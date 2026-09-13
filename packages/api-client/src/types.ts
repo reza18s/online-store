@@ -784,6 +784,19 @@ export interface AdminOrderListQuery {
   paymentStatus?: CheckoutPaymentStatus;
 }
 
+export interface AdminDashboardSummaryQuery {
+  periodDays?: number;
+}
+
+export interface AdminDashboardSummary {
+  publishedProductCount: number;
+  newCustomerCount: number;
+  newOrderCount: number;
+  paidGrossToman: number;
+  successfulRefundToman: number;
+  orderStatusCounts: Record<CheckoutOrderStatus, number>;
+}
+
 export interface AdminOrderCustomer {
   id: string;
   phone: string;

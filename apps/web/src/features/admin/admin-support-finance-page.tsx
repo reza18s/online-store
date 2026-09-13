@@ -65,7 +65,14 @@ const VIEW_ACCESS: Record<
   },
 };
 
-const PAYMENT_STATUSES = ['PENDING', 'PROCESSING', 'SUCCEEDED', 'FAILED', 'CANCELLED'] as const;
+export const PAYMENT_STATUSES = [
+  'PENDING',
+  'REDIRECTED',
+  'SUCCEEDED',
+  'FAILED',
+  'EXPIRED',
+  'CANCELLED',
+] as const;
 const CUSTOMER_STATUSES = ['ACTIVE', 'SUSPENDED', 'DELETED'] as const;
 const NOTIFICATION_STATUSES = ['PENDING', 'PROCESSING', 'SENT', 'FAILED'] as const;
 const ACTOR_TYPES = ['CUSTOMER', 'STAFF', 'SYSTEM'] as const;

@@ -19,6 +19,7 @@ const PAYMENT_REQUEST_PATH = 'request.json';
 const PAYMENT_VERIFY_PATH = 'verify.json';
 const PAYMENT_REVERSE_PATH = 'reverse.json';
 const CALLBACK_PATH = '/v1/payments/zarinpal/callback';
+const ZARINPAL_REQUEST_TIMEOUT_MS = 10_000;
 const SUCCESS_CODES = new Set([100, 101]);
 const IDENTIFIER_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,255}$/;
 const ORDER_NUMBER_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
@@ -78,16 +79,21 @@ export function toZarinPalRial(amountToman: number): number {
 
 function asProviderResponse(value: unknown): ProviderResponse {
   if (!isRecord(value) || !isRecord(value.data)) throw new Error('provider response is malformed');
-  const code = Number(value.data.code);
-  if (!Number.isInteger(code)) throw new Error('provider response code is malformed');
+  const code = value.data.code;
+  if (typeof code !== 'number' || !Number.isSafeInteger(code)) {
+    throw new Error('provider response code is malformed');
+  }
   return { data: { ...value.data, code } as ProviderResponseData };
 }
 
 function providerIdentifier(value: unknown, message: string): string {
   const identifier =
-    typeof value === 'number' && Number.isSafeInteger(value)
-      ? String(value)
-      : String(value ?? '').trim();
+    typeof value === 'string' && value.trim()
+      ? value.trim()
+      : typeof value === 'number' && Number.isSafeInteger(value)
+        ? String(value)
+        : undefined;
+  if (!identifier) throw new Error(message);
   assertIdentifier(identifier, message);
   return identifier;
 }
@@ -120,7 +126,11 @@ function configurationError(config: ZarinPalGatewayConfig): string | undefined {
 
   try {
     const callbackOrigin = new URL(config.WEB_ORIGIN);
-    if (callbackOrigin.protocol !== 'http:' && callbackOrigin.protocol !== 'https:') {
+    if (
+      (callbackOrigin.protocol !== 'http:' && callbackOrigin.protocol !== 'https:') ||
+      callbackOrigin.username ||
+      callbackOrigin.password
+    ) {
       return 'Payment callback origin is invalid.';
     }
   } catch {
@@ -138,13 +148,14 @@ export class ZarinPalPaymentGateway implements PaymentGateway {
   public constructor(
     private readonly config: ZarinPalGatewayConfig,
     request: ZarinPalHttpRequest = (input, init) => fetch(input, init),
+    private readonly requestTimeoutMs = ZARINPAL_REQUEST_TIMEOUT_MS,
   ) {
     this.request = request;
   }
 
   public async startPayment(input: PaymentStartInput): Promise<PaymentStartResult> {
     this.assertConfigured();
-    assertIdentifier(input.orderNumber, 'order number is invalid');
+    assertOrderNumber(input.orderNumber);
     const amountRial = toZarinPalRial(input.amountToman);
     const callbackUrl = new URL(CALLBACK_PATH, this.config.WEB_ORIGIN);
     callbackUrl.searchParams.set('orderNumber', input.orderNumber);
@@ -222,7 +233,7 @@ export class ZarinPalPaymentGateway implements PaymentGateway {
 
   public async refundPayment(input: PaymentRefundInput): Promise<PaymentRefundResult> {
     this.assertConfigured();
-    assertIdentifier(input.orderNumber, 'order number is invalid');
+    assertOrderNumber(input.orderNumber);
     if (input.isFullRefund !== true) {
       throw new ServiceUnavailableException('ZarinPal partial refunds are not configured.');
     }
@@ -255,14 +266,19 @@ export class ZarinPalPaymentGateway implements PaymentGateway {
     );
     const url = new URL(path, baseUrl);
     let response: Response;
+    const controller = new AbortController();
+    const timeoutHandle = setTimeout(() => controller.abort(), this.requestTimeoutMs);
     try {
       response = await this.request(url, {
         method: 'POST',
         headers: { accept: 'application/json', 'content-type': 'application/json' },
         body: JSON.stringify(body),
+        signal: controller.signal,
       });
     } catch {
       throw new BadGatewayException('ZarinPal request failed.');
+    } finally {
+      clearTimeout(timeoutHandle);
     }
     if (!response.ok) throw new BadGatewayException('ZarinPal request failed.');
 

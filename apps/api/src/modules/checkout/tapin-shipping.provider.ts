@@ -88,7 +88,7 @@ export class TapinShippingProvider implements ShippingProvider {
   private productionContext(): TapinTransportContext {
     const apiKey = this.config.apiKey?.trim();
     const baseUrl = this.config.baseUrl?.trim();
-    if (!apiKey || !baseUrl || !isHttpUrl(baseUrl)) {
+    if (!apiKey || !baseUrl || !isHttpsUrl(baseUrl)) {
       throw new ServiceUnavailableException('پیکربندی سرویس حمل‌ونقل تاپین کامل نیست.');
     }
 
@@ -179,10 +179,10 @@ function isTapinQuoteResponse(value: unknown): value is TapinQuoteResponse {
   );
 }
 
-function isHttpUrl(value: string): boolean {
+function isHttpsUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === 'http:' || url.protocol === 'https:';
+    return url.protocol === 'https:';
   } catch {
     return false;
   }

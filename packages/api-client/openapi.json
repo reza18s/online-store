@@ -974,6 +974,52 @@
         }
       }
     },
+    "/v1/admin/dashboard/summary": {
+      "get": {
+        "operationId": "adminDashboardSummary",
+        "tags": ["admin-dashboard"],
+        "x-nova-schema-status": "detailed",
+        "x-nova-auth": "staff:admin",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AdminDashboardSummary"
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "401": {
+            "$ref": "#/components/responses/ApiError401"
+          },
+          "403": {
+            "$ref": "#/components/responses/ApiError403"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/AdminDashboardPeriodDays"
+          }
+        ],
+        "security": [
+          {
+            "staffSession": []
+          }
+        ],
+        "x-nova-auth-requirement": {
+          "principal": "staff",
+          "roles": ["admin"],
+          "sessionCookie": "nova_staff_session"
+        },
+        "x-nova-csrf": {
+          "required": false,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "cookieIssuedOnSafeRequest": true
+        }
+      }
+    },
     "/v1/admin/orders": {
       "get": {
         "operationId": "adminOrderList",
@@ -2550,6 +2596,30 @@
         }
       }
     },
+    "/v1/staff/auth/csrf": {
+      "get": {
+        "operationId": "staffCsrf",
+        "x-nova-schema-status": "inventory-only",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/NullEnvelope"
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "security": [],
+        "x-nova-csrf": {
+          "required": false,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "cookieIssuedOnSafeRequest": true
+        }
+      }
+    },
     "/v1/staff/auth/me": {
       "get": {
         "operationId": "staffMe",
@@ -3780,6 +3850,7 @@
       "post": {
         "operationId": "adminCatalogProductMediaPresign",
         "x-nova-schema-status": "inventory-only",
+        "x-nova-request-dto": "PresignAdminProductMediaDto",
         "responses": {
           "200": {
             "$ref": "#/components/responses/CatalogMediaUploadPlan"
@@ -3836,6 +3907,7 @@
       "post": {
         "operationId": "adminCatalogProductMediaComplete",
         "x-nova-schema-status": "inventory-only",
+        "x-nova-request-dto": "CompleteAdminProductMediaDto",
         "responses": {
           "200": {
             "$ref": "#/components/responses/AdminCatalogProductMedia"
@@ -4991,6 +5063,17 @@
           "default": 1
         }
       },
+      "AdminDashboardPeriodDays": {
+        "name": "periodDays",
+        "in": "query",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 365,
+          "default": 30
+        }
+      },
       "AdminOrderQ": {
         "name": "q",
         "in": "query",
@@ -5805,6 +5888,16 @@
           "application/json": {
             "schema": {
               "$ref": "#/components/schemas/ApiEnvelopeAdminOrderDetail"
+            }
+          }
+        }
+      },
+      "AdminDashboardSummary": {
+        "description": "Admin dashboard summary envelope",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ApiEnvelopeAdminDashboardSummary"
             }
           }
         }
@@ -7908,6 +8001,83 @@
         },
         "additionalProperties": false
       },
+      "AdminDashboardSummary": {
+        "type": "object",
+        "required": [
+          "publishedProductCount",
+          "newCustomerCount",
+          "newOrderCount",
+          "paidGrossToman",
+          "successfulRefundToman",
+          "orderStatusCounts"
+        ],
+        "properties": {
+          "publishedProductCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "newCustomerCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "newOrderCount": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "paidGrossToman": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "successfulRefundToman": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "orderStatusCounts": {
+            "type": "object",
+            "required": [
+              "PENDING_PAYMENT",
+              "CONFIRMED",
+              "PREPARING",
+              "SHIPPED",
+              "DELIVERED",
+              "CANCELLED",
+              "RETURNED"
+            ],
+            "properties": {
+              "PENDING_PAYMENT": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "CONFIRMED": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "PREPARING": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "SHIPPED": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "DELIVERED": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "CANCELLED": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "RETURNED": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
       "AdminOrderSummary": {
         "type": "object",
         "required": [
@@ -8895,6 +9065,19 @@
         "properties": {
           "data": {
             "$ref": "#/components/schemas/AdminOrderDetail"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/ApiMeta"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ApiEnvelopeAdminDashboardSummary": {
+        "type": "object",
+        "required": ["data", "meta"],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/AdminDashboardSummary"
           },
           "meta": {
             "$ref": "#/components/schemas/ApiMeta"

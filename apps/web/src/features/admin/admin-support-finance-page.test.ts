@@ -8,6 +8,7 @@ import {
   canStaffInspectView,
   normalizeAdminSupportFinanceView,
   pageCount,
+  PAYMENT_STATUSES,
   safeAuditMetadataLabel,
 } from './admin-support-finance-page';
 
@@ -24,6 +25,17 @@ test('enforces the server-aligned role matrix before rendering a panel', () => {
   assert.equal(canStaffInspectView('notifications', ['operations']), true);
   assert.equal(canStaffInspectView('payments', ['operations', 'support']), false);
   assert.equal(canStaffInspectView('audit', ['admin']), true);
+});
+
+test('keeps the payment status filter aligned with the payment inspection contract', () => {
+  assert.deepEqual(PAYMENT_STATUSES, [
+    'PENDING',
+    'REDIRECTED',
+    'SUCCEEDED',
+    'FAILED',
+    'EXPIRED',
+    'CANCELLED',
+  ]);
 });
 
 test('keeps pagination bounded and always exposes a valid page count', () => {

@@ -1,6 +1,6 @@
 # Local development
 
-This runbook covers the local dependency workflow for the NOVA Store workspace. It uses the repository's exact `postgres:16-alpine` and `redis:7-alpine` images, the checked-in Prisma migrations, and the idempotent catalog seed. It does not reset or delete an existing database.
+This runbook covers the local dependency workflow for the NOVA Store workspace. It uses the repository's exact `postgres:16-alpine` and `redis:7-alpine` images, the locally verified immutable MinIO image `minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e` (MinIO `RELEASE.2025-09-07T16-13-09Z`), the checked-in Prisma migrations, and the idempotent catalog seed. It does not reset or delete an existing database.
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@ This runbook covers the local dependency workflow for the NOVA Store workspace. 
 - PowerShell for the commands below. Keep the environment-variable overrides in the same PowerShell session as the Prisma commands.
 - Host ports `55432` and `56379` available. These alternate ports keep verification separate from a normal local stack on `5432` or `6379`.
 
-The Compose definition declares `postgres:16-alpine` and `redis:7-alpine`. PostgreSQL uses `nova` / `nova` / `nova_local_only`, Redis enables append-only persistence, and both services have healthchecks. These credentials are local-only examples; do not use them in production.
+The Compose definition declares `postgres:16-alpine`, `redis:7-alpine`, and the pinned MinIO digest above. MinIO uses `pull_policy: never`, PostgreSQL uses `nova` / `nova` / `nova_local_only`, Redis enables append-only persistence, and all three services have healthchecks. These credentials are local-only examples; do not use them in production.
 
 ## First run and static Compose validation
 
@@ -23,8 +23,9 @@ The rendered configuration must show:
 
 - `postgres:16-alpine` with container port `5432` and a `pg_isready` healthcheck.
 - `redis:7-alpine` with container port `6379`, append-only mode, and a `redis-cli ping` healthcheck.
+- `minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e` with `pull_policy: never`, container ports `9000`/`9001`, and an `mc ready local` healthcheck.
 - `nova_postgres_data` mounted at `/var/lib/postgresql/data` and `nova_redis_data` mounted at `/data`.
-- The Compose default network. Its actual name is project-scoped (for example, `nova-db-001_default`), and containers can reach one another at `postgres:5432` and `redis:6379`.
+- The Compose default network. Its actual name is project-scoped (for example, `nova-db-001_default`), and containers can reach one another at `postgres:5432`, `redis:6379`, and `s3:9000`.
 
 The `config` command is static validation; it does not prove that Docker can pull images or start containers.
 
@@ -40,11 +41,11 @@ $ComposeArgs = @('--project-name', $ComposeProject, '--env-file', '.env.example'
 
 $env:POSTGRES_PORT = [string]$PostgresPort
 $env:REDIS_PORT = [string]$RedisPort
-$env:DATABASE_URL = "postgresql://nova:nova_local_only@localhost:$PostgresPort/nova?schema=public"
-$env:REDIS_URL = "redis://localhost:$RedisPort"
+$env:DATABASE_URL = "postgresql://nova:nova_local_only@127.0.0.1:$PostgresPort/nova?schema=public"
+$env:REDIS_URL = "redis://127.0.0.1:$RedisPort"
 
 docker compose @ComposeArgs config
-docker compose @ComposeArgs up -d postgres redis
+docker compose @ComposeArgs up -d postgres redis s3
 docker compose @ComposeArgs ps
 
 bun run db:generate
@@ -52,7 +53,7 @@ bun run db:migrate
 bun run db:seed
 ```
 
-`bun run db:migrate` invokes `prisma migrate deploy`. It applies the six checked-in migrations in lexicographic order and does not create, rename, reorder, or reset migrations. `bun run db:seed` invokes the seed command configured in `packages/db/prisma.config.ts`.
+`bun run db:migrate` invokes `prisma migrate deploy`. It applies the seven checked-in migrations in lexicographic order and does not create, rename, reorder, or reset migrations. `bun run db:seed` invokes the seed command configured in `packages/db/prisma.config.ts`.
 
 If another service already owns either alternate port, choose two other unused ports and set all four overrides consistently before running the Prisma commands. Do not change the image tags to work around a pull failure.
 
@@ -75,10 +76,10 @@ docker compose @ComposeArgs exec -T postgres psql -U nova -d nova -c 'SELECT (SE
 
 Expected evidence:
 
-- Both Compose services show `Up` and `(healthy)`; the exact container image names remain `postgres:16-alpine` and `redis:7-alpine`.
+- All three Compose services show `Up` and `(healthy)`; the exact container image names are `postgres:16-alpine`, `redis:7-alpine`, and the pinned MinIO digest documented above.
 - `pg_isready` reports that the database is accepting connections.
 - Redis prints `PONG`.
-- Migration history lists, in order, `0001_foundation`, `0002_payment_reconciliation`, `0003_returns_and_cancellation`, `0004_notification_outbox_dedupe`, `0005_coupon_redemption_lifecycle`, and `0006_seo_redirect_status`.
+- Migration history lists, in order, `0001_foundation`, `0002_payment_reconciliation`, `0003_returns_and_cancellation`, `0004_notification_outbox_dedupe`, `0005_coupon_redemption_lifecycle`, `0006_seo_redirect_status`, and `0007_catalog_media_storage`.
 - Prisma reports that the database schema is up to date.
 - Seed counts are `9` categories, `6` products, `14` variants, `6` media records, and `14` inventory records. The seed output should also report `Seeded 9 categories and 6 products.`
 
@@ -89,8 +90,8 @@ bun run dev:api
 ```
 
 ```powershell
-(Invoke-WebRequest -UseBasicParsing 'http://localhost:4000/health/live').Content
-(Invoke-WebRequest -UseBasicParsing 'http://localhost:4000/health/ready').Content
+(Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:4000/health/live').Content
+(Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:4000/health/ready').Content
 ```
 
 `/health/live` must return HTTP `200` with `status: "ok"` and `service: "api"`. `/health/ready` must return HTTP `200` with `status: "ok"`, `service: "api"`, and `database: "ok"`. The separate Redis `PONG` check above verifies the Redis path used by the OTP state store; Redis is intentionally not part of the current readiness response.
@@ -126,7 +127,7 @@ Choose unused alternate ports and update `POSTGRES_PORT`, `REDIS_PORT`, `DATABAS
 
 ### Prisma cannot connect
 
-Confirm that the Compose project is healthy with `docker compose @ComposeArgs ps`, then confirm that `DATABASE_URL` points to the published PostgreSQL port for this project. From the host, use `localhost:<published-port>`; from another container on the Compose network, use `postgres:5432`.
+Confirm that the Compose project is healthy with `docker compose @ComposeArgs ps`, then confirm that `DATABASE_URL` points to the published PostgreSQL port for this project. From the host, use `127.0.0.1:<published-port>`; from another container on the Compose network, use `postgres:5432`.
 
 ### The seed is rerun
 
@@ -142,6 +143,6 @@ bun run build
 bun run docker:config
 ```
 
-These checks are separate from the runtime evidence above. A successful typecheck or Compose render does not prove that PostgreSQL 16 and Redis 7 started successfully.
+These checks are separate from the runtime evidence above. A successful typecheck or Compose render does not prove that PostgreSQL 16, Redis 7, or the pinned MinIO image started successfully.
 
 Do not use production data or secrets in the local seeded environment.

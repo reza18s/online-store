@@ -108,6 +108,21 @@ function MessageCard({
   );
 }
 
+function CartRefreshNotice({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div
+      className="flex flex-wrap items-center justify-between gap-3 border border-warning bg-warning-soft p-4 text-sm"
+      role="alert"
+    >
+      <span>به‌روزرسانی سبد خرید انجام نشد؛ اطلاعات فعلی ممکن است قدیمی باشد.</span>
+      <Button type="button" size="sm" variant="outline" onClick={onRetry}>
+        <Icon name="refresh" size={16} />
+        تلاش دوباره
+      </Button>
+    </div>
+  );
+}
+
 function CartSkeleton() {
   return (
     <section
@@ -464,7 +479,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
         <CartSkeleton />
       </main>
     );
-  if (isError || !cart)
+  if (!cart)
     return (
       <main className="shell mx-auto flex min-h-[55svh] w-[calc(100%-2rem)] max-w-[1280px] items-center bg-background py-8">
         <MessageCard
@@ -482,6 +497,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
           <span className="text-xs text-primary">NOVA / CART</span>
           <h1 className="text-2xl md:text-3xl">سبد خرید</h1>
         </header>
+        {isError ? <CartRefreshNotice onRetry={retry} /> : null}
         <section className="border border-border bg-surface p-8 text-center">
           <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-primary">
             <Icon name="bag" size={22} />
@@ -506,6 +522,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
         <span aria-hidden="true">/</span>
         <span>سبد خرید</span>
       </div>
+      {isError ? <CartRefreshNotice onRetry={retry} /> : null}
       <header className="space-y-2">
         <span className="text-xs text-primary">NOVA / CART</span>
         <h1 className="text-2xl md:text-3xl">سبد خرید</h1>

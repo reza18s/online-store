@@ -36,6 +36,15 @@ export interface CheckoutFailure {
   action: 'retry' | 'address' | 'shipping' | 'payment' | 'login' | 'cart' | 'orders';
 }
 
+export function checkoutRetryTarget(
+  failure: CheckoutFailure | null,
+  source: 'quote' | 'submit' | 'address' | null,
+): 'quote' | 'submit' | null {
+  if (!failure || failure.action !== 'retry') return null;
+  if (source === 'submit') return 'submit';
+  return source === 'address' ? null : 'quote';
+}
+
 const paymentStates = new Set<PaymentRecoveryState>([
   'redirecting',
   'pending',

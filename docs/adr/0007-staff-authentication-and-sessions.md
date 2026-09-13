@@ -51,7 +51,10 @@ navigation guards alone are never sufficient.
 
 The session is delivered in an HttpOnly, SameSite cookie. State-changing login
 and logout requests remain subject to the global exact-origin and double-submit
-CSRF guard.
+CSRF guard. The login page first calls the safe `GET /v1/staff/auth/csrf`
+bootstrap route so the browser receives the readable double-submit token; the
+login mutation remains CSRF-protected and the bootstrap route does not
+authenticate or create a staff session.
 
 ## Consequences
 

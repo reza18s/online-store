@@ -55,6 +55,8 @@ export type {
   AdminCustomerListQuery,
   AdminCustomerPage,
   AdminCustomerStatus,
+  AdminDashboardSummary,
+  AdminDashboardSummaryQuery,
   AdminNotificationJob,
   AdminNotificationListQuery,
   AdminNotificationPage,

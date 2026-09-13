@@ -274,6 +274,8 @@ Object.assign(dtoSchemas, {
   UpdateAdminProductVariantDto: 'UpdateAdminProductVariant',
   CreateAdminProductMediaDto: 'CreateAdminProductMedia',
   UpdateAdminProductMediaDto: 'UpdateAdminProductMedia',
+  PresignAdminProductMediaDto: 'PresignAdminProductMedia',
+  CompleteAdminProductMediaDto: 'CompleteAdminProductMedia',
   ProductStatusDto: 'ProductStatus',
   AdminInventoryAdjustmentDto: 'AdminInventoryAdjustment',
   AdminInventoryReorderPointDto: 'AdminInventoryReorderPoint',
@@ -301,6 +303,8 @@ Object.assign(dtoFiles, {
   UpdateAdminProductVariantDto: 'apps/api/src/modules/catalog/dto/admin-product.dto.ts',
   CreateAdminProductMediaDto: 'apps/api/src/modules/catalog/dto/admin-product.dto.ts',
   UpdateAdminProductMediaDto: 'apps/api/src/modules/catalog/dto/admin-product.dto.ts',
+  PresignAdminProductMediaDto: 'apps/api/src/modules/catalog/dto/admin-product.dto.ts',
+  CompleteAdminProductMediaDto: 'apps/api/src/modules/catalog/dto/admin-product.dto.ts',
   ProductStatusDto: 'apps/api/src/modules/catalog/dto/product-status.dto.ts',
   AdminInventoryAdjustmentDto: 'apps/api/src/modules/inventory/dto/admin-inventory.dto.ts',
   AdminInventoryReorderPointDto: 'apps/api/src/modules/inventory/dto/admin-inventory.dto.ts',
@@ -355,20 +359,23 @@ function dtoFields(dtoName: string): Set<string> {
   const relativePath = dtoFiles[dtoName] ?? queryDtoFiles[dtoName];
   assert.ok(relativePath, `API DTO source for ${dtoName} is missing`);
   const source = readFileSync(join(repositoryRoot, relativePath), 'utf8');
-  const declaration = new RegExp(`export class ${dtoName}\\s*\\{`);
+  const declaration = new RegExp(
+    `export class ${dtoName}(?:\\s+extends\\s+([A-Za-z_$][\\w$]*))?\\s*\\{`,
+  );
   const match = declaration.exec(source);
   assert.ok(match, `API DTO ${dtoName} is missing`);
-  return new Set(
-    [
-      ...braceBody(source, match.index).matchAll(
-        /^\s*public\s+([A-Za-z_$][\w$]*)[!?]?\s*(?::|=)/gm,
-      ),
-    ].map((field) => {
-      const name = field[1];
-      assert.ok(name);
-      return name;
-    }),
-  );
+  const fields = new Set<string>();
+  if (match[1]) {
+    for (const field of dtoFields(match[1])) fields.add(field);
+  }
+  for (const field of braceBody(source, match.index).matchAll(
+    /^\s*public\s+([A-Za-z_$][\w$]*)[!?]?\s*(?::|=)/gm,
+  )) {
+    const name = field[1];
+    assert.ok(name);
+    fields.add(name);
+  }
+  return fields;
 }
 
 test('OpenAPI route inventory matches every Nest controller route', () => {
@@ -484,6 +491,7 @@ test('covered request DTOs and client interfaces match OpenAPI field sets', () =
     AdminOrderPage: 'AdminOrderPage',
     AdminOrderPayment: 'AdminOrderPayment',
     AdminOrderDetail: 'AdminOrderDetail',
+    AdminDashboardSummary: 'AdminDashboardSummary',
     AdminPaymentAttempt: 'AdminPaymentAttempt',
     AdminPaymentPage: 'AdminPaymentPage',
     ContentBlock: 'ContentBlock',

@@ -3,7 +3,7 @@ import { test } from 'node:test';
 
 import type { CustomerOrderDetail } from '@nova/api-client';
 
-import { addressFormIsComplete } from './account-pages';
+import { addressFormIsComplete, findCustomerAddressByRouteId } from './account-pages';
 import {
   CUSTOMER_RETURN_WINDOW_DAYS,
   canCancelCustomerOrder,
@@ -91,6 +91,29 @@ test('requires every server-required address field before allowing a save', () =
   };
   assert.equal(addressFormIsComplete(form), true);
   assert.equal(addressFormIsComplete({ ...form, city: '  ' }), false);
+});
+
+test('matches an encoded address edit route to the customer address id', () => {
+  const addresses = [
+    {
+      id: 'address/1',
+      label: 'خانه',
+      recipientName: 'مشتری نوا',
+      phone: '09120000000',
+      province: 'تهران',
+      city: 'تهران',
+      addressLine: 'خیابان نمونه، پلاک ۱',
+      postalCode: '1234567890',
+      isDefault: true,
+      createdAt: '2026-09-01T00:00:00.000Z',
+      updatedAt: '2026-09-01T00:00:00.000Z',
+    },
+  ];
+
+  assert.equal(
+    findCustomerAddressByRouteId(addresses, encodeURIComponent('address/1')),
+    addresses[0],
+  );
 });
 
 test('does not let a disabled order query keep an unauthenticated route in loading', () => {

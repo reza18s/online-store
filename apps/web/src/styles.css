@@ -12,13 +12,14 @@
   --surface-warm: #e7ded2;
   --ink: #272220;
   --ink-soft: #5e534d;
-  --ink-muted: #8a7d75;
+  --ink-muted: #6f625a;
   --oxblood: #6d2838;
   --oxblood-deep: #54202d;
   --oxblood-soft: #f0dee3;
   --line: #d8cec2;
   --line-soft: #e7ded3;
   --champagne: #b79a6b;
+  --ink-eyebrow: #7a6244;
   --success: #39705a;
   --success-soft: #e4eee8;
   --warning: #87643a;
@@ -289,14 +290,14 @@ textarea:focus-visible {
   display: none;
 }
 
-.cart-button {
+.site-header .cart-button {
   align-items: center;
   background: var(--oxblood);
   border-radius: 4px;
   color: var(--surface-strong);
   display: inline-flex;
   gap: 7px;
-  min-height: 40px;
+  min-height: 44px;
   padding-inline: 12px;
   transition: background-color 140ms ease-out, transform 140ms ease-out;
 }
@@ -557,7 +558,7 @@ textarea:focus-visible {
 }
 
 .section-heading__eyebrow {
-  color: var(--champagne);
+  color: var(--ink-eyebrow);
   display: block;
   font-family: var(--font-latin);
   font-size: 10px;
@@ -2581,8 +2582,8 @@ textarea:focus-visible {
     display: none;
   }
 
-  .cart-button {
-    min-height: 38px;
+  .site-header .cart-button {
+    min-height: 44px;
     padding-inline: 9px;
   }
 

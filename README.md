@@ -37,10 +37,12 @@ bun run dev:worker
 Start local dependencies when database-backed API work is needed:
 
 ```powershell
-docker compose --env-file .env.example -f infra/docker/compose.yml up -d postgres redis
+docker compose --env-file .env.example -f infra/docker/compose.yml up -d postgres redis s3
 bun run db:migrate
 bun run db:seed
 ```
+
+The local `s3` service is MinIO. The E2E runtime preflight also checks its loopback liveness endpoint, so start it with PostgreSQL and Redis whenever running database-backed API or browser verification.
 
 The API exposes `GET /health/live` without a database dependency and `GET /health/ready` once PostgreSQL is available. API routes use the `/v1` prefix after the health endpoints.
 
@@ -53,5 +55,12 @@ bun run test
 bun run build
 bun run docker:config
 ```
+
+Validation is behavior- and risk-based, not file-based. Do not create a separate
+test for every changed file. Add or update focused tests when observable
+behavior, state transitions, public contracts, security or data integrity, or
+meaningful regression risk changes. Otherwise, use the narrowest applicable
+existing tests and static checks; broader suites belong at integration or
+release gates rather than on every file change.
 
 Do not place production credentials in this repository. Copy `.env.example` to a local `.env` only for development and resolve the provider, hosting, domain, brand, and compliance decisions listed in `arch.md` before production work.

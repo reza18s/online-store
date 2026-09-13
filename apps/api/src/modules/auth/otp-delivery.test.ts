@@ -126,8 +126,58 @@ test('rejects missing, non-sandbox, and invalid provider configuration without t
   assert.equal(calls, 0);
 });
 
+test('rejects unsafe SMS.ir sandbox configuration variants', () => {
+  for (const config of [
+    {
+      apiKey: '  ',
+      templateId: 123456,
+      baseUrl: 'https://api.sms.ir/v1',
+      sandbox: true,
+    },
+    {
+      apiKey: 'sandbox-api-key',
+      templateId: 1.5,
+      baseUrl: 'https://api.sms.ir/v1',
+      sandbox: true,
+    },
+    {
+      apiKey: 'sandbox-api-key',
+      templateId: Number.NaN,
+      baseUrl: 'https://api.sms.ir/v1',
+      sandbox: true,
+    },
+    {
+      apiKey: 'sandbox-api-key',
+      templateId: 123456,
+      baseUrl: '   ',
+      sandbox: true,
+    },
+    {
+      apiKey: 'sandbox-api-key',
+      templateId: 123456,
+      baseUrl: 'https://user:password@api.sms.ir/v1',
+      sandbox: true,
+    },
+    {
+      apiKey: 'sandbox-api-key',
+      templateId: 123456,
+      baseUrl: 'https://api.sms.ir/v1?token=secret',
+      sandbox: true,
+    },
+    {
+      apiKey: 'sandbox-api-key',
+      templateId: 123456,
+      baseUrl: 'https://api.sms.ir/v1#secret',
+      sandbox: true,
+    },
+  ]) {
+    assert.equal(isValidSmsIrOtpDeliveryConfig(config), false);
+  }
+});
+
 test('sanitizes malformed and provider error responses', async () => {
   for (const receivedResponse of [
+    response(Number.NaN, { status: 1 }),
     response(200, { message: 'malformed' }),
     response(400, { status: 0, message: 'api-key=sandbox-api-key mobile=+989123456789' }),
   ]) {
@@ -155,4 +205,21 @@ test('sanitizes transport failures and invalid normalized inputs', async () => {
   });
   await assert.rejects(delivery.send('09123456789', '123456'), /در دسترس نیست/);
   await assert.rejects(delivery.send('+989123456789', '12345'), /در دسترس نیست/);
+});
+
+test('sanitizes abort-shaped transport failures without exposing OTP request data', async () => {
+  const delivery = configured(async () => {
+    throw new DOMException(
+      'The operation was aborted: apiKey=sandbox-api-key mobile=+989123456789 code=123456',
+      'AbortError',
+    );
+  });
+
+  await assert.rejects(delivery.send('+989123456789', '123456'), (error: unknown) => {
+    return (
+      error instanceof ServiceUnavailableException &&
+      error.message === 'سرویس ارسال پیامک در دسترس نیست.' &&
+      !/sandbox-api-key|989123456789|123456/.test(error.message)
+    );
+  });
 });

@@ -159,8 +159,27 @@ export function catalogMediaObjectKeys(input: CatalogMediaUploadInput): {
   };
 }
 
-function assertOwnedKey(key: string, expectedPrefix: string): void {
-  if (!key.startsWith(`${expectedPrefix}/`) || key.includes('..') || key.includes('\\')) {
+type CatalogMediaObjectRole = 'original' | 'derivative';
+
+function assertOwnedKey(
+  key: string,
+  expectedPrefix: string,
+  expectedRole?: CatalogMediaObjectRole,
+): void {
+  const ownedPrefix = `${expectedPrefix}/`;
+  const objectName = key.startsWith(ownedPrefix) ? key.slice(ownedPrefix.length) : '';
+  const hasExpectedObjectName =
+    expectedRole === undefined ||
+    Object.values(MEDIA_EXTENSION_BY_CONTENT_TYPE).some(
+      (extension) => objectName === `${expectedRole}.${extension}`,
+    );
+
+  if (
+    !key.startsWith(ownedPrefix) ||
+    key.includes('..') ||
+    key.includes('\\') ||
+    !hasExpectedObjectName
+  ) {
     throw new CatalogMediaStorageError(
       'MEDIA_KEY_INVALID',
       'Media object key is outside its ownership boundary.',
@@ -259,8 +278,8 @@ export class S3CatalogMediaStorage implements CatalogMediaStorage {
   public async completeUpload(input: CatalogMediaUploadInput): Promise<CatalogMediaCompletedAsset> {
     const keys = catalogMediaObjectKeys(input);
     const expectedPrefix = `catalog/products/${input.productId}/${input.assetId}`;
-    assertOwnedKey(keys.originalKey, expectedPrefix);
-    assertOwnedKey(keys.derivativeKey, expectedPrefix);
+    assertOwnedKey(keys.originalKey, expectedPrefix, 'original');
+    assertOwnedKey(keys.derivativeKey, expectedPrefix, 'derivative');
 
     const [original, derivative] = await Promise.all([
       this.head(keys.originalKey),
@@ -280,7 +299,11 @@ export class S3CatalogMediaStorage implements CatalogMediaStorage {
   public async createDerivativeReadUrl(input: CatalogMediaReadUrlInput): Promise<string> {
     assertSafeId(input.productId, 'product id');
     assertSafeId(input.mediaId, 'media id');
-    assertOwnedKey(input.derivativeKey, `catalog/products/${input.productId}/${input.mediaId}`);
+    assertOwnedKey(
+      input.derivativeKey,
+      `catalog/products/${input.productId}/${input.mediaId}`,
+      'derivative',
+    );
     return this.presignedUrl('GET', input.derivativeKey, {}, 300, {
       'response-cache-control': 'public, max-age=31536000, immutable',
     });
@@ -290,8 +313,8 @@ export class S3CatalogMediaStorage implements CatalogMediaStorage {
     assertSafeId(input.productId, 'product id');
     assertSafeId(input.mediaId, 'media id');
     const prefix = `catalog/products/${input.productId}/${input.mediaId}`;
-    assertOwnedKey(input.originalKey, prefix);
-    assertOwnedKey(input.derivativeKey, prefix);
+    assertOwnedKey(input.originalKey, prefix, 'original');
+    assertOwnedKey(input.derivativeKey, prefix, 'derivative');
     const quarantinePrefix = `catalog/quarantine/${input.productId}/${input.mediaId}/${Date.now()}`;
 
     for (const key of [input.originalKey, input.derivativeKey]) {

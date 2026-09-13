@@ -6,6 +6,7 @@ import { ApiClientError } from '@nova/api-client';
 import {
   buildCheckoutHref,
   classifyCheckoutFailure,
+  checkoutRetryTarget,
   getStableCheckoutIdempotencyKey,
   isQuoteExpired,
   normalizeCheckoutStep,
@@ -140,6 +141,20 @@ test('detects expired quotes and maps commerce failures to safe next actions', (
     classifyCheckoutFailure(apiError(401, 'UNAUTHORIZED', 'نشست منقضی شده است.')).action,
     'login',
   );
+});
+
+test('routes retryable checkout failures to the operation that failed', () => {
+  const retryableFailure = {
+    kind: 'network' as const,
+    title: 'سرویس موقتاً پاسخ نمی‌دهد',
+    message: 'دوباره تلاش کنید.',
+    actionLabel: 'تلاش دوباره',
+    action: 'retry' as const,
+  };
+  assert.equal(checkoutRetryTarget(retryableFailure, 'submit'), 'submit');
+  assert.equal(checkoutRetryTarget(retryableFailure, 'quote'), 'quote');
+  assert.equal(checkoutRetryTarget(retryableFailure, 'address'), null);
+  assert.equal(checkoutRetryTarget({ ...retryableFailure, action: 'cart' }, 'submit'), null);
 });
 
 test('payment recovery copy tells the customer not to retry a pending payment blindly', () => {

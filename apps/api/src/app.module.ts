@@ -13,6 +13,7 @@ import { StaffAuthModule } from './modules/staff-auth/staff-auth.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { ContentModule } from './modules/content/content.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ContentModule } from './modules/content/content.module';
     OrdersModule,
     CustomersModule,
     ContentModule,
+    DashboardModule,
   ],
   providers: [CsrfGuard],
 })

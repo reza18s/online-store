@@ -28,11 +28,17 @@ jobs:
       - name: Lint
         run: bun run lint
 
+      - name: Validate workflow formatting
+        run: bunx prettier --check .github/workflows/ci.yml
+
       - name: Test
         run: bun run test
+
+      - name: Integration tests
+        run: bun run test:integration
 
       - name: Build
         run: bun run build
 
-      - name: Validate local infrastructure
+      - name: Validate rendered Compose configuration
         run: bun run docker:config

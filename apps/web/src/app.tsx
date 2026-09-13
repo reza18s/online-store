@@ -25,6 +25,7 @@ import {
   useStaffUser,
 } from './features/admin/admin-catalog-api';
 import { isStaffAuthFailure, isStaffAuthorizationFailure } from './features/admin/admin-auth';
+import { AdminDashboardPage, hasAdminDashboardRole } from './features/admin/admin-dashboard-page';
 import { useAdminInventory } from './features/admin/admin-inventory-api';
 import { useAdminOrders } from './features/admin/admin-orders-api';
 import { AdminOrderDetailPage, AdminOrdersPage } from './features/admin/admin-orders-page';
@@ -2576,6 +2577,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
   const authFailure = isStaffAuthFailure(staffQuery.error);
   const authorizationFailure = isStaffAuthorizationFailure(staffQuery.error);
   const hasStaffSession = Boolean(staffQuery.data) && !authFailure;
+  const staffRoles = staffQuery.data?.roles;
   const allowDevelopmentPreview = shouldShowAdminDashboardPreview({
     page,
     isDevelopment: import.meta.env.DEV,
@@ -2587,8 +2589,10 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
   if (staffQuery.isPending && !allowDevelopmentPreview) return <AdminSessionLoading />;
   if (authFailure && staffQuery.data) return <AdminLoginPage sessionExpired />;
   if (!hasStaffSession && !allowDevelopmentPreview) return <AdminLoginPage />;
+  if (page === 'admin' && hasStaffSession && !hasAdminDashboardRole(staffRoles)) {
+    return <AdminPermissionDeniedPage />;
+  }
   const [adminSection, ...adminPathSegments] = page.split('/');
-  const staffRoles = staffQuery.data?.roles;
   if (adminSection === 'orders') {
     const encodedOrderNumber = adminPathSegments.join('/');
     return encodedOrderNumber ? (
@@ -2612,6 +2616,9 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
     const [subsection, encodedId] = adminPathSegments;
     if (adminSection === 'catalog' && subsection === 'categories') {
       return <AdminCatalogInventoryPage view="categories" staffRoles={staffRoles} />;
+    }
+    if (adminSection === 'catalog' && subsection === 'products' && encodedId === 'new') {
+      return <AdminCatalogInventoryPage view="product" staffRoles={staffRoles} />;
     }
     if (adminSection === 'catalog' && subsection === 'products' && encodedId) {
       return (
@@ -2649,13 +2656,14 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
     }
     return <AdminContentSeoPage view="content" staffRoles={staffRoles} />;
   }
+  if (page === 'products/new') {
+    return <AdminCatalogInventoryPage view="product" staffRoles={staffRoles} />;
+  }
   if (page === 'products') return <AdminProductsPage />;
   if (page !== 'admin') {
     if (!allowDevelopmentPreview) return <AdminRouteUnavailablePage page={page} />;
     return <AdminLegacyPage page={page} />;
   }
-  if (!allowDevelopmentPreview) return <AdminRouteUnavailablePage page="admin" />;
-
   const nav = [
     ['admin', 'داشبورد', 'home'],
     ['catalog', 'محصولات', 'bag'],
@@ -2668,6 +2676,10 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
     ['promotions', 'تخفیف‌ها', 'tag'],
     ['operations', 'تنظیمات', 'settings'],
   ].map(([key, label, icon]) => ({ key, label, icon: icon as IconName }));
+  const adminDisplayName = allowDevelopmentPreview
+    ? 'مدیر نمونه'
+    : (staffQuery.data?.email ?? 'کاربر مدیریت');
+  const adminAccountLabel = allowDevelopmentPreview ? 'حساب نمایشی' : 'نشست فعال';
 
   return (
     <main className="admin-shell min-h-svh bg-[#f6f6f4] text-foreground">
@@ -2691,11 +2703,15 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
             <img
               className="h-10 w-10 rounded-full object-cover"
               src="/assets/nova-hero-men.webp"
-              alt=""
+              alt={allowDevelopmentPreview ? '' : `پروفایل ${adminDisplayName}`}
             />
             <div className="min-w-0 text-right">
-              <strong className="block truncate text-xs !text-foreground">مدیر نمونه</strong>
-              <small className="mt-1 block text-[9px] !text-muted-foreground">حساب نمایشی</small>
+              <strong className="block truncate text-xs !text-foreground">
+                {adminDisplayName}
+              </strong>
+              <small className="mt-1 block text-[9px] !text-muted-foreground">
+                {adminAccountLabel}
+              </small>
             </div>
           </div>
           <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-[10px] !text-muted-foreground transition-colors hover:!text-foreground disabled:opacity-50" />
@@ -2742,16 +2758,20 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
               aria-label="اعلان‌ها"
             >
               <Icon name="bell" size={19} />
-              <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary text-[8px] text-primary-foreground">
-                ۱
-              </span>
+              {allowDevelopmentPreview ? (
+                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary text-[8px] text-primary-foreground">
+                  ۱
+                </span>
+              ) : null}
             </button>
             <img
               className="h-9 w-9 rounded-full bg-secondary object-cover"
               src="/assets/nova-hero-men.webp"
-              alt="پروفایل مدیر نمونه"
+              alt={`پروفایل ${adminDisplayName}`}
             />
-            <span className="hidden text-xs text-muted-foreground lg:inline">تاریخ نمایشی</span>
+            <span className="hidden text-xs text-muted-foreground lg:inline">
+              {allowDevelopmentPreview ? 'تاریخ نمایشی' : 'نشست فعال'}
+            </span>
             <button
               className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors hover:bg-accent-soft"
               type="button"
@@ -2762,7 +2782,11 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
           </div>
         </header>
         <div className="admin-page bg-[#f6f6f4] p-4 pb-24 md:p-6 md:pb-8 lg:p-8">
-          <AdminDashboard />
+          {allowDevelopmentPreview ? (
+            <AdminDashboard />
+          ) : (
+            <AdminDashboardPage staffRoles={staffRoles} />
+          )}
         </div>
       </section>
       <nav

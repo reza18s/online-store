@@ -138,7 +138,9 @@ export class SmsIrOtpDelivery implements OtpDelivery {
         signal: controller.signal,
       });
 
-      if (response.status < 200 || response.status >= 300) throw deliveryError();
+      if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 300) {
+        throw deliveryError();
+      }
       let body: unknown;
       try {
         body = await response.json();

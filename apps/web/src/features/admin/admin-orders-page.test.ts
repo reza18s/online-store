@@ -21,6 +21,17 @@ test('keeps the complete operational status vocabulary presentationally stable',
   assert.equal(adminOrderStatusTone('DELIVERED'), 'success');
 });
 
+test('uses semantic tones for return and refund statuses', () => {
+  assert.equal(adminOrderStatusTone('REQUESTED'), 'warning');
+  assert.equal(adminOrderStatusTone('APPROVED'), 'info');
+  assert.equal(adminOrderStatusTone('REJECTED'), 'danger');
+  assert.equal(adminOrderStatusTone('RECEIVED'), 'success');
+  assert.equal(adminOrderStatusTone('REFUNDED'), 'success');
+  assert.equal(adminOrderStatusTone('PENDING'), 'warning');
+  assert.equal(adminOrderStatusTone('SUCCEEDED'), 'success');
+  assert.equal(adminOrderStatusTone('FAILED'), 'danger');
+});
+
 test('allows only the staff roles that own the corresponding operations', () => {
   assert.equal(hasAdminStaffRole(['support']), true);
   assert.equal(hasAdminStaffRole(['support'], 'operations'), false);

@@ -68,12 +68,15 @@ export function adminCatalogProductPath(productId: string): string {
   return `/v1/admin/catalog/products/${encodeId(productId)}`;
 }
 
+const staffAuthCsrfPath = '/v1/staff/auth/csrf';
+
 export async function fetchStaffUser(): Promise<StaffUser> {
   const response = await apiClient.getEnvelope<StaffUser>('/v1/staff/auth/me');
   return response.data;
 }
 
 export async function loginStaff(input: StaffLoginInput): Promise<StaffUser> {
+  await apiClient.getEnvelope<null>(staffAuthCsrfPath);
   const response = await apiClient.postEnvelope<StaffUser>('/v1/staff/auth/login', input);
   return response.data;
 }

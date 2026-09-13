@@ -4,6 +4,7 @@ import type {
   AdminInventoryListQuery,
   AdminCouponListQuery,
   AdminCustomerListQuery,
+  AdminDashboardSummaryQuery,
   AdminNotificationListQuery,
   AdminOrderListQuery,
   AdminPaymentListQuery,
@@ -56,6 +57,11 @@ export const queryKeys = {
     productVariants: (productId: string) =>
       ['admin', 'catalog', 'product-variants', productId] as const,
     productMedia: (productId: string) => ['admin', 'catalog', 'product-media', productId] as const,
+  },
+  adminDashboard: {
+    all: ['admin', 'dashboard'] as const,
+    summary: (filters: AdminDashboardSummaryQuery = {}) =>
+      ['admin', 'dashboard', 'summary', filters] as const,
   },
   adminInventory: {
     all: ['admin', 'inventory'] as const,

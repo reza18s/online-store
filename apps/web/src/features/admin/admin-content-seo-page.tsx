@@ -323,6 +323,10 @@ export function getAdminContentSeoState(
   return query.hasItems ? 'ready' : 'empty';
 }
 
+export function isAdminContentSeoEditorInputDisabled(canEdit: boolean, busy: boolean): boolean {
+  return !canEdit || busy;
+}
+
 function formatDate(value: string): string {
   const date = new Date(value);
   return Number.isNaN(date.getTime())
@@ -386,6 +390,7 @@ function Textarea({
   dir = 'rtl',
   hint,
   rows = 5,
+  disabled = false,
 }: {
   label: string;
   value: string;
@@ -393,6 +398,7 @@ function Textarea({
   dir?: 'rtl' | 'ltr';
   hint?: string;
   rows?: number;
+  disabled?: boolean;
 }) {
   return (
     <label className="block space-y-2 text-right text-xs">
@@ -401,8 +407,9 @@ function Textarea({
         dir={dir}
         value={value}
         rows={rows}
+        disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-control border border-border bg-background px-3 py-3 text-sm leading-7 text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15"
+        className="w-full rounded-control border border-border bg-background px-3 py-3 text-sm leading-7 text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-4 focus:ring-primary/15 disabled:cursor-not-allowed disabled:bg-secondary"
       />
       {hint ? (
         <span className="block text-[11px] leading-6 text-muted-foreground">{hint}</span>
@@ -416,19 +423,22 @@ function Select({
   value,
   onChange,
   children,
+  disabled = false,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   children: ReactNode;
+  disabled?: boolean;
 }) {
   return (
     <label className="block space-y-2 text-right text-xs">
       <span className="font-semibold text-foreground">{label}</span>
       <select
         value={value}
+        disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
-        className="min-h-11 w-full rounded-control border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-primary/15"
+        className="min-h-11 w-full rounded-control border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-primary/15 disabled:cursor-not-allowed disabled:bg-secondary"
       >
         {children}
       </select>
@@ -722,6 +732,7 @@ function ContentEditor({
           label="متن صفحه"
           value={draft.body}
           onChange={(value) => update({ body: value })}
+          disabled={isAdminContentSeoEditorInputDisabled(canEdit, busy)}
           hint="متن به‌صورت امن و بدون HTML ذخیره می‌شود."
           rows={7}
         />
@@ -730,6 +741,7 @@ function ContentEditor({
           value={draft.blocksJson}
           onChange={(value) => update({ blocksJson: value })}
           dir="ltr"
+          disabled={isAdminContentSeoEditorInputDisabled(canEdit, busy)}
           hint={`حداکثر ${MAX_BLOCKS} بلوک و ${MAX_JSON_LENGTH.toLocaleString('fa-IR')} نویسه؛ HTML پذیرفته نمی‌شود.`}
           rows={8}
         />
@@ -957,6 +969,7 @@ function SeoEditor({
           label="توضیح SEO"
           value={draft.description}
           onChange={(value) => update({ description: value })}
+          disabled={isAdminContentSeoEditorInputDisabled(canEdit, busy)}
           rows={4}
         />
         <Input
@@ -972,6 +985,7 @@ function SeoEditor({
           value={draft.structuredDataJson}
           onChange={(value) => update({ structuredDataJson: value })}
           dir="ltr"
+          disabled={isAdminContentSeoEditorInputDisabled(canEdit, busy)}
           hint="JSON محدود و بدون HTML؛ برای داده ساختاریافته استفاده می‌شود."
           rows={6}
         />
@@ -1192,6 +1206,7 @@ function RedirectEditor({
           label="کد وضعیت"
           value={String(draft.statusCode)}
           onChange={(value) => update({ statusCode: Number(value) as SeoRedirectStatusCode })}
+          disabled={isAdminContentSeoEditorInputDisabled(canEdit, busy)}
         >
           <option value="301">301 — انتقال دائمی</option>
           <option value="302">302 — انتقال موقت</option>

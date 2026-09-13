@@ -326,6 +326,41 @@ function Invoke-PostgresQuery {
     return $value
 }
 
+function Get-PostgresClientMajorVersion {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$CommandPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    try {
+        $output = @(& $CommandPath '--version' 2>&1)
+        $exitCode = $LASTEXITCODE
+    }
+    catch {
+        throw "BLOCKED: $Description could not be started."
+    }
+    if ($exitCode -ne 0) {
+        throw "BLOCKED: $Description version probe failed with exit code $exitCode."
+    }
+
+    $versionText = $output |
+        ForEach-Object { $_.ToString().Trim() } |
+        Where-Object { $_ -ne '' } |
+        Select-Object -First 1
+    if ($null -eq $versionText) {
+        throw "BLOCKED: $Description version probe returned no output."
+    }
+    $match = [regex]::Match($versionText, '(?i)\bPostgreSQL\)\s+(\d+)(?:\.\d+)?(?=\s|$)')
+    if (-not $match.Success) {
+        throw "BLOCKED: $Description version output could not be parsed."
+    }
+
+    return [int]$match.Groups[1].Value
+}
+
 function Get-ConnectedDatabaseIdentity {
     param(
         [Parameter(Mandatory = $true)]
@@ -362,6 +397,32 @@ function Get-ConnectedServerIdentity {
         -DatabaseUrl $DatabaseUrl `
         -Query "SELECT COALESCE(inet_server_addr()::text, 'local-socket') || ':' || COALESCE(inet_server_port()::text, '0');" `
         -Description $Description
+}
+
+function Get-ConnectedServerMajorVersion {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    $value = Invoke-PostgresQuery `
+        -PsqlPath $PsqlPath `
+        -DatabaseUrl $DatabaseUrl `
+        -Query "SELECT (current_setting('server_version_num')::integer / 10000)::text;" `
+        -Description $Description
+
+    [int]$majorVersion = 0
+    if (-not [int]::TryParse($value, [Globalization.NumberStyles]::Integer, [Globalization.CultureInfo]::InvariantCulture, [ref]$majorVersion)) {
+        throw "FAIL: $Description returned a non-numeric PostgreSQL major version."
+    }
+
+    return $majorVersion
 }
 
 function Get-ConnectedClusterIdentity {
@@ -529,6 +590,34 @@ try {
     $pgRestorePath = Get-RequiredCommandPath -Name 'pg_restore'
     $psqlPath = Get-RequiredCommandPath -Name 'psql'
 
+    $clientVersions = @(
+        [pscustomobject]@{
+            Name  = 'pg_dump'
+            Major = Get-PostgresClientMajorVersion -CommandPath $pgDumpPath -Description 'pg_dump'
+        }
+        [pscustomobject]@{
+            Name  = 'pg_restore'
+            Major = Get-PostgresClientMajorVersion -CommandPath $pgRestorePath -Description 'pg_restore'
+        }
+        [pscustomobject]@{
+            Name  = 'psql'
+            Major = Get-PostgresClientMajorVersion -CommandPath $psqlPath -Description 'psql'
+        }
+    )
+    $clientMajors = @($clientVersions | ForEach-Object { $_.Major } | Select-Object -Unique)
+    if ($clientMajors.Count -ne 1) {
+        throw 'BLOCKED: pg_dump, pg_restore and psql must use the same PostgreSQL major version.'
+    }
+
+    [int]$clientMajorVersion = $clientMajors[0]
+    $sourceServerMajorVersion = Get-ConnectedServerMajorVersion `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $SourceDatabaseUrl `
+        -Description 'source server major-version check'
+    if ($sourceServerMajorVersion -ne $clientMajorVersion) {
+        throw "BLOCKED: PostgreSQL client major version $clientMajorVersion does not match source server major version $sourceServerMajorVersion."
+    }
+
     if (-not $BackupOnly) {
         $restore = Get-DatabaseIdentity -ConnectionUrl $RestoreDatabaseUrl
         if ($source.Host -eq $restore.Host -and $source.Port -eq $restore.Port -and $source.Database -eq $restore.Database) {
@@ -537,6 +626,14 @@ try {
 
         if ([StringComparer]::OrdinalIgnoreCase.Equals($source.Database, $restore.Database)) {
             throw 'BLOCKED: the restore target must use a different database name from the source database.'
+        }
+
+        $restoreServerMajorVersion = Get-ConnectedServerMajorVersion `
+            -PsqlPath $psqlPath `
+            -DatabaseUrl $RestoreDatabaseUrl `
+            -Description 'restore-target server major-version check'
+        if ($restoreServerMajorVersion -ne $clientMajorVersion) {
+            throw "BLOCKED: PostgreSQL client major version $clientMajorVersion does not match restore-target server major version $restoreServerMajorVersion."
         }
 
         $sourceConnectionIdentity = Get-ConnectedDatabaseIdentity `
@@ -664,10 +761,12 @@ try {
         -Phase 'archive' `
         -Message 'The backup archive was created and structurally verified.' `
         -Data ([ordered]@{
-            archivePath   = $backupPath
-            archiveBytes  = $backupInfo.Length
-            archiveEntries = $entryCount
-            sha256        = $sha256
+            archivePath                = $backupPath
+            archiveBytes               = $backupInfo.Length
+            archiveEntries             = $entryCount
+            sha256                     = $sha256
+            postgresClientMajorVersion = $clientMajorVersion
+            sourceServerMajorVersion   = $sourceServerMajorVersion
         })
 
     if ($BackupOnly) {
@@ -675,7 +774,11 @@ try {
             -Status 'PASS' `
             -Phase 'complete' `
             -Message 'Archive-only verification passed; restore was intentionally not attempted.' `
-            -Data ([ordered]@{ restore = 'SKIPPED' })
+            -Data ([ordered]@{
+                restore                    = 'SKIPPED'
+                postgresClientMajorVersion = $clientMajorVersion
+                sourceServerMajorVersion   = $sourceServerMajorVersion
+            })
         exit 0
     }
 
@@ -724,7 +827,7 @@ try {
     $restoredTableCountText = Invoke-PostgresQuery `
         -PsqlPath $psqlPath `
         -DatabaseUrl $RestoreDatabaseUrl `
-        -Query "SELECT count(*) FROM pg_class AS c JOIN pg_namespace AS n ON n.oid = c.relnamespace WHERE n.nspname NOT IN ('pg_catalog', 'information_schema') AND c.relkind IN ('r', 'p');" `
+        -Query "SELECT count(*) FROM pg_class AS c JOIN pg_namespace AS n ON n.oid = c.relnamespace WHERE n.nspname NOT IN ('pg_catalog', 'information_schema', 'pg_toast') AND c.relkind IN ('r', 'p');" `
         -Description 'restored-table verification'
 
     [long]$restoredTableCount = 0
@@ -759,6 +862,9 @@ try {
             archivePath                = $backupPath
             archiveBytes               = $backupInfo.Length
             sha256                     = $sha256
+            postgresClientMajorVersion = $clientMajorVersion
+            sourceServerMajorVersion   = $sourceServerMajorVersion
+            restoreServerMajorVersion  = $restoreServerMajorVersion
             sourceClusterIdentity      = $sourceClusterIdentity
             restoreClusterIdentity     = $restoreClusterIdentity
             targetMaintenanceApproval  = 'approved'

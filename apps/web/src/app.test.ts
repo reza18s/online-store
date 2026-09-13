@@ -109,7 +109,7 @@ test('renders a non-operational state instead of static data for an unfinished a
   queryClient.clear();
 });
 
-test('keeps the static admin dashboard preview development-only', () => {
+test('keeps the static admin preview development-only and renders the live admin summary', () => {
   assert.equal(
     shouldShowAdminDashboardPreview({ page: 'admin', isDevelopment: true, hasStaffSession: false }),
     true,
@@ -142,6 +142,22 @@ test('keeps the static admin dashboard preview development-only', () => {
     status: 'ACTIVE',
     roles: ['admin'],
   });
+  queryClient.setQueryData(queryKeys.adminDashboard.summary({ periodDays: 30 }), {
+    publishedProductCount: 12,
+    newCustomerCount: 4,
+    newOrderCount: 8,
+    paidGrossToman: 298500000,
+    successfulRefundToman: 1250000,
+    orderStatusCounts: {
+      PENDING_PAYMENT: 1,
+      CONFIRMED: 2,
+      PREPARING: 1,
+      SHIPPED: 1,
+      DELIVERED: 2,
+      CANCELLED: 1,
+      RETURNED: 0,
+    },
+  });
   const markup = renderToStaticMarkup(
     createElement(
       QueryClientProvider,
@@ -150,8 +166,36 @@ test('keeps the static admin dashboard preview development-only', () => {
     ),
   );
 
-  assert.match(markup, /داشبورد هنوز آماده نیست/);
-  assert.doesNotMatch(markup, /۲۹۸٬۵۰۰٬۰۰۰/);
+  assert.match(markup, /NOVA \/ ADMIN DASHBOARD · LIVE SUMMARY/);
+  assert.match(markup, /۲۹۸٬۵۰۰٬۰۰۰ تومان/);
+  assert.match(markup, /staff@example\.test/);
+  assert.doesNotMatch(markup, /داده نمایشی|حساب نمایشی|تاریخ نمایشی/);
+  queryClient.clear();
+});
+
+test('denies a signed-in non-admin before the live dashboard query is used', () => {
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(queryKeys.staffAuth.current(), {
+    id: 'staff-support',
+    email: 'support@example.test',
+    status: 'ACTIVE',
+    roles: ['support'],
+  });
+
+  const markup = renderToStaticMarkup(
+    createElement(
+      QueryClientProvider,
+      { client: queryClient },
+      createElement(AdminPage, { page: 'admin' }),
+    ),
+  );
+
+  assert.match(markup, /دسترسی کافی نیست/);
+  assert.doesNotMatch(markup, /NOVA \/ ADMIN DASHBOARD · LIVE SUMMARY/);
+  assert.equal(
+    queryClient.getQueryData(queryKeys.adminDashboard.summary({ periodDays: 30 })),
+    undefined,
+  );
   queryClient.clear();
 });
 
@@ -186,6 +230,31 @@ test('passes encoded admin customer lookup queries into the customer filter', ()
   assert.match(markup, /id="customer-query"/);
   assert.match(markup, /value="person\+support@example\.test"/);
   queryClient.clear();
+});
+
+test('routes canonical and legacy new-product paths into the create editor', () => {
+  for (const page of ['catalog/products/new', 'products/new']) {
+    const queryClient = new QueryClient();
+    queryClient.setQueryData(queryKeys.staffAuth.current(), {
+      id: 'staff-admin',
+      email: 'admin@example.test',
+      status: 'ACTIVE',
+      roles: ['admin'],
+    });
+
+    const markup = renderToStaticMarkup(
+      createElement(
+        QueryClientProvider,
+        { client: queryClient },
+        createElement(AdminPage, { page }),
+      ),
+    );
+
+    assert.match(markup, /<h2[^>]*>محصول جدید<\/h2>/);
+    assert.match(markup, /شناسه محصول/);
+    assert.doesNotMatch(markup, /محصول پیدا نشد|این مسیر هنوز به داده‌های واقعی پنل متصل نشده است/);
+    queryClient.clear();
+  }
 });
 
 test('does not expose a fabricated order number from the payment preview state', () => {

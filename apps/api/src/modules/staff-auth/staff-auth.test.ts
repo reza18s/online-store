@@ -3,6 +3,7 @@ import { test } from 'node:test';
 
 import { ForbiddenException, HttpException, HttpStatus } from '@nestjs/common';
 
+import type { RequestWithId } from '../../common/http/request-id.middleware';
 import type { OtpStateStore } from '../auth/otp-state.store';
 import {
   createRecoveryCode,
@@ -14,6 +15,7 @@ import {
 } from './staff-auth.crypto';
 import { assertStaffRole } from './staff-auth.guard';
 import { SessionService, hashSessionToken } from '../auth/session.service';
+import { StaffAuthController } from './staff-auth.controller';
 import { STAFF_LOGIN_MAX_ATTEMPTS, StaffAuthService } from './staff-auth.service';
 
 interface StoredValue {
@@ -139,6 +141,15 @@ test('hashes staff passwords and encrypts TOTP secrets without exposing plaintex
 
   const encrypted = encryptTotpSecret('JBSWY3DPEHPK3PXP');
   assert.equal(encrypted.includes('JBSWY3DPEHPK3PXP'), false);
+});
+
+test('returns a null envelope for the public staff CSRF bootstrap route', async () => {
+  const controller = new StaffAuthController({} as StaffAuthService);
+  const response = await controller.csrf({ requestId: 'staff-csrf-request' } as RequestWithId);
+
+  assert.equal(response.data, null);
+  assert.equal(response.meta.requestId, 'staff-csrf-request');
+  assert.match(response.meta.timestamp, /^\d{4}-\d{2}-\d{2}T/);
 });
 
 test('generates the RFC TOTP vector and accepts Persian digits within clock skew', () => {

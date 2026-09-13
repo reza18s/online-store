@@ -37,6 +37,11 @@ function clearStaffCookie(response: ResponseWithHeaders): void {
 export class StaffAuthController {
   public constructor(private readonly auth: StaffAuthService) {}
 
+  @Get('csrf')
+  public csrf(@Req() request: RequestWithId): ApiEnvelope<null> {
+    return this.envelope(request, null);
+  }
+
   @Post('login')
   public async login(
     @Req() request: RequestWithId & { ip?: string },

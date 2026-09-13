@@ -41,3 +41,17 @@ test('matches expected HTTP boundaries including intentional unauthenticated 401
   assert.equal(probeMatches({ status: 200, body: '{"data":null}' }, 401, 'UNAUTHORIZED'), false);
   assert.equal(probeMatches({ status: null, body: '' }, 200, '"data":['), false);
 });
+
+test('accepts a loopback object-storage endpoint without exposing credentials', () => {
+  const endpoint = parseE2eEndpoint(
+    'NOVA_E2E_S3_URL',
+    'http://127.0.0.1:59000',
+    'http://127.0.0.1:59000',
+  );
+
+  assert.equal(endpoint.safeOrigin, 'http://127.0.0.1:59000');
+  assert.equal(
+    endpointUrl(endpoint, '/minio/health/live'),
+    'http://127.0.0.1:59000/minio/health/live',
+  );
+});

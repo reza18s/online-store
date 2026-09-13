@@ -122,6 +122,30 @@ unavailable rendered-browser gate.
 | Payment failed/recovery | `PASS` (logic/source) / `NOT RUN` (browser) | Failed and recovery routes preserve safe retry/continue guidance; focused checkout tests passed. |
 | Refund / return | `PASS` (logic/source) / `NOT RUN` (browser) | Customer return states and `REFUNDED` status copy exist; orders/payment refund integration tests passed, but no browser return/refund render was exercised. |
 
+## Parent browser follow-up — 2026-09-13
+
+The current parent checkout now has five bounded, fixture-backed authenticated
+dashboard sidecars:
+
+- `authenticated-admin-dashboard-qa.pw.ts` covers the typed six-field summary,
+  the 30-to-90 day read-only period change and the support-role denial boundary.
+- `authenticated-admin-dashboard-layout-qa.pw.ts` covers RTL/page containment
+  at exact `1440x900` and `390x844` viewports.
+- `authenticated-admin-dashboard-state-qa.pw.ts` covers a synthetic 503,
+  actionable retry and redaction of provider/database/stack details.
+- `authenticated-admin-dashboard-accessibility-qa.pw.ts` covers the named
+  period combobox, keyboard selection, visible focus and reduced-motion CSS.
+- `authenticated-admin-dashboard-empty-qa.pw.ts` covers the localized RTL
+  null-summary empty state without metrics or preview content.
+
+The eight dashboard tests pass `8/8` through the installed Chrome channel, and
+the complete one-worker pinned-Chromium Playwright matrix passes `66/66` under
+the approved elevated local process boundary. Browser discovery is `66` tests
+in `26` files. These sidecars use synthetic staff/API fixtures, loopback-only
+route guards and read-only GET assertions; they improve bounded rendered
+evidence but do not close real staff authentication/MFA, screen-reader AT,
+formal pixel comparison, provider, storage-upload or production gates.
+
 ## Visual regression status
 
 ### Atelier storefront direction

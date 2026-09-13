@@ -4,6 +4,8 @@ const SMS_IR_VERIFY_PATH = 'send/verify';
 const SMS_IR_REQUEST_TIMEOUT_MS = 10_000;
 const SUPPORTED_NOTIFICATION_KINDS = new Set(['PAYMENT_SUCCEEDED', 'PAYMENT_FAILED']);
 
+class SmsIrNotificationError extends Error {}
+
 export interface SmsIrNotificationHttpRequest {
   url: string;
   headers: Record<string, string>;
@@ -96,10 +98,10 @@ function notificationParameters(
   job: NotificationJobRecord,
 ): Array<{ name: string; value: string }> {
   if (!SUPPORTED_NOTIFICATION_KINDS.has(job.kind)) {
-    throw new Error('sms-ir-unsupported-notification-kind');
+    throw new SmsIrNotificationError('sms-ir-unsupported-notification-kind');
   }
   if (!isRecord(job.payload) || 'code' in job.payload || 'otp' in job.payload) {
-    throw new Error('sms-ir-invalid-notification-payload');
+    throw new SmsIrNotificationError('sms-ir-invalid-notification-payload');
   }
 
   const orderNumber = job.payload.orderNumber;
@@ -114,7 +116,7 @@ function notificationParameters(
         amountToman < 0 ||
         amountToman > 2_147_483_647))
   ) {
-    throw new Error('sms-ir-invalid-notification-payload');
+    throw new SmsIrNotificationError('sms-ir-invalid-notification-payload');
   }
 
   const parameters = [{ name: 'OrderNumber', value: orderNumber }];
@@ -135,10 +137,10 @@ export class SmsIrNotificationSender implements NotificationSender {
 
   public async send(job: NotificationJobRecord): Promise<void> {
     if (!isValidSmsIrNotificationConfig(this.options)) {
-      throw new Error('sms-ir-unconfigured');
+      throw new SmsIrNotificationError('sms-ir-unconfigured');
     }
     if (!/^\+989\d{9}$/.test(job.recipient)) {
-      throw new Error('sms-ir-invalid-recipient');
+      throw new SmsIrNotificationError('sms-ir-invalid-recipient');
     }
 
     const controller = new AbortController();
@@ -159,19 +161,19 @@ export class SmsIrNotificationSender implements NotificationSender {
         signal: controller.signal,
       });
 
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error('sms-ir-provider-error');
+      if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 300) {
+        throw new SmsIrNotificationError('sms-ir-provider-error');
       }
       let body: unknown;
       try {
         body = await response.json();
       } catch {
-        throw new Error('sms-ir-malformed-response');
+        throw new SmsIrNotificationError('sms-ir-malformed-response');
       }
-      if (!isSuccessfulResponse(body)) throw new Error('sms-ir-provider-error');
+      if (!isSuccessfulResponse(body)) throw new SmsIrNotificationError('sms-ir-provider-error');
     } catch (error) {
-      if (error instanceof Error && error.message.startsWith('sms-ir-')) throw error;
-      throw new Error('sms-ir-request-failed');
+      if (error instanceof SmsIrNotificationError) throw error;
+      throw new SmsIrNotificationError('sms-ir-request-failed');
     } finally {
       clearTimeout(timeout);
     }

@@ -121,6 +121,12 @@ async function checkUnauthenticatedApiBoundaries(apiEndpoint: E2eEndpoint): Prom
       bodyMarker: '"data":null',
     },
     {
+      label: 'staff login CSRF bootstrap',
+      path: '/v1/staff/auth/csrf',
+      expectedStatus: 200,
+      bodyMarker: '"data":null',
+    },
+    {
       label: 'customer order ownership boundary',
       path: '/v1/account/orders/NOPE',
       expectedStatus: 401,
@@ -135,6 +141,12 @@ async function checkUnauthenticatedApiBoundaries(apiEndpoint: E2eEndpoint): Prom
     {
       label: 'admin catalog boundary',
       path: '/v1/admin/catalog/products?limit=1',
+      expectedStatus: 401,
+      bodyMarker: '"code":"UNAUTHORIZED"',
+    },
+    {
+      label: 'admin dashboard boundary',
+      path: '/v1/admin/dashboard/summary',
       expectedStatus: 401,
       bodyMarker: '"code":"UNAUTHORIZED"',
     },
@@ -170,6 +182,18 @@ async function checkStorefrontRootShell(webEndpoint: E2eEndpoint): Promise<strin
   return failures;
 }
 
+async function checkObjectStorageHealth(storageEndpoint: E2eEndpoint): Promise<string[]> {
+  const result = await probe(endpointUrl(storageEndpoint, '/minio/health/live'));
+  if (!result.ok || result.status !== 200) {
+    return [
+      `object-storage liveness ${storageEndpoint.safeOrigin} (${result.status ?? 'unreachable'})`,
+    ];
+  }
+
+  console.log(`[PASS] object-storage liveness: ${storageEndpoint.safeOrigin}`);
+  return [];
+}
+
 async function main(): Promise<void> {
   const apiEndpoint = parseE2eEndpoint(
     'NOVA_E2E_API_URL',
@@ -181,24 +205,31 @@ async function main(): Promise<void> {
     process.env.NOVA_E2E_WEB_URL,
     'http://127.0.0.1:5173',
   );
+  const storageEndpoint = parseE2eEndpoint(
+    'NOVA_E2E_S3_URL',
+    process.env.NOVA_E2E_S3_URL,
+    'http://127.0.0.1:59000',
+  );
 
   console.log('TEST-001 runtime E2E preflight and storefront shell smoke');
   console.log(`web origin: ${webEndpoint.safeOrigin}`);
   console.log(`api origin: ${apiEndpoint.safeOrigin}`);
+  console.log(`object-storage origin: ${storageEndpoint.safeOrigin}`);
   console.log(
-    'scope: API health/readiness, public/unauthenticated boundary probes, and one HTML root-shell availability probe; no browser interaction is claimed',
+    'scope: API health/readiness, public/unauthenticated boundary probes, object-storage liveness, and one HTML root-shell availability probe; no browser interaction is claimed',
   );
 
   const failures = [
     ...(await checkApiHealth(apiEndpoint)),
     ...(await checkUnauthenticatedApiBoundaries(apiEndpoint)),
+    ...(await checkObjectStorageHealth(storageEndpoint)),
     ...(await checkStorefrontRootShell(webEndpoint)),
   ];
   if (failures.length) {
     console.error('\nBLOCKED: live E2E prerequisites or storefront shell are unavailable.');
     for (const failure of failures) console.error(`- ${failure}`);
     console.error(
-      'Required: running API with PostgreSQL readiness and a running Vite/preview storefront. ' +
+      'Required: running API with PostgreSQL readiness, reachable local object storage, and a running Vite/preview storefront. ' +
         'Do not interpret this as authenticated or Playwright coverage.',
     );
     process.exitCode = 2;

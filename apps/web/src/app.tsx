@@ -2936,16 +2936,7 @@ function NotFoundPage() {
   );
 }
 
-export function RouteView({
-  route,
-  cart,
-  cartLoading,
-  cartError,
-  onRetryCart,
-  customerId,
-  isWishlisted,
-  onToggleWishlist,
-}: {
+type RouteViewProps = {
   route: string;
   cart: CartView | undefined;
   cartLoading: boolean;
@@ -2954,7 +2945,18 @@ export function RouteView({
   customerId?: string;
   isWishlisted: (slug: string) => boolean;
   onToggleWishlist: (slug: string) => void;
-}) {
+};
+
+export function PublicApp({
+  route,
+  cart,
+  cartLoading,
+  cartError,
+  onRetryCart,
+  customerId,
+  isWishlisted,
+  onToggleWishlist,
+}: RouteViewProps) {
   const resolved = parseHashRoute(route);
 
   switch (resolved.kind) {
@@ -3056,18 +3058,37 @@ export function RouteView({
       return <PublicContentSystemPage slug={resolved.page} />;
     case 'content':
       return <PublicContentSystemPage slug={resolved.slug} />;
-    case 'admin':
-      return <AdminPage page={resolved.page} queryString={resolved.queryString} />;
     case 'not-found':
       return <NotFoundPage />;
+    default:
+      return <NotFoundPage />;
   }
+}
+
+export function AdminApp({ route }: Pick<RouteViewProps, 'route'>) {
+  const resolved = parseHashRoute(route);
+
+  if (resolved.kind === 'admin') {
+    return <AdminPage page={resolved.page} queryString={resolved.queryString} />;
+  }
+
+  return <NotFoundPage />;
+}
+
+export function RouteView(props: RouteViewProps) {
+  return parseHashRoute(props.route).kind === 'admin' ? (
+    <AdminApp route={props.route} />
+  ) : (
+    <PublicApp {...props} />
+  );
 }
 
 export function App() {
   const route = useHashRoute();
   useScrollToTop(route);
-  const cartQuery = useCart(!route.startsWith('#admin'));
-  const customerQuery = useCurrentCustomer(!route.startsWith('#admin'));
+  const isAdminRoute = route.startsWith('#admin');
+  const cartQuery = useCart(!isAdminRoute);
+  const customerQuery = useCurrentCustomer(!isAdminRoute);
   const cart = cartQuery.data;
   const cartCount = cart?.itemCount ?? 0;
   const [searchOpen, setSearchOpen] = useState(false);
@@ -3099,27 +3120,31 @@ export function App() {
 
   return (
     <div
-      className={`app-root min-h-svh bg-background ${route.startsWith('#admin') ? 'app-root--admin' : ''}`}
+      className={`app-root min-h-svh bg-background ${isAdminRoute ? 'app-root--admin' : ''}`}
       dir="rtl"
     >
-      {!route.startsWith('#admin') ? (
+      {!isAdminRoute ? (
         <Header
           cartCount={cartCount}
           onSearch={() => setSearchOpen(true)}
           onMenu={() => setMenuOpen(true)}
         />
       ) : null}
-      <RouteView
-        route={route}
-        cart={cart}
-        cartLoading={cartQuery.isPending}
-        cartError={cartQuery.isError}
-        onRetryCart={() => void cartQuery.refetch()}
-        customerId={customerQuery.data?.id}
-        isWishlisted={(slug) => wishlist.has(slug)}
-        onToggleWishlist={toggleWishlist}
-      />
-      {!route.startsWith('#admin') ? <MobileBottomNav cartCount={cartCount} /> : null}
+      {isAdminRoute ? (
+        <AdminApp route={route} />
+      ) : (
+        <PublicApp
+          route={route}
+          cart={cart}
+          cartLoading={cartQuery.isPending}
+          cartError={cartQuery.isError}
+          onRetryCart={() => void cartQuery.refetch()}
+          customerId={customerQuery.data?.id}
+          isWishlisted={(slug) => wishlist.has(slug)}
+          onToggleWishlist={toggleWishlist}
+        />
+      )}
+      {!isAdminRoute ? <MobileBottomNav cartCount={cartCount} /> : null}
       <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
       <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>

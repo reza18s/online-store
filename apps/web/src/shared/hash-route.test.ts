@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { parseHashRoute } from './hash-route';
+import { hashRouteFromLocation, parseHashRoute } from './hash-route';
 
 function assertRoute(route: string, expected: Record<string, unknown>): void {
   const actual = parseHashRoute(route) as unknown as Record<string, unknown>;
@@ -9,6 +9,18 @@ function assertRoute(route: string, expected: Record<string, unknown>): void {
     assert.deepEqual(actual[key], value, `${route} should resolve ${key}`);
   }
 }
+
+test('adapts React Router locations to the app hash-route contract', () => {
+  assert.equal(
+    hashRouteFromLocation({ pathname: '/admin/orders', search: '?q=paid' }),
+    '#admin/orders?q=paid',
+  );
+  assert.equal(
+    hashRouteFromLocation({ pathname: '/product/linen-overshirt', search: '' }),
+    '#product/linen-overshirt',
+  );
+  assert.equal(hashRouteFromLocation({ pathname: '/', search: '' }), '#home');
+});
 
 test('keeps storefront home aliases and query strings explicit', () => {
   assertRoute('#home', { kind: 'home', path: '#home', queryString: '' });

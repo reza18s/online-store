@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export type Audience = 'women' | 'men' | 'children';
 
@@ -77,6 +78,12 @@ export function decodeHashSegment(value: string): string {
   } catch {
     return value;
   }
+}
+
+export function hashRouteFromLocation(location: { pathname: string; search: string }): string {
+  const pathname = location.pathname.replace(/^\/+/, '');
+  const routePath = pathname ? `#${pathname}` : '#home';
+  return `${routePath}${location.search}`;
 }
 
 export function parseHashRoute(route: string): HashRoute {
@@ -163,17 +170,23 @@ export function parseHashRoute(route: string): HashRoute {
 }
 
 export function useHashRoute(): string {
-  const [route, setRoute] = useState(
-    () => window.location.hash || globalThis.__NOVA_RENDER_CONTEXT__?.hashRoute || '#home',
-  );
+  const location = useLocation();
+  if (location.pathname === '/' && !location.search) {
+    return globalThis.__NOVA_RENDER_CONTEXT__?.hashRoute ?? '#home';
+  }
+  return hashRouteFromLocation(location);
+}
 
+export function HashNavigationBridge(): null {
   useEffect(() => {
-    const onHashChange = () => setRoute(window.location.hash || '#home');
+    const onHashChange = () => {
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
-  return route;
+  return null;
 }
 
 export function useScrollToTop(route: string): void {

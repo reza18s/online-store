@@ -1,6 +1,7 @@
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { StrictMode, type ReactNode, useEffect, useState } from 'react';
 import { createRoot, hydrateRoot } from 'react-dom/client';
+import { HashRouter } from 'react-router-dom';
 
 import '@nova/ui/styles.css';
 
@@ -13,6 +14,7 @@ import {
   isStaffProtectedQueryKey,
 } from './features/admin/admin-auth';
 import { readInitialRenderContext, type InitialRenderContext } from './seo/metadata';
+import { HashNavigationBridge } from './shared/hash-route';
 import './styles.css';
 
 function redirectToStaffLogin(): void {
@@ -113,9 +115,12 @@ const appRenderers: AppRenderers = {
 function InteractiveApp() {
   return (
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
+      <HashRouter>
+        <HashNavigationBridge />
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </HashRouter>
     </StrictMode>
   );
 }

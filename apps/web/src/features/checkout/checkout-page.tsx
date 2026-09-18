@@ -11,20 +11,24 @@ import {
   type CustomerAddressCreateInput,
   type CustomerOrderDetail,
 } from '@nova/api-client';
-import { Button } from '@nova/ui';
+import { Button, Input as UiInput, Radio, Textarea as UiTextarea } from '@nova/ui';
 
 import { useCreateCustomerAddress, useCustomerAddresses } from '../addresses/addresses-api';
 import { useCustomerOrder } from '../orders/orders-api';
-import { useCheckoutQuote, useSubmitCheckout } from './checkout-api';
+import { completeLocalPayment, useCheckoutQuote, useSubmitCheckout } from './checkout-api';
 import {
   buildCheckoutHref,
   classifyCheckoutFailure,
+  checkoutFormStateFromRoute,
   checkoutRetryTarget,
   getStableCheckoutIdempotencyKey,
+  isConfirmedTerminalPaymentStartFailure,
   isQuoteExpired,
   normalizeCheckoutStep,
   parseCheckoutRouteParams,
   paymentRecoveryCopy,
+  rotateCheckoutIdempotencyKey,
+  shouldShowNewAddressFromRoute,
   shouldShowCheckoutOrderLoading,
   type CheckoutFailure,
   type CheckoutStep,
@@ -165,7 +169,7 @@ function CartState({
   if (cartError || !cart) {
     return (
       <CheckoutShell>
-        <section className="mx-auto flex min-h-[55svh] max-w-xl flex-col items-center justify-center border border-border bg-surface p-8 text-center shadow-card">
+        <section className="mx-auto flex min-h-[55svh] max-w-xl flex-col items-center justify-center rounded-editorial border border-border bg-surface p-8 text-center shadow-card">
           <Icon name="warning" size={24} />
           <h1 className="mt-4 text-xl">سبد خرید بارگذاری نشد</h1>
           <p className="mt-2 text-sm leading-7 text-muted-foreground">
@@ -181,7 +185,7 @@ function CartState({
   if (!cart.items.length) {
     return (
       <CheckoutShell>
-        <section className="mx-auto flex min-h-[55svh] max-w-xl flex-col items-center justify-center border border-border bg-surface p-8 text-center shadow-card">
+        <section className="mx-auto flex min-h-[55svh] max-w-xl flex-col items-center justify-center rounded-editorial border border-border bg-surface p-8 text-center shadow-card">
           <h1 className="text-xl">سبد خرید شما خالی است</h1>
           <p className="mt-2 text-sm leading-7 text-muted-foreground">
             برای تکمیل سفارش، ابتدا یک محصول به سبد خرید اضافه کنید.
@@ -228,11 +232,10 @@ function AddressForm({
             className={`option-card ${selectedAddressId === address.id ? 'is-selected' : ''}`}
             key={address.id}
           >
-            <input
+            <Radio
               checked={selectedAddressId === address.id}
               name="checkout-address"
               onChange={() => onSelect(address.id)}
-              type="radio"
             />
             <span className="min-w-0">
               <strong>
@@ -276,7 +279,7 @@ function AddressForm({
             ).map(([key, label, placeholder]) => (
               <label className="grid gap-1 text-sm" key={key}>
                 <span>{label}</span>
-                <input
+                <UiInput
                   className="min-h-11 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
                   dir={key === 'phone' || key === 'postalCode' ? 'ltr' : 'rtl'}
                   required
@@ -292,7 +295,7 @@ function AddressForm({
           </div>
           <label className="grid gap-1 text-sm">
             <span>نشانی کامل</span>
-            <textarea
+            <UiTextarea
               className="border border-border bg-background px-3 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
               required
               rows={3}
@@ -328,12 +331,7 @@ function ShippingOptions({
       <legend className="mb-3 text-sm font-semibold">روش ارسال را انتخاب کنید</legend>
       {(['STANDARD', 'EXPRESS'] as CheckoutShippingMethod[]).map((method) => (
         <label className={`option-card ${value === method ? 'is-selected' : ''}`} key={method}>
-          <input
-            checked={value === method}
-            name="shipping"
-            onChange={() => onChange(method)}
-            type="radio"
-          />
+          <Radio checked={value === method} name="shipping" onChange={() => onChange(method)} />
           <span>
             <strong>{method === 'STANDARD' ? 'ارسال عادی' : 'ارسال سریع'}</strong>
             <small>
@@ -354,7 +352,7 @@ function PaymentOptions() {
     <fieldset className="option-list">
       <legend className="mb-3 text-sm font-semibold">روش پرداخت</legend>
       <label className="option-card is-selected">
-        <input type="radio" name="payment" defaultChecked aria-label="پرداخت آنلاین" />
+        <Radio name="payment" defaultChecked aria-label="پرداخت آنلاین" />
         <span>
           <strong>پرداخت آنلاین</strong>
           <small>پس از ثبت امن سفارش، در صورت فعال‌بودن درگاه به آن منتقل می‌شوید.</small>
@@ -478,20 +476,19 @@ function CheckoutPageContent({
 }: CheckoutPageProps & { cart: CartView }) {
   const currentStep = normalizeCheckoutStep(rawStep);
   const params = parseCheckoutRouteParams(queryString);
+  const routeState = checkoutFormStateFromRoute(params);
+  const routeShowsNewAddress = shouldShowNewAddressFromRoute(queryString);
   const addressesQuery = useCustomerAddresses();
   const createAddressMutation = useCreateCustomerAddress();
   const submitMutation = useSubmitCheckout();
-  const [selectedAddressId, setSelectedAddressId] = useState(params.addressId);
-  const [shippingMethod, setShippingMethod] = useState(params.shippingMethod);
-  const [couponCode, setCouponCode] = useState(params.couponCode);
-  const [showNewAddress, setShowNewAddress] = useState(
-    new URLSearchParams(queryString.startsWith('?') ? queryString.slice(1) : queryString).get(
-      'newAddress',
-    ) === '1',
-  );
+  const [selectedAddressId, setSelectedAddressId] = useState(routeState.addressId);
+  const [shippingMethod, setShippingMethod] = useState(routeState.shippingMethod);
+  const [couponCode, setCouponCode] = useState(routeState.couponCode);
+  const [showNewAddress, setShowNewAddress] = useState(routeShowsNewAddress);
   const [addressDraft, setAddressDraft] = useState(emptyAddressDraft);
   const [failure, setFailure] = useState<CheckoutFailure | null>(null);
   const [failureSource, setFailureSource] = useState<'quote' | 'submit' | 'address' | null>(null);
+  const [retryWithFreshIdempotencyKey, setRetryWithFreshIdempotencyKey] = useState(false);
 
   useEffect(() => {
     if (selectedAddressId || !addressesQuery.data?.length) return;
@@ -503,10 +500,14 @@ function CheckoutPageContent({
   }, [addressesQuery.data, selectedAddressId]);
 
   useEffect(() => {
-    if (params.addressId) setSelectedAddressId(params.addressId);
-    if (params.couponCode) setCouponCode(params.couponCode);
-    setShippingMethod(params.shippingMethod);
-  }, [params.addressId, params.couponCode, params.shippingMethod]);
+    setSelectedAddressId(routeState.addressId);
+    setCouponCode(routeState.couponCode);
+    setShippingMethod(routeState.shippingMethod);
+  }, [routeState.addressId, routeState.couponCode, routeState.shippingMethod]);
+
+  useEffect(() => {
+    setShowNewAddress(routeShowsNewAddress);
+  }, [routeShowsNewAddress]);
 
   const addressId = selectedAddressId;
   const checkoutInput = useMemo<CheckoutRequestInput>(
@@ -551,6 +552,7 @@ function CheckoutPageContent({
       setSelectedAddressId(address.id);
       setAddressDraft(emptyAddressDraft);
       setShowNewAddress(false);
+      setRetryWithFreshIdempotencyKey(false);
     } catch (error) {
       setFailureFrom(
         errorFailure(error, 'ذخیره آدرس انجام نشد؛ اطلاعات واردشده حفظ شده است.'),
@@ -641,14 +643,22 @@ function CheckoutPageContent({
       return;
     }
     try {
+      const idempotencyKey = retryWithFreshIdempotencyKey
+        ? rotateCheckoutIdempotencyKey(checkoutInput, quote)
+        : getStableCheckoutIdempotencyKey(checkoutInput, quote);
+      setRetryWithFreshIdempotencyKey(false);
       const order = await submitMutation.mutateAsync({
         input: checkoutInput,
-        idempotencyKey: getStableCheckoutIdempotencyKey(checkoutInput, quote),
+        idempotencyKey,
       });
       handleCheckoutOrder(order);
     } catch (error) {
+      setRetryWithFreshIdempotencyKey(isConfirmedTerminalPaymentStartFailure(error));
       setFailureFrom(
-        errorFailure(error, 'ثبت سفارش انجام نشد؛ سفارش جدیدی ایجاد نشده است.'),
+        errorFailure(
+          error,
+          'نتیجه ثبت سفارش قطعی نیست؛ ممکن است تلاش لغوشده‌ای در حساب شما ثبت شده باشد.',
+        ),
         'submit',
       );
     }
@@ -747,6 +757,7 @@ function CheckoutPageContent({
                 setSelectedAddressId(id);
                 setFailure(null);
                 setFailureSource(null);
+                setRetryWithFreshIdempotencyKey(false);
               }}
               showNewAddress={showNewAddress}
               onToggleNewAddress={() => setShowNewAddress((open) => !open)}
@@ -759,13 +770,22 @@ function CheckoutPageContent({
               createFailure={failureSource === 'address' ? failure : null}
             />
           ) : currentStep === 'shipping' ? (
-            <ShippingOptions value={shippingMethod} onChange={setShippingMethod} quote={quote} />
+            <ShippingOptions
+              value={shippingMethod}
+              onChange={(value) => {
+                setShippingMethod(value);
+                setFailure(null);
+                setFailureSource(null);
+                setRetryWithFreshIdempotencyKey(false);
+              }}
+              quote={quote}
+            />
           ) : (
             <>
               <PaymentOptions />
               <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
                 کد تخفیف (اختیاری)
-                <input
+                <UiInput
                   className="min-h-12 border border-border bg-surface px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
                   value={couponCode}
                   dir="ltr"
@@ -775,6 +795,7 @@ function CheckoutPageContent({
                     setCouponCode(event.target.value);
                     setFailure(null);
                     setFailureSource(null);
+                    setRetryWithFreshIdempotencyKey(false);
                   }}
                 />
               </label>
@@ -940,6 +961,69 @@ export function CheckoutPaymentRecoveryPage({ queryString = '' }: { queryString?
           refetch={() => void orderQuery.refetch()}
         />
       )}
+    </CheckoutShell>
+  );
+}
+
+export function LocalPaymentPage({ queryString = '' }: { queryString?: string }) {
+  const params = new URLSearchParams(queryString);
+  const orderNumber = params.get('orderNumber') ?? '';
+  const amountValue = params.get('amountToman') ?? '';
+  const transactionId = params.get('transactionId') ?? '';
+  const token = params.get('token') ?? '';
+  const amountToman = Number(amountValue);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (
+      !orderNumber ||
+      !transactionId ||
+      !token ||
+      !Number.isSafeInteger(amountToman) ||
+      amountToman < 1
+    ) {
+      setError('لینک پرداخت محلی کامل نیست؛ سفارش شما تغییر نکرده است.');
+      return;
+    }
+
+    let active = true;
+    void completeLocalPayment({ orderNumber, amountToman, transactionId, token })
+      .then((result) => {
+        if (!active) return;
+        if (result.outcome === 'PAID' || result.outcome === 'DUPLICATE') {
+          window.location.hash = `#checkout/confirmation?orderNumber=${encodeURIComponent(orderNumber)}`;
+          return;
+        }
+        setError('پرداخت محلی تأیید نشد؛ وضعیت سفارش خود را بررسی کنید.');
+      })
+      .catch(() => {
+        if (active) setError('تکمیل پرداخت محلی ممکن نشد؛ دوباره تلاش کنید.');
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [amountToman, orderNumber, token, transactionId]);
+
+  return (
+    <CheckoutShell>
+      <section
+        className="mx-auto flex min-h-[55svh] max-w-xl flex-col items-center justify-center border border-border bg-surface p-8 text-center shadow-card"
+        role={error ? 'alert' : 'status'}
+      >
+        <Icon name={error ? 'warning' : 'shield'} size={24} />
+        <h1 className="mt-4 text-xl">{error ? 'پرداخت انجام نشد' : 'در حال تکمیل پرداخت محلی'}</h1>
+        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+          {error || 'پرداخت آزمایشی بدون اتصال به درگاه خارجی در حال ثبت است.'}
+        </p>
+        {error ? (
+          <Button className="mt-5" asChild variant="outline">
+            <a href={`#checkout/payment-recovery?orderNumber=${encodeURIComponent(orderNumber)}`}>
+              بررسی وضعیت سفارش
+            </a>
+          </Button>
+        ) : null}
+      </section>
     </CheckoutShell>
   );
 }

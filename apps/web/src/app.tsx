@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from 'react';
 
-import { Button } from '@nova/ui';
+import { Badge, Button, Card, Input as UiInput, Select as UiSelect } from '@nova/ui';
 import { ApiClientError } from '@nova/api-client';
 import type {
   AdminCatalogProductListItem,
@@ -59,6 +59,7 @@ import {
   CheckoutConfirmationPage,
   CheckoutPage as StorefrontCheckoutPage,
   CheckoutPaymentRecoveryPage,
+  LocalPaymentPage,
 } from './features/checkout/checkout-page';
 import {
   CustomerAccountPage,
@@ -224,6 +225,7 @@ function AuthPage({
   const verifyOtpMutation = useVerifyCustomerOtp();
   const [phone, setPhone] = useState(() => (isVerify ? readAuthPhone() : ''));
   const [code, setCode] = useState('');
+  const localCode = new URLSearchParams(queryString).get('localCode') ?? '';
   const [formError, setFormError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const challengeId = new URLSearchParams(queryString).get('challengeId') ?? '';
@@ -262,7 +264,9 @@ function AuthPage({
     try {
       const result = await requestOtpMutation.mutateAsync({ phone: phone.trim() });
       writeAuthPhone(phone.trim());
-      window.location.hash = `#auth/verify?challengeId=${encodeURIComponent(result.challengeId)}`;
+      const nextParams = new URLSearchParams({ challengeId: result.challengeId });
+      if (result.localCode) nextParams.set('localCode', result.localCode);
+      window.location.hash = `#auth/verify?${nextParams.toString()}`;
     } catch (error) {
       setFormError(authErrorMessage(error));
     }
@@ -281,7 +285,9 @@ function AuthPage({
       const result = await requestOtpMutation.mutateAsync({ phone: storedPhone });
       writeAuthPhone(storedPhone);
       setSuccessMessage('کد جدید ارسال شد.');
-      window.location.hash = `#auth/verify?challengeId=${encodeURIComponent(result.challengeId)}`;
+      const nextParams = new URLSearchParams({ challengeId: result.challengeId });
+      if (result.localCode) nextParams.set('localCode', result.localCode);
+      window.location.hash = `#auth/verify?${nextParams.toString()}`;
     } catch (error) {
       setFormError(authErrorMessage(error));
     }
@@ -310,7 +316,7 @@ function AuthPage({
         >
           <label className="flex flex-col gap-2 text-sm font-medium">
             {isVerify ? 'کد تأیید' : 'شماره موبایل'}
-            <input
+            <UiInput
               className="min-h-12 border border-border bg-background px-4 text-center outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-accent-soft"
               dir="ltr"
               inputMode={isVerify ? 'numeric' : 'tel'}
@@ -330,6 +336,15 @@ function AuthPage({
             <div className="inline-message inline-message--success" role="status">
               <Icon name="check" size={16} />
               {successMessage}
+            </div>
+          ) : null}
+          {isVerify && localCode ? (
+            <div className="inline-message inline-message--success" role="status">
+              <Icon name="check" size={16} />
+              کد تست محلی:{' '}
+              <strong dir="ltr" className="font-mono tracking-[0.2em]">
+                {localCode}
+              </strong>
             </div>
           ) : null}
           {formError ||
@@ -356,14 +371,14 @@ function AuthPage({
             {isVerify ? 'تغییر شماره' : 'بازگشت به فروشگاه'} <Icon name="arrow-left" size={14} />
           </a>
           {isVerify ? (
-            <button
+            <Button
               className="min-h-11 text-primary underline underline-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
               disabled={isSubmitting}
               onClick={() => void resendCode()}
               type="button"
             >
               {requestOtpMutation.isPending ? 'در حال ارسال...' : 'ارسال دوباره کد'}
-            </button>
+            </Button>
           ) : null}
         </div>
       </section>
@@ -492,11 +507,11 @@ function PreviewStatePage({ state }: { state: PreviewState }) {
 
 type AdminStatusTone = 'success' | 'info' | 'warning' | 'neutral';
 
-const adminStatusClasses: Record<AdminStatusTone, string> = {
-  success: 'bg-success-100 text-success',
-  info: 'bg-info-100 text-info',
-  warning: 'bg-warning-100 text-warning',
-  neutral: 'bg-secondary text-muted-foreground',
+const adminStatusVariants: Record<AdminStatusTone, 'success' | 'info' | 'warning' | 'secondary'> = {
+  success: 'success',
+  info: 'info',
+  warning: 'warning',
+  neutral: 'secondary',
 };
 
 function AdminStatusChip({
@@ -507,11 +522,12 @@ function AdminStatusChip({
   children: ReactNode;
 }) {
   return (
-    <span
-      className={`inline-flex min-h-7 items-center rounded-md px-2.5 py-1 text-[10px] font-medium ${adminStatusClasses[tone]}`}
+    <Badge
+      variant={adminStatusVariants[tone]}
+      className="min-h-7 rounded-md text-[10px] font-medium"
     >
       {children}
-    </span>
+    </Badge>
   );
 }
 
@@ -531,24 +547,27 @@ function AdminMetricCard({
   orderClass: string;
 }) {
   return (
-    <article
-      className={`flex min-h-[124px] flex-col justify-between border border-border bg-surface p-4 shadow-card transition-shadow hover:shadow-float md:p-5 ${orderClass}`}
+    <Card
+      asChild
+      className={`flex min-h-[124px] flex-col justify-between bg-surface p-4 transition-shadow hover:shadow-float md:p-5 ${orderClass}`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <span
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${iconTone}`}
-        >
-          <Icon name={icon} size={20} />
-        </span>
-        <span className="text-right text-xs text-muted-foreground">{label}</span>
-      </div>
-      <div className="text-right">
-        <strong className="block font-display text-2xl leading-none tracking-tight text-foreground md:text-[27px]">
-          {value}
-        </strong>
-        <span className="mt-2 block text-[10px] text-success">{note}</span>
-      </div>
-    </article>
+      <article>
+        <div className="flex items-start justify-between gap-3">
+          <span
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-md ${iconTone}`}
+          >
+            <Icon name={icon} size={20} />
+          </span>
+          <span className="text-right text-xs text-muted-foreground">{label}</span>
+        </div>
+        <div className="text-right">
+          <strong className="block font-display text-2xl leading-none tracking-tight text-foreground md:text-[27px]">
+            {value}
+          </strong>
+          <span className="mt-2 block text-[10px] text-success">{note}</span>
+        </div>
+      </article>
+    </Card>
   );
 }
 
@@ -566,12 +585,12 @@ function AdminSalesChart() {
             فروش و درآمد
           </h2>
         </div>
-        <button
+        <Button
           className="inline-flex min-h-10 items-center gap-2 border border-border bg-background px-3 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
           type="button"
         >
           ۳۰ روز گذشته <Icon name="chevron-down" size={14} />
-        </button>
+        </Button>
       </header>
       <div className="mt-4 flex flex-wrap justify-end gap-4 text-[10px] text-muted-foreground">
         <span className="inline-flex items-center gap-2">
@@ -1000,12 +1019,12 @@ function AdminDashboard() {
           </h1>
           <p className="mt-1 text-xs leading-7 text-muted-foreground">{ADMIN_PREVIEW_NOTICE}</p>
         </div>
-        <button
+        <Button
           className="inline-flex min-h-10 w-max items-center gap-2 border border-border bg-surface px-3 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
           type="button"
         >
           ۳۰ روز گذشته <Icon name="chevron-down" size={14} />
-        </button>
+        </Button>
       </header>
       <section className="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-label="شاخص‌های کلیدی">
         {metrics.map((metric) => (
@@ -1064,8 +1083,14 @@ export function validateStaffLoginInput(
     return { field: 'email', message: 'لطفاً یک ایمیل معتبر وارد کنید.' };
   }
   if (!password.trim()) return { field: 'password', message: 'رمز عبور را وارد کنید.' };
+  if (password.trim().length < 12) {
+    return { field: 'password', message: 'رمز عبور باید حداقل ۱۲ کاراکتر باشد.' };
+  }
   if (!factor.trim()) {
     return { field: 'factor', message: 'کد تأیید دومرحله‌ای یا کد بازیابی را وارد کنید.' };
+  }
+  if (factor.trim().length < 6) {
+    return { field: 'factor', message: 'کد تأیید یا کد بازیابی باید حداقل ۶ کاراکتر باشد.' };
   }
   return null;
 }
@@ -1100,165 +1125,186 @@ function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }
   };
 
   return (
-    <main className="flex min-h-svh items-center justify-center bg-background px-4 py-10" dir="rtl">
-      <section className="w-full max-w-[460px] border border-border bg-surface p-7 text-right shadow-none md:p-8">
-        <div className="flex justify-center">
-          <Logo descriptor="" />
-        </div>
-        <span className="section-heading__eyebrow mt-8 block text-center">NOVA / ADMIN ACCESS</span>
-        <h1 className="mt-5 text-center text-3xl leading-relaxed">ورود به فضای مدیریت</h1>
-        <p className="mx-auto mt-3 max-w-[360px] text-center text-sm leading-8 text-muted-foreground">
-          برای ادامه، رمز عبور و کد تأیید دومرحله‌ای مدیر را وارد کنید.
-        </p>
-        {sessionExpired ? (
-          <p
-            className="mt-6 flex items-start gap-2 border border-error/20 bg-error-soft px-3 py-3 text-sm leading-7 text-error"
-            role="status"
-          >
-            <Icon name="warning" size={17} className="mt-1 shrink-0" />
-            نشست مدیریت منقضی شده است؛ برای ادامه دوباره وارد شوید.
+    <main className="admin-login-page bg-background px-4 py-6 md:px-8 md:py-10" dir="rtl">
+      <div className="admin-login-shell">
+        <aside className="admin-login-visual" aria-label="روایت برند نوا">
+          <img src="/assets/nova-women-lifestyle.webp" alt="" />
+          <div className="admin-login-visual__veil" />
+          <div className="admin-login-visual__copy">
+            <Logo descriptor="ATELIER EDITORIAL" />
+            <p>جزئیات، هویت برند ماست.</p>
+            <span>PEOPLE · FASHION · DETAILS</span>
+          </div>
+          <small>مدیریت دنیای نوا از زیبایی</small>
+        </aside>
+        <section className="admin-login-form border border-border bg-surface p-7 text-right shadow-none md:p-10">
+          <div className="admin-login-form__mark" aria-hidden="true">
+            <Icon name="shield" size={22} />
+          </div>
+          <span className="section-heading__eyebrow mt-7 block">NOVA / ADMIN ACCESS</span>
+          <h1 className="mt-4 text-3xl leading-relaxed">ورود به فضای مدیریت</h1>
+          <p className="mt-3 max-w-[360px] text-sm leading-8 text-muted-foreground">
+            برای ادامه، رمز عبور و کد تأیید دومرحله‌ای مدیر را وارد کنید.
           </p>
-        ) : null}
-        <form className="mt-7 flex flex-col gap-5" noValidate onSubmit={handleSubmit}>
-          <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-email">
-            <span>ایمیل سازمانی</span>
-            <span className="relative block">
-              <input
-                id="staff-email"
-                className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'email' ? 'border-destructive' : 'border-border'}`}
-                dir="ltr"
-                name="email"
-                autoComplete="username"
-                required
-                type="email"
-                value={email}
-                aria-describedby={fieldError?.field === 'email' ? 'staff-email-error' : undefined}
-                aria-invalid={fieldError?.field === 'email' ? 'true' : undefined}
-                onChange={(event) => {
-                  setEmail(event.target.value);
-                  if (fieldError?.field === 'email') setFieldError(null);
-                }}
-                placeholder="admin@example.com"
-              />
-              <Icon
-                name="mail"
-                size={18}
-                className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              />
-            </span>
-            {fieldError?.field === 'email' ? (
-              <span
-                id="staff-email-error"
-                className="flex items-start gap-1 text-sm leading-6 text-destructive"
-                role="alert"
-              >
-                <Icon name="warning" size={16} className="mt-1 shrink-0" />
-                {fieldError.message}
-              </span>
-            ) : null}
-          </label>
-          <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-password">
-            <span>رمز عبور</span>
-            <span className="relative block">
-              <input
-                id="staff-password"
-                className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'password' ? 'border-destructive' : 'border-border'}`}
-                dir="ltr"
-                name="password"
-                autoComplete="current-password"
-                required
-                type="password"
-                value={password}
-                aria-describedby={
-                  fieldError?.field === 'password' ? 'staff-password-error' : undefined
-                }
-                aria-invalid={fieldError?.field === 'password' ? 'true' : undefined}
-                onChange={(event) => {
-                  setPassword(event.target.value);
-                  if (fieldError?.field === 'password') setFieldError(null);
-                }}
-              />
-              <Icon
-                name="eye"
-                size={18}
-                className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              />
-            </span>
-            {fieldError?.field === 'password' ? (
-              <span
-                id="staff-password-error"
-                className="flex items-start gap-1 text-sm leading-6 text-destructive"
-                role="alert"
-              >
-                <Icon name="warning" size={16} className="mt-1 shrink-0" />
-                {fieldError.message}
-              </span>
-            ) : null}
-          </label>
-          <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-factor">
-            <span>کد تأیید دومرحله‌ای یا کد بازیابی</span>
-            <span className="relative block">
-              <input
-                id="staff-factor"
-                className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'factor' ? 'border-destructive' : 'border-border'}`}
-                dir="ltr"
-                name="factor"
-                autoComplete="one-time-code"
-                inputMode="numeric"
-                required
-                type="text"
-                value={factor}
-                aria-describedby={fieldError?.field === 'factor' ? 'staff-factor-error' : undefined}
-                aria-invalid={fieldError?.field === 'factor' ? 'true' : undefined}
-                onChange={(event) => {
-                  setFactor(event.target.value);
-                  if (fieldError?.field === 'factor') setFieldError(null);
-                }}
-              />
-              <Icon
-                name="shield"
-                size={18}
-                className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-              />
-            </span>
-            {fieldError?.field === 'factor' ? (
-              <span
-                id="staff-factor-error"
-                className="flex items-start gap-1 text-sm leading-6 text-destructive"
-                role="alert"
-              >
-                <Icon name="warning" size={16} className="mt-1 shrink-0" />
-                {fieldError.message}
-              </span>
-            ) : null}
-          </label>
-          {formError ? (
+          {sessionExpired ? (
             <p
-              className="flex items-start gap-2 border border-error/20 bg-error-soft px-3 py-2 text-sm leading-7 text-error"
-              role="alert"
-              aria-live="polite"
+              className="mt-6 flex items-start gap-2 border border-error/20 bg-error-soft px-3 py-3 text-sm leading-7 text-error"
+              role="status"
             >
               <Icon name="warning" size={17} className="mt-1 shrink-0" />
-              {formError}
+              نشست مدیریت منقضی شده است؛ برای ادامه دوباره وارد شوید.
             </p>
           ) : null}
-          <Button
-            className="w-full !rounded-control"
-            size="lg"
-            type="submit"
-            disabled={loginMutation.isPending}
+          <form className="mt-7 flex flex-col gap-5" noValidate onSubmit={handleSubmit}>
+            <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-email">
+              <span>ایمیل سازمانی</span>
+              <span className="relative block">
+                <UiInput
+                  id="staff-email"
+                  className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'email' ? 'border-destructive' : 'border-border'}`}
+                  dir="ltr"
+                  name="email"
+                  autoComplete="username"
+                  required
+                  type="email"
+                  value={email}
+                  aria-describedby={fieldError?.field === 'email' ? 'staff-email-error' : undefined}
+                  aria-invalid={fieldError?.field === 'email' ? 'true' : undefined}
+                  onChange={(event) => {
+                    setEmail(event.target.value);
+                    if (fieldError?.field === 'email') setFieldError(null);
+                  }}
+                  placeholder="admin@example.com"
+                />
+                <Icon
+                  name="mail"
+                  size={18}
+                  className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                />
+              </span>
+              {fieldError?.field === 'email' ? (
+                <span
+                  id="staff-email-error"
+                  className="flex items-start gap-1 text-sm leading-6 text-destructive"
+                  role="alert"
+                >
+                  <Icon name="warning" size={16} className="mt-1 shrink-0" />
+                  {fieldError.message}
+                </span>
+              ) : null}
+            </label>
+            <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-password">
+              <span>رمز عبور</span>
+              <span className="relative block">
+                <UiInput
+                  id="staff-password"
+                  className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'password' ? 'border-destructive' : 'border-border'}`}
+                  dir="ltr"
+                  name="password"
+                  autoComplete="current-password"
+                  required
+                  type="password"
+                  value={password}
+                  aria-describedby={
+                    fieldError?.field === 'password' ? 'staff-password-error' : undefined
+                  }
+                  aria-invalid={fieldError?.field === 'password' ? 'true' : undefined}
+                  onChange={(event) => {
+                    setPassword(event.target.value);
+                    if (fieldError?.field === 'password') setFieldError(null);
+                  }}
+                />
+                <Icon
+                  name="eye"
+                  size={18}
+                  className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                />
+              </span>
+              {fieldError?.field === 'password' ? (
+                <span
+                  id="staff-password-error"
+                  className="flex items-start gap-1 text-sm leading-6 text-destructive"
+                  role="alert"
+                >
+                  <Icon name="warning" size={16} className="mt-1 shrink-0" />
+                  {fieldError.message}
+                </span>
+              ) : null}
+            </label>
+            <label className="flex flex-col gap-2 text-sm font-medium" htmlFor="staff-factor">
+              <span>کد تأیید دومرحله‌ای یا کد بازیابی</span>
+              <span className="relative block">
+                <UiInput
+                  id="staff-factor"
+                  className={`min-h-12 w-full border bg-background pe-10 ps-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft ${fieldError?.field === 'factor' ? 'border-destructive' : 'border-border'}`}
+                  dir="ltr"
+                  name="factor"
+                  autoComplete="one-time-code"
+                  inputMode="numeric"
+                  required
+                  type="text"
+                  value={factor}
+                  aria-describedby={
+                    fieldError?.field === 'factor' ? 'staff-factor-error' : undefined
+                  }
+                  aria-invalid={fieldError?.field === 'factor' ? 'true' : undefined}
+                  onChange={(event) => {
+                    setFactor(event.target.value);
+                    if (fieldError?.field === 'factor') setFieldError(null);
+                  }}
+                />
+                <Icon
+                  name="shield"
+                  size={18}
+                  className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                />
+              </span>
+              {fieldError?.field === 'factor' ? (
+                <span
+                  id="staff-factor-error"
+                  className="flex items-start gap-1 text-sm leading-6 text-destructive"
+                  role="alert"
+                >
+                  <Icon name="warning" size={16} className="mt-1 shrink-0" />
+                  {fieldError.message}
+                </span>
+              ) : null}
+            </label>
+            {formError ? (
+              <p
+                className="flex items-start gap-2 border border-error/20 bg-error-soft px-3 py-2 text-sm leading-7 text-error"
+                role="alert"
+                aria-live="polite"
+              >
+                <Icon name="warning" size={17} className="mt-1 shrink-0" />
+                {formError}
+              </p>
+            ) : null}
+            <Button
+              className="w-full !rounded-control"
+              size="lg"
+              type="submit"
+              disabled={loginMutation.isPending}
+            >
+              {loginMutation.isPending ? 'در حال بررسی...' : 'ورود به پنل'}
+              <Icon name="arrow-right" size={17} />
+            </Button>
+          </form>
+          <div className="admin-login-form__security mt-6">
+            <Icon name="shield" size={17} />
+            <div>
+              <strong>دسترسی امن و رمزگذاری‌شده</strong>
+              <span>اطلاعات شما با بالاترین سطح امنیت محافظت می‌شود.</span>
+            </div>
+          </div>
+          <a
+            className="mt-6 flex items-center justify-center gap-2 border-t border-border pt-5 text-sm text-muted-foreground transition-colors hover:text-primary"
+            href="#home"
           >
-            {loginMutation.isPending ? 'در حال بررسی...' : 'ورود به پنل'}
-            <Icon name="arrow-right" size={17} />
-          </Button>
-        </form>
-        <a
-          className="mt-5 flex items-center justify-center gap-2 border-t border-border pt-5 text-sm text-muted-foreground transition-colors hover:text-primary"
-          href="#home"
-        >
-          بازگشت به فروشگاه <Icon name="arrow-right" size={15} />
-        </a>
-      </section>
+            بازگشت به فروشگاه <Icon name="arrow-right" size={15} />
+          </a>
+        </section>
+      </div>
     </main>
   );
 }
@@ -1283,7 +1329,7 @@ function AdminLogoutButton({
   };
 
   return (
-    <button
+    <Button
       className={className}
       type="button"
       disabled={logoutMutation.isPending}
@@ -1299,7 +1345,7 @@ function AdminLogoutButton({
       ) : (
         label
       )}
-    </button>
+    </Button>
   );
 }
 
@@ -1359,9 +1405,9 @@ export function AdminLegacyPage({ page }: { page: string }) {
             label="خروج"
             className="icon-button border-0 md:hidden disabled:opacity-50"
           />
-          <button className="icon-button" type="button" aria-label="اعلان‌ها">
+          <Button className="icon-button" type="button" aria-label="اعلان‌ها">
             <Icon name="bell" size={19} />
-          </button>
+          </Button>
           <div>
             <span>سلام، مدیر نمونه</span>
             <small>آخرین ورود: داده نمایشی</small>
@@ -1375,10 +1421,10 @@ export function AdminLegacyPage({ page }: { page: string }) {
               <p className="mt-2 text-[10px] text-muted-foreground">{ADMIN_PREVIEW_NOTICE}</p>
             </div>
             <div className="admin-page__actions">
-              <button className="admin-secondary" type="button">
+              <Button className="admin-secondary" type="button">
                 <Icon name="settings" size={16} />
                 تنظیمات
-              </button>
+              </Button>
               {page === 'products' ? (
                 <Button asChild>
                   <a href="#admin/products/new">
@@ -1434,9 +1480,9 @@ export function AdminLegacyPage({ page }: { page: string }) {
                   <span dir="ltr">{id}</span>
                   <strong>{name}</strong>
                   <span className="status-badge">{status}</span>
-                  <button className="icon-button" type="button" aria-label={`مشاهده ${id}`}>
+                  <Button className="icon-button" type="button" aria-label={`مشاهده ${id}`}>
                     <Icon name="arrow-left" size={16} />
-                  </button>
+                  </Button>
                 </div>
               ))}
             </section>
@@ -1922,13 +1968,13 @@ function AdminProductsPage() {
         <section className="min-w-0 flex-1">
           <header className="border-b border-border bg-surface px-4 py-4 sm:px-6 lg:px-8" dir="ltr">
             <div className="hidden items-center gap-3 lg:flex">
-              <button
+              <Button
                 className="flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 type="button"
                 aria-label="اعلان‌ها"
               >
                 <Icon name="bell" size={19} />
-              </button>
+              </Button>
               <img
                 className="h-10 w-10 rounded-full object-cover"
                 src="/assets/nova-hero-men.webp"
@@ -1988,7 +2034,7 @@ function AdminProductsPage() {
                     size={18}
                     className="pointer-events-none absolute inset-y-0 right-3 my-auto text-muted-foreground"
                   />
-                  <input
+                  <UiInput
                     className="min-h-11 w-full rounded-control border border-border bg-background px-10 text-xs outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-accent-soft"
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
@@ -1997,7 +2043,7 @@ function AdminProductsPage() {
                   />
                 </label>
 
-                <button
+                <Button
                   className={`order-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-control border px-4 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:order-3 ${quickFilterActive ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-background hover:border-primary hover:text-primary'}`}
                   type="button"
                   aria-pressed={quickFilterActive}
@@ -2005,11 +2051,11 @@ function AdminProductsPage() {
                 >
                   <Icon name="filter" size={17} />
                   فیلترها
-                </button>
+                </Button>
 
                 <label className="relative order-4 min-w-0 sm:order-2 sm:min-w-[138px]">
                   <span className="sr-only">دسته‌بندی</span>
-                  <select
+                  <UiSelect
                     className="min-h-11 w-full appearance-none rounded-control border border-border bg-background px-3 pl-9 text-xs outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-accent-soft"
                     value={category}
                     onChange={(event) => {
@@ -2023,7 +2069,7 @@ function AdminProductsPage() {
                         {item.label}
                       </option>
                     ))}
-                  </select>
+                  </UiSelect>
                   <Icon
                     name="chevron-down"
                     size={15}
@@ -2033,7 +2079,7 @@ function AdminProductsPage() {
 
                 <label className="relative order-5 min-w-0 sm:order-1 sm:min-w-[138px]">
                   <span className="sr-only">وضعیت</span>
-                  <select
+                  <UiSelect
                     className="min-h-11 w-full appearance-none rounded-control border border-border bg-background px-3 pl-9 text-xs outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-accent-soft"
                     value={status}
                     onChange={(event) => {
@@ -2045,7 +2091,7 @@ function AdminProductsPage() {
                     <option value="PUBLISHED">فعال</option>
                     <option value="DRAFT">پیش‌نویس</option>
                     <option value="ARCHIVED">بایگانی شده</option>
-                  </select>
+                  </UiSelect>
                   <Icon
                     name="chevron-down"
                     size={15}
@@ -2073,7 +2119,7 @@ function AdminProductsPage() {
                 <p className="mx-auto mt-2 max-w-md text-xs leading-7 text-muted-foreground">
                   {dataState.message}
                 </p>
-                <button
+                <Button
                   className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-control bg-primary px-5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                   type="button"
                   onClick={() =>
@@ -2082,7 +2128,7 @@ function AdminProductsPage() {
                 >
                   <Icon name="refresh" size={16} />
                   دوباره تلاش کنید
-                </button>
+                </Button>
               </section>
             ) : (
               <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(300px,0.9fr)_minmax(0,1.45fr)]">
@@ -2309,7 +2355,7 @@ function AdminProductsPage() {
                             </td>
                             <td className="px-4 py-3">
                               <div className="relative flex items-center justify-end gap-2">
-                                <button
+                                <Button
                                   className="flex h-9 w-9 items-center justify-center rounded-control text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                                   type="button"
                                   aria-label={`گزینه‌های ${product.name}`}
@@ -2322,7 +2368,7 @@ function AdminProductsPage() {
                                   }
                                 >
                                   <Icon name="more-vertical" size={17} />
-                                </button>
+                                </Button>
                                 <a
                                   className="flex h-9 w-9 items-center justify-center rounded-control border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                                   href={`#admin/products/${product.slug}/edit`}
@@ -2424,7 +2470,7 @@ function AdminProductsPage() {
                       از {formatPersianNumber(resultCount)} محصول
                     </span>
                     <nav className="flex items-center gap-1" aria-label="صفحه‌بندی محصولات">
-                      <button
+                      <Button
                         className="flex h-8 w-8 items-center justify-center rounded-control border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-45"
                         type="button"
                         aria-label="صفحه قبلی"
@@ -2432,15 +2478,15 @@ function AdminProductsPage() {
                         onClick={() => setPage((current) => Math.max(1, current - 1))}
                       >
                         <Icon name="arrow-right" size={15} />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         className="flex h-8 min-w-8 items-center justify-center rounded-control bg-primary px-2 text-[10px] text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                         type="button"
                         aria-current="page"
                       >
                         {formatPersianNumber(page)}
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         className="flex h-8 w-8 items-center justify-center rounded-control border border-border text-muted-foreground transition-colors hover:border-primary hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                         type="button"
                         aria-label="صفحه بعدی"
@@ -2448,7 +2494,7 @@ function AdminProductsPage() {
                         onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
                       >
                         <Icon name="arrow-left" size={15} />
-                      </button>
+                      </Button>
                     </nav>
                   </div>
                 </section>
@@ -2570,100 +2616,19 @@ export function AdminRouteUnavailablePage({ page }: { page: string }) {
   );
 }
 
-export function AdminPage({ page, queryString = '' }: { page: string; queryString?: string }) {
-  const isLoginPage = page === 'login';
-  const sessionExpired = new URLSearchParams(queryString).get('expired') === '1';
-  const staffQuery = useStaffUser(!isLoginPage);
-  const authFailure = isStaffAuthFailure(staffQuery.error);
-  const authorizationFailure = isStaffAuthorizationFailure(staffQuery.error);
-  const hasStaffSession = Boolean(staffQuery.data) && !authFailure;
-  const staffRoles = staffQuery.data?.roles;
-  const allowDevelopmentPreview = shouldShowAdminDashboardPreview({
-    page,
-    isDevelopment: import.meta.env.DEV,
-    hasStaffSession: Boolean(staffQuery.data),
-  });
-
-  if (isLoginPage) return <AdminLoginPage sessionExpired={sessionExpired} />;
-  if (authorizationFailure) return <AdminPermissionDeniedPage />;
-  if (staffQuery.isPending && !allowDevelopmentPreview) return <AdminSessionLoading />;
-  if (authFailure && staffQuery.data) return <AdminLoginPage sessionExpired />;
-  if (!hasStaffSession && !allowDevelopmentPreview) return <AdminLoginPage />;
-  if (page === 'admin' && hasStaffSession && !hasAdminDashboardRole(staffRoles)) {
-    return <AdminPermissionDeniedPage />;
-  }
-  const [adminSection, ...adminPathSegments] = page.split('/');
-  if (adminSection === 'orders') {
-    const encodedOrderNumber = adminPathSegments.join('/');
-    return encodedOrderNumber ? (
-      <AdminOrderDetailPage
-        orderNumber={decodeHashSegment(encodedOrderNumber)}
-        staffRoles={staffRoles}
-      />
-    ) : (
-      <AdminOrdersPage staffRoles={staffRoles} />
-    );
-  }
-  if (
-    adminSection === 'payments' ||
-    adminSection === 'customers' ||
-    adminSection === 'notifications' ||
-    adminSection === 'audit'
-  ) {
-    return <AdminSupportFinancePage view={adminSection} queryString={queryString} />;
-  }
-  if (adminSection === 'catalog' || adminSection === 'inventory') {
-    const [subsection, encodedId] = adminPathSegments;
-    if (adminSection === 'catalog' && subsection === 'categories') {
-      return <AdminCatalogInventoryPage view="categories" staffRoles={staffRoles} />;
-    }
-    if (adminSection === 'catalog' && subsection === 'products' && encodedId === 'new') {
-      return <AdminCatalogInventoryPage view="product" staffRoles={staffRoles} />;
-    }
-    if (adminSection === 'catalog' && subsection === 'products' && encodedId) {
-      return (
-        <AdminCatalogInventoryPage
-          view="product"
-          productId={decodeHashSegment(encodedId)}
-          staffRoles={staffRoles}
-        />
-      );
-    }
-    if (adminSection === 'inventory') {
-      return (
-        <AdminCatalogInventoryPage
-          view="inventory"
-          variantId={encodedId ? decodeHashSegment(encodedId) : undefined}
-          staffRoles={staffRoles}
-        />
-      );
-    }
-    return <AdminCatalogInventoryPage view="catalog" staffRoles={staffRoles} />;
-  }
-  if (adminSection === 'content') {
-    const [subsection, encodedId] = adminPathSegments;
-    if (subsection === 'seo' || subsection === 'redirects') {
-      return <AdminContentSeoPage view={subsection} staffRoles={staffRoles} />;
-    }
-    if (subsection === 'pages' && encodedId) {
-      return (
-        <AdminContentSeoPage
-          view="content"
-          pageId={decodeHashSegment(encodedId)}
-          staffRoles={staffRoles}
-        />
-      );
-    }
-    return <AdminContentSeoPage view="content" staffRoles={staffRoles} />;
-  }
-  if (page === 'products/new') {
-    return <AdminCatalogInventoryPage view="product" staffRoles={staffRoles} />;
-  }
-  if (page === 'products') return <AdminProductsPage />;
-  if (page !== 'admin') {
-    if (!allowDevelopmentPreview) return <AdminRouteUnavailablePage page={page} />;
-    return <AdminLegacyPage page={page} />;
-  }
+function AdminWorkspaceShell({
+  page,
+  allowDevelopmentPreview,
+  adminDisplayName,
+  adminAccountLabel,
+  children,
+}: {
+  page: string;
+  allowDevelopmentPreview: boolean;
+  adminDisplayName: string;
+  adminAccountLabel: string;
+  children: ReactNode;
+}) {
   const nav = [
     ['admin', 'داشبورد', 'home'],
     ['catalog', 'محصولات', 'bag'],
@@ -2676,20 +2641,20 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
     ['promotions', 'تخفیف‌ها', 'tag'],
     ['operations', 'تنظیمات', 'settings'],
   ].map(([key, label, icon]) => ({ key, label, icon: icon as IconName }));
-  const adminDisplayName = allowDevelopmentPreview
-    ? 'مدیر نمونه'
-    : (staffQuery.data?.email ?? 'کاربر مدیریت');
-  const adminAccountLabel = allowDevelopmentPreview ? 'حساب نمایشی' : 'نشست فعال';
+  const isNavActive = (key: string) =>
+    page === key ||
+    (key === 'catalog' && page.startsWith('catalog/products')) ||
+    (key !== 'catalog' && page.startsWith(`${key}/`));
 
   return (
-    <main className="admin-shell min-h-svh bg-[#f6f6f4] text-foreground">
-      <aside className="admin-sidebar flex-[0_0_194px] !bg-surface !text-foreground px-3 py-6">
+    <main className="admin-shell min-h-svh bg-background text-foreground">
+      <aside className="admin-sidebar flex-[0_0_194px] px-3 py-6">
         <Logo descriptor="ADMIN PANEL" />
-        <span className="admin-sidebar__label !text-muted-foreground">فضای مدیریت</span>
+        <span className="admin-sidebar__label">فضای مدیریت</span>
         <nav className="flex flex-col gap-1" aria-label="ناوبری مدیریت">
           {nav.map((item) => (
             <a
-              className={`flex min-h-11 items-center gap-3 rounded-md px-3 text-xs !text-foreground/80 transition-colors ${page === item.key || page.startsWith(`${item.key}/`) ? '!bg-primary !text-primary-foreground' : 'hover:!bg-secondary'}`}
+              className={`flex min-h-11 items-center gap-3 rounded-md px-3 text-xs transition-colors ${isNavActive(item.key ?? '') ? 'is-active' : ''}`}
               href={`#admin${item.key === 'admin' ? '' : `/${item.key}`}`}
               key={item.key}
             >
@@ -2698,7 +2663,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
             </a>
           ))}
         </nav>
-        <div className="mt-auto border-t !border-border pt-5">
+        <div className="mt-auto border-t border-border pt-5">
           <div className="flex items-center gap-3 px-2">
             <img
               className="h-10 w-10 rounded-full object-cover"
@@ -2706,15 +2671,11 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
               alt={allowDevelopmentPreview ? '' : `پروفایل ${adminDisplayName}`}
             />
             <div className="min-w-0 text-right">
-              <strong className="block truncate text-xs !text-foreground">
-                {adminDisplayName}
-              </strong>
-              <small className="mt-1 block text-[9px] !text-muted-foreground">
-                {adminAccountLabel}
-              </small>
+              <strong className="block truncate text-xs">{adminDisplayName}</strong>
+              <small className="mt-1 block text-[9px] opacity-70">{adminAccountLabel}</small>
             </div>
           </div>
-          <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-[10px] !text-muted-foreground transition-colors hover:!text-foreground disabled:opacity-50" />
+          <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-[10px] opacity-75 transition-colors hover:opacity-100 disabled:opacity-50" />
         </div>
       </aside>
       <section className="admin-content min-h-svh w-full">
@@ -2737,12 +2698,12 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
             </a>
           </div>
           <form
-            className="hidden w-full max-w-[375px] items-center gap-2 rounded-md border border-border bg-background px-3 md:flex"
+            className="hidden w-full max-w-[375px] items-center gap-2 rounded-control border border-border bg-background px-3 md:flex"
             dir="rtl"
             onSubmit={(event) => event.preventDefault()}
           >
             <Icon name="search" size={18} className="text-muted-foreground" />
-            <input
+            <UiInput
               className="min-h-9 min-w-0 flex-1 bg-transparent text-xs outline-none"
               aria-label="جست‌وجو در پنل مدیریت"
               placeholder="جست‌وجو در محصولات، سفارش‌ها، مشتریان ..."
@@ -2752,7 +2713,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
             </kbd>
           </form>
           <div className="ml-auto hidden !flex-row items-center gap-4 md:flex" dir="rtl">
-            <button
+            <Button
               className="relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-secondary"
               type="button"
               aria-label="اعلان‌ها"
@@ -2763,7 +2724,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
                   ۱
                 </span>
               ) : null}
-            </button>
+            </Button>
             <img
               className="h-9 w-9 rounded-full bg-secondary object-cover"
               src="/assets/nova-hero-men.webp"
@@ -2772,22 +2733,16 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
             <span className="hidden text-xs text-muted-foreground lg:inline">
               {allowDevelopmentPreview ? 'تاریخ نمایشی' : 'نشست فعال'}
             </span>
-            <button
+            <Button
               className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors hover:bg-accent-soft"
               type="button"
               aria-label="تغییر پوسته"
             >
               <Icon name="sparkles" size={19} />
-            </button>
+            </Button>
           </div>
         </header>
-        <div className="admin-page bg-[#f6f6f4] p-4 pb-24 md:p-6 md:pb-8 lg:p-8">
-          {allowDevelopmentPreview ? (
-            <AdminDashboard />
-          ) : (
-            <AdminDashboardPage staffRoles={staffRoles} />
-          )}
-        </div>
+        <div className="admin-page bg-background p-4 pb-24 md:p-6 md:pb-8 lg:p-8">{children}</div>
       </section>
       <nav
         className="fixed inset-x-0 bottom-0 z-30 flex min-h-[66px] items-stretch justify-around border-t border-border bg-surface/95 px-2 pb-[max(7px,env(safe-area-inset-bottom))] pt-1 shadow-float backdrop-blur md:hidden"
@@ -2800,7 +2755,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
           ['operations', 'بیشتر', 'menu'],
         ].map(([key, label, icon]) => (
           <a
-            className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-[10px] ${page === key ? 'text-primary' : 'text-muted-foreground'}`}
+            className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-[10px] ${isNavActive(key ?? '') ? 'text-primary' : 'text-muted-foreground'}`}
             href={`#admin${key === 'admin' ? '' : `/${key}`}`}
             key={key}
           >
@@ -2810,6 +2765,128 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
         ))}
       </nav>
     </main>
+  );
+}
+
+export function AdminPage({ page, queryString = '' }: { page: string; queryString?: string }) {
+  const isLoginPage = page === 'login';
+  const sessionExpired = new URLSearchParams(queryString).get('expired') === '1';
+  const staffQuery = useStaffUser(!isLoginPage);
+  const authFailure = isStaffAuthFailure(staffQuery.error);
+  const authorizationFailure = isStaffAuthorizationFailure(staffQuery.error);
+  const hasStaffSession = Boolean(staffQuery.data) && !authFailure;
+  const staffRoles = staffQuery.data?.roles;
+  const allowDevelopmentPreview = shouldShowAdminDashboardPreview({
+    page,
+    isDevelopment: import.meta.env.DEV,
+    hasStaffSession: Boolean(staffQuery.data),
+  });
+
+  if (isLoginPage) return <AdminLoginPage sessionExpired={sessionExpired} />;
+  if (authorizationFailure) return <AdminPermissionDeniedPage />;
+  if (staffQuery.isPending && !allowDevelopmentPreview) return <AdminSessionLoading />;
+  if (authFailure && staffQuery.data) return <AdminLoginPage sessionExpired />;
+  if (!hasStaffSession && !allowDevelopmentPreview) return <AdminLoginPage />;
+  if (page === 'admin' && hasStaffSession && !hasAdminDashboardRole(staffRoles)) {
+    return <AdminPermissionDeniedPage />;
+  }
+  const adminDisplayName = allowDevelopmentPreview
+    ? 'مدیر نمونه'
+    : (staffQuery.data?.email ?? 'کاربر مدیریت');
+  const adminAccountLabel = allowDevelopmentPreview ? 'حساب نمایشی' : 'نشست فعال';
+  const withWorkspaceShell = (content: ReactNode) => (
+    <AdminWorkspaceShell
+      page={page}
+      allowDevelopmentPreview={allowDevelopmentPreview}
+      adminDisplayName={adminDisplayName}
+      adminAccountLabel={adminAccountLabel}
+    >
+      {content}
+    </AdminWorkspaceShell>
+  );
+  const [adminSection, ...adminPathSegments] = page.split('/');
+  if (adminSection === 'orders') {
+    const encodedOrderNumber = adminPathSegments.join('/');
+    return withWorkspaceShell(
+      encodedOrderNumber ? (
+        <AdminOrderDetailPage
+          orderNumber={decodeHashSegment(encodedOrderNumber)}
+          staffRoles={staffRoles}
+        />
+      ) : (
+        <AdminOrdersPage staffRoles={staffRoles} />
+      ),
+    );
+  }
+  if (
+    adminSection === 'payments' ||
+    adminSection === 'customers' ||
+    adminSection === 'notifications' ||
+    adminSection === 'audit'
+  ) {
+    return withWorkspaceShell(
+      <AdminSupportFinancePage view={adminSection} queryString={queryString} />,
+    );
+  }
+  if (adminSection === 'catalog' || adminSection === 'inventory') {
+    const [subsection, encodedId] = adminPathSegments;
+    if (adminSection === 'catalog' && subsection === 'categories') {
+      return withWorkspaceShell(
+        <AdminCatalogInventoryPage view="categories" staffRoles={staffRoles} />,
+      );
+    }
+    if (adminSection === 'catalog' && subsection === 'products' && encodedId === 'new') {
+      return withWorkspaceShell(
+        <AdminCatalogInventoryPage view="product" staffRoles={staffRoles} />,
+      );
+    }
+    if (adminSection === 'catalog' && subsection === 'products' && encodedId) {
+      return withWorkspaceShell(
+        <AdminCatalogInventoryPage
+          view="product"
+          productId={decodeHashSegment(encodedId)}
+          staffRoles={staffRoles}
+        />,
+      );
+    }
+    if (adminSection === 'inventory') {
+      return withWorkspaceShell(
+        <AdminCatalogInventoryPage
+          view="inventory"
+          variantId={encodedId ? decodeHashSegment(encodedId) : undefined}
+          staffRoles={staffRoles}
+        />,
+      );
+    }
+    return withWorkspaceShell(<AdminCatalogInventoryPage view="catalog" staffRoles={staffRoles} />);
+  }
+  if (adminSection === 'content') {
+    const [subsection, encodedId] = adminPathSegments;
+    if (subsection === 'seo' || subsection === 'redirects') {
+      return withWorkspaceShell(<AdminContentSeoPage view={subsection} staffRoles={staffRoles} />);
+    }
+    if (subsection === 'pages' && encodedId) {
+      return withWorkspaceShell(
+        <AdminContentSeoPage
+          view="content"
+          pageId={decodeHashSegment(encodedId)}
+          staffRoles={staffRoles}
+        />,
+      );
+    }
+    return withWorkspaceShell(<AdminContentSeoPage view="content" staffRoles={staffRoles} />);
+  }
+  if (page === 'products/new') {
+    return withWorkspaceShell(<AdminCatalogInventoryPage view="product" staffRoles={staffRoles} />);
+  }
+  if (page === 'products') return withWorkspaceShell(<AdminProductsPage />);
+  if (page !== 'admin') {
+    if (!allowDevelopmentPreview)
+      return withWorkspaceShell(<AdminRouteUnavailablePage page={page} />);
+    return withWorkspaceShell(<AdminLegacyPage page={page} />);
+  }
+  return withWorkspaceShell(
+    allowDevelopmentPreview ? <AdminDashboard /> : <AdminDashboardPage staffRoles={staffRoles} />,
   );
 }
 
@@ -2945,6 +3022,8 @@ export function RouteView({
       return <PreviewStatePage state={resolved.state} />;
     case 'checkout-confirmation':
       return <CheckoutConfirmationPage queryString={resolved.queryString} />;
+    case 'local-payment':
+      return <LocalPaymentPage queryString={resolved.queryString} />;
     case 'checkout':
       return (
         <StorefrontCheckoutPage

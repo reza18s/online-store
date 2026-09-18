@@ -7,7 +7,13 @@ import {
   type CustomerOrderDetail,
   type CustomerReturnReason,
 } from '@nova/api-client';
-import { Button } from '@nova/ui';
+import {
+  Button,
+  Checkbox,
+  Input as UiInput,
+  Select as UiSelect,
+  Textarea as UiTextarea,
+} from '@nova/ui';
 
 import {
   useCreateCustomerAddress,
@@ -31,6 +37,7 @@ import {
   formatPersianNumber,
   formatToman,
   getReturnEligibility,
+  getReturnOrderState,
   isCustomerActive,
   isOfflineError,
   isPermissionError,
@@ -246,7 +253,7 @@ function AccountLayout({
               {logoutError}
             </p>
           ) : null}
-          <button
+          <Button
             className="mt-3 flex min-h-11 items-center gap-2 px-3 text-sm text-destructive transition-colors hover:text-destructive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50"
             disabled={logoutPending}
             onClick={onLogout}
@@ -254,7 +261,15 @@ function AccountLayout({
           >
             <Icon name="close" size={17} />
             {logoutPending ? 'در حال خروج...' : 'خروج از حساب'}
-          </button>
+          </Button>
+          <div className="account-nav__promo">
+            <img src="/assets/nova-materials.webp" alt="بافت‌های طبیعی آتلیه نوا" />
+            <div>
+              <span>NOVA / ATELIER</span>
+              <strong>به دنیای نوا بپیوندید</strong>
+              <a href="#campaign">مشاهده کالکشن</a>
+            </div>
+          </div>
         </aside>
         <section className="account-content">{children}</section>
       </div>
@@ -339,6 +354,19 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
         <h1>{accountTitles[activeSection]}</h1>
         <p>اطلاعات و سفارش‌های شما در یک نگاه.</p>
       </header>
+      {activeSection === 'dashboard' ? (
+        <section className="account-welcome" aria-labelledby="account-welcome-title">
+          <img src="/assets/nova-women-lifestyle.webp" alt="استایل آرام و روزمره نوا" />
+          <div>
+            <span className="section-heading__eyebrow">NOVA / ATELIER</span>
+            <h2 id="account-welcome-title">خوش آمدید به دنیای نوا</h2>
+            <p>انتخاب‌های شما، سفارش‌ها و پیشنهادهای شخصی‌سازی‌شده در یک نگاه.</p>
+            <a href="#products/new">
+              دیدن انتخاب‌های تازه <Icon name="arrow-left" size={15} />
+            </a>
+          </div>
+        </section>
+      ) : null}
       {activeSection === 'profile' ? (
         <ProfilePanel customer={customer} />
       ) : activeSection === 'orders' ? (
@@ -444,13 +472,13 @@ function InlineQueryError({ error, onRetry }: { error: unknown; onRetry: () => v
             : apiErrorMessage(error, 'دریافت اطلاعات انجام نشد.')}
       </span>
       {!isPermissionError(error) && !isUnauthorizedError(error) ? (
-        <button
+        <Button
           className="mr-auto min-h-8 underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           onClick={onRetry}
           type="button"
         >
           تلاش دوباره
-        </button>
+        </Button>
       ) : null}
     </div>
   );
@@ -479,14 +507,14 @@ function CustomerOrderListContent({ query }: { query: ReturnType<typeof useCusto
     <>
       <div className="mb-5 flex flex-wrap items-center gap-2" aria-label="فیلتر سفارش‌ها">
         {statuses.map((item) => (
-          <button
+          <Button
             className={`min-h-11 border px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${status === item ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
             key={item}
             onClick={() => setStatus(item)}
             type="button"
           >
             {item === 'ALL' ? 'همه' : orderStatusCopy[item]}
-          </button>
+          </Button>
         ))}
       </div>
       {activeQuery.isPending ? (
@@ -720,7 +748,7 @@ function CustomerAddressForm({
       </div>
       <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
         نشانی کامل
-        <textarea
+        <UiTextarea
           className="border border-border bg-background px-3 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
           rows={4}
           value={form.addressLine}
@@ -730,9 +758,7 @@ function CustomerAddressForm({
         />
       </label>
       <label className="mt-4 flex min-h-11 items-center gap-2 text-sm text-muted-foreground">
-        <input
-          className="h-4 w-4 accent-primary"
-          type="checkbox"
+        <Checkbox
           checked={form.isDefault}
           onChange={(event) => updateField('isDefault', event.target.checked)}
         />
@@ -788,7 +814,7 @@ function AddressField({
   return (
     <label className="flex flex-col gap-2 text-sm font-medium">
       {label}
-      <input
+      <UiInput
         className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -964,16 +990,16 @@ export function CustomerAddressBookPage({
                   ویرایش <Icon name="edit" size={15} />
                 </a>
                 {!address.isDefault ? (
-                  <button
+                  <Button
                     className="min-h-9 text-muted-foreground underline underline-offset-4 transition-colors hover:text-primary disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                     type="button"
                     disabled={isMutating}
                     onClick={() => void changeDefault(address.id)}
                   >
                     انتخاب به عنوان اصلی
-                  </button>
+                  </Button>
                 ) : null}
-                <button
+                <Button
                   className="min-h-9 text-destructive underline underline-offset-4 transition-colors hover:text-destructive/80 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   type="button"
                   disabled={isMutating}
@@ -982,7 +1008,7 @@ export function CustomerAddressBookPage({
                   }}
                 >
                   حذف
-                </button>
+                </Button>
               </div>
             </article>
           ))}
@@ -1197,7 +1223,7 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
                   : 'در انتظار'}
           </p>
           {canCancelCustomerOrder(order) ? (
-            <button
+            <Button
               className="mt-4 min-h-11 text-sm text-destructive underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               type="button"
               onClick={() => {
@@ -1206,7 +1232,7 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
               }}
             >
               لغو سفارش
-            </button>
+            </Button>
           ) : null}
           {eligibility.eligible ? (
             <a
@@ -1236,7 +1262,7 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
           </p>
           <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
             دلیل لغو
-            <textarea
+            <UiTextarea
               className="border border-border bg-background px-3 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
               rows={3}
               value={cancelReason}
@@ -1275,8 +1301,9 @@ function ReturnOrderState({
   order: CustomerOrderDetail;
   orderNumber: string;
 }) {
+  const state = getReturnOrderState(order);
   const eligibility = getReturnEligibility(order);
-  if (order.returnRequest)
+  if (state === 'requested' && order.returnRequest)
     return (
       <PageFrame>
         <EmptyState
@@ -1287,7 +1314,7 @@ function ReturnOrderState({
         />
       </PageFrame>
     );
-  if (!eligibility.eligible)
+  if (state === 'ineligible')
     return (
       <PageFrame>
         <EmptyState
@@ -1312,7 +1339,29 @@ function ReturnOrderState({
         />
       </PageFrame>
     );
-  return null;
+  return (
+    <PageFrame>
+      <EmptyState
+        title="هنوز درخواست بازگشتی ثبت نشده است"
+        description="این سفارش شرایط بازگشت را دارد. برای شروع، درخواست بازگشت کالا را ثبت کنید."
+        action="ثبت درخواست بازگشت"
+        href={`#return/request?orderNumber=${encodeURIComponent(orderNumber)}`}
+        icon="package"
+      />
+    </PageFrame>
+  );
+}
+
+type SubmittedCustomerOrder = {
+  routeOrderNumber: string;
+  order: CustomerOrderDetail;
+};
+
+export function getSubmittedOrderForRoute(
+  submittedOrder: SubmittedCustomerOrder | undefined,
+  routeOrderNumber: string,
+): CustomerOrderDetail | undefined {
+  return submittedOrder?.routeOrderNumber === routeOrderNumber ? submittedOrder.order : undefined;
 }
 
 export function CustomerReturnPage({
@@ -1331,7 +1380,7 @@ export function CustomerReturnPage({
   const [confirmed, setConfirmed] = useState({ unused: false, unwashed: false, tags: false });
   const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
   const [formError, setFormError] = useState('');
-  const [submittedOrder, setSubmittedOrder] = useState<CustomerOrderDetail>();
+  const [submittedOrder, setSubmittedOrder] = useState<SubmittedCustomerOrder>();
   const online = useOnlineStatus();
   useCustomerCacheBoundary(customerQuery.data?.id, isUnauthorizedError(customerQuery.error));
 
@@ -1367,7 +1416,8 @@ export function CustomerReturnPage({
     );
   if (orderQuery.isError || !orderQuery.data)
     return <OrderDetailError error={orderQuery.error} onRetry={() => void orderQuery.refetch()} />;
-  const order = submittedOrder ?? orderQuery.data;
+  const currentSubmittedOrder = getSubmittedOrderForRoute(submittedOrder, orderNumber);
+  const order = currentSubmittedOrder ?? orderQuery.data;
   if (mode === 'status')
     return order.returnRequest ? (
       <PageFrame>
@@ -1425,7 +1475,7 @@ export function CustomerReturnPage({
             .map((item) => ({ orderItemId: item.id, quantity: item.quantity })),
         },
       });
-      setSubmittedOrder(result);
+      setSubmittedOrder({ routeOrderNumber: orderNumber, order: result });
     } catch (error) {
       setFormError(
         !online || isOfflineError(error)
@@ -1462,7 +1512,7 @@ export function CustomerReturnPage({
             const selected = selectedItemIds.includes(item.id);
             return (
               <label className={`option-card ${selected ? 'is-selected' : ''}`} key={item.id}>
-                <input
+                <Checkbox
                   checked={selected}
                   onChange={(event) =>
                     setSelectedItemIds((current) =>
@@ -1471,7 +1521,6 @@ export function CustomerReturnPage({
                         : current.filter((id) => id !== item.id),
                     )
                   }
-                  type="checkbox"
                 />
                 <span>
                   <strong>{item.productName}</strong>
@@ -1486,7 +1535,7 @@ export function CustomerReturnPage({
         </fieldset>
         <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
           دلیل بازگشت
-          <select
+          <UiSelect
             className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
             value={reason}
             onChange={(event) => setReason(event.target.value as CustomerReturnReason)}
@@ -1498,11 +1547,11 @@ export function CustomerReturnPage({
                 </option>
               ),
             )}
-          </select>
+          </UiSelect>
         </label>
         <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
           توضیحات تکمیلی
-          <textarea
+          <UiTextarea
             className="border border-border bg-background px-3 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
             rows={4}
             maxLength={500}
@@ -1521,12 +1570,11 @@ export function CustomerReturnPage({
             ] as const
           ).map(([key, label]) => (
             <label className="flex min-h-11 items-center gap-2" key={key}>
-              <input
+              <Checkbox
                 checked={confirmed[key]}
                 onChange={(event) =>
                   setConfirmed((current) => ({ ...current, [key]: event.target.checked }))
                 }
-                type="checkbox"
               />
               {label}
             </label>
@@ -1540,18 +1588,18 @@ export function CustomerReturnPage({
             {formError}
           </p>
         ) : null}
-        {submittedOrder?.returnRequest ? (
+        {currentSubmittedOrder?.returnRequest ? (
           <p
             className="mt-4 border border-success bg-success-100 px-4 py-3 text-sm text-success"
             role="status"
           >
             درخواست بازگشت ثبت شد و اکنون در وضعیت «
-            {returnRequestStatusCopy[submittedOrder.returnRequest.status]}» قرار دارد.
+            {returnRequestStatusCopy[currentSubmittedOrder.returnRequest.status]}» قرار دارد.
           </p>
         ) : null}
         <div className="mt-6 flex flex-wrap gap-3">
           <Button
-            disabled={returnMutation.isPending || Boolean(submittedOrder?.returnRequest)}
+            disabled={returnMutation.isPending || Boolean(currentSubmittedOrder?.returnRequest)}
             loading={returnMutation.isPending}
             size="lg"
             type="submit"

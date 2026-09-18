@@ -247,6 +247,26 @@ test('quarantines each owned object by signed copy before deleting its source', 
   );
 });
 
+test('rejects quarantine when the interface id differs from the asset encoded by owned keys', async () => {
+  const calls: string[] = [];
+  const fakeFetch: typeof fetch = async (_url, init) => {
+    calls.push(init?.method ?? 'GET');
+    return new Response(null, { status: 200 });
+  };
+
+  await assert.rejects(
+    storage(fakeFetch).quarantine({
+      mediaId: 'database-media-1',
+      productId: 'product-1',
+      originalKey: 'catalog/products/product-1/asset-1/original.webp',
+      derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+    }),
+    (error: unknown) =>
+      error instanceof CatalogMediaStorageError && error.code === 'MEDIA_KEY_INVALID',
+  );
+  assert.deepEqual(calls, []);
+});
+
 test('does not delete a source when its quarantine copy fails', async () => {
   const calls: string[] = [];
   const fakeFetch: typeof fetch = async (_url, init) => {
@@ -265,4 +285,31 @@ test('does not delete a source when its quarantine copy fails', async () => {
       error instanceof CatalogMediaStorageError && error.code === 'MEDIA_QUARANTINE_FAILED',
   );
   assert.deepEqual(calls, ['PUT']);
+});
+
+test('retries quarantine safely when one source object is already absent', async () => {
+  const calls: string[] = [];
+  const fakeFetch: typeof fetch = async (url, init) => {
+    const requestUrl = new URL(String(url));
+    const method = init?.method ?? 'GET';
+    const objectKey = requestUrl.pathname.replace(/^\/nova-media-test\//, '');
+    const copySource = new Headers(init?.headers).get('x-amz-copy-source') ?? '';
+    calls.push(`${method} ${objectKey}`);
+    if (method === 'PUT' && copySource.endsWith('/derivative.webp')) {
+      return new Response(null, { status: 404 });
+    }
+    return new Response(null, { status: 200 });
+  };
+
+  await storage(fakeFetch).quarantine({
+    mediaId: 'asset-1',
+    productId: 'product-1',
+    originalKey: 'catalog/products/product-1/asset-1/original.webp',
+    derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+  });
+
+  assert.match(calls[0] ?? '', /^PUT catalog\/quarantine\/product-1\/asset-1\/\d+\/original\.webp$/);
+  assert.equal(calls[1], 'DELETE catalog/products/product-1/asset-1/original.webp');
+  assert.match(calls[2] ?? '', /^PUT catalog\/quarantine\/product-1\/asset-1\/\d+\/derivative\.webp$/);
+  assert.equal(calls.length, 3);
 });

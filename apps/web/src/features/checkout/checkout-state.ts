@@ -36,6 +36,24 @@ export interface CheckoutFailure {
   action: 'retry' | 'address' | 'shipping' | 'payment' | 'login' | 'cart' | 'orders';
 }
 
+export function checkoutFormStateFromRoute(
+  params: Pick<CheckoutRouteParams, 'addressId' | 'shippingMethod' | 'couponCode'>,
+): Pick<CheckoutRouteParams, 'addressId' | 'shippingMethod' | 'couponCode'> {
+  return {
+    addressId: params.addressId,
+    shippingMethod: params.shippingMethod,
+    couponCode: params.couponCode,
+  };
+}
+
+export function shouldShowNewAddressFromRoute(queryString = ''): boolean {
+  return (
+    new URLSearchParams(queryString.startsWith('?') ? queryString.slice(1) : queryString).get(
+      'newAddress',
+    ) === '1'
+  );
+}
+
 export function checkoutRetryTarget(
   failure: CheckoutFailure | null,
   source: 'quote' | 'submit' | 'address' | null,
@@ -135,29 +153,66 @@ function checkoutFingerprint(input: CheckoutRequestInput, quote: CheckoutIdempot
 
 const idempotencyStorageKey = 'nova.checkout.idempotency.v1';
 
+type CheckoutIdempotencyStorage = Pick<Storage, 'getItem' | 'setItem'>;
+
+function readIdempotencyEntries(storage: CheckoutIdempotencyStorage): Record<string, unknown> {
+  const stored = JSON.parse(storage.getItem(idempotencyStorageKey) ?? '{}') as unknown;
+  return stored && typeof stored === 'object' && !Array.isArray(stored)
+    ? (stored as Record<string, unknown>)
+    : {};
+}
+
+function writeIdempotencyKey(
+  fingerprint: string,
+  key: string,
+  storage: CheckoutIdempotencyStorage,
+): void {
+  storage.setItem(
+    idempotencyStorageKey,
+    JSON.stringify({ ...readIdempotencyEntries(storage), [fingerprint]: key }),
+  );
+}
+
+function createAndStoreCheckoutIdempotencyKey(
+  fingerprint: string,
+  storage: CheckoutIdempotencyStorage | undefined,
+): string {
+  const key = createRandomKey();
+  if (storage) {
+    try {
+      writeIdempotencyKey(fingerprint, key, storage);
+    } catch {
+      // A storage failure must not prevent checkout; use the in-memory key.
+    }
+  }
+  return key;
+}
+
 export function getStableCheckoutIdempotencyKey(
   input: CheckoutRequestInput,
   quote: CheckoutIdempotencyQuote,
-  storage: Pick<Storage, 'getItem' | 'setItem'> | undefined = storageAvailable(),
+  storage: CheckoutIdempotencyStorage | undefined = storageAvailable(),
 ): string {
   const fingerprint = checkoutFingerprint(input, quote);
   if (storage) {
     try {
-      const stored = JSON.parse(storage.getItem(idempotencyStorageKey) ?? '{}') as unknown;
-      const entries =
-        stored && typeof stored === 'object' && !Array.isArray(stored)
-          ? (stored as Record<string, unknown>)
-          : {};
+      const entries = readIdempotencyEntries(storage);
       const existing = entries[fingerprint];
       if (typeof existing === 'string' && existing.trim()) return existing;
-      const key = createRandomKey();
-      storage.setItem(idempotencyStorageKey, JSON.stringify({ ...entries, [fingerprint]: key }));
-      return key;
+      return createAndStoreCheckoutIdempotencyKey(fingerprint, storage);
     } catch {
       return createRandomKey();
     }
   }
   return createRandomKey();
+}
+
+export function rotateCheckoutIdempotencyKey(
+  input: CheckoutRequestInput,
+  quote: CheckoutIdempotencyQuote,
+  storage: CheckoutIdempotencyStorage | undefined = storageAvailable(),
+): string {
+  return createAndStoreCheckoutIdempotencyKey(checkoutFingerprint(input, quote), storage);
 }
 
 export function isQuoteExpired(quote: CheckoutQuote | undefined, now = Date.now()): boolean {
@@ -181,6 +236,22 @@ function errorText(error: unknown): string {
 function looksOffline(error: unknown): boolean {
   if (typeof navigator !== 'undefined' && navigator.onLine === false) return true;
   return error instanceof TypeError && /fetch|network|connection/i.test(error.message);
+}
+
+const unconfiguredPaymentGatewayMessage = 'درگاه پرداخت پیکربندی نشده است.';
+
+/**
+ * The current API emits this response only after payment start is reached and
+ * its cleanup path cancels the order. Other 5xx responses may occur before or
+ * after side effects, so they remain same-key retries.
+ */
+export function isConfirmedTerminalPaymentStartFailure(error: unknown): boolean {
+  return (
+    error instanceof ApiClientError &&
+    error.status === 503 &&
+    error.payload?.error.code === 'SERVICE_UNAVAILABLE' &&
+    error.payload.error.message === unconfiguredPaymentGatewayMessage
+  );
 }
 
 export function classifyCheckoutFailure(error: unknown): CheckoutFailure {
@@ -281,19 +352,23 @@ export function classifyCheckoutFailure(error: unknown): CheckoutFailure {
     error.status === 503 &&
     /payment|درگاه|پرداخت/i.test(text)
   ) {
+    const terminalPaymentStartFailure = isConfirmedTerminalPaymentStartFailure(error);
     return {
       kind: 'payment-unavailable',
       title: 'درگاه پرداخت در دسترس نیست',
-      message: 'سفارش یا پرداختی ثبت نشد. پس از پیکربندی درگاه واقعی، دوباره تلاش کنید.',
-      actionLabel: 'بازگشت به پرداخت',
-      action: 'payment',
+      message: terminalPaymentStartFailure
+        ? 'تلاش قبلی لغو شده است؛ پس از پیکربندی درگاه واقعی، پرداخت را دوباره از همین مرحله شروع کنید.'
+        : 'درگاه پرداخت موقتاً در دسترس نیست. پس از بررسی وضعیت سفارش، دوباره از همین مرحله ادامه دهید.',
+      actionLabel: terminalPaymentStartFailure ? 'شروع دوباره پرداخت' : 'بازگشت به پرداخت',
+      action: terminalPaymentStartFailure ? 'retry' : 'payment',
     };
   }
   if (error instanceof ApiClientError && error.status >= 500) {
     return {
       kind: 'network',
       title: 'سرویس موقتاً پاسخ نمی‌دهد',
-      message: 'سفارش ثبت نشده است. چند لحظه بعد همین مرحله را دوباره امتحان کنید.',
+      message:
+        'نتیجه ثبت سفارش قطعی نیست؛ ممکن است تلاش لغوشده‌ای در حساب شما ثبت شده باشد. چند لحظه بعد همین مرحله را دوباره امتحان کنید.',
       actionLabel: 'تلاش دوباره',
       action: 'retry',
     };

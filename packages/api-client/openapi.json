@@ -10663,6 +10663,11 @@
           "resendAvailableAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "localCode": {
+            "type": "string",
+            "pattern": "^[0-9]{6}$",
+            "description": "Development/test-only OTP returned by the local adapter."
           }
         },
         "additionalProperties": false

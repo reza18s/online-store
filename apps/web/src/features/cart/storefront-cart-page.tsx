@@ -89,7 +89,7 @@ function MessageCard({
 }) {
   return (
     <section
-      className="mx-auto w-full max-w-xl border border-border bg-surface p-7 text-center shadow-card"
+      className="mx-auto w-full max-w-xl rounded-editorial border border-border bg-surface p-7 text-center shadow-card"
       role="alert"
     >
       <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-warning-soft text-warning">
@@ -255,7 +255,7 @@ function CartLineView({
             className="inline-flex min-h-11 items-center border border-border bg-background"
             aria-label={`تعداد ${line.productName}`}
           >
-            <button
+            <Button
               className="min-h-11 min-w-11 text-lg text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
               type="button"
               aria-label="کاهش تعداد"
@@ -263,11 +263,11 @@ function CartLineView({
               onClick={() => onUpdate(line.variantId, line.quantity - 1)}
             >
               −
-            </button>
+            </Button>
             <span className="min-w-8 text-center text-xs" aria-live="polite">
               {new Intl.NumberFormat('fa-IR').format(line.quantity)}
             </span>
-            <button
+            <Button
               className="min-h-11 min-w-11 text-lg text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
               type="button"
               aria-label="افزایش تعداد"
@@ -275,7 +275,7 @@ function CartLineView({
               onClick={() => onUpdate(line.variantId, line.quantity + 1)}
             >
               +
-            </button>
+            </Button>
           </div>
         </div>
         {unavailable ? (
@@ -284,7 +284,7 @@ function CartLineView({
           </p>
         ) : null}
       </div>
-      <button
+      <Button
         className="icon-button"
         type="button"
         disabled={busy}
@@ -292,7 +292,7 @@ function CartLineView({
         onClick={() => onRemove(line.variantId)}
       >
         <Icon name="close" size={17} />
-      </button>
+      </Button>
     </article>
   );
 }
@@ -337,7 +337,7 @@ function RecommendationCard({
         </a>
         <div className="mt-1 flex items-center justify-between gap-2">
           <span className="text-xs text-primary">{formatToman(product.price)}</span>
-          <button
+          <Button
             className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground disabled:cursor-not-allowed disabled:bg-secondary disabled:text-muted-foreground"
             type="button"
             disabled={disabled}
@@ -347,7 +347,7 @@ function RecommendationCard({
             onClick={() => onAdd(product)}
           >
             <Icon name="plus" size={16} />
-          </button>
+          </Button>
         </div>
       </div>
     </article>
@@ -374,7 +374,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
   const mergeAttempt = useRef<string | undefined>(undefined);
   const isBusy = Boolean(busyVariantId) || addMutation.isPending || mergeMutation.isPending;
   const mergeEnabled = props.enableGuestMerge ?? true;
-  const guestMergeActive = Boolean(props.customerId && cart?.kind === 'GUEST');
+  const guestMergeActive = mergeEnabled && Boolean(props.customerId && cart?.kind === 'GUEST');
 
   const handleMergeSuccess = () => {
     setMergeConflicts([]);
@@ -498,7 +498,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
           <h1 className="text-2xl md:text-3xl">سبد خرید</h1>
         </header>
         {isError ? <CartRefreshNotice onRetry={retry} /> : null}
-        <section className="border border-border bg-surface p-8 text-center">
+        <section className="rounded-editorial border border-border bg-surface p-8 text-center">
           <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-primary">
             <Icon name="bag" size={22} />
           </span>
@@ -551,7 +551,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
               onRemove={removeItem}
             />
           ))}
-          <div className="flex items-start gap-2 border border-border bg-surface p-4 text-sm leading-7 text-muted-foreground">
+          <div className="flex items-start gap-2 rounded-control border border-border bg-surface p-4 text-sm leading-7 text-muted-foreground">
             <Icon name="info" size={17} />
             <span>
               قیمت و موجودی در مرحله پرداخت دوباره بررسی می‌شود. موجودی کم یا تغییر قیمت بدون تأیید
@@ -568,7 +568,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
           ) : null}
         </section>
         <aside
-          className="h-max border border-border bg-surface p-5 shadow-card lg:sticky lg:top-24"
+          className="h-max rounded-editorial border border-border bg-surface p-5 shadow-card lg:sticky lg:top-24"
           aria-labelledby="cart-summary-title"
         >
           <h2 className="text-lg" id="cart-summary-title">

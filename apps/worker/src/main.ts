@@ -2,16 +2,11 @@ import { environment } from '@nova/config';
 import { DatabaseClient } from '@nova/db';
 
 import { createConsoleWorkerLogger } from './observability';
-import { SmsIrNotificationSender } from './sms-ir-notification-sender';
+import { createNotificationSender } from './notification-sender';
 import { NotificationWorkerRuntime } from './worker-runtime';
 
 const database = new DatabaseClient();
-const sender = new SmsIrNotificationSender({
-  apiKey: environment.SMS_IR_API_KEY,
-  templateId: environment.SMS_IR_TEMPLATE_ID,
-  baseUrl: environment.SMS_IR_BASE_URL,
-  sandbox: environment.SMS_IR_SANDBOX,
-});
+const sender = createNotificationSender(environment);
 const runtime = new NotificationWorkerRuntime({
   database,
   sender,

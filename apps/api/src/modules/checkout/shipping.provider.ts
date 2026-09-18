@@ -32,7 +32,7 @@ export class LocalShippingProvider implements ShippingProvider {
       return {
         method: input.method,
         amountToman: 89_000,
-        label: 'اکسپرس',
+        label: 'ایران‌پست · اکسپرس',
         estimate: 'تحویل ۱ تا ۲ روز کاری',
       };
     }
@@ -40,7 +40,7 @@ export class LocalShippingProvider implements ShippingProvider {
     return {
       method: input.method,
       amountToman: 0,
-      label: 'پیشتاز',
+      label: 'ایران‌پست · پیشتاز',
       estimate: 'تحویل بین ۲ تا ۴ روز کاری · سراسر ایران',
     };
   }
@@ -48,6 +48,6 @@ export class LocalShippingProvider implements ShippingProvider {
 
 /**
  * Compatibility name for existing checkout unit fixtures. Production wiring uses
- * the explicit local/test or Tapin selection in checkout.module.ts.
+ * the explicit local/test or Iran Post selection in checkout.module.ts.
  */
 export class FixedShippingProvider extends LocalShippingProvider {}

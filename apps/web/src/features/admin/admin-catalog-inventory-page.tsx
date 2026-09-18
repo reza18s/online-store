@@ -11,7 +11,14 @@ import {
   type AdminInventoryListQuery,
   type AdminCatalogProductListQuery,
 } from '@nova/api-client';
-import { Button } from '@nova/ui';
+import {
+  Badge,
+  Button,
+  Checkbox,
+  Input as UiInput,
+  Select as UiSelect,
+  Textarea as UiTextarea,
+} from '@nova/ui';
 
 import {
   useAdminCatalogCategories,
@@ -69,6 +76,14 @@ const catalogKeyPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export function normalizeAdminCatalogInventoryView(value?: string): AdminCatalogInventoryView {
   if (value === 'categories' || value === 'inventory' || value === 'product') return value;
   return 'catalog';
+}
+
+export function adminProductEditorKey(productId?: string): string {
+  return productId ? `product:${productId}` : 'new';
+}
+
+export function adminInventoryViewKey(variantId?: string): string {
+  return variantId ? `inventory:${variantId}` : 'inventory';
 }
 
 export function pageCount(total: number, limit: number): number {
@@ -144,6 +159,17 @@ export function isInventoryDiscrepancy(
   return item.onHand - item.reserved !== item.available;
 }
 
+export function resolveInventoryDetailState(input: {
+  hasItem: boolean;
+  enabled: boolean;
+  isPending: boolean;
+  isError: boolean;
+}): 'empty' | 'loading' | 'error' | 'ready' {
+  if (input.enabled && input.isPending && !input.hasItem) return 'loading';
+  if (input.enabled && input.isError && !input.hasItem) return 'error';
+  return input.hasItem ? 'ready' : 'empty';
+}
+
 export function adminCatalogInventoryErrorMessage(error: unknown, fallback: string): string {
   if (error instanceof ApiClientError) {
     if (error.status === 401) return 'نشست کاربری منقضی شده است؛ دوباره وارد شوید.';
@@ -208,45 +234,33 @@ function statusLabel(status: string): string {
   );
 }
 
-function statusTone(status: string): string {
+function statusBadgeVariant(status: string): 'success' | 'warning' | 'destructive' | 'secondary' {
   if (['PUBLISHED', 'IN_STOCK', 'ACTIVE', 'RECEIPT', 'RELEASE', 'RETURN'].includes(status)) {
-    return 'border-success/30 bg-success-soft text-success';
+    return 'success';
   }
   if (['LOW_STOCK', 'DRAFT', 'RESERVATION'].includes(status)) {
-    return 'border-warning/30 bg-warning-soft text-warning';
+    return 'warning';
   }
   if (['OUT_OF_STOCK', 'ARCHIVED', 'INACTIVE'].includes(status)) {
-    return 'border-destructive/30 bg-error-soft text-destructive';
+    return 'destructive';
   }
-  return 'border-border bg-secondary text-muted-foreground';
+  return 'secondary';
 }
 
 function StatusBadge({ status }: { status: string }) {
-  return (
-    <span
-      className={`inline-flex min-h-8 items-center rounded-control border px-2.5 text-[11px] ${statusTone(status)}`}
-    >
-      {statusLabel(status)}
-    </span>
-  );
+  return <Badge variant={statusBadgeVariant(status)}>{statusLabel(status)}</Badge>;
 }
 
 function MutationStateBadge({ state }: { state: AdminMutationState }) {
-  const tone =
+  const variant =
     state === 'saved'
-      ? 'border-success/30 bg-success-soft text-success'
+      ? 'success'
       : state === 'saving'
-        ? 'border-info/30 bg-info-soft text-info'
+        ? 'info'
         : state === 'invalid' || state === 'publish-blocked'
-          ? 'border-destructive/30 bg-error-soft text-destructive'
-          : 'border-warning/30 bg-warning-soft text-warning';
-  return (
-    <span
-      className={`inline-flex min-h-8 items-center rounded-control border px-2.5 text-[11px] ${tone}`}
-    >
-      {mutationStateLabel(state)}
-    </span>
-  );
+          ? 'destructive'
+          : 'warning';
+  return <Badge variant={variant}>{mutationStateLabel(state)}</Badge>;
 }
 
 function StatePanel({
@@ -501,7 +515,7 @@ function FilterInput({
           name="search"
           size={17}
         />
-        <input
+        <UiInput
           aria-label={label}
           className="min-h-12 w-full border border-border bg-background px-3 pe-10 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
           onChange={(event) => onChange(event.target.value)}
@@ -531,7 +545,7 @@ function Pagination({
         صفحه {formatNumber(page)} از {formatNumber(pages)} · {formatNumber(total)} نتیجه
       </span>
       <div className="flex items-center gap-2" dir="ltr">
-        <button
+        <Button
           aria-label="صفحه قبل"
           className="flex min-h-11 min-w-11 items-center justify-center rounded-control border border-border bg-background transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           disabled={page <= 1}
@@ -539,11 +553,11 @@ function Pagination({
           type="button"
         >
           <Icon name="arrow-left" size={16} />
-        </button>
+        </Button>
         <span className="min-w-11 text-center" dir="rtl">
           {formatNumber(page)}
         </span>
-        <button
+        <Button
           aria-label="صفحه بعد"
           className="flex min-h-11 min-w-11 items-center justify-center rounded-control border border-border bg-background transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           disabled={page >= pages}
@@ -551,7 +565,7 @@ function Pagination({
           type="button"
         >
           <Icon name="arrow-right" size={16} />
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -621,7 +635,7 @@ function CatalogView({ roles }: { roles: readonly string[] }) {
         />
         <label className="block text-xs text-muted-foreground">
           وضعیت
-          <select
+          <UiSelect
             aria-label="فیلتر وضعیت محصول"
             className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) =>
@@ -637,11 +651,11 @@ function CatalogView({ roles }: { roles: readonly string[] }) {
             <option value="DRAFT">پیش‌نویس</option>
             <option value="PUBLISHED">منتشرشده</option>
             <option value="ARCHIVED">آرشیوشده</option>
-          </select>
+          </UiSelect>
         </label>
         <label className="block text-xs text-muted-foreground">
           دسته‌بندی
-          <select
+          <UiSelect
             aria-label="فیلتر دسته‌بندی"
             className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) =>
@@ -661,7 +675,7 @@ function CatalogView({ roles }: { roles: readonly string[] }) {
                   {category.name}
                 </option>
               ))}
-          </select>
+          </UiSelect>
         </label>
         <Button type="submit">
           <Icon name="search" size={16} /> اعمال فیلتر
@@ -874,13 +888,13 @@ function LowStockCard({
         </div>
       ) : query.isError ? (
         <div className="p-4">
-          <button
+          <Button
             className="min-h-11 text-xs text-primary underline focus-visible:outline-2 focus-visible:outline-primary"
             onClick={() => void query.refetch()}
             type="button"
           >
             دریافت دوباره
-          </button>
+          </Button>
         </div>
       ) : items.length === 0 ? (
         <p className="p-5 text-xs leading-7 text-muted-foreground">
@@ -1037,7 +1051,7 @@ function CategoriesView({ roles }: { roles: readonly string[] }) {
         >
           <label className="text-xs text-muted-foreground">
             شناسه لاتین
-            <input
+            <UiInput
               className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               dir="ltr"
               onChange={(event) =>
@@ -1049,7 +1063,7 @@ function CategoriesView({ roles }: { roles: readonly string[] }) {
           </label>
           <label className="text-xs text-muted-foreground">
             نام دسته
-            <input
+            <UiInput
               className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               onChange={(event) =>
                 setNewCategory((current) => ({ ...current, name: event.target.value }))
@@ -1060,7 +1074,7 @@ function CategoriesView({ roles }: { roles: readonly string[] }) {
           </label>
           <label className="text-xs text-muted-foreground">
             والد
-            <select
+            <UiSelect
               className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               onChange={(event) =>
                 setNewCategory((current) => ({ ...current, parentId: event.target.value }))
@@ -1075,7 +1089,7 @@ function CategoriesView({ roles }: { roles: readonly string[] }) {
                     {category.name}
                   </option>
                 ))}
-            </select>
+            </UiSelect>
           </label>
           <Button loading={createMutation.isPending} type="submit">
             <Icon name="plus" size={16} /> افزودن
@@ -1161,7 +1175,7 @@ function CategoryRow({
       >
         <label className="text-xs text-muted-foreground">
           نام دسته
-          <input
+          <UiInput
             className="mt-2 min-h-11 w-full border border-border bg-surface px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) => onDraftChange({ ...draft, name: event.target.value })}
             value={draft.name}
@@ -1169,7 +1183,7 @@ function CategoryRow({
         </label>
         <label className="text-xs text-muted-foreground">
           والد
-          <select
+          <UiSelect
             className="mt-2 min-h-11 w-full border border-border bg-surface px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) => onDraftChange({ ...draft, parentId: event.target.value })}
             value={draft.parentId}
@@ -1182,7 +1196,7 @@ function CategoryRow({
                   {candidate.name}
                 </option>
               ))}
-          </select>
+          </UiSelect>
         </label>
         <div className="flex items-end gap-2">
           <Button loading={saving} type="submit">
@@ -1354,7 +1368,7 @@ function InventoryView({
         />
         <label className="block text-xs text-muted-foreground">
           وضعیت تنوع
-          <select
+          <UiSelect
             aria-label="فیلتر وضعیت تنوع"
             className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) =>
@@ -1369,10 +1383,10 @@ function InventoryView({
             <option value="ALL">همه تنوع‌ها</option>
             <option value="ACTIVE">فعال</option>
             <option value="INACTIVE">غیرفعال</option>
-          </select>
+          </UiSelect>
         </label>
         <label className="flex min-h-12 items-center gap-3 border border-border bg-background px-3 text-xs">
-          <input
+          <Checkbox
             checked={filters.lowStock === true}
             onChange={(event) =>
               setFilters((current) => ({
@@ -1381,7 +1395,6 @@ function InventoryView({
                 lowStock: event.target.checked || undefined,
               }))
             }
-            type="checkbox"
           />{' '}
           فقط موجودی کم
         </label>
@@ -1444,6 +1457,7 @@ function InventoryView({
         </section>
         <InventoryDetail
           detailQuery={detailQuery}
+          enabled={Boolean(selectedVariantId)}
           canOperate={canOperate}
           delta={delta}
           reason={reason}
@@ -1471,7 +1485,7 @@ function InventoryRow({
   onSelect: (id: string) => void;
 }) {
   return (
-    <button
+    <Button
       className={`flex min-h-[92px] w-full items-center gap-3 px-4 py-4 text-right transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${selected ? 'bg-accent-soft' : ''}`}
       onClick={() => onSelect(item.variantId)}
       type="button"
@@ -1494,12 +1508,13 @@ function InventoryRow({
         </span>
       </span>
       <StatusBadge status={item.stockStatus} />
-    </button>
+    </Button>
   );
 }
 
 function InventoryDetail({
   detailQuery,
+  enabled,
   canOperate,
   delta,
   reason,
@@ -1513,6 +1528,7 @@ function InventoryDetail({
   reordering,
 }: {
   detailQuery: ReturnType<typeof useAdminInventoryItem>;
+  enabled: boolean;
   canOperate: boolean;
   delta: string;
   reason: string;
@@ -1526,6 +1542,39 @@ function InventoryDetail({
   reordering: boolean;
 }) {
   const item = detailQuery.data;
+  const detailState = resolveInventoryDetailState({
+    hasItem: Boolean(item),
+    enabled,
+    isPending: detailQuery.isPending,
+    isError: detailQuery.isError,
+  });
+  if (detailState === 'loading')
+    return (
+      <div className="border border-border bg-surface p-5 shadow-card">
+        <LoadingState label="در حال دریافت جزئیات موجودی..." />
+      </div>
+    );
+  if (detailState === 'error')
+    return (
+      <StatePanel
+        icon={isOfflineError(detailQuery.error) ? 'refresh' : 'warning'}
+        title={
+          isOfflineError(detailQuery.error)
+            ? 'اتصال شبکه در دسترس نیست'
+            : 'دریافت اطلاعات انجام نشد'
+        }
+        description={adminCatalogInventoryErrorMessage(
+          detailQuery.error,
+          'جزئیات موجودی در دسترس نیست.',
+        )}
+        action={
+          <Button onClick={() => void detailQuery.refetch()} variant="outline">
+            <Icon name="refresh" size={16} /> تلاش دوباره
+          </Button>
+        }
+        tone="danger"
+      />
+    );
   if (!item)
     return (
       <StatePanel
@@ -1598,7 +1647,7 @@ function InventoryDetail({
                 <div className="mt-3 grid gap-3">
                   <label className="text-xs text-muted-foreground">
                     مقدار تغییر
-                    <input
+                    <UiInput
                       className="mt-2 min-h-11 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       dir="ltr"
                       inputMode="numeric"
@@ -1609,7 +1658,7 @@ function InventoryDetail({
                   </label>
                   <label className="text-xs text-muted-foreground">
                     دلیل ثبت
-                    <textarea
+                    <UiTextarea
                       className="mt-2 min-h-20 w-full border border-border bg-background px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       onChange={(event) => setReason(event.target.value)}
                       placeholder="دلیل عملیاتی تغییر..."
@@ -1625,7 +1674,7 @@ function InventoryDetail({
                 <h4 className="text-sm font-semibold">نقطه سفارش مجدد</h4>
                 <label className="mt-3 block text-xs text-muted-foreground">
                   حداقل قابل سفارش
-                  <input
+                  <UiInput
                     className="mt-2 min-h-11 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     dir="ltr"
                     inputMode="numeric"
@@ -1931,7 +1980,7 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
           <label className="text-xs text-muted-foreground">
             شناسه محصول
             <span className="relative mt-2 block">
-              <input
+              <UiInput
                 className="min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:bg-secondary"
                 dir="ltr"
                 disabled={!isCreate || !canWrite}
@@ -1944,7 +1993,7 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
           </label>
           <label className="text-xs text-muted-foreground">
             نام محصول
-            <input
+            <UiInput
               className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               disabled={!canWrite}
               onChange={(event) =>
@@ -1955,7 +2004,7 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
           </label>
           <label className="text-xs text-muted-foreground">
             قیمت پایه (تومان)
-            <input
+            <UiInput
               className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               dir="ltr"
               disabled={!canWrite}
@@ -1968,7 +2017,7 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
           </label>
           <label className="text-xs text-muted-foreground">
             قیمت قبل (اختیاری)
-            <input
+            <UiInput
               className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               dir="ltr"
               disabled={!canWrite}
@@ -1983,7 +2032,7 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
             <>
               <label className="text-xs text-muted-foreground">
                 برند
-                <input
+                <UiInput
                   className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   disabled={!canWrite}
                   onChange={(event) =>
@@ -1994,7 +2043,7 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
               </label>
               <label className="text-xs text-muted-foreground md:col-span-2">
                 توضیح کوتاه
-                <textarea
+                <UiTextarea
                   className="mt-2 min-h-20 w-full border border-border bg-background px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   disabled={!canWrite}
                   onChange={(event) =>
@@ -2005,7 +2054,7 @@ function ProductEditor({ roles, productId }: { roles: readonly string[]; product
               </label>
               <label className="text-xs text-muted-foreground md:col-span-2">
                 توضیحات
-                <textarea
+                <UiTextarea
                   className="mt-2 min-h-28 w-full border border-border bg-background px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   disabled={!canWrite}
                   onChange={(event) =>
@@ -2107,11 +2156,10 @@ function TaxonomyPanel({
                 className="flex min-h-11 items-center gap-3 border border-border bg-background px-3 text-xs"
                 key={category.id}
               >
-                <input
+                <Checkbox
                   checked={selectedIds.includes(category.id)}
                   disabled={!canWrite}
                   onChange={() => onToggle(category.id)}
-                  type="checkbox"
                 />
                 {category.name}
                 <span className="ms-auto text-[10px] text-muted-foreground" dir="ltr">
@@ -2217,7 +2265,7 @@ function OptionsPanel({
       ) : null}
       {canWrite ? (
         <form className="mt-4 grid gap-2 sm:grid-cols-[.7fr_1fr_auto]" onSubmit={addOption}>
-          <input
+          <UiInput
             aria-label="کلید گزینه"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             dir="ltr"
@@ -2227,7 +2275,7 @@ function OptionsPanel({
             placeholder="size"
             value={newOption.key}
           />
-          <input
+          <UiInput
             aria-label="نام گزینه"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) =>
@@ -2312,7 +2360,7 @@ function OptionItem({
   return (
     <div className="py-4">
       <div className="flex items-center gap-2">
-        <input
+        <UiInput
           aria-label={`نام گزینه ${option.key}`}
           className="min-h-10 min-w-0 flex-1 border border-border bg-background px-3 text-xs font-semibold outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           disabled={!canWrite}
@@ -2340,7 +2388,7 @@ function OptionItem({
       </div>
       {canWrite ? (
         <div className="mt-3 flex gap-2">
-          <input
+          <UiInput
             aria-label={`مقدار جدید برای ${option.name}`}
             className="min-h-10 min-w-0 flex-1 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             dir="ltr"
@@ -2369,7 +2417,7 @@ function OptionValue({
   const [label, setLabel] = useState(value.label);
   return (
     <span className="inline-flex min-h-9 items-center gap-1 border border-border bg-background px-2">
-      <input
+      <UiInput
         aria-label={`ویرایش مقدار ${value.label}`}
         className="w-20 bg-transparent text-xs outline-none"
         disabled={!canWrite}
@@ -2377,14 +2425,14 @@ function OptionValue({
         value={label}
       />
       {canWrite ? (
-        <button
+        <Button
           aria-label={`ذخیره مقدار ${value.label}`}
           className="flex h-7 w-7 items-center justify-center text-primary focus-visible:outline-2 focus-visible:outline-primary"
           onClick={() => void onSave({ id: value.id, label: label.trim() })}
           type="button"
         >
           <Icon name="check" size={13} />
-        </button>
+        </Button>
       ) : null}
     </span>
   );
@@ -2465,7 +2513,7 @@ function VariantsPanel({
       ) : null}
       {canWrite ? (
         <form className="mt-4 grid gap-2 sm:grid-cols-2" onSubmit={addVariant}>
-          <input
+          <UiInput
             aria-label="SKU تنوع"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             dir="ltr"
@@ -2473,28 +2521,28 @@ function VariantsPanel({
             placeholder="SKU-001"
             value={draft.sku}
           />
-          <input
+          <UiInput
             aria-label="عنوان تنوع"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) => setDraft((current) => ({ ...current, title: event.target.value }))}
             placeholder="عنوان تنوع"
             value={draft.title}
           />
-          <input
+          <UiInput
             aria-label="سایز تنوع"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) => setDraft((current) => ({ ...current, size: event.target.value }))}
             placeholder="M"
             value={draft.size}
           />
-          <input
+          <UiInput
             aria-label="رنگ تنوع"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) => setDraft((current) => ({ ...current, color: event.target.value }))}
             placeholder="مشکی"
             value={draft.color}
           />
-          <input
+          <UiInput
             aria-label="قیمت تنوع"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             dir="ltr"
@@ -2569,28 +2617,28 @@ function VariantItem({
         </a>
       </div>
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        <input
+        <UiInput
           aria-label={`عنوان ${variant.sku}`}
           className="min-h-10 border border-border bg-background px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           disabled={!canWrite}
           onChange={(event) => setTitle(event.target.value)}
           value={title}
         />
-        <input
+        <UiInput
           aria-label={`سایز ${variant.sku}`}
           className="min-h-10 border border-border bg-background px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           disabled={!canWrite}
           onChange={(event) => setSize(event.target.value)}
           value={size}
         />
-        <input
+        <UiInput
           aria-label={`رنگ ${variant.sku}`}
           className="min-h-10 border border-border bg-background px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           disabled={!canWrite}
           onChange={(event) => setColor(event.target.value)}
           value={color}
         />
-        <input
+        <UiInput
           aria-label={`قیمت ${variant.sku}`}
           className="min-h-10 border border-border bg-background px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           dir="ltr"
@@ -2705,7 +2753,7 @@ function MediaPanel({
       ) : null}
       {canWrite ? (
         <form className="mt-4 grid gap-2" onSubmit={addMedia}>
-          <input
+          <UiInput
             aria-label="نشانی رسانه"
             className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             dir="ltr"
@@ -2714,7 +2762,7 @@ function MediaPanel({
             value={draft.url}
           />
           <div className="grid gap-2 sm:grid-cols-[1fr_130px_auto]">
-            <input
+            <UiInput
               aria-label="متن جایگزین"
               className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               onChange={(event) =>
@@ -2723,7 +2771,7 @@ function MediaPanel({
               placeholder="متن جایگزین"
               value={draft.altText}
             />
-            <select
+            <UiSelect
               aria-label="نوع رسانه"
               className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               onChange={(event) =>
@@ -2737,7 +2785,7 @@ function MediaPanel({
               <option value="PRODUCT">محصول</option>
               <option value="DETAIL">جزئیات</option>
               <option value="SWATCH">نمونه رنگ</option>
-            </select>
+            </UiSelect>
             <Button loading={createMedia.isPending} type="submit">
               <Icon name="plus" size={15} /> افزودن
             </Button>
@@ -2790,7 +2838,7 @@ function MediaItem({
           {media.url}
         </p>
         <p className="mt-1 text-[10px] text-muted-foreground">{statusLabel(media.kind)}</p>
-        <input
+        <UiInput
           aria-label={`متن جایگزین ${media.url}`}
           className="mt-2 min-h-9 w-full border border-border bg-background px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           disabled={!canWrite}
@@ -2859,9 +2907,13 @@ export function AdminCatalogInventoryPage({
       ) : activeView === 'categories' ? (
         <CategoriesView roles={roles} />
       ) : activeView === 'inventory' ? (
-        <InventoryView initialVariantId={variantId} roles={roles} />
+        <InventoryView
+          key={adminInventoryViewKey(variantId)}
+          initialVariantId={variantId}
+          roles={roles}
+        />
       ) : (
-        <ProductEditor productId={productId} roles={roles} />
+        <ProductEditor key={adminProductEditorKey(productId)} productId={productId} roles={roles} />
       )}
     </AdminOperationsShell>
   );

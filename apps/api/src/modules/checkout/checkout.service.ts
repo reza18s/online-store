@@ -8,6 +8,7 @@ import {
   Optional,
   ServiceUnavailableException,
 } from '@nestjs/common';
+import { environment } from '@nova/config';
 import type { OrderStatus, PaymentAttemptStatus, PaymentStatus } from '@nova/db';
 import { Prisma } from '@nova/db';
 
@@ -20,7 +21,12 @@ import {
   type CouponDiscount,
 } from '../coupons/coupon.service';
 import { InventoryService, type InventoryReservationBatch } from '../inventory/inventory.service';
-import { PAYMENT_GATEWAY, type PaymentGateway, type PaymentStartResult } from './payment.gateway';
+import {
+  isAllowedPaymentRedirectUrl,
+  PAYMENT_GATEWAY,
+  type PaymentGateway,
+  type PaymentStartResult,
+} from './payment.gateway';
 import { SHIPPING_PROVIDER, type ShippingMethod, type ShippingProvider } from './shipping.provider';
 
 export const CHECKOUT_QUOTE_TTL_SECONDS = 5 * 60;
@@ -133,11 +139,13 @@ const orderResultSelect = {
 } as const;
 
 function assertIdentifier(value: string, message: string): void {
-  if (!identifierPattern.test(value)) throw new BadRequestException(message);
+  if (typeof value !== 'string' || !identifierPattern.test(value)) {
+    throw new BadRequestException(message);
+  }
 }
 
 function assertIdempotencyKey(value: string): void {
-  if (!idempotencyKeyPattern.test(value)) {
+  if (typeof value !== 'string' || !idempotencyKeyPattern.test(value)) {
     throw new BadRequestException('کلید تکرارنشدن درخواست معتبر نیست.');
   }
 }
@@ -567,10 +575,13 @@ export class CheckoutService {
   }
 
   private assertRedirectUrl(result: PaymentStartResult): void {
-    try {
-      const url = new URL(result.redirectUrl);
-      if (url.protocol !== 'https:') throw new Error('unsupported payment redirect');
-    } catch {
+    if (
+      !isAllowedPaymentRedirectUrl(
+        result.redirectUrl,
+        this.paymentGateway.name,
+        environment.WEB_ORIGIN,
+      )
+    ) {
       throw new Error('Payment gateway returned an invalid redirect URL.');
     }
   }

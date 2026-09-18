@@ -6,12 +6,16 @@ import { ApiClientError } from '@nova/api-client';
 import {
   buildCheckoutHref,
   classifyCheckoutFailure,
+  checkoutFormStateFromRoute,
   checkoutRetryTarget,
   getStableCheckoutIdempotencyKey,
+  isConfirmedTerminalPaymentStartFailure,
   isQuoteExpired,
   normalizeCheckoutStep,
   parseCheckoutRouteParams,
   paymentRecoveryCopy,
+  rotateCheckoutIdempotencyKey,
+  shouldShowNewAddressFromRoute,
   shouldShowCheckoutOrderLoading,
 } from './checkout-state';
 
@@ -49,6 +53,29 @@ test('keeps checkout route state normalized and preserves only safe step input',
     }),
     '#checkout/payment?addressId=addr%2F1&shipping=EXPRESS&coupon=SAVE10',
   );
+});
+
+test('clears stale checkout values when a route transition omits address and coupon', () => {
+  const populated = checkoutFormStateFromRoute(
+    parseCheckoutRouteParams('?addressId=address-1&shipping=EXPRESS&coupon=SAVE10'),
+  );
+  const cleared = checkoutFormStateFromRoute(parseCheckoutRouteParams('?'));
+
+  assert.deepEqual(populated, {
+    addressId: 'address-1',
+    shippingMethod: 'EXPRESS',
+    couponCode: 'SAVE10',
+  });
+  assert.deepEqual(cleared, {
+    addressId: '',
+    shippingMethod: 'STANDARD',
+    couponCode: '',
+  });
+});
+
+test('clears the new-address form marker when a route transition omits it', () => {
+  assert.equal(shouldShowNewAddressFromRoute('?newAddress=1'), true);
+  assert.equal(shouldShowNewAddressFromRoute('?addressId=address-1'), false);
 });
 
 test('does not show order loading when the recovery link has no order number', () => {
@@ -98,6 +125,52 @@ test('reuses the idempotency key for the same checkout quote and rotates it when
     ),
     first,
   );
+});
+
+test('rotates and persists a new checkout key only for an explicit terminal payment-start retry', () => {
+  const values = new Map<string, string>();
+  const storage: Storage = {
+    getItem: (key) => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, value),
+    removeItem: () => undefined,
+    clear: () => values.clear(),
+    key: () => null,
+    length: 0,
+  };
+  const input = { addressId: 'address-1', shippingMethod: 'STANDARD' as const };
+  const quote = {
+    cartId: 'cart-1',
+    lines: [{ cartItemId: 'line-1', variantId: 'variant-1', quantity: 1 }],
+  } as const;
+  const stable = getStableCheckoutIdempotencyKey(input, quote, storage);
+  const rotated = rotateCheckoutIdempotencyKey(input, quote, storage);
+
+  assert.notEqual(rotated, stable);
+  assert.equal(getStableCheckoutIdempotencyKey(input, quote, storage), rotated);
+});
+
+test('distinguishes the confirmed terminal payment-start response from uncertain failures', () => {
+  const terminal = apiError(503, 'SERVICE_UNAVAILABLE', 'درگاه پرداخت پیکربندی نشده است.');
+  const genericServerFailure = apiError(500, 'INTERNAL_ERROR', 'خطای داخلی سرویس.');
+  const unrelatedUnavailable = apiError(
+    503,
+    'SERVICE_UNAVAILABLE',
+    'درگاه پرداخت موقتاً در دسترس نیست.',
+  );
+
+  assert.equal(isConfirmedTerminalPaymentStartFailure(terminal), true);
+  assert.equal(isConfirmedTerminalPaymentStartFailure(genericServerFailure), false);
+  assert.equal(isConfirmedTerminalPaymentStartFailure(unrelatedUnavailable), false);
+  assert.equal(isConfirmedTerminalPaymentStartFailure(new TypeError('Failed to fetch')), false);
+  assert.equal(classifyCheckoutFailure(terminal).action, 'retry');
+  assert.equal(classifyCheckoutFailure(terminal).actionLabel, 'شروع دوباره پرداخت');
+  assert.equal(checkoutRetryTarget(classifyCheckoutFailure(terminal), 'submit'), 'submit');
+  assert.equal(classifyCheckoutFailure(unrelatedUnavailable).action, 'payment');
+  assert.equal(
+    classifyCheckoutFailure(terminal).message,
+    'تلاش قبلی لغو شده است؛ پس از پیکربندی درگاه واقعی، پرداخت را دوباره از همین مرحله شروع کنید.',
+  );
+  assert.match(classifyCheckoutFailure(genericServerFailure).message, /نتیجه ثبت سفارش قطعی نیست/);
 });
 
 test('detects expired quotes and maps commerce failures to safe next actions', () => {
@@ -155,6 +228,28 @@ test('routes retryable checkout failures to the operation that failed', () => {
   assert.equal(checkoutRetryTarget(retryableFailure, 'quote'), 'quote');
   assert.equal(checkoutRetryTarget(retryableFailure, 'address'), null);
   assert.equal(checkoutRetryTarget({ ...retryableFailure, action: 'cart' }, 'submit'), null);
+  assert.equal(
+    checkoutRetryTarget(
+      {
+        ...retryableFailure,
+        kind: 'payment-unavailable',
+        action: 'retry',
+      },
+      'submit',
+    ),
+    'submit',
+  );
+  assert.equal(
+    checkoutRetryTarget(
+      {
+        ...retryableFailure,
+        kind: 'payment-unavailable',
+        action: 'payment',
+      },
+      'submit',
+    ),
+    null,
+  );
 });
 
 test('payment recovery copy tells the customer not to retry a pending payment blindly', () => {

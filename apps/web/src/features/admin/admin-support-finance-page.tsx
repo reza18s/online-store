@@ -11,6 +11,7 @@ import {
   type AdminPaymentListQuery,
   type AdminPaymentPage,
 } from '@nova/api-client';
+import { Badge, Button, Input as UiInput, Select as UiSelect } from '@nova/ui';
 
 import { useAdminPayment, useAdminPayments } from './admin-payments-api';
 import { useAdminCustomers } from './admin-customers-api';
@@ -92,7 +93,8 @@ export function canStaffInspectView(
   view: AdminSupportFinanceView,
   roles: readonly string[],
 ): boolean {
-  return VIEW_ACCESS[view].roles.some((role) => roles.includes(role));
+  const normalizedRoles = new Set(roles.map((role) => role.toLowerCase()));
+  return VIEW_ACCESS[view].roles.some((role) => normalizedRoles.has(role));
 }
 
 export function pageCount(total: number, limit: number): number {
@@ -167,27 +169,21 @@ function statusLabel(status: string): string {
   return labels[status] ?? 'نامشخص';
 }
 
-function statusTone(status: string): string {
+function statusBadgeVariant(status: string): 'success' | 'destructive' | 'warning' | 'secondary' {
   if (status === 'SUCCEEDED' || status === 'SENT' || status === 'ACTIVE') {
-    return 'bg-success-100 text-success';
+    return 'success';
   }
   if (status === 'FAILED' || status === 'CANCELLED' || status === 'DELETED') {
-    return 'bg-destructive-100 text-destructive';
+    return 'destructive';
   }
   if (status === 'PROCESSING' || status === 'PENDING' || status === 'SUSPENDED') {
-    return 'bg-warning-100 text-warning';
+    return 'warning';
   }
-  return 'bg-secondary text-muted-foreground';
+  return 'secondary';
 }
 
 function StatusBadge({ status }: { status: string }) {
-  return (
-    <span
-      className={`inline-flex min-h-8 items-center rounded-control px-2.5 text-[10px] ${statusTone(status)}`}
-    >
-      {statusLabel(status)}
-    </span>
-  );
+  return <Badge variant={statusBadgeVariant(status)}>{statusLabel(status)}</Badge>;
 }
 
 function isOfflineError(error: unknown): boolean {
@@ -279,14 +275,14 @@ function StateCard({
       <h2 className="mt-4 text-base leading-7">{title}</h2>
       <p className="mx-auto mt-2 max-w-md text-xs leading-7 text-muted-foreground">{description}</p>
       {action && onAction ? (
-        <button
+        <Button
           className="mt-5 inline-flex min-h-11 items-center justify-center gap-2 rounded-control bg-primary px-5 text-xs text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           type="button"
           onClick={onAction}
         >
           <Icon name="refresh" size={15} />
           {action}
-        </button>
+        </Button>
       ) : null}
     </section>
   );
@@ -313,7 +309,7 @@ function Pagination({
         صفحه {formatNumber(page)} از {formatNumber(pages)} · {formatNumber(total)} نتیجه
       </p>
       <div className="flex items-center gap-2" dir="ltr">
-        <button
+        <Button
           className="flex min-h-11 min-w-11 items-center justify-center rounded-control border border-border bg-background text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           type="button"
           aria-label="صفحه قبل"
@@ -321,11 +317,11 @@ function Pagination({
           onClick={() => onPageChange(page - 1)}
         >
           <Icon name="arrow-left" size={16} />
-        </button>
+        </Button>
         <span className="min-w-11 text-center text-xs" dir="rtl">
           {formatNumber(page)}
         </span>
-        <button
+        <Button
           className="flex min-h-11 min-w-11 items-center justify-center rounded-control border border-border bg-background text-muted-foreground transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           type="button"
           aria-label="صفحه بعد"
@@ -333,7 +329,7 @@ function Pagination({
           onClick={() => onPageChange(page + 1)}
         >
           <Icon name="arrow-right" size={16} />
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -352,13 +348,13 @@ function FilterBar({
       onSubmit={onSubmit}
     >
       {children}
-      <button
+      <Button
         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-control bg-primary px-4 text-xs text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
         type="submit"
       >
         <Icon name="filter" size={15} />
         اعمال فیلتر
-      </button>
+      </Button>
     </form>
   );
 }
@@ -381,7 +377,7 @@ function TextFilter({
   return (
     <label className="flex min-w-0 flex-col gap-1.5 text-[11px] text-muted-foreground" htmlFor={id}>
       {label}
-      <input
+      <UiInput
         className="min-h-11 w-full rounded-control border border-border bg-surface px-3 text-xs text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-accent-soft"
         id={id}
         dir={dir}
@@ -409,7 +405,7 @@ function SelectFilter({
   return (
     <label className="flex min-w-0 flex-col gap-1.5 text-[11px] text-muted-foreground" htmlFor={id}>
       {label}
-      <select
+      <UiSelect
         className="min-h-11 w-full appearance-none rounded-control border border-border bg-surface px-3 text-xs text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-accent-soft"
         id={id}
         value={value}
@@ -421,7 +417,7 @@ function SelectFilter({
             {statusLabel(option)}
           </option>
         ))}
-      </select>
+      </UiSelect>
     </label>
   );
 }
@@ -529,13 +525,13 @@ function PaymentInspection() {
                         key={payment.id}
                       >
                         <td className="px-3 py-3">
-                          <button
+                          <Button
                             className="min-h-11 rounded-control px-2 text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                             type="button"
                             onClick={() => setSelectedId(payment.id)}
                           >
                             {ltr(payment.id, 'max-w-[150px] truncate')}
-                          </button>
+                          </Button>
                         </td>
                         <td className="px-3 py-3">
                           <a

@@ -1,5 +1,6 @@
 import 'dotenv/config';
 
+import { createCipheriv, createHash, createHmac, randomBytes, scryptSync } from 'node:crypto';
 import { PrismaPg } from '@prisma/adapter-pg';
 
 import { PrismaClient } from '../src/generated/prisma/client';
@@ -9,6 +10,175 @@ const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL ?? localDatabaseUrl,
 });
 const prisma = new PrismaClient({ adapter });
+
+const DEFAULT_LOCAL_STAFF_EMAIL = 'admin@nova.local';
+const DEFAULT_LOCAL_STAFF_PHONE = '+989120000000';
+const DEFAULT_LOCAL_STAFF_PASSWORD = 'nova-local-admin-password-2026';
+const DEFAULT_LOCAL_STAFF_TOTP_SECRET = 'JBSWY3DPEHPK3PXP';
+const DEFAULT_LOCAL_STAFF_RECOVERY_CODE = 'NOVAADMIN1';
+const DEFAULT_AUTH_SECRET = 'nova-local-only-auth-secret-change-me-2026';
+const DEFAULT_STAFF_TOTP_ENCRYPTION_KEY = 'nova-local-only-staff-totp-key-change-me-2026';
+const PASSWORD_HASH_VERSION = 'scrypt-v1';
+const PASSWORD_KEY_LENGTH = 64;
+const PASSWORD_SCRYPT_N = 32_768;
+const PASSWORD_SCRYPT_R = 8;
+const PASSWORD_SCRYPT_P = 1;
+const PASSWORD_SCRYPT_MAXMEM = 64 * 1024 * 1024;
+
+interface LocalStaffFixture {
+  email: string;
+  phone: string;
+  password: string;
+  totpSecret: string;
+  recoveryCode: string;
+}
+
+function toBase64Url(value: Uint8Array): string {
+  return Buffer.from(value).toString('base64url');
+}
+
+function localTestModeEnabled(): boolean {
+  const rawValue = process.env.LOCAL_TEST_MODE?.trim().toLowerCase();
+  if (!rawValue || rawValue === 'false') return false;
+  if (rawValue !== 'true') {
+    throw new Error('LOCAL_TEST_MODE must be true or false.');
+  }
+
+  const nodeEnvironment = process.env.NODE_ENV?.trim().toLowerCase() || 'development';
+  if (nodeEnvironment !== 'development' && nodeEnvironment !== 'test') {
+    throw new Error('LOCAL_TEST_MODE is allowed only in development or test environments.');
+  }
+  return true;
+}
+
+function localStaffFixture(): LocalStaffFixture {
+  const fixture: LocalStaffFixture = {
+    email: (process.env.LOCAL_STAFF_EMAIL?.trim() || DEFAULT_LOCAL_STAFF_EMAIL).toLowerCase(),
+    phone: process.env.LOCAL_STAFF_PHONE?.trim() || DEFAULT_LOCAL_STAFF_PHONE,
+    password: process.env.LOCAL_STAFF_PASSWORD || DEFAULT_LOCAL_STAFF_PASSWORD,
+    totpSecret: (process.env.LOCAL_STAFF_TOTP_SECRET?.trim() || DEFAULT_LOCAL_STAFF_TOTP_SECRET)
+      .replace(/\s/g, '')
+      .toUpperCase(),
+    recoveryCode: (
+      process.env.LOCAL_STAFF_RECOVERY_CODE?.trim() || DEFAULT_LOCAL_STAFF_RECOVERY_CODE
+    )
+      .replace(/[\s-]/g, '')
+      .toUpperCase(),
+  };
+
+  if (!/^[^\s@]+@[^\s@]+$/.test(fixture.email)) {
+    throw new Error('LOCAL_STAFF_EMAIL must be a valid email address.');
+  }
+  if (!/^\+989\d{9}$/.test(fixture.phone)) {
+    throw new Error('LOCAL_STAFF_PHONE must be an Iranian mobile number in international format.');
+  }
+  if (fixture.password.length < 12 || fixture.password.length > 200) {
+    throw new Error('LOCAL_STAFF_PASSWORD must contain 12 to 200 characters.');
+  }
+  if (!/^[A-Z2-7]+=*$/.test(fixture.totpSecret) || fixture.totpSecret.length < 16) {
+    throw new Error('LOCAL_STAFF_TOTP_SECRET must be a base32 TOTP secret.');
+  }
+  if (!/^[A-Z0-9]{10}$/.test(fixture.recoveryCode)) {
+    throw new Error('LOCAL_STAFF_RECOVERY_CODE must contain exactly 10 letters or digits.');
+  }
+
+  return fixture;
+}
+
+function hashLocalStaffPassword(password: string): string {
+  const salt = randomBytes(16);
+  const hash = scryptSync(password, salt, PASSWORD_KEY_LENGTH, {
+    N: PASSWORD_SCRYPT_N,
+    r: PASSWORD_SCRYPT_R,
+    p: PASSWORD_SCRYPT_P,
+    maxmem: PASSWORD_SCRYPT_MAXMEM,
+  });
+  return [
+    PASSWORD_HASH_VERSION,
+    PASSWORD_SCRYPT_N,
+    PASSWORD_SCRYPT_R,
+    PASSWORD_SCRYPT_P,
+    toBase64Url(salt),
+    toBase64Url(hash),
+  ].join('$');
+}
+
+function encryptLocalStaffTotpSecret(secret: string): string {
+  const key = createHash('sha256')
+    .update(process.env.STAFF_TOTP_ENCRYPTION_KEY || DEFAULT_STAFF_TOTP_ENCRYPTION_KEY, 'utf8')
+    .digest();
+  const iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', key, iv);
+  const ciphertext = Buffer.concat([cipher.update(secret, 'utf8'), cipher.final()]);
+  return ['v1', toBase64Url(iv), toBase64Url(cipher.getAuthTag()), toBase64Url(ciphertext)].join(
+    '.',
+  );
+}
+
+function hashLocalStaffRecoveryCode(code: string): string {
+  return createHmac('sha256', process.env.AUTH_SECRET || DEFAULT_AUTH_SECRET)
+    .update(`staff-recovery:${code}`)
+    .digest('hex');
+}
+
+async function seedLocalStaffFixture(adminRoleId: string): Promise<void> {
+  const fixture = localStaffFixture();
+  const passwordHash = hashLocalStaffPassword(fixture.password);
+  const totpSecretEncrypted = encryptLocalStaffTotpSecret(fixture.totpSecret);
+  const recoveryCodeHash = hashLocalStaffRecoveryCode(fixture.recoveryCode);
+
+  const user = await prisma.user.upsert({
+    where: { email: fixture.email },
+    update: {
+      phone: fixture.phone,
+      status: 'ACTIVE',
+      staffCredential: {
+        upsert: {
+          update: {
+            passwordHash,
+            totpSecretEncrypted,
+            failedAttempts: 0,
+            lockedUntil: null,
+          },
+          create: { passwordHash, totpSecretEncrypted },
+        },
+      },
+    },
+    create: {
+      phone: fixture.phone,
+      email: fixture.email,
+      status: 'ACTIVE',
+      staffCredential: {
+        create: { passwordHash, totpSecretEncrypted },
+      },
+    },
+    select: { id: true },
+  });
+
+  await prisma.userRole.upsert({
+    where: {
+      userId_roleId: {
+        userId: user.id,
+        roleId: adminRoleId,
+      },
+    },
+    update: {},
+    create: { userId: user.id, roleId: adminRoleId },
+  });
+
+  await prisma.staffRecoveryCode.upsert({
+    where: {
+      userId_codeHash: {
+        userId: user.id,
+        codeHash: recoveryCodeHash,
+      },
+    },
+    update: { usedAt: null },
+    create: { userId: user.id, codeHash: recoveryCodeHash },
+  });
+
+  console.log(`Seeded local staff fixture: ${fixture.email} (admin role).`);
+}
 
 const ZERO_WIDTH_CHARACTERS = /(?:\u200B|\u200C|\u200D|\u2060|\uFEFF)/gu;
 const SEARCH_PUNCTUATION = /[^\p{L}\p{N}\s_-]/gu;
@@ -36,6 +206,7 @@ function normalizeSearchableText(value: string): string {
 }
 
 async function main(): Promise<void> {
+  const enableLocalStaffFixture = localTestModeEnabled();
   const permissions = [
     ['catalog.read', 'Read catalog data'],
     ['catalog.write', 'Create and edit catalog data'],
@@ -85,6 +256,15 @@ async function main(): Promise<void> {
         create: { roleId: role.id, permissionId },
       });
     }
+  }
+
+  if (enableLocalStaffFixture) {
+    const adminRole = await prisma.role.findUnique({
+      where: { key: 'admin' },
+      select: { id: true },
+    });
+    if (!adminRole) throw new Error('Missing seeded role: admin');
+    await seedLocalStaffFixture(adminRole.id);
   }
 
   const categories = await Promise.all(

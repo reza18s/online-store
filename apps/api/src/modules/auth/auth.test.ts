@@ -12,6 +12,7 @@ import {
   verifyOtpVerifier,
 } from './auth.service';
 import { normalizeIranianPhone, normalizeOtpCode } from './phone';
+import { LocalOtpDelivery } from './otp-delivery';
 import { CUSTOMER_SESSION_IDLE_SECONDS, SessionService, hashSessionToken } from './session.service';
 
 interface OtpValue {
@@ -84,7 +85,7 @@ interface FakeUser {
   phoneVerifiedAt: Date | null;
 }
 
-function createAuthHarness(existingStatus?: UserStatus) {
+function createAuthHarness(existingStatus?: UserStatus, upsertStatus?: UserStatus) {
   const phone = '+989123456789';
   const user: FakeUser | null = existingStatus
     ? {
@@ -121,6 +122,7 @@ function createAuthHarness(existingStatus?: UserStatus) {
           } else {
             state.user.phone = where.phone;
             state.user.phoneVerifiedAt = update.phoneVerifiedAt;
+            if (upsertStatus) state.user.status = upsertStatus;
           }
           return {
             id: state.user.id,
@@ -147,9 +149,11 @@ function createAuthHarness(existingStatus?: UserStatus) {
 
   return {
     auth: new AuthService(database as never, store as never, delivery as never, sessions as never),
+    database,
     delivery,
     state,
     store,
+    sessions,
     sessionCount: () => createdSessionCount,
   };
 }
@@ -193,6 +197,20 @@ test('requests an OTP with cooldowns and never returns the code in the API resul
     harness.auth.requestOtp({ phone: '+989123456789', ip: '127.0.0.1' }),
   );
   assert.equal(harness.delivery.sent.length, 1);
+});
+
+test('returns a local OTP only when the provider-free delivery adapter opts into it', async () => {
+  const harness = createAuthHarness();
+  const localAuth = new AuthService(
+    harness.database as never,
+    harness.store as never,
+    new LocalOtpDelivery() as never,
+    harness.sessions as never,
+  );
+
+  const result = await localAuth.requestOtp({ phone: '09123456789', ip: '127.0.0.10' });
+
+  assert.match(result.localCode ?? '', /^\d{6}$/);
 });
 
 test('verifies a Persian OTP once and creates a customer session', async () => {
@@ -249,6 +267,19 @@ test('locks a challenge after the configured number of failed attempts', async (
 test('does not allow a suspended customer to create a session', async () => {
   const harness = createAuthHarness('SUSPENDED');
   const challenge = await harness.auth.requestOtp({ phone: '09123456789', ip: '127.0.0.6' });
+  const message = harness.delivery.sent[0];
+  assert.ok(message);
+
+  await assert.rejects(
+    harness.auth.verifyOtp(challenge.challengeId, message.code),
+    (error: unknown) => error instanceof ForbiddenException,
+  );
+  assert.equal(harness.sessionCount(), 0);
+});
+
+test('does not create a session when the upsert returns an inactive customer', async () => {
+  const harness = createAuthHarness('ACTIVE', 'SUSPENDED');
+  const challenge = await harness.auth.requestOtp({ phone: '09123456789', ip: '127.0.0.7' });
   const message = harness.delivery.sent[0];
   assert.ok(message);
 

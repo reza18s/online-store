@@ -71,6 +71,10 @@ The operator also needs:
   major version as one another and as the source (and restore target for a full
   drill); the verifier blocks before dump/restore when a major-version mismatch
   is detected;
+- If multiple PostgreSQL majors are installed, put the approved client `bin`
+  directory first in the current process `PATH`. The verifier uses the first
+  resolved application path for each client and then checks the reported major
+  version before any database operation;
 - a new writable archive path with enough local capacity;
 - for a restore drill, an already-created disposable PostgreSQL database on a
   separate PostgreSQL cluster identity, preferably created from `template0`,
@@ -142,6 +146,10 @@ If no authorized disposable restore target exists, do not invent one and do not
 point the command at the source database. Run the safe archive-only mode:
 
 ```powershell
+# Load this value into the current process through the approved secret/session
+# flow; do not put a real URL, password, or credential in this runbook or shell history.
+$env:NOVA_BACKUP_SOURCE_DATABASE_URL = '<approved source URL>'
+
 $BackupDirectory = Join-Path (Get-Location) 'backup-evidence'
 New-Item -ItemType Directory -Path $BackupDirectory -Force | Out-Null
 $BackupFile = Join-Path $BackupDirectory 'nova-postgres-2026-09-11.dump'
@@ -150,10 +158,12 @@ powershell -NoProfile -File .\infra\deploy\verify-postgres-backup.ps1 `
   -BackupOnly
 ```
 
-This mode proves only that `pg_dump` created a non-empty custom archive and that
-`pg_restore --list` can read it. It exits `0` for that limited check while emitting
-`restore: SKIPPED`; the OPS-002 restore gate remains `BLOCKED` until the separate
-target and owner decision is recorded.
+This mode also snapshots and rechecks the source connected database and server
+identity immediately before and after `pg_dump`, so an endpoint/database change
+fails closed. It still proves only that `pg_dump` created a non-empty custom archive
+and that `pg_restore --list` can read it. It exits `0` for that limited check while
+emitting `restore: SKIPPED`; the OPS-002 restore gate remains `BLOCKED` until the
+separate target and owner decision is recorded.
 
 ## Evidence interpretation and failure handling
 

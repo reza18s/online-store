@@ -65,6 +65,7 @@ export class AuthController {
       challengeId: result.challengeId,
       expiresAt: result.expiresAt.toISOString(),
       resendAvailableAt: result.resendAvailableAt.toISOString(),
+      ...(result.localCode ? { localCode: result.localCode } : {}),
     });
   }
 

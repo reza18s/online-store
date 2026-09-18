@@ -34,6 +34,7 @@ $previousEnvironment = @{
     REDIS_URL = $env:REDIS_URL
     API_PORT = $env:API_PORT
     WEB_ORIGIN = $env:WEB_ORIGIN
+    LOCAL_TEST_MODE = $env:LOCAL_TEST_MODE
 }
 
 function Restore-EnvironmentVariable {
@@ -135,6 +136,7 @@ try {
     $env:DATABASE_URL = "postgresql://nova:nova_local_only@127.0.0.1:$PostgresPort/nova?schema=public"
     $env:REDIS_URL = "redis://127.0.0.1:$RedisPort"
     $env:WEB_ORIGIN = $WebOrigin.AbsoluteUri.TrimEnd('/')
+    $env:LOCAL_TEST_MODE = 'true'
 
     $composeArgs = @(
         '--project-name', $ComposeProject,
@@ -246,4 +248,5 @@ finally {
     Restore-EnvironmentVariable -Name 'REDIS_URL' -Value $previousEnvironment.REDIS_URL
     Restore-EnvironmentVariable -Name 'API_PORT' -Value $previousEnvironment.API_PORT
     Restore-EnvironmentVariable -Name 'WEB_ORIGIN' -Value $previousEnvironment.WEB_ORIGIN
+    Restore-EnvironmentVariable -Name 'LOCAL_TEST_MODE' -Value $previousEnvironment.LOCAL_TEST_MODE
 }

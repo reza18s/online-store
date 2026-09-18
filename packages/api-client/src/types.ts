@@ -511,6 +511,7 @@ export interface OtpRequestResponse {
   challengeId: string;
   expiresAt: string;
   resendAvailableAt: string;
+  localCode?: string;
 }
 
 export interface OtpVerifyResponse {

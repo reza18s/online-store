@@ -30,6 +30,7 @@ import type { CatalogFacetQueryDto } from './dto/catalog-facet.query';
 import { normalizeSearchText, type ProductListQueryDto } from './dto/product-list.query';
 import {
   CATALOG_MEDIA_STORAGE,
+  catalogMediaAssetIdFromObjectKey,
   DisabledCatalogMediaStorage,
   CatalogMediaStorageError,
   type CatalogMediaStorage,
@@ -315,7 +316,11 @@ export class CatalogService {
     }
     try {
       return await this.storage.createDerivativeReadUrl({
-        mediaId: media.id,
+        mediaId: catalogMediaAssetIdFromObjectKey(
+          media.productId,
+          media.derivativeKey,
+          'derivative',
+        ),
         productId: media.productId,
         derivativeKey: media.derivativeKey,
       });

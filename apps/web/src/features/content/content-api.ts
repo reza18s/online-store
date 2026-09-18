@@ -21,6 +21,7 @@ import {
   type ContentPage,
   type SeoResolution,
 } from '@nova/api-client';
+import { getFakeContentPage, isStorefrontFakeDataEnabled } from '../../shared/dev-store-fixtures';
 
 export const contentPagePath = '/v1/content/pages';
 export const seoResolvePath = '/v1/seo/resolve';
@@ -58,6 +59,7 @@ export function contentPageRequestPath(slug: string): string {
 }
 
 export async function fetchContentPage(slug: string): Promise<ContentPage> {
+  if (isStorefrontFakeDataEnabled()) return getFakeContentPage(slug);
   const response = await apiClient.getEnvelope<ContentPage>(contentPageRequestPath(slug));
   return response.data;
 }

@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 
 import { ApiClientError, isContentPageSlug } from '@nova/api-client';
 import type { ContentPage } from '@nova/api-client';
+import { Button } from '@nova/ui';
 
 import { Icon } from '../../shared/icon';
 import { useContentPage } from './content-api';
@@ -11,6 +12,29 @@ export { getRenderableContentBlocks, safeSiteRelativeHref } from './content-bloc
 export type { RenderableContentBlock, RenderableContentBlocks } from './content-blocks';
 
 const MAX_TEXT_LENGTH = 12_000;
+
+const editorialHeroAssets: Record<string, { src: string; alt: string }> = {
+  about: { src: '/assets/nova-hero-editorial-v2.png', alt: 'روایت سبک زندگی نوا' },
+  article: { src: '/assets/nova-hero-editorial-v2.png', alt: 'استایل زنانه نوا' },
+  campaign: { src: '/assets/nova-hero-editorial-v2.png', alt: 'فصل تازه نوا' },
+  'care-guide': { src: '/assets/nova-materials.webp', alt: 'مراقبت از پارچه‌های نوا' },
+  contact: { src: '/assets/nova-hero-men.webp', alt: 'فضای آتلیه نوا' },
+  content: { src: '/assets/nova-women-lifestyle.webp', alt: 'مجله نوا' },
+  faq: { src: '/assets/nova-materials.webp', alt: 'جزئیات متریال نوا' },
+  guide: { src: '/assets/nova-materials.webp', alt: 'راهنمای انتخاب پارچه نوا' },
+  lookbook: { src: '/assets/nova-hero-editorial-v2.png', alt: 'لوک‌بوک نوا' },
+  privacy: { src: '/assets/nova-materials.webp', alt: 'جزئیات پارچه نوا' },
+  'returns-policy': { src: '/assets/nova-women-lifestyle.webp', alt: 'راهنمای بازگشت نوا' },
+  'shipping-policy': { src: '/assets/nova-hero-men.webp', alt: 'ارسال سفارش‌های نوا' },
+  'size-guide': { src: '/assets/nova-materials.webp', alt: 'راهنمای اندازه نوا' },
+  support: { src: '/assets/nova-women-lifestyle.webp', alt: 'پشتیبانی نوا' },
+  terms: { src: '/assets/nova-materials.webp', alt: 'شرایط استفاده از نوا' },
+  trust: { src: '/assets/nova-materials.webp', alt: 'اعتماد و کیفیت نوا' },
+};
+const defaultEditorialHeroAsset = {
+  src: '/assets/nova-hero-editorial-v2.png',
+  alt: 'مجله نوا',
+};
 
 export type PublicContentSystemState = 'offline' | 'maintenance';
 
@@ -51,7 +75,7 @@ function boundedText(value: unknown, maxLength: number): string | null {
 
 function decodeSlug(value: string): string | null {
   try {
-    return decodeURIComponent(value.trim());
+    return decodeURIComponent(value.trim()).trim();
   } catch {
     return null;
   }
@@ -236,14 +260,14 @@ function SystemStatePanel({
         <p>{copy.description}</p>
         <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
           {copy.retry && onRetry ? (
-            <button
+            <Button
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-editorial bg-primary px-5 text-sm font-semibold text-primary-foreground transition-transform duration-150 hover:-translate-y-px hover:bg-primary-hover focus-visible:outline-none motion-reduce:transform-none motion-reduce:transition-none"
               type="button"
               onClick={onRetry}
             >
               <Icon name="refresh" size={17} />
               تلاش دوباره
-            </button>
+            </Button>
           ) : null}
           <a
             className="inline-flex min-h-11 items-center justify-center rounded-editorial border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-colors duration-150 hover:border-primary hover:text-primary focus-visible:outline-none motion-reduce:transition-none"
@@ -299,6 +323,7 @@ function PublishedContent({
   const rendered = getRenderableContentBlocks(page.blocks);
   const pageTitle = boundedText(page.title, 200) ?? 'محتوای نوا';
   const hasUnsupported = rendered.unsupportedCount > 0;
+  const heroAsset = editorialHeroAssets[slug] ?? defaultEditorialHeroAsset;
 
   return (
     <PageShell labelledBy="public-content-title">
@@ -319,41 +344,60 @@ function PublishedContent({
           </a>
           <p>یادداشت‌ها، راهنماها و روایت‌های منتشرشده از آتلیه نوا.</p>
         </div>
-        <div className="min-h-[180px] bg-secondary/70" aria-hidden="true" />
+        <img className="editorial-hero__image" src={heroAsset.src} alt={heroAsset.alt} />
       </section>
 
-      <article className="reading-column" aria-label="محتوای منتشرشده">
-        {body ? <p>{body}</p> : null}
-        {rendered.blocks.map((block) => (
-          <RenderedBlock block={block} key={block.key} />
-        ))}
-        {state === 'empty' ? (
-          <p
-            className="mt-6 border-s-2 border-warning bg-warning-soft p-4 text-sm text-warning"
-            role="status"
-          >
-            این صفحه منتشر شده است، اما هنوز محتوای قابل نمایش ندارد.
-          </p>
-        ) : null}
-        {state === 'unsupported' || hasUnsupported ? (
-          <p
-            className="mt-6 border-s-2 border-warning bg-warning-soft p-4 text-sm text-warning"
-            role="status"
-          >
-            بخشی از این صفحه در حال حاضر برای نمایش ایمن پشتیبانی نمی‌شود. برای ادامه، از خانه شروع
-            کنید.
-          </p>
-        ) : null}
-        {state === 'empty' || state === 'unsupported' ? (
-          <a
-            className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-editorial border border-border bg-surface px-5 text-sm font-semibold text-foreground hover:border-primary hover:text-primary focus-visible:outline-none"
-            href="#home"
-          >
-            بازگشت به خانه
-            <Icon name="arrow-left" size={16} aria-hidden="true" />
-          </a>
-        ) : null}
-      </article>
+      <div className="editorial-reading-layout">
+        <article className="reading-column" aria-label="محتوای منتشرشده">
+          {body ? <p>{body}</p> : null}
+          {rendered.blocks.map((block) => (
+            <RenderedBlock block={block} key={block.key} />
+          ))}
+          {state === 'empty' ? (
+            <p
+              className="mt-6 border-s-2 border-warning bg-warning-soft p-4 text-sm text-warning"
+              role="status"
+            >
+              این صفحه منتشر شده است، اما هنوز محتوای قابل نمایش ندارد.
+            </p>
+          ) : null}
+          {state === 'unsupported' || hasUnsupported ? (
+            <p
+              className="mt-6 border-s-2 border-warning bg-warning-soft p-4 text-sm text-warning"
+              role="status"
+            >
+              بخشی از این صفحه در حال حاضر برای نمایش ایمن پشتیبانی نمی‌شود. برای ادامه، از خانه
+              شروع کنید.
+            </p>
+          ) : null}
+          {state === 'empty' || state === 'unsupported' ? (
+            <a
+              className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-editorial border border-border bg-surface px-5 text-sm font-semibold text-foreground hover:border-primary hover:text-primary focus-visible:outline-none"
+              href="#home"
+            >
+              بازگشت به خانه
+              <Icon name="arrow-left" size={16} aria-hidden="true" />
+            </a>
+          ) : null}
+        </article>
+        <aside className="editorial-aside" aria-label="راهنمای مطالعه">
+          <div className="editorial-aside__panel">
+            <span className="section-heading__eyebrow">NOVA / JOURNAL</span>
+            <h2>در این صفحه</h2>
+            <p>
+              روایت‌ها و راهنماهای نوا برای انتخابی آگاهانه‌تر؛ با حوصله بخوانید و جزئیات را نزدیک
+              ببینید.
+            </p>
+            <a href="#support">
+              پرسشی دارید؟ <Icon name="arrow-left" size={15} aria-hidden="true" />
+            </a>
+          </div>
+          <div className="editorial-aside__image">
+            <img src="/assets/nova-materials.webp" alt="بافت‌های طبیعی آتلیه نوا" loading="lazy" />
+            <span>{pageTitle}</span>
+          </div>
+        </aside>
+      </div>
     </PageShell>
   );
 }

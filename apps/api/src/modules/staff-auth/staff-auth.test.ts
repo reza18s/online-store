@@ -2,8 +2,9 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { ForbiddenException, HttpException, HttpStatus } from '@nestjs/common';
+import { environment } from '@nova/config';
 
-import type { RequestWithId } from '../../common/http/request-id.middleware';
+import type { RequestWithId, ResponseWithHeaders } from '../../common/http/request-id.middleware';
 import type { OtpStateStore } from '../auth/otp-state.store';
 import {
   createRecoveryCode,
@@ -13,8 +14,20 @@ import {
   hashStaffPassword,
   verifyStaffPassword,
 } from './staff-auth.crypto';
-import { assertStaffRole } from './staff-auth.guard';
-import { SessionService, hashSessionToken } from '../auth/session.service';
+import {
+  SessionService,
+  STAFF_SESSION_COOKIE_NAME,
+  STAFF_SESSION_ABSOLUTE_SECONDS,
+  hashSessionToken,
+} from '../auth/session.service';
+import {
+  assertStaffRole,
+  STAFF_ROLES_KEY,
+  StaffAuthGuard,
+  StaffRoleGuard,
+  type StaffRequest,
+  type StaffRole,
+} from './staff-auth.guard';
 import { StaffAuthController } from './staff-auth.controller';
 import { STAFF_LOGIN_MAX_ATTEMPTS, StaffAuthService } from './staff-auth.service';
 
@@ -65,6 +78,36 @@ class MemoryStateStore implements OtpStateStore {
     }
     return value;
   }
+}
+
+class FakeResponse implements ResponseWithHeaders {
+  private readonly headers = new Map<string, string | string[]>();
+
+  public setHeader(name: string, value: string | string[]): void {
+    this.headers.set(name.toLowerCase(), value);
+  }
+
+  public getHeader(name: string): string | string[] | undefined {
+    return this.headers.get(name.toLowerCase());
+  }
+}
+
+function httpContext(request: StaffRequest) {
+  return {
+    switchToHttp: () => ({
+      getRequest: () => request,
+    }),
+  } as never;
+}
+
+function roleContext(request: StaffRequest) {
+  return {
+    getHandler: () => 'handler',
+    getClass: () => 'class',
+    switchToHttp: () => ({
+      getRequest: () => request,
+    }),
+  } as never;
 }
 
 interface StaffFixtureOptions {
@@ -138,6 +181,10 @@ test('hashes staff passwords and encrypts TOTP secrets without exposing plaintex
   assert.notEqual(passwordHash, 'correct horse battery staple');
   assert.equal(verifyStaffPassword('correct horse battery staple', passwordHash), true);
   assert.equal(verifyStaffPassword('wrong password', passwordHash), false);
+  assert.equal(
+    verifyStaffPassword('any password', 'scrypt-v1$32768$8$1$AAAAAAAAAAAAAAAAAAAAAA$!'),
+    false,
+  );
 
   const encrypted = encryptTotpSecret('JBSWY3DPEHPK3PXP');
   assert.equal(encrypted.includes('JBSWY3DPEHPK3PXP'), false);
@@ -150,6 +197,287 @@ test('returns a null envelope for the public staff CSRF bootstrap route', async 
   assert.equal(response.data, null);
   assert.equal(response.meta.requestId, 'staff-csrf-request');
   assert.match(response.meta.timestamp, /^\d{4}-\d{2}-\d{2}T/);
+});
+
+test('StaffAuthGuard authenticates staff/me from only nova_staff_session and delegates missing or invalid sessions', async () => {
+  const staff = {
+    id: 'staff-1',
+    email: 'staff@nova.example',
+    status: 'ACTIVE' as const,
+    roles: ['admin'],
+  };
+  const validToken = 's'.repeat(43);
+  const resolvedTokens: Array<string | undefined> = [];
+  const sessions = {
+    resolveStaffSession: async (token: string | undefined) => {
+      resolvedTokens.push(token);
+      return token === validToken
+        ? { user: staff, expiresAt: new Date('2026-09-14T12:00:00.000Z') }
+        : null;
+    },
+  };
+  const guard = new StaffAuthGuard(sessions as never);
+
+  const authenticatedRequest = {
+    headers: {
+      cookie: `nova_session=customer-token; ${STAFF_SESSION_COOKIE_NAME}=${validToken}`,
+    },
+  } as StaffRequest;
+  assert.equal(await guard.canActivate(httpContext(authenticatedRequest)), true);
+  assert.deepEqual(authenticatedRequest.staff, staff);
+
+  const rejectedCases: Array<{ cookie: string | undefined; expectedToken: string | undefined }> = [
+    { cookie: undefined, expectedToken: undefined },
+    { cookie: 'nova_session=customer-token', expectedToken: undefined },
+    {
+      cookie: `${STAFF_SESSION_COOKIE_NAME}=unknown-token`,
+      expectedToken: 'unknown-token',
+    },
+  ];
+  for (const current of rejectedCases) {
+    const request = {
+      headers: current.cookie === undefined ? undefined : { cookie: current.cookie },
+    } as StaffRequest;
+    await assert.rejects(guard.canActivate(httpContext(request)), (error: unknown) => {
+      return error instanceof HttpException && error.getStatus() === HttpStatus.UNAUTHORIZED;
+    });
+    assert.equal(request.staff, undefined);
+    assert.equal(resolvedTokens.at(-1), current.expectedToken);
+  }
+
+  assert.deepEqual(resolvedTokens, [validToken, undefined, undefined, 'unknown-token']);
+});
+
+test('StaffRoleGuard permits matching roles, rejects missing or mismatched staff, and permits routes without role metadata', () => {
+  let configuredRoles: StaffRole[] | undefined = ['admin'];
+  const reflector = {
+    getAllAndOverride: (key: string, targets: unknown[]) => {
+      assert.equal(key, STAFF_ROLES_KEY);
+      assert.deepEqual(targets, ['handler', 'class']);
+      return configuredRoles;
+    },
+  };
+  const guard = new StaffRoleGuard(reflector as never);
+  const adminStaff = {
+    id: 'staff-1',
+    email: 'staff@nova.example',
+    status: 'ACTIVE' as const,
+    roles: ['admin'] as StaffRole[],
+  };
+
+  assert.equal(guard.canActivate(roleContext({ staff: adminStaff } as StaffRequest)), true);
+
+  assert.throws(
+    () => guard.canActivate(roleContext({} as StaffRequest)),
+    (error: unknown) =>
+      error instanceof HttpException && error.getStatus() === HttpStatus.UNAUTHORIZED,
+  );
+
+  assert.throws(
+    () =>
+      guard.canActivate(
+        roleContext({
+          staff: { ...adminStaff, roles: ['support'] as StaffRole[] },
+        } as StaffRequest),
+      ),
+    (error: unknown) =>
+      error instanceof HttpException && error.getStatus() === HttpStatus.FORBIDDEN,
+  );
+
+  configuredRoles = undefined;
+  assert.equal(guard.canActivate(roleContext({} as StaffRequest)), true);
+});
+
+test('staff login emits the configured session cookie and returns the typed staff envelope', async () => {
+  const token = 'staff-login-token';
+  const staff = {
+    id: 'staff-1',
+    email: 'staff@nova.example',
+    status: 'ACTIVE' as const,
+    roles: ['admin'] as StaffRole[],
+  };
+  const auth = {
+    login: async (input: unknown) => {
+      assert.deepEqual(input, {
+        email: 'staff@nova.example',
+        password: 'correct horse battery staple',
+        factor: '123456',
+        ip: '198.51.100.10',
+      });
+      return { token, user: staff };
+    },
+  };
+  const controller = new StaffAuthController(auth as never);
+  const response = new FakeResponse();
+  const result = await controller.login(
+    { requestId: 'staff-login-request', ip: '198.51.100.10' },
+    response,
+    {
+      email: 'staff@nova.example',
+      password: 'correct horse battery staple',
+      factor: '123456',
+    },
+  );
+
+  assert.deepEqual(result.data, staff);
+  assert.equal(result.meta.requestId, 'staff-login-request');
+  assert.match(result.meta.timestamp, /^\d{4}-\d{2}-\d{2}T/);
+
+  const secure = environment.WEB_ORIGIN.startsWith('https://') ? '; Secure' : '';
+  assert.deepEqual(response.getHeader('Set-Cookie'), [
+    `${STAFF_SESSION_COOKIE_NAME}=${token}; Max-Age=${STAFF_SESSION_ABSOLUTE_SECONDS}; Path=/; HttpOnly; SameSite=Lax${secure}`,
+  ]);
+});
+
+test('staff logout delegates the staff cookie revoke, clears it, and returns a null envelope for missing, unknown, or malformed cookies', async () => {
+  type RevokeCall = {
+    where: {
+      tokenHash: string;
+      kind: string;
+      revokedAt: null;
+    };
+    data: { revokedAt: Date };
+  };
+  const revoked: RevokeCall[] = [];
+  const database = {
+    prisma: {
+      session: {
+        updateMany: async (args: RevokeCall) => {
+          revoked.push(args);
+          return { count: 0 };
+        },
+      },
+    },
+  };
+  const auth = new StaffAuthService(
+    {} as never,
+    {} as never,
+    new SessionService(database as never),
+  );
+  const controller = new StaffAuthController(auth);
+  const unknownToken = 'e'.repeat(43);
+  const cases = [
+    { name: 'missing', cookie: 'nova_session=customer-token' },
+    {
+      name: 'unknown valid-format',
+      cookie: `nova_session=customer-token; ${STAFF_SESSION_COOKIE_NAME}=${unknownToken}`,
+    },
+    { name: 'malformed', cookie: `${STAFF_SESSION_COOKIE_NAME}=bad.token` },
+  ];
+
+  for (const [index, current] of cases.entries()) {
+    const response = new FakeResponse();
+    const result = await controller.logout(
+      {
+        requestId: `staff-logout-${index}`,
+        headers: { cookie: current.cookie },
+      } as StaffRequest,
+      response,
+    );
+
+    assert.equal(result.data, null, `${current.name} logout should return a null envelope`);
+    assert.equal(result.meta.requestId, `staff-logout-${index}`);
+    const cookies = response.getHeader('Set-Cookie');
+    assert.ok(Array.isArray(cookies));
+    assert.equal(cookies.length, 1);
+    assert.match(
+      cookies[0] ?? '',
+      new RegExp(`^${STAFF_SESSION_COOKIE_NAME}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax`),
+    );
+    assert.doesNotMatch(cookies[0] ?? '', /nova_session=/);
+  }
+
+  assert.equal(revoked.length, 1);
+  assert.equal(revoked[0]?.where.tokenHash, hashSessionToken(unknownToken));
+  assert.equal(revoked[0]?.where.kind, 'ADMIN');
+  assert.equal(revoked[0]?.where.revokedAt, null);
+  assert.ok(revoked[0]?.data.revokedAt instanceof Date);
+});
+
+test('SessionService rejects malformed, unknown, expired, and revoked staff tokens before returning a user', async () => {
+  const now = Date.now();
+  const validToken = 'v'.repeat(43);
+  const unknownToken = 'u'.repeat(43);
+  const expiredToken = 'e'.repeat(43);
+  const revokedToken = 'r'.repeat(43);
+  const records = new Map([
+    [
+      hashSessionToken(validToken),
+      {
+        expiresAt: new Date(now + 60 * 60 * 1_000),
+        revokedAt: null,
+      },
+    ],
+    [
+      hashSessionToken(expiredToken),
+      {
+        expiresAt: new Date(now - 1_000),
+        revokedAt: null,
+      },
+    ],
+    [
+      hashSessionToken(revokedToken),
+      {
+        expiresAt: new Date(now + 60 * 60 * 1_000),
+        revokedAt: new Date(now - 1_000),
+      },
+    ],
+  ]);
+  let lookups = 0;
+  const database = {
+    prisma: {
+      session: {
+        findFirst: async ({
+          where,
+        }: {
+          where: {
+            tokenHash: string;
+            kind: 'ADMIN';
+            revokedAt: null;
+            expiresAt: { gt: Date };
+          };
+        }) => {
+          lookups += 1;
+          const record = records.get(where.tokenHash);
+          if (
+            !record ||
+            where.kind !== 'ADMIN' ||
+            record.revokedAt !== null ||
+            record.expiresAt <= where.expiresAt.gt
+          ) {
+            return null;
+          }
+          return {
+            id: 'staff-session-1',
+            expiresAt: record.expiresAt,
+            lastSeenAt: new Date(now),
+            user: {
+              id: 'staff-1',
+              email: 'staff@nova.example',
+              status: 'ACTIVE' as const,
+              roles: [{ role: { key: 'admin' } }],
+            },
+          };
+        },
+        updateMany: async () => ({ count: 0 }),
+      },
+    },
+  };
+  const sessions = new SessionService(database as never);
+
+  assert.equal(await sessions.resolveStaffSession(undefined), null);
+  assert.equal(await sessions.resolveStaffSession('bad.token'), null);
+  assert.equal(lookups, 0);
+  assert.equal(await sessions.resolveStaffSession(unknownToken), null);
+  assert.equal(await sessions.resolveStaffSession(expiredToken), null);
+  assert.equal(await sessions.resolveStaffSession(revokedToken), null);
+  assert.deepEqual((await sessions.resolveStaffSession(validToken))?.user, {
+    id: 'staff-1',
+    email: 'staff@nova.example',
+    status: 'ACTIVE',
+    roles: ['admin'],
+  });
+  assert.equal(lookups, 4);
 });
 
 test('generates the RFC TOTP vector and accepts Persian digits within clock skew', () => {

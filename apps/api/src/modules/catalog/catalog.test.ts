@@ -5,6 +5,7 @@ import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 
 import { CatalogService } from './catalog.service';
+import type { CatalogMediaReadUrlInput, CatalogMediaStorage } from './catalog-media.storage';
 import { CatalogFacetQueryDto } from './dto/catalog-facet.query';
 import { normalizeSearchText, ProductListQueryDto } from './dto/product-list.query';
 import { SearchSuggestionsQueryDto } from './dto/search-suggestions.query';
@@ -30,6 +31,20 @@ function createSuggestionService(rows: unknown[], onQuery?: () => void): Catalog
   };
 
   return new CatalogService({ prisma } as never);
+}
+
+function createMediaService(
+  media: Record<string, unknown>,
+  onReadUrl: (input: CatalogMediaReadUrlInput) => Promise<string>,
+): CatalogService {
+  const prisma = {
+    productMedia: {
+      findUnique: async () => media,
+    },
+  };
+  const storage = { createDerivativeReadUrl: onReadUrl } as unknown as CatalogMediaStorage;
+
+  return new CatalogService({ prisma } as never, storage);
 }
 
 function createProduct(overrides: Record<string, unknown> = {}): Record<string, unknown> {
@@ -351,4 +366,29 @@ test('does not query the database for a blank suggestion query', async () => {
 
   assert.deepEqual(response, []);
   assert.equal(queried, false);
+});
+
+test('uses the persisted asset key when creating a public derivative URL', async () => {
+  const calls: CatalogMediaReadUrlInput[] = [];
+  const service = createMediaService(
+    {
+      id: 'database-media-1',
+      productId: 'product-1',
+      storageStatus: 'READY',
+      derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+    },
+    async (input) => {
+      calls.push(input);
+      return 'https://cdn.test/asset-1.webp';
+    },
+  );
+
+  assert.equal(await service.getMediaUrl('database-media-1'), 'https://cdn.test/asset-1.webp');
+  assert.deepEqual(calls, [
+    {
+      mediaId: 'asset-1',
+      productId: 'product-1',
+      derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+    },
+  ]);
 });

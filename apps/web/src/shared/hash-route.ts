@@ -26,6 +26,7 @@ export type HashRoute =
   | { kind: 'product'; path: string; queryString: string; slug: string }
   | { kind: 'cart'; path: string; queryString: string }
   | { kind: 'preview-state'; path: string; queryString: string; state: PreviewState }
+  | { kind: 'local-payment'; path: string; queryString: string }
   | { kind: 'checkout-confirmation'; path: string; queryString: string }
   | { kind: 'checkout'; path: string; queryString: string; step: string }
   | { kind: 'account'; path: string; queryString: string; section?: string }
@@ -106,6 +107,7 @@ export function parseHashRoute(route: string): HashRoute {
     return { ...shared, kind: 'cart' };
   }
   if (path === '#checkout/confirmation') return { ...shared, kind: 'checkout-confirmation' };
+  if (path === '#checkout/local-payment') return { ...shared, kind: 'local-payment' };
   if (path === '#checkout/payment-pending') {
     return { ...shared, kind: 'preview-state', state: 'payment-pending' };
   }

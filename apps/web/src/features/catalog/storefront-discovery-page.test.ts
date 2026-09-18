@@ -1,17 +1,22 @@
 import assert from 'node:assert/strict';
+import { createElement } from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { test } from 'node:test';
 
 import {
   buildDiscoveryHref,
+  CatalogQueryState,
   discoveryFacetFiltersFromQuery,
   discoveryFiltersFromQuery,
   parseDiscoveryQuery,
   preserveFacetSelection,
   productAddButtonLabel,
   resolveVariant,
+  shouldShowCatalogRefreshNotice,
   shouldShowProductLoading,
   structuredVariantOptions,
 } from './storefront-discovery-page';
+import type { useCatalogProducts } from './catalog-api';
 
 test('parses shareable discovery state and keeps invalid sort/page values safe', () => {
   assert.deepEqual(
@@ -172,4 +177,27 @@ test('does not treat a disabled product query as loading without a slug', () => 
   assert.equal(shouldShowProductLoading('', true), false);
   assert.equal(shouldShowProductLoading('linen-overshirt', false), false);
   assert.equal(shouldShowProductLoading('linen-overshirt', true), true);
+});
+
+test('keeps cached catalog results visible with a retry warning after refresh failure', () => {
+  assert.equal(shouldShowCatalogRefreshNotice(true, true), true);
+  assert.equal(shouldShowCatalogRefreshNotice(true, false), false);
+  assert.equal(shouldShowCatalogRefreshNotice(false, true), false);
+
+  const markup = renderToStaticMarkup(
+    createElement(CatalogQueryState, {
+      query: {
+        data: { items: [{ slug: 'cached-product' }], total: 1, page: 1, limit: 8 },
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        refetch: async () => undefined,
+      } as unknown as ReturnType<typeof useCatalogProducts>,
+      children: createElement('p', null, 'cached product cards'),
+    }),
+  );
+
+  assert.match(markup, /به‌روزرسانی نتایج انجام نشد/);
+  assert.match(markup, /تلاش دوباره/);
+  assert.match(markup, /cached product cards/);
 });

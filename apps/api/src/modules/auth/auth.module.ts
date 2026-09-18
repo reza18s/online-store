@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { CustomerAuthGuard } from './customer-auth.guard';
 import {
   isValidSmsIrOtpDeliveryConfig,
+  LocalOtpDelivery,
   OTP_DELIVERY,
   SmsIrOtpDelivery,
   UnconfiguredOtpDelivery,
@@ -27,19 +28,21 @@ import { SessionService } from './session.service';
     {
       provide: OTP_DELIVERY,
       useFactory: () =>
-        isValidSmsIrOtpDeliveryConfig({
-          apiKey: environment.SMS_IR_API_KEY,
-          templateId: environment.SMS_IR_TEMPLATE_ID,
-          baseUrl: environment.SMS_IR_BASE_URL,
-          sandbox: environment.SMS_IR_SANDBOX,
-        })
-          ? new SmsIrOtpDelivery({
-              apiKey: environment.SMS_IR_API_KEY,
-              templateId: environment.SMS_IR_TEMPLATE_ID,
-              baseUrl: environment.SMS_IR_BASE_URL,
-              sandbox: environment.SMS_IR_SANDBOX,
-            })
-          : new UnconfiguredOtpDelivery(),
+        environment.NODE_ENV === 'development' || environment.NODE_ENV === 'test'
+          ? new LocalOtpDelivery()
+          : isValidSmsIrOtpDeliveryConfig({
+                apiKey: environment.SMS_IR_API_KEY,
+                templateId: environment.SMS_IR_TEMPLATE_ID,
+                baseUrl: environment.SMS_IR_BASE_URL,
+                sandbox: environment.SMS_IR_SANDBOX,
+              })
+            ? new SmsIrOtpDelivery({
+                apiKey: environment.SMS_IR_API_KEY,
+                templateId: environment.SMS_IR_TEMPLATE_ID,
+                baseUrl: environment.SMS_IR_BASE_URL,
+                sandbox: environment.SMS_IR_SANDBOX,
+              })
+            : new UnconfiguredOtpDelivery(),
     },
   ],
   exports: [AuthService, CustomerAuthGuard, SessionService, OTP_STATE_STORE],

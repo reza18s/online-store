@@ -7,6 +7,7 @@ import {
 } from 'react';
 
 import type { CatalogSearchSuggestion } from '@nova/api-client';
+import { Button, Input as UiInput } from '@nova/ui';
 
 import { useCatalogSuggestions } from '../features/catalog/catalog-api';
 import { Icon } from './icon';
@@ -47,14 +48,14 @@ export function Header({
     <header className="site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur">
       <div className="shell site-header__inner mx-auto w-[calc(100%-2rem)] max-w-[1280px]">
         <div className="site-header__nav-wrap flex items-center gap-3.5">
-          <button
+          <Button
             className="icon-button site-header__menu"
             type="button"
             onClick={onMenu}
             aria-label="باز کردن منو"
           >
             <Icon name="menu" />
-          </button>
+          </Button>
           <nav className="site-nav" aria-label="دسته‌بندی‌های اصلی">
             {navItems.map((item) => (
               <a key={item.href} href={item.href} className="site-nav__link">
@@ -67,9 +68,9 @@ export function Header({
         <Logo />
 
         <div className="site-header__actions flex items-center gap-0.5">
-          <button className="icon-button" type="button" onClick={onSearch} aria-label="جست‌وجو">
+          <Button className="icon-button" type="button" onClick={onSearch} aria-label="جست‌وجو">
             <Icon name="search" />
-          </button>
+          </Button>
           <a className="icon-button site-header__account" href="#account" aria-label="حساب کاربری">
             <Icon name="user" />
           </a>
@@ -290,9 +291,9 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
             <span className="section-heading__eyebrow">NOVA / SEARCH</span>
             <h2 id="search-title">چه چیزی پیدا می‌کنید؟</h2>
           </div>
-          <button className="icon-button" type="button" onClick={onClose} aria-label="بستن جست‌وجو">
+          <Button className="icon-button" type="button" onClick={onClose} aria-label="بستن جست‌وجو">
             <Icon name="close" />
-          </button>
+          </Button>
         </div>
         <form
           className="search-field"
@@ -302,7 +303,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
           }}
         >
           <Icon name="search" size={19} />
-          <input
+          <UiInput
             ref={inputRef}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -322,13 +323,13 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
               role="alert"
             >
               <span>جست‌وجو در دسترس نیست.</span>
-              <button
+              <Button
                 className="text-primary underline"
                 type="button"
                 onClick={() => void suggestionQuery.refetch()}
               >
                 تلاش دوباره
-              </button>
+              </Button>
             </div>
           ) : suggestions.length ? (
             suggestions.map((suggestion) => (
@@ -365,7 +366,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
               <span className="section-heading__eyebrow">جست‌وجوهای اخیر</span>
               <div className="mt-2 flex flex-wrap gap-2">
                 {recent.map((item) => (
-                  <button
+                  <Button
                     className="border border-border bg-surface px-3 py-2 text-xs hover:border-primary hover:text-primary"
                     type="button"
                     key={item}
@@ -375,7 +376,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
                     }}
                   >
                     {item}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -416,7 +417,7 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
       >
         <div className="menu-drawer__top">
           <Logo />
-          <button
+          <Button
             ref={closeButtonRef}
             className="icon-button"
             type="button"
@@ -424,7 +425,7 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
             aria-label="بستن منو"
           >
             <Icon name="close" />
-          </button>
+          </Button>
         </div>
         <nav>
           {navItems.map((item) => (

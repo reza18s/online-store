@@ -9,7 +9,17 @@
         "cwd": "${workspaceFolder}"
       },
       "isBackground": true,
-      "problemMatcher": [],
+      "problemMatcher": {
+        "owner": "nova-vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^$",
+          "endsPattern": "^VITE .* ready"
+        }
+      },
       "presentation": {
         "group": "nova",
         "panel": "dedicated",
@@ -17,14 +27,44 @@
       }
     },
     {
+      "label": "NOVA: Open storefront",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-Command",
+        "Start-Process 'http://127.0.0.1:5173/#home'"
+      ],
+      "dependsOn": "NOVA: Start full stack",
+      "dependsOrder": "sequence",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never"
+      }
+    },
+    {
       "label": "NOVA: Start API",
       "type": "shell",
-      "command": "bun run dev:api",
+      "command": "bun run dev:api:local",
+      "detail": "Starts the isolated local infrastructure, applies migrations and seed, then starts the API.",
       "options": {
         "cwd": "${workspaceFolder}"
       },
       "isBackground": true,
-      "problemMatcher": [],
+      "problemMatcher": {
+        "owner": "nova-api",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^Starting PostgreSQL",
+          "endsPattern": "^(Local dependencies are ready\\. Starting the API on|Local dependencies and API are already ready on)"
+        }
+      },
       "presentation": {
         "group": "nova",
         "panel": "dedicated",
@@ -35,11 +75,28 @@
       "label": "NOVA: Start worker",
       "type": "shell",
       "command": "bun run dev:worker",
+      "dependsOn": "NOVA: Start API",
+      "dependsOrder": "sequence",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "DATABASE_URL": "postgresql://nova:nova_local_only@127.0.0.1:55432/nova?schema=public",
+          "REDIS_URL": "redis://127.0.0.1:56379",
+          "S3_ENDPOINT": "http://127.0.0.1:59000"
+        }
       },
       "isBackground": true,
-      "problemMatcher": [],
+      "problemMatcher": {
+        "owner": "nova-worker",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^$",
+          "endsPattern": "worker_started"
+        }
+      },
       "presentation": {
         "group": "nova",
         "panel": "dedicated",
@@ -51,7 +108,13 @@
       "type": "shell",
       "command": "docker compose --env-file .env.example -f infra/docker/compose.yml up -d",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "POSTGRES_PORT": "55432",
+          "REDIS_PORT": "56379",
+          "S3_PORT": "59000",
+          "S3_CONSOLE_PORT": "59001"
+        }
       },
       "problemMatcher": [],
       "presentation": {
@@ -133,9 +196,7 @@
     {
       "label": "NOVA: Start full stack",
       "dependsOn": [
-        "NOVA: Start infrastructure",
         "NOVA: Start frontend",
-        "NOVA: Start API",
         "NOVA: Start worker"
       ],
       "dependsOrder": "parallel",

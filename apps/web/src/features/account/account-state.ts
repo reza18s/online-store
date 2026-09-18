@@ -55,6 +55,8 @@ export interface ReturnEligibility {
   reason: ReturnEligibilityReason;
 }
 
+export type ReturnOrderState = 'requested' | 'ineligible' | 'not-requested';
+
 export function formatToman(amount: number): string {
   return `${new Intl.NumberFormat('fa-IR').format(amount)} تومان`;
 }
@@ -143,6 +145,14 @@ export function getReturnEligibility(
     return { eligible: false, reason: 'expired' };
   }
   return { eligible: true, reason: 'eligible' };
+}
+
+export function getReturnOrderState(
+  order: Pick<CustomerOrderDetail, 'status' | 'paymentStatus' | 'shipment' | 'returnRequest'>,
+  now = new Date(),
+): ReturnOrderState {
+  if (order.returnRequest) return 'requested';
+  return getReturnEligibility(order, now).eligible ? 'not-requested' : 'ineligible';
 }
 
 export function clearCustomerProtectedCache(queryClient: QueryClient, resetSession = false): void {

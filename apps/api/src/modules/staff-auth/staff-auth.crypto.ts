@@ -74,6 +74,7 @@ export function verifyStaffPassword(password: string, encoded: string): boolean 
 
   try {
     const expected = fromBase64Url(expectedText);
+    if (expected.length === 0) return false;
     const actual = scryptSync(password, fromBase64Url(saltText), expected.length, {
       N: n,
       r,

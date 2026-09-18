@@ -50,6 +50,8 @@ import { normalizeSearchText } from './dto/product-list.query';
 import { CATALOG_PRODUCT_STATUSES, type CatalogProductStatus } from './dto/product-status.dto';
 import {
   CATALOG_MEDIA_STORAGE,
+  catalogMediaAssetIdFromObjectKeys,
+  catalogMediaObjectKeys,
   DisabledCatalogMediaStorage,
   CatalogMediaStorageError,
   type CatalogMediaCompletedAsset,
@@ -2078,6 +2080,18 @@ export class CatalogAdminService {
     try {
       asset = await this.storage.completeUpload(uploadInput);
     } catch (error) {
+      try {
+        const keys = catalogMediaObjectKeys(uploadInput);
+        await this.storage.quarantine({
+          mediaId: assetId,
+          productId: product,
+          originalKey: keys.originalKey,
+          derivativeKey: keys.derivativeKey,
+        });
+      } catch {
+        // The original completion error remains authoritative. The storage
+        // implementation treats missing objects as an idempotent no-op.
+      }
       rethrowMediaStorageError(error);
     }
 
@@ -2132,7 +2146,7 @@ export class CatalogAdminService {
       if (error instanceof ConflictException) throw error;
       try {
         await this.storage.quarantine({
-          mediaId,
+          mediaId: assetId,
           productId: product,
           originalKey: asset.originalKey,
           derivativeKey: asset.derivativeKey,
@@ -2294,25 +2308,39 @@ export class CatalogAdminService {
     }
 
     const hasStoredObjects =
-      current.storageStatus === 'READY' &&
+      (current.storageStatus === 'READY' || current.storageStatus === 'QUARANTINED') &&
       current.originalKey !== null &&
       current.derivativeKey !== null;
-    if (hasStoredObjects) {
+    const assetId = hasStoredObjects
+      ? (() => {
+          try {
+            return catalogMediaAssetIdFromObjectKeys(product, {
+              originalKey: current.originalKey as string,
+              derivativeKey: current.derivativeKey as string,
+            });
+          } catch (error) {
+            rethrowMediaStorageError(error);
+          }
+        })()
+      : undefined;
+    if (assetId !== undefined) {
       const originalKey = current.originalKey as string;
       const derivativeKey = current.derivativeKey as string;
-      const quarantined = await this.database.prisma.productMedia.updateMany({
-        where: { id: media, productId: product, storageStatus: 'READY' },
-        data: { storageStatus: 'QUARANTINED' },
-      });
-      if (quarantined.count !== 1) {
-        throw new ConflictException({
-          code: 'PRODUCT_MEDIA_DELETE_CONFLICT',
-          message: 'تصویر محصول هم‌زمان تغییر کرده است؛ دوباره تلاش کنید.',
+      if (current.storageStatus === 'READY') {
+        const quarantined = await this.database.prisma.productMedia.updateMany({
+          where: { id: media, productId: product, storageStatus: 'READY' },
+          data: { storageStatus: 'QUARANTINED' },
         });
+        if (quarantined.count !== 1) {
+          throw new ConflictException({
+            code: 'PRODUCT_MEDIA_DELETE_CONFLICT',
+            message: 'تصویر محصول هم‌زمان تغییر کرده است؛ دوباره تلاش کنید.',
+          });
+        }
       }
       try {
         await this.storage.quarantine({
-          mediaId: media,
+          mediaId: assetId,
           productId: product,
           originalKey,
           derivativeKey,

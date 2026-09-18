@@ -30,35 +30,46 @@ const optionalPositiveIntegerFromEnvironment = z.preprocess(
   z.coerce.number().int().positive().optional(),
 );
 
-const environmentSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'staging', 'production']).default('development'),
-  API_PORT: z.coerce.number().int().min(1).max(65_535).default(4000),
-  WEB_ORIGIN: z.string().url().default('http://127.0.0.1:5173'),
-  DATABASE_URL: z
-    .string()
-    .url()
-    .default('postgresql://nova:nova_local_only@localhost:5432/nova?schema=public'),
-  REDIS_URL: z.string().url().default('redis://localhost:6379'),
-  S3_ENDPOINT: z.string().url().default('http://127.0.0.1:59000'),
-  S3_REGION: z.string().min(1).default('us-east-1'),
-  S3_BUCKET: z.string().min(1).default('nova-media-local'),
-  S3_ACCESS_KEY: z.string().min(1).default('nova_local_s3'),
-  S3_SECRET_KEY: z.string().min(1).default('nova_local_s3_secret_change_me'),
-  S3_FORCE_PATH_STYLE: booleanFromEnvironment(true),
-  ZARINPAL_MERCHANT_ID: optionalTextFromEnvironment,
-  ZARINPAL_BASE_URL: optionalUrlFromEnvironment,
-  ZARINPAL_SANDBOX: booleanFromEnvironment(true),
-  SMS_IR_API_KEY: optionalTextFromEnvironment,
-  SMS_IR_LINE_NUMBER: optionalTextFromEnvironment,
-  SMS_IR_TEMPLATE_ID: optionalPositiveIntegerFromEnvironment,
-  SMS_IR_BASE_URL: z.string().url().default('https://api.sms.ir/v1'),
-  SMS_IR_SANDBOX: booleanFromEnvironment(true),
-  TAPIN_API_KEY: optionalTextFromEnvironment,
-  TAPIN_BASE_URL: optionalUrlFromEnvironment,
-  TAPIN_SANDBOX: booleanFromEnvironment(true),
-  AUTH_SECRET: z.string().min(32).default(DEFAULT_AUTH_SECRET),
-  STAFF_TOTP_ENCRYPTION_KEY: z.string().min(32).default(DEFAULT_STAFF_TOTP_ENCRYPTION_KEY),
-});
+const environmentSchema = z
+  .object({
+    NODE_ENV: z.enum(['development', 'test', 'staging', 'production']).default('development'),
+    API_PORT: z.coerce.number().int().min(1).max(65_535).default(4000),
+    WEB_ORIGIN: z.string().url().default('http://127.0.0.1:5173'),
+    DATABASE_URL: z
+      .string()
+      .url()
+      .default('postgresql://nova:nova_local_only@localhost:5432/nova?schema=public'),
+    REDIS_URL: z.string().url().default('redis://localhost:6379'),
+    S3_ENDPOINT: z.string().url().default('http://127.0.0.1:59000'),
+    S3_REGION: z.string().min(1).default('us-east-1'),
+    S3_BUCKET: z.string().min(1).default('nova-media-local'),
+    S3_ACCESS_KEY: z.string().min(1).default('nova_local_s3'),
+    S3_SECRET_KEY: z.string().min(1).default('nova_local_s3_secret_change_me'),
+    S3_FORCE_PATH_STYLE: booleanFromEnvironment(true),
+    ZARINPAL_MERCHANT_ID: optionalTextFromEnvironment,
+    ZARINPAL_BASE_URL: optionalUrlFromEnvironment,
+    ZARINPAL_SANDBOX: booleanFromEnvironment(true),
+    SMS_IR_API_KEY: optionalTextFromEnvironment,
+    SMS_IR_LINE_NUMBER: optionalTextFromEnvironment,
+    SMS_IR_TEMPLATE_ID: optionalPositiveIntegerFromEnvironment,
+    SMS_IR_BASE_URL: z.string().url().default('https://api.sms.ir/v1'),
+    SMS_IR_SANDBOX: booleanFromEnvironment(true),
+    IRAN_POST_API_KEY: optionalTextFromEnvironment,
+    IRAN_POST_BASE_URL: optionalUrlFromEnvironment,
+    IRAN_POST_SANDBOX: booleanFromEnvironment(true),
+    AUTH_SECRET: z.string().min(32).default(DEFAULT_AUTH_SECRET),
+    STAFF_TOTP_ENCRYPTION_KEY: z.string().min(32).default(DEFAULT_STAFF_TOTP_ENCRYPTION_KEY),
+    LOCAL_TEST_MODE: booleanFromEnvironment(false),
+  })
+  .superRefine((value, context) => {
+    if (value.LOCAL_TEST_MODE && value.NODE_ENV !== 'development' && value.NODE_ENV !== 'test') {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['LOCAL_TEST_MODE'],
+        message: 'LOCAL_TEST_MODE is allowed only in development or test environments.',
+      });
+    }
+  });
 
 export type Environment = z.infer<typeof environmentSchema>;
 
@@ -83,11 +94,12 @@ export function parseEnvironment(input: NodeJS.ProcessEnv = process.env): Enviro
     SMS_IR_TEMPLATE_ID: input.SMS_IR_TEMPLATE_ID,
     SMS_IR_BASE_URL: input.SMS_IR_BASE_URL,
     SMS_IR_SANDBOX: input.SMS_IR_SANDBOX,
-    TAPIN_API_KEY: input.TAPIN_API_KEY,
-    TAPIN_BASE_URL: input.TAPIN_BASE_URL,
-    TAPIN_SANDBOX: input.TAPIN_SANDBOX,
+    IRAN_POST_API_KEY: input.IRAN_POST_API_KEY,
+    IRAN_POST_BASE_URL: input.IRAN_POST_BASE_URL,
+    IRAN_POST_SANDBOX: input.IRAN_POST_SANDBOX,
     AUTH_SECRET: input.AUTH_SECRET,
     STAFF_TOTP_ENCRYPTION_KEY: input.STAFF_TOTP_ENCRYPTION_KEY,
+    LOCAL_TEST_MODE: input.LOCAL_TEST_MODE,
   });
 }
 

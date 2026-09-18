@@ -60,6 +60,10 @@ test('keeps cart, checkout, and account route precedence', () => {
     kind: 'checkout-confirmation',
     queryString: 'orderNumber=NV-1',
   });
+  assertRoute('#checkout/local-payment?orderNumber=NV-1', {
+    kind: 'local-payment',
+    queryString: 'orderNumber=NV-1',
+  });
   assertRoute('#account', { kind: 'account' });
   assertRoute('#account/orders', { kind: 'account', section: 'orders' });
   assertRoute('#account/addresses', { kind: 'address-list' });

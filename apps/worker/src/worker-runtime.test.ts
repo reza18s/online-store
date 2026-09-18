@@ -87,6 +87,21 @@ function job(): RuntimeJob {
   };
 }
 
+test('rejects timer intervals that would be coerced into unsafe scheduling', () => {
+  const fixture = createRuntimeDatabase();
+
+  assert.throws(
+    () =>
+      new NotificationWorkerRuntime({
+        database: fixture.database,
+        sender: { send: async () => {} },
+        environment: 'test',
+        intervalMs: 0,
+      }),
+    { message: 'worker-interval-invalid' },
+  );
+});
+
 test('suppresses overlapping ticks and waits for the active tick before disconnecting', async () => {
   const fixture = createRuntimeDatabase([job()]);
   const logs = createLogger();

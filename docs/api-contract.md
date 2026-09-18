@@ -26,6 +26,7 @@ The check fails when a controller route is added, removed, or renamed without up
 - Cart reads and item mutations support a guest cart cookie; `POST /v1/cart/merge` requires a customer session and may return `409 CART_MERGE_CONFLICT` with typed conflict details.
 - Customer order and checkout routes require customer authentication. Admin order reads require `support`, `operations`, or `admin`; fulfillment mutations require `operations` or `admin`; return review requires `support` or `admin`. Admin payments and content require `admin`.
 - Checkout and customer order payment objects retain `redirectUrl` because those responses may return a customer payment redirect. Admin order detail payment objects intentionally omit `redirectUrl`, including when the underlying payment attempt has one.
+- In development/test, the payment redirect may point to the first-party local payment route and is completed through the signed `/v1/payments/local/callback` flow. The customer OTP response may also include an optional `localCode`; this field is emitted only by the local OTP adapter and is absent from provider-backed responses.
 
 ## Errors and intentional gaps
 

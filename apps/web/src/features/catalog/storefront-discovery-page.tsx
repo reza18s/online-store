@@ -7,7 +7,7 @@ import type {
   CatalogSort,
   CatalogProductVariant,
 } from '@nova/api-client';
-import { Button } from '@nova/ui';
+import { Button, Checkbox, Input as UiInput, Select as UiSelect } from '@nova/ui';
 
 import { Icon } from '../../shared/icon';
 import {
@@ -58,7 +58,7 @@ const audienceCopy: Record<
     label: 'زنانه',
     title: 'لباس‌هایی برای روزهای روشن',
     description: 'رویه‌های سبک، بافت‌های آرام و جزئیاتی که هر روز را شخصی‌تر می‌کنند.',
-    image: '/assets/nova-women-lifestyle.webp',
+    image: '/assets/nova-hero-editorial-v2.png',
   },
   men: {
     label: 'مردانه',
@@ -253,7 +253,7 @@ function MessageCard({
 }) {
   return (
     <section
-      className={`border bg-surface p-7 text-center shadow-card ${tone === 'error' ? 'border-error text-destructive' : tone === 'warning' ? 'border-warning' : 'border-border'}`}
+      className={`rounded-editorial border bg-surface p-7 text-center shadow-card ${tone === 'error' ? 'border-error text-destructive' : tone === 'warning' ? 'border-warning' : 'border-border'}`}
       role={tone === 'neutral' ? undefined : 'alert'}
     >
       <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
@@ -292,7 +292,26 @@ function ProductSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
-function CatalogQueryState({
+export function shouldShowCatalogRefreshNotice(isError: boolean, hasData: boolean): boolean {
+  return isError && hasData;
+}
+
+function CatalogRefreshNotice({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div
+      className="flex flex-wrap items-center justify-between gap-3 border border-warning bg-warning-soft p-4 text-sm"
+      role="alert"
+    >
+      <span>به‌روزرسانی نتایج انجام نشد؛ اطلاعات فعلی ممکن است قدیمی باشد.</span>
+      <Button type="button" size="sm" variant="outline" onClick={onRetry}>
+        <Icon name="refresh" size={16} />
+        تلاش دوباره
+      </Button>
+    </div>
+  );
+}
+
+export function CatalogQueryState({
   query,
   emptyTitle = 'محصولی برای نمایش پیدا نشد',
   children,
@@ -319,17 +338,24 @@ function CatalogQueryState({
       />
     );
   }
+  const refreshNotice = shouldShowCatalogRefreshNotice(query.isError, Boolean(query.data)) ? (
+    <CatalogRefreshNotice onRetry={() => void query.refetch()} />
+  ) : null;
   if (query.data && !query.data.items.length) {
     return (
-      <MessageCard
-        title={emptyTitle}
-        description="فیلترها را تغییر دهید یا از انتخاب‌های تازه نوا دیدن کنید."
-        icon="layers"
-      />
+      <div className="space-y-3">
+        {refreshNotice}
+        <MessageCard
+          title={emptyTitle}
+          description="فیلترها را تغییر دهید یا از انتخاب‌های تازه نوا دیدن کنید."
+          icon="layers"
+        />
+      </div>
     );
   }
   return (
     <div className="space-y-3">
+      {refreshNotice}
       {query.isFetching ? (
         <p className="text-xs text-muted-foreground" role="status">
           در حال به‌روزرسانی نتایج...
@@ -376,7 +402,7 @@ function ProductCard({
             </span>
           )}
         </a>
-        <button
+        <Button
           className={`icon-button absolute end-2 top-2 bg-surface/90 ${isWishlisted ? 'text-primary' : ''}`}
           type="button"
           aria-label={
@@ -388,7 +414,7 @@ function ProductCard({
           onClick={() => onToggleWishlist(product.slug)}
         >
           <Icon name="heart" size={17} />
-        </button>
+        </Button>
         {product.tag ? (
           <span className="absolute start-2 top-2 rounded-control bg-success-soft px-2 py-1 text-[10px] text-success">
             {product.tag}
@@ -427,7 +453,7 @@ function ProductCard({
                 />
               ))}
             </div>
-            <button
+            <Button
               className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform hover:-translate-y-px hover:bg-primary-hover disabled:cursor-not-allowed disabled:bg-secondary disabled:text-muted-foreground motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               type="button"
               disabled={disabled}
@@ -437,7 +463,7 @@ function ProductCard({
               onClick={() => onAdd(product)}
             >
               <Icon name="plus" size={17} />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -508,154 +534,189 @@ function useProductAdder() {
   return { add, feedback, isPending: mutation.isPending };
 }
 
-function CategoryRail() {
-  const categoriesQuery = useCatalogCategories();
-  if (categoriesQuery.isPending && !categoriesQuery.data)
-    return (
-      <div
-        className="h-16 rounded-editorial bg-secondary motion-safe:animate-pulse"
-        role="status"
-        aria-label="در حال بارگذاری دسته‌ها"
-      />
-    );
-  if (categoriesQuery.isError && !categoriesQuery.data)
-    return <p className="text-sm text-muted-foreground">دسته‌بندی‌ها موقتاً در دسترس نیستند.</p>;
-  const categories = categoriesQuery.data ?? [];
-  return (
-    <nav
-      className="flex gap-2 overflow-x-auto border-y border-border py-3"
-      aria-label="دسته‌بندی‌های فروشگاه"
-    >
-      {categories.map((category) => (
-        <a
-          className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-editorial border border-border bg-surface px-3 text-sm hover:border-primary hover:text-primary"
-          href={`#products?category=${encodeURIComponent(category.slug)}`}
-          key={category.id}
-        >
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-secondary">
-            <Icon name="layers" size={16} />
-          </span>
-          {category.name}
-        </a>
-      ))}
-    </nav>
-  );
-}
-
 function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
   const productsQuery = useCatalogProducts({ limit: 8, sort: 'newest' });
   const adder = useProductAdder();
   const isWishlisted = props.isWishlisted ?? (() => false);
   const onToggleWishlist = props.onToggleWishlist ?? (() => undefined);
   const products = productsQuery.data?.items.map(toStorefrontProduct) ?? [];
+  const lookbookStories = [
+    {
+      title: 'شهر در پاییز',
+      description: 'لایه‌هایی گرم برای قدم‌زدن‌های ماندگار',
+      image: '/assets/nova-women-lifestyle.webp',
+      href: '#campaign',
+    },
+    {
+      title: 'مینیمال، همیشه زیباست',
+      description: 'فرم‌های ساده برای جزئیات روزمره',
+      image: '/assets/nova-hero-editorial-v2.png',
+      href: '#category/women',
+    },
+    {
+      title: 'تعادل در هر فصل',
+      description: 'استایلی برای تمام لحظه‌ها',
+      image: '/assets/nova-hero-men.webp',
+      href: '#category/men',
+    },
+    {
+      title: 'شب‌های تهران',
+      description: 'وقتی استایل، داستان می‌گوید',
+      image: '/assets/nova-materials.webp',
+      href: '#article',
+    },
+  ];
   return (
-    <main className="bg-background">
-      <div className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-8 py-6 md:space-y-12 md:py-10">
-        <section
-          className="grid gap-4 lg:grid-cols-[minmax(0,7fr)_minmax(220px,3fr)_minmax(170px,2fr)]"
-          aria-labelledby="storefront-home-title"
-        >
-          <article className="relative min-h-[300px] overflow-hidden rounded-editorial border border-border bg-surface md:min-h-[360px]">
-            <img
-              className="absolute inset-0 h-full w-full object-cover"
-              src="/assets/nova-women-lifestyle.webp"
-              alt="استایل پاییزی زنانه در فضای روشن و آرام"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-foreground/10 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 space-y-3 p-5 text-primary-foreground md:p-7">
-              <span className="text-xs">NOVA / کالکشن تازه</span>
-              <h1 className="max-w-[18ch] text-2xl md:text-3xl" id="storefront-home-title">
-                جزئیات آرام، برای روزهای بلند
-              </h1>
-              <p className="max-w-[42ch] text-sm leading-7">
-                انتخابی از بافت‌های طبیعی، فرم‌های دقیق و رنگ‌هایی که با فصل همراه می‌شوند.
-              </p>
-              <a
-                className="inline-flex min-h-11 items-center gap-2 rounded-pill bg-primary px-4 text-sm font-semibold"
-                href="#products/new"
-              >
-                مشاهده کالکشن <Icon name="arrow-left" size={16} />
-              </a>
+    <main className="lookbook-home bg-background">
+      <div className="shell">
+        <section className="lookbook-hero" aria-labelledby="storefront-home-title">
+          <img
+            src="/assets/nova-hero-editorial-v2.png"
+            alt="استایل زنانه نوا در آتلیه‌ای با نور گرم"
+          />
+          <div className="lookbook-hero__shade" aria-hidden="true" />
+          <div className="lookbook-hero__copy">
+            <span>NOVA LOOKBOOK</span>
+            <h1 id="storefront-home-title">استایل‌هایی برای زندگی واقعی</h1>
+            <p>ترکیبی از ظرافت، شخصیت و لحظه‌های خاص؛ الهام بگیرید، سبک خود را پیدا کنید.</p>
+            <a className="lookbook-button" href="#campaign">
+              مشاهده لوک‌بوک <Icon name="arrow-left" size={16} />
+            </a>
+            <small>REAL PEOPLE · BEAUTIFUL STORIES</small>
+          </div>
+          <aside className="lookbook-hero__note" aria-hidden="true">
+            <p>بیش از مد، یک سبک زندگی.</p>
+            <span>
+              TIMELESS
+              <br />
+              ELEGANT
+              <br />
+              PERSIAN
+              <br />
+              ALWAYS YOU
+            </span>
+          </aside>
+        </section>
+
+        <section className="lookbook-stories" aria-labelledby="lookbook-stories-title">
+          <div className="lookbook-section-heading">
+            <div>
+              <span>NOVA / EDITORIAL STORIES</span>
+              <h2 id="lookbook-stories-title">مجموعه استایل‌ها</h2>
             </div>
-          </article>
-          <a
-            className="relative min-h-40 overflow-hidden rounded-editorial bg-secondary"
-            href="#category/men"
-          >
+            <a href="#campaign">
+              مشاهده همه <Icon name="arrow-left" size={14} />
+            </a>
+          </div>
+          <div className="lookbook-stories__grid">
+            {lookbookStories.map((story) => (
+              <a className="lookbook-story-card" href={story.href} key={story.title}>
+                <img src={story.image} alt="" loading="lazy" />
+                <div>
+                  <strong>{story.title}</strong>
+                  <p>{story.description}</p>
+                  <span>
+                    مشاهده استایل <Icon name="arrow-left" size={13} />
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="lookbook-manifesto" aria-labelledby="lookbook-manifesto-title">
+          <div className="lookbook-manifesto__portrait">
             <img
-              className="h-full w-full object-cover"
-              src="/assets/nova-hero-men.webp"
-              alt="استایل مردانه با کت چهارخانه در استودیو"
+              src="/assets/nova-women-lifestyle.webp"
+              alt="پرتره زن با استایل کلاسیک نوا"
+              loading="lazy"
             />
-            <span className="absolute inset-x-0 bottom-0 bg-foreground/65 p-4 text-sm text-primary-foreground">
-              فرم‌های ماندگار / مشاهده مردانه
-            </span>
-          </a>
-          <a
-            className="relative min-h-40 overflow-hidden rounded-editorial bg-secondary"
-            href="#article"
-          >
+            <blockquote>مد، راهی برای گفتن داستان خود است.</blockquote>
+          </div>
+          <div className="lookbook-manifesto__copy">
+            <span>NOVA / PERSONAL STYLE</span>
+            <h2 id="lookbook-manifesto-title">لحظه‌هایی که می‌مانند</h2>
+            <p>
+              هر استایل، بخشی از یک روایت است؛ از صبح‌های آرام تا شب‌های فراموش‌نشدنی. لوک‌بوک نوا،
+              الهام‌گرفته از زنان واقعی و زندگی‌های زیباست.
+            </p>
+            <a href="#article">
+              کاوش در لوک‌بوک <Icon name="arrow-left" size={14} />
+            </a>
+          </div>
+          <a className="lookbook-manifesto__aside" href="#campaign">
             <img
-              className="h-full w-full object-cover"
               src="/assets/nova-materials.webp"
-              alt="بافت‌های طبیعی پارچه و نخ در کنار هم"
+              alt="جزئیات معماری و بافت‌های الهام‌بخش نوا"
+              loading="lazy"
             />
-            <span className="absolute inset-x-0 bottom-0 bg-foreground/65 p-4 text-sm text-primary-foreground">
-              یادداشت متریال
-            </span>
+            <span>زیباتر از دیروز، برای فردایی روشن‌تر</span>
           </a>
         </section>
-        <CategoryRail />
-        <section aria-labelledby="new-arrivals-title" className="space-y-5">
-          <div className="flex items-end justify-between gap-4">
+
+        <section className="lookbook-products" aria-labelledby="new-arrivals-title">
+          <div className="lookbook-section-heading">
             <div>
-              <span className="text-xs text-primary">۰۲ / انتخاب‌های تازه</span>
-              <h2 className="mt-2 text-xl md:text-2xl" id="new-arrivals-title">
-                تازه‌های آتلیه
-              </h2>
+              <span>SHOP THE LOOK</span>
+              <h2 id="new-arrivals-title">آیتم‌های این استایل</h2>
             </div>
-            <a className="text-sm text-primary underline" href="#products/new">
-              مشاهده همه
+            <a href="#products/new">
+              مشاهده همه <Icon name="arrow-left" size={14} />
             </a>
           </div>
           <CatalogQueryState query={productsQuery}>
-            <ProductGrid
-              products={products.slice(0, 4)}
-              isWishlisted={isWishlisted}
-              onToggleWishlist={onToggleWishlist}
-              onAdd={adder.add}
-            />
+            <div className="lookbook-products__grid">
+              {products.slice(0, 6).map((product) => (
+                <article className="lookbook-product" key={product.slug}>
+                  <div className="lookbook-product__media">
+                    <a
+                      href={`#product/${encodeURIComponent(product.slug)}`}
+                      aria-label={`مشاهده ${product.name}`}
+                    >
+                      {product.image ? (
+                        <img src={product.image} alt={product.alt} loading="lazy" />
+                      ) : (
+                        <Icon name="shirt" size={30} />
+                      )}
+                    </a>
+                    <Button
+                      className={`icon-button lookbook-product__favorite ${isWishlisted(product.slug) ? 'is-selected' : ''}`}
+                      type="button"
+                      aria-label={
+                        isWishlisted(product.slug)
+                          ? `حذف ${product.name} از علاقه‌مندی‌ها`
+                          : `افزودن ${product.name} به علاقه‌مندی‌ها`
+                      }
+                      aria-pressed={isWishlisted(product.slug)}
+                      onClick={() => onToggleWishlist(product.slug)}
+                    >
+                      <Icon name="heart" size={15} />
+                    </Button>
+                  </div>
+                  <a
+                    className="lookbook-product__name"
+                    href={`#product/${encodeURIComponent(product.slug)}`}
+                  >
+                    {product.name}
+                  </a>
+                  <button
+                    className="lookbook-product__price"
+                    type="button"
+                    onClick={() => adder.add(product)}
+                    disabled={adder.isPending}
+                  >
+                    {formatToman(product.price)}
+                  </button>
+                </article>
+              ))}
+              <a className="lookbook-shop-card" href="#products/new">
+                <span>استایل کامل این لوک</span>
+                <strong>خرید مجموعه</strong>
+                <Icon name="arrow-left" size={17} />
+              </a>
+            </div>
           </CatalogQueryState>
           {adder.feedback ? <AddToCartFeedback {...adder.feedback} /> : null}
-          {adder.isPending ? (
-            <p className="text-xs text-muted-foreground" role="status">
-              در حال افزودن به سبد...
-            </p>
-          ) : null}
-        </section>
-        <section
-          className="grid gap-5 border border-border bg-surface p-5 md:grid-cols-2 md:p-8"
-          aria-labelledby="materials-title"
-        >
-          <img
-            className="aspect-[4/3] w-full object-cover"
-            src="/assets/nova-materials.webp"
-            alt="پارچه‌های طبیعی با رنگ‌های خنثی در استودیو"
-            loading="lazy"
-          />
-          <div className="flex flex-col justify-center gap-4">
-            <span className="text-xs text-primary">۰۳ / یادداشت آتلیه</span>
-            <h2 className="text-xl md:text-2xl" id="materials-title">
-              بافت‌ها، از نزدیک
-            </h2>
-            <p className="text-sm leading-7 text-muted-foreground">
-              ما به جزئیاتی فکر می‌کنیم که دیده نمی‌شوند؛ از انتخاب پارچه‌ای که نرم‌تر می‌شود تا
-              دوختی که با هر بار پوشیدن، دقیق‌تر می‌نشیند.
-            </p>
-            <a className="text-sm text-primary underline" href="#article">
-              خواندن داستان پارچه‌ها <Icon name="arrow-left" size={15} />
-            </a>
-          </div>
         </section>
       </div>
     </main>
@@ -717,7 +778,7 @@ function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
         </CatalogQueryState>
         {adder.feedback ? <AddToCartFeedback {...adder.feedback} /> : null}
       </section>
-      <section className="grid gap-4 border border-border bg-secondary p-5 md:grid-cols-[1fr_auto] md:items-center">
+      <section className="grid gap-4 rounded-editorial border border-border bg-secondary p-5 md:grid-cols-[1fr_auto] md:items-center">
         <div>
           <span className="text-xs text-primary">راهنمای انتخاب</span>
           <h2 className="mt-2 text-lg">سایز درست، حس درست</h2>
@@ -747,7 +808,7 @@ function FilterSelect({
   return (
     <label className="flex min-h-11 flex-col gap-1 text-xs font-semibold">
       <span>{label}</span>
-      <select
+      <UiSelect
         className="min-h-11 border border-border bg-surface px-3 outline-none focus:border-primary"
         value={value}
         onChange={(event) => onChange(event.target.value)}
@@ -759,7 +820,7 @@ function FilterSelect({
             {option.count ? ` (${option.count})` : ''}
           </option>
         ))}
-      </select>
+      </UiSelect>
     </label>
   );
 }
@@ -832,16 +893,14 @@ function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
         onChange={(value) => update({ material: value })}
       />
       <label className="flex min-h-11 items-center gap-2 text-sm">
-        <input
-          type="checkbox"
+        <Checkbox
           checked={state.inStock}
           onChange={(event) => update({ inStock: event.target.checked ? 'true' : undefined })}
         />{' '}
         فقط موجود
       </label>
       <label className="flex min-h-11 items-center gap-2 text-sm">
-        <input
-          type="checkbox"
+        <Checkbox
           checked={state.onSale}
           onChange={(event) => update({ onSale: event.target.checked ? 'true' : undefined })}
         />{' '}
@@ -873,7 +932,7 @@ function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
         </div>
         <label className="flex min-h-11 items-center gap-2 border border-border bg-surface px-3 text-xs">
           <span>مرتب‌سازی</span>
-          <select
+          <UiSelect
             className="bg-transparent outline-none"
             value={state.sort}
             onChange={(event) => update({ sort: event.target.value })}
@@ -882,7 +941,7 @@ function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
             <option value="price_asc">ارزان‌ترین</option>
             <option value="price_desc">گران‌ترین</option>
             <option value="name">الفبا</option>
-          </select>
+          </UiSelect>
         </label>
       </header>
       {state.q ? (
@@ -890,7 +949,7 @@ function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
           <label className="sr-only" htmlFor="discovery-search">
             عبارت جست‌وجو
           </label>
-          <input
+          <UiInput
             id="discovery-search"
             className="min-h-11 w-full border border-border bg-background px-3 outline-none focus:border-primary"
             dir="auto"
@@ -929,7 +988,7 @@ function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
         </Button>
         <label className="flex min-h-11 flex-1 items-center justify-center gap-2 border border-border bg-surface px-2 text-xs">
           <span>مرتب‌سازی</span>
-          <select
+          <UiSelect
             className="min-w-0 bg-transparent"
             value={state.sort}
             onChange={(event) => update({ sort: event.target.value })}
@@ -938,7 +997,7 @@ function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
             <option value="price_asc">ارزان‌ترین</option>
             <option value="price_desc">گران‌ترین</option>
             <option value="name">الفبا</option>
-          </select>
+          </UiSelect>
         </label>
       </div>
       <div className="grid gap-8 md:grid-cols-[minmax(190px,296px)_minmax(0,1fr)]">
@@ -988,14 +1047,14 @@ function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
               <h2 className="text-lg" id="mobile-discovery-filters-title">
                 فیلترها
               </h2>
-              <button
+              <Button
                 className="icon-button"
                 type="button"
                 onClick={() => setMobileFiltersOpen(false)}
                 aria-label="بستن فیلترها"
               >
                 <Icon name="close" />
-              </button>
+              </Button>
             </div>
             {filters}
             <Button
@@ -1226,7 +1285,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
           {gallery.length > 1 ? (
             <div className="flex gap-2 overflow-x-auto">
               {gallery.map((item, index) => (
-                <button
+                <Button
                   className={`h-20 w-16 shrink-0 overflow-hidden rounded-control border ${index === mediaIndex ? 'border-primary' : 'border-border'}`}
                   type="button"
                   aria-label={`نمایش تصویر ${index + 1}`}
@@ -1235,7 +1294,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
                   key={`${item.url}-${index}`}
                 >
                   <img className="h-full w-full object-cover" src={item.url} alt="" />
-                </button>
+                </Button>
               ))}
             </div>
           ) : null}
@@ -1243,14 +1302,14 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
         <section className="space-y-5" aria-labelledby="product-title">
           <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
             <span>{product.category}</span>
-            <button
+            <Button
               className="icon-button"
               type="button"
               aria-label="افزودن به علاقه‌مندی‌ها"
               onClick={() => (props.onToggleWishlist ?? (() => undefined))(product.slug)}
             >
               <Icon name="heart" size={19} />
-            </button>
+            </Button>
           </div>
           <h1 className="text-2xl md:text-3xl" id="product-title">
             {product.name}
@@ -1280,7 +1339,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
               <legend className="text-sm font-semibold">{option.name}</legend>
               <div className="flex flex-wrap gap-2">
                 {option.values.map((value) => (
-                  <button
+                  <Button
                     className={`min-h-11 border px-3 text-sm ${selectedOptionValues[option.key] === value.id ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
                     type="button"
                     aria-pressed={selectedOptionValues[option.key] === value.id}
@@ -1290,7 +1349,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
                     key={value.id}
                   >
                     {value.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </fieldset>
@@ -1300,7 +1359,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
               <legend className="text-sm font-semibold">اندازه</legend>
               <div className="flex flex-wrap gap-2">
                 {legacySizes.map((value) => (
-                  <button
+                  <Button
                     className={`min-h-11 min-w-11 border px-3 text-sm ${selectedSize === value ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
                     type="button"
                     aria-pressed={selectedSize === value}
@@ -1308,7 +1367,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
                     key={value}
                   >
                     {value}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </fieldset>
@@ -1318,7 +1377,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
               <legend className="text-sm font-semibold">رنگ</legend>
               <div className="flex flex-wrap gap-2">
                 {legacyColors.map((value) => (
-                  <button
+                  <Button
                     className={`min-h-11 min-w-11 border px-3 text-sm ${selectedColor === value ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
                     type="button"
                     aria-pressed={selectedColor === value}
@@ -1326,7 +1385,7 @@ function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
                     key={value}
                   >
                     {value}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </fieldset>

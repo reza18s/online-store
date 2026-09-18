@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { ConflictException } from '@nestjs/common';
+import { BadRequestException, ConflictException } from '@nestjs/common';
 import type { OrderStatus, PaymentAttemptStatus, PaymentStatus } from '@nova/db';
 
 import type { CustomerAddress } from '../addresses/address.service';
@@ -353,7 +353,7 @@ test('builds an authoritative quote with live cart prices and express shipping',
   assert.equal(result.subtotalToman, 200_000);
   assert.equal(result.shippingToman, 89_000);
   assert.equal(result.totalToman, 289_000);
-  assert.equal(result.shippingLabel, 'اکسپرس');
+  assert.equal(result.shippingLabel, 'ایران‌پست · اکسپرس');
   assert.equal(result.lines[0]?.selectedOptions[0]?.valueLabel, 'متوسط');
   assert.equal(
     result.lines[0]?.variantSnapshot && typeof result.lines[0].variantSnapshot,
@@ -511,4 +511,25 @@ test('releases inventory and cancels the order when payment start fails', async 
   assert.equal(fixture.reserveCount, 1);
   assert.equal(fixture.releaseCount, 1);
   assert.equal(fixture.state.orderEvents.length, 2);
+});
+
+test('rejects non-string checkout identifiers before any order side effect', async () => {
+  const fixture = createFixture();
+
+  await assert.rejects(
+    fixture.service.submit({
+      ...quoteInput,
+      idempotencyKey: undefined as never,
+    }),
+    (error: unknown) => error instanceof BadRequestException,
+  );
+  await assert.rejects(
+    fixture.service.quote({
+      ...quoteInput,
+      userId: undefined as never,
+    }),
+    (error: unknown) => error instanceof BadRequestException,
+  );
+
+  assert.equal(fixture.state.orders.size, 0);
 });

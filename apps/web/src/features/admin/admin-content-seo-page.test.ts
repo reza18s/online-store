@@ -6,6 +6,7 @@ import {
   getAdminContentSeoState,
   getPublishReadiness,
   isAdminContentSeoEditorInputDisabled,
+  isContentPublishActionDisabled,
   isSafeSiteRelativePath,
   normalizeAdminContentSeoView,
   normalizeSiteRelativePath,
@@ -119,4 +120,11 @@ test('locks every editor input while a content mutation is pending', () => {
   assert.equal(isAdminContentSeoEditorInputDisabled(true, true), true);
   assert.equal(isAdminContentSeoEditorInputDisabled(true, false), false);
   assert.equal(isAdminContentSeoEditorInputDisabled(false, false), true);
+});
+
+test('does not publish a content draft while its editor has unsaved changes', () => {
+  assert.equal(isContentPublishActionDisabled(true, false, true), true);
+  assert.equal(isContentPublishActionDisabled(true, false, false), false);
+  assert.equal(isContentPublishActionDisabled(true, true, false), true);
+  assert.equal(isContentPublishActionDisabled(false, false, false), true);
 });

@@ -38,6 +38,7 @@ export interface OtpRequestResult {
   challengeId: string;
   expiresAt: Date;
   resendAvailableAt: Date;
+  localCode?: string;
 }
 
 export interface VerifyOtpResult {
@@ -176,9 +177,16 @@ export class AuthService {
 
     await this.otpStore.set(challengeKey(challengeId), JSON.stringify(record), OTP_TTL_SECONDS);
     await this.otpStore.set(latestKey(phone), challengeId, OTP_TTL_SECONDS);
-    await this.otpDelivery.send(phone, code);
+    const deliveryResult = await this.otpDelivery.send(phone, code);
+    const localCode =
+      deliveryResult && typeof deliveryResult === 'object' ? deliveryResult.localCode : undefined;
 
-    return { challengeId, expiresAt, resendAvailableAt };
+    return {
+      challengeId,
+      expiresAt,
+      resendAvailableAt,
+      ...(localCode ? { localCode } : {}),
+    };
   }
 
   public async verifyOtp(challengeId: string, inputCode: string): Promise<VerifyOtpResult> {
@@ -216,6 +224,9 @@ export class AuthService {
       create: { phone: challenge.phone, phoneVerifiedAt: new Date() },
       select: { id: true, phone: true, email: true, status: true },
     });
+    if (user.status !== 'ACTIVE') {
+      throw new ForbiddenException('ورود امکان‌پذیر نیست.');
+    }
     const session = await this.sessions.createCustomerSession(user.id);
 
     return {

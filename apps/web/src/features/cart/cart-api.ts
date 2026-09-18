@@ -10,6 +10,14 @@ import {
   type CartMergeConflict,
   type CartView,
 } from '@nova/api-client';
+import {
+  addFakeCartItem,
+  getFakeCart,
+  isStorefrontFakeDataEnabled,
+  mergeFakeCart,
+  removeFakeCartItem,
+  updateFakeCartItem,
+} from '../../shared/dev-store-fixtures';
 
 export interface AddCartItemInput extends CartItemMutation {
   idempotencyKey?: string;
@@ -18,6 +26,7 @@ export interface AddCartItemInput extends CartItemMutation {
 export const guestCartMergePath = '/v1/cart/merge';
 
 export async function fetchCart(): Promise<CartView> {
+  if (isStorefrontFakeDataEnabled()) return getFakeCart();
   const response = await apiClient.getEnvelope<CartView>('/v1/cart');
   return response.data;
 }
@@ -25,6 +34,7 @@ export async function fetchCart(): Promise<CartView> {
 export async function mergeGuestCart(
   input: CartMergeInput = { resolutions: [] },
 ): Promise<CartView> {
+  if (isStorefrontFakeDataEnabled()) return mergeFakeCart();
   const response = await apiClient.postEnvelope<CartView>(guestCartMergePath, input);
   return response.data;
 }
@@ -83,6 +93,7 @@ export function getCartMergeConflicts(error: unknown): CartMergeConflict[] {
 
 export async function addCartItem(input: AddCartItemInput): Promise<CartView> {
   const { idempotencyKey, ...body } = input;
+  if (isStorefrontFakeDataEnabled()) return addFakeCartItem(body.variantId, body.quantity);
   const response = await apiClient.request<ApiEnvelope<CartView>>('/v1/cart/items', {
     method: 'POST',
     headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
@@ -92,6 +103,7 @@ export async function addCartItem(input: AddCartItemInput): Promise<CartView> {
 }
 
 export async function updateCartItem(variantId: string, quantity: number): Promise<CartView> {
+  if (isStorefrontFakeDataEnabled()) return updateFakeCartItem(variantId, quantity);
   const response = await apiClient.patchEnvelope<CartView>(
     `/v1/cart/items/${encodeURIComponent(variantId)}`,
     { quantity },
@@ -100,6 +112,7 @@ export async function updateCartItem(variantId: string, quantity: number): Promi
 }
 
 export async function removeCartItem(variantId: string): Promise<CartView> {
+  if (isStorefrontFakeDataEnabled()) return removeFakeCartItem(variantId);
   const response = await apiClient.deleteEnvelope<CartView>(
     `/v1/cart/items/${encodeURIComponent(variantId)}`,
   );

@@ -94,6 +94,34 @@ bun run dev:api
 (Invoke-WebRequest -UseBasicParsing 'http://127.0.0.1:4000/health/ready').Content
 ```
 
+The local seed also creates the provider-free staff fixture whenever
+`LOCAL_TEST_MODE=true` in `development` or `test`. The fixture is an ordinary
+database user with the normal password/TOTP credential, admin role, and session
+cookie path; it is not an authentication bypass. Its default credentials are:
+
+```text
+email:    admin@nova.local
+password: nova-local-admin-password-2026
+factor:   output of `bun run local:staff-code`
+```
+
+The single-use recovery factor is `NOVAADMIN1`; rerunning `bun run db:seed`
+resets that local fixture factor. Do not use these synthetic values outside a
+local/test database. `LOCAL_TEST_MODE` is rejected by configuration for
+staging/production.
+
+Run the complete provider-free auth/provider boundary check without external
+credentials:
+
+```powershell
+bun run test:local-providers
+```
+
+The command covers local OTP and staff-auth behavior, local payment callback
+verification, local Iran Post-labelled shipping, local notification selection,
+and the production/staging fail-closed configuration checks. It does not claim
+real account, sandbox delivery, live provider, or production evidence.
+
 `/health/live` must return HTTP `200` with `status: "ok"` and `service: "api"`. `/health/ready` must return HTTP `200` with `status: "ok"`, `service: "api"`, and `database: "ok"`. The separate Redis `PONG` check above verifies the Redis path used by the OTP state store; Redis is intentionally not part of the current readiness response.
 
 ## Cleanup and data protection

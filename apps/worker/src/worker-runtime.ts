@@ -6,6 +6,7 @@ import { processNotificationBatch, type NotificationSender } from './notificatio
 type WorkerTimer = ReturnType<typeof setInterval>;
 type SetInterval = (callback: () => void, delayMs: number) => WorkerTimer;
 type ClearInterval = (timer: WorkerTimer) => void;
+const MAX_INTERVAL_MS = 2_147_483_647;
 
 export interface NotificationWorkerRuntimeOptions {
   database: DatabaseClient;
@@ -37,7 +38,11 @@ export class NotificationWorkerRuntime {
     this.sender = options.sender;
     this.environment = options.environment;
     this.logger = options.logger ?? createConsoleWorkerLogger();
-    this.intervalMs = options.intervalMs ?? 5_000;
+    const intervalMs = options.intervalMs ?? 5_000;
+    if (!Number.isSafeInteger(intervalMs) || intervalMs < 1 || intervalMs > MAX_INTERVAL_MS) {
+      throw new Error('worker-interval-invalid');
+    }
+    this.intervalMs = intervalMs;
     this.setIntervalFn = options.setIntervalFn ?? setInterval;
     this.clearIntervalFn = options.clearIntervalFn ?? clearInterval;
   }

@@ -15,7 +15,15 @@ import {
   type AdminSeoMetadataUpdateInput,
   type SeoRedirectStatusCode,
 } from '@nova/api-client';
-import { Button } from '@nova/ui';
+import {
+  Badge,
+  Button,
+  Checkbox,
+  Input as UiInput,
+  Label,
+  Select as UiSelect,
+  Textarea as UiTextarea,
+} from '@nova/ui';
 
 import { useStaffUser } from './admin-catalog-api';
 import { isStaffAuthFailure, isStaffAuthorizationFailure } from './admin-auth';
@@ -327,6 +335,14 @@ export function isAdminContentSeoEditorInputDisabled(canEdit: boolean, busy: boo
   return !canEdit || busy;
 }
 
+export function isContentPublishActionDisabled(
+  canEdit: boolean,
+  busy: boolean,
+  dirty: boolean,
+): boolean {
+  return !canEdit || busy || dirty;
+}
+
 function formatDate(value: string): string {
   const date = new Date(value);
   return Number.isNaN(date.getTime())
@@ -365,9 +381,9 @@ function Input({
   error?: string;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'>) {
   return (
-    <label className="block space-y-2 text-right text-xs">
+    <Label className="block space-y-2 text-right text-xs">
       <span className="font-semibold text-foreground">{label}</span>
-      <input
+      <UiInput
         {...props}
         dir={dir}
         value={value}
@@ -379,7 +395,7 @@ function Input({
           {error}
         </span>
       ) : null}
-    </label>
+    </Label>
   );
 }
 
@@ -401,9 +417,9 @@ function Textarea({
   disabled?: boolean;
 }) {
   return (
-    <label className="block space-y-2 text-right text-xs">
+    <Label className="block space-y-2 text-right text-xs">
       <span className="font-semibold text-foreground">{label}</span>
-      <textarea
+      <UiTextarea
         dir={dir}
         value={value}
         rows={rows}
@@ -414,7 +430,7 @@ function Textarea({
       {hint ? (
         <span className="block text-[11px] leading-6 text-muted-foreground">{hint}</span>
       ) : null}
-    </label>
+    </Label>
   );
 }
 
@@ -432,17 +448,17 @@ function Select({
   disabled?: boolean;
 }) {
   return (
-    <label className="block space-y-2 text-right text-xs">
+    <Label className="block space-y-2 text-right text-xs">
       <span className="font-semibold text-foreground">{label}</span>
-      <select
+      <UiSelect
         value={value}
         disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
         className="min-h-11 w-full rounded-control border border-border bg-background px-3 text-sm text-foreground outline-none focus:border-primary focus:ring-4 focus:ring-primary/15 disabled:cursor-not-allowed disabled:bg-secondary"
       >
         {children}
-      </select>
-    </label>
+      </UiSelect>
+    </Label>
   );
 }
 
@@ -502,17 +518,11 @@ function StatePanel({
 
 function StatusChip({ status }: { status: AdminContentStatus }) {
   const tone = status === 'PUBLISHED' ? 'success' : status === 'ARCHIVED' ? 'neutral' : 'warning';
-  const classes = {
-    success: 'border-success/30 bg-success-soft text-success',
-    warning: 'border-warning/30 bg-warning-soft text-warning',
-    neutral: 'border-border bg-secondary text-muted-foreground',
-  };
+  const variant = tone === 'neutral' ? 'secondary' : tone;
   return (
-    <span
-      className={`inline-flex min-h-7 items-center rounded-md border px-2.5 py-1 text-[11px] ${classes[tone]}`}
-    >
+    <Badge variant={variant} className="min-h-7 rounded-md text-[11px]">
       {statusLabel(status)}
-    </span>
+    </Badge>
   );
 }
 
@@ -568,7 +578,7 @@ function ContentList({
         <div className="divide-y divide-border overflow-hidden rounded-control border border-border">
           {items.map((item) => (
             <div className="relative" key={item.id}>
-              <button
+              <Button
                 type="button"
                 onClick={() => onSelect(item.id)}
                 className={`flex min-h-16 w-full items-center justify-between gap-3 px-3 text-right transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${selectedId === item.id ? 'bg-accent-soft' : 'bg-background'}`}
@@ -588,7 +598,7 @@ function ContentList({
                     {formatDate(item.updatedAt)}
                   </span>
                 </span>
-              </button>
+              </Button>
               <a
                 href={safeContentHref(item.slug)}
                 aria-label={'مشاهده ' + item.title}
@@ -787,7 +797,7 @@ function ContentEditor({
               <Button
                 type="button"
                 variant="outline"
-                disabled={!canEdit || busy}
+                disabled={isContentPublishActionDisabled(canEdit, busy, dirty)}
                 onClick={() => save(undefined, true)}
               >
                 بررسی و انتشار
@@ -829,7 +839,7 @@ function SeoList({
       {items.length ? (
         <div className="divide-y divide-border overflow-hidden rounded-control border border-border">
           {items.map((item) => (
-            <button
+            <Button
               type="button"
               key={item.id}
               onClick={() => onSelect(item.id)}
@@ -847,7 +857,7 @@ function SeoList({
               <span dir="ltr" className="shrink-0 text-[10px] text-muted-foreground">
                 {formatDate(item.updatedAt)}
               </span>
-            </button>
+            </Button>
           ))}
         </div>
       ) : (
@@ -990,8 +1000,7 @@ function SeoEditor({
           rows={6}
         />
         <label className="flex min-h-11 cursor-pointer items-center justify-end gap-3 rounded-control border border-border bg-background px-3 text-xs">
-          <input
-            type="checkbox"
+          <Checkbox
             checked={draft.noIndex}
             onChange={(event) => update({ noIndex: event.target.checked })}
             disabled={busy || !canEdit}
@@ -1070,7 +1079,7 @@ function RedirectList({
       {items.length ? (
         <div className="divide-y divide-border overflow-hidden rounded-control border border-border">
           {items.map((item) => (
-            <button
+            <Button
               type="button"
               key={item.id}
               onClick={() => onSelect(item.id)}
@@ -1090,7 +1099,7 @@ function RedirectList({
               <span className="shrink-0 rounded-md border border-info/30 bg-info-soft px-2 py-1 text-[10px] text-info">
                 {item.statusCode}
               </span>
-            </button>
+            </Button>
           ))}
         </div>
       ) : (
@@ -1269,7 +1278,7 @@ function SearchBar({
     <label className="flex min-h-11 flex-1 items-center gap-2 rounded-control border border-border bg-surface px-3 text-xs focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/15">
       <Icon name="search" size={18} />
       <span className="sr-only">جست‌وجو</span>
-      <input
+      <UiInput
         dir="rtl"
         value={value}
         onChange={(event) => onChange(event.target.value)}

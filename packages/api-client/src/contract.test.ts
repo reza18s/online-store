@@ -502,6 +502,8 @@ test('covered request DTOs and client interfaces match OpenAPI field sets', () =
     AdminContentPagePage: 'AdminContentPagePage',
     CatalogFacets: 'CatalogFacets',
     CatalogProductPage: 'CatalogProductPage',
+    CustomerUser: 'CustomerUser',
+    StaffUser: 'StaffUser',
   };
   for (const [typeName, schemaName] of Object.entries(clientSchemas)) {
     assert.deepEqual(
@@ -510,6 +512,17 @@ test('covered request DTOs and client interfaces match OpenAPI field sets', () =
       typeName,
     );
   }
+});
+
+test('documents the optional local OTP field without making it part of the provider contract', () => {
+  const schema = contract.components.schemas.OtpRequestResponse;
+  assert.ok(schema);
+  assert.equal(schema.required?.includes('localCode'), false);
+  assert.deepEqual(schema.properties?.localCode, {
+    type: 'string',
+    pattern: '^[0-9]{6}$',
+    description: 'Development/test-only OTP returned by the local adapter.',
+  });
 });
 
 test('admin order payment contracts exclude redirectUrl while customer and checkout retain it', () => {
@@ -700,6 +713,17 @@ test('standard security, CSRF, and idempotency metadata matches producer enforce
       );
     }
   }
+});
+
+test('staff logout remains CSRF-only without an advertised 401 response', () => {
+  const operation = operationEntries().find(
+    ({ path, method }) => path === '/v1/staff/auth/logout' && method === 'post',
+  )?.operation;
+  assert.ok(operation, 'POST /v1/staff/auth/logout operation is missing');
+  assert.deepEqual(operation.security, [{ csrfToken: [] }]);
+  assert.equal((operation['x-nova-csrf'] as Record<string, unknown>).required, true);
+  assert.equal('x-nova-auth' in operation, false);
+  assert.equal((operation.responses as Record<string, unknown> | undefined)?.['401'], undefined);
 });
 
 function expectSecurityScheme(inValue: string, name: string): Record<string, unknown> {

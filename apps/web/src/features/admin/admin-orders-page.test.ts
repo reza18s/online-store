@@ -6,6 +6,7 @@ import {
   adminOrderErrorMessage,
   adminOrderStatusLabel,
   adminOrderStatusTone,
+  adminPaymentAttemptStatusLabel,
   getModalFocusWrapIndex,
   hasAdminStaffRole,
   isSafeTrackingReference,
@@ -30,6 +31,16 @@ test('uses semantic tones for return and refund statuses', () => {
   assert.equal(adminOrderStatusTone('PENDING'), 'warning');
   assert.equal(adminOrderStatusTone('SUCCEEDED'), 'success');
   assert.equal(adminOrderStatusTone('FAILED'), 'danger');
+});
+
+test('localizes every payment attempt status shown in order details', () => {
+  assert.deepEqual(
+    ['PENDING', 'REDIRECTED', 'SUCCEEDED', 'FAILED', 'EXPIRED', 'CANCELLED'].map(
+      adminPaymentAttemptStatusLabel,
+    ),
+    ['در انتظار پرداخت', 'هدایت‌شده', 'موفق', 'ناموفق', 'منقضی‌شده', 'لغوشده'],
+  );
+  assert.equal(adminPaymentAttemptStatusLabel('UNKNOWN'), 'UNKNOWN');
 });
 
 test('allows only the staff roles that own the corresponding operations', () => {

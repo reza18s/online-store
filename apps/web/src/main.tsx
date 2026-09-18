@@ -82,7 +82,7 @@ export function seedInitialRenderData(
     case 'category':
       queryClient.setQueryData(queryKeys.catalog.categories(), data.categories);
       queryClient.setQueryData(
-        queryKeys.catalog.products({ audience: data.audience, limit: 4, sort: 'newest' }),
+        queryKeys.catalog.products({ audience: data.audience, limit: 8, sort: 'newest' }),
         data.products,
       );
       return;

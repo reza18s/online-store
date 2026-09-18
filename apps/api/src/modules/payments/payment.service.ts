@@ -51,6 +51,17 @@ const paymentAttemptSelect = {
   },
 } satisfies Prisma.PaymentAttemptSelect;
 
+const refundIdentitySelect = {
+  id: true,
+  orderId: true,
+  provider: true,
+  amountToman: true,
+  paymentAttemptId: true,
+  returnRequestId: true,
+  status: true,
+  providerRefundId: true,
+} satisfies Prisma.RefundSelect;
+
 export type PaymentCallbackOutcome = 'PAID' | 'FAILED' | 'DUPLICATE' | 'REFUNDED' | 'REFUND_FAILED';
 
 export interface PaymentCallbackInput {
@@ -120,6 +131,14 @@ interface RefundSource {
   id: string;
   status: RefundStatus;
   providerRefundId: string | null;
+}
+
+interface RefundIdentitySource extends RefundSource {
+  orderId: string;
+  provider: string;
+  amountToman: number;
+  paymentAttemptId: string | null;
+  returnRequestId: string | null;
 }
 
 function isUniqueViolation(error: unknown): boolean {
@@ -280,8 +299,9 @@ export class PaymentService {
     }
     const existingRefund = await this.database.prisma.refund.findUnique({
       where: { idempotencyKey: input.idempotencyKey },
-      select: { id: true, status: true, providerRefundId: true },
+      select: refundIdentitySelect,
     });
+    if (existingRefund) this.assertRefundIdentity(existingRefund, input);
     if (existingRefund?.status === 'SUCCEEDED') {
       return {
         refundId: existingRefund.id,
@@ -294,6 +314,7 @@ export class PaymentService {
       throw new ConflictException('فقط سفارش پرداخت‌شده قابل بازپرداخت است.');
     }
     const refund = existingRefund ?? (await this.findOrCreateRefund(input, reason));
+    this.assertRefundIdentity(refund, input);
     if (refund.status === 'SUCCEEDED') {
       return {
         refundId: refund.id,
@@ -388,13 +409,25 @@ export class PaymentService {
     }
   }
 
+  private assertRefundIdentity(refund: RefundIdentitySource, input: ProcessRefundInput): void {
+    if (
+      refund.orderId !== input.orderId ||
+      refund.provider !== input.provider ||
+      refund.amountToman !== input.amountToman ||
+      refund.paymentAttemptId !== (input.paymentAttemptId ?? null) ||
+      refund.returnRequestId !== (input.returnRequestId ?? null)
+    ) {
+      throw new ConflictException('کلید بازپرداخت با درخواست اصلی هم‌خوان نیست.');
+    }
+  }
+
   private async findOrCreateRefund(
     input: ProcessRefundInput,
     reason: string,
-  ): Promise<RefundSource> {
+  ): Promise<RefundIdentitySource> {
     const existing = await this.database.prisma.refund.findUnique({
       where: { idempotencyKey: input.idempotencyKey },
-      select: { id: true, status: true, providerRefundId: true },
+      select: refundIdentitySelect,
     });
     if (existing) return existing;
 
@@ -409,13 +442,13 @@ export class PaymentService {
           idempotencyKey: input.idempotencyKey,
           reason,
         },
-        select: { id: true, status: true, providerRefundId: true },
+        select: refundIdentitySelect,
       });
     } catch (error) {
       if (!isUniqueViolation(error)) throw error;
       const raced = await this.database.prisma.refund.findUnique({
         where: { idempotencyKey: input.idempotencyKey },
-        select: { id: true, status: true, providerRefundId: true },
+        select: refundIdentitySelect,
       });
       if (!raced) throw error;
       return raced;

@@ -55,7 +55,7 @@ but still reject the Chromium process with `spawn EPERM` before any test body
 runs. In that environment, repeat the same read-only browser command from the
 approved elevated local terminal; this is a process-permission boundary, not an
 application assertion failure. The pinned Chromium matrix is currently
-verified at `67/67` under that boundary.
+verified at `68/68` under that boundary.
 
 Start the API and Vite storefront using the runbook above, then run the
 anonymous browser smoke:
@@ -69,9 +69,10 @@ The runtime preflight uses `NOVA_E2E_WEB_URL` (default
 `http://127.0.0.1:59000`) for the storefront and local object-storage health
 checks. The browser runner keeps reports in ignored output folders and
 covers the public RTL storefront, catalog and recovery routes, protected-route
-boundaries, fixture-backed customer/admin journeys, responsive shell behavior,
-keyboard focus behavior, and bounded accessibility smoke checks across the
-required viewport set. The current inventory is 67 tests in 26 files in the
+boundaries, fixture-backed customer/admin journeys, customer OTP verification
+failure recovery, responsive shell behavior, keyboard focus behavior, and
+bounded accessibility smoke checks across the required viewport set. The
+current inventory is 68 tests in 27 files in the
 `test/e2e/browser` directory; use `bun run test:e2e:browser -- --list` to
 verify the exact count after changes.
 

@@ -66,6 +66,34 @@ function Read-PackageManifest {
     }
 }
 
+function Assert-NoReparsePoint {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path,
+
+        [Parameter(Mandatory = $true)]
+        [string]$RelativePath
+    )
+
+    $currentPath = [System.IO.Path]::GetFullPath($Path)
+    $rootPath = [System.IO.Path]::GetFullPath($repositoryRoot).TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
+
+    while ($true) {
+        if (Test-Path -LiteralPath $currentPath) {
+            $item = Get-Item -Force -LiteralPath $currentPath
+            Assert-Condition (($item.Attributes -band [System.IO.FileAttributes]::ReparsePoint) -eq 0) "Repository path '$RelativePath' contains a reparse point at '$currentPath'."
+        }
+
+        if ($currentPath -ieq $rootPath) {
+            break
+        }
+
+        $parentPath = [System.IO.Path]::GetDirectoryName($currentPath)
+        Assert-Condition (-not [string]::IsNullOrWhiteSpace($parentPath) -and $parentPath -ne $currentPath) "Repository path '$RelativePath' is not contained by the repository root."
+        $currentPath = $parentPath
+    }
+}
+
 function Assert-NonEmptyFile {
     param(
         [Parameter(Mandatory = $true)]
@@ -74,6 +102,7 @@ function Assert-NonEmptyFile {
 
     $path = Join-Path $repositoryRoot $RelativePath
     Assert-Condition (Test-Path -LiteralPath $path -PathType Leaf) "Expected build artifact '$RelativePath' is missing."
+    Assert-NoReparsePoint -Path $path -RelativePath $RelativePath
 
     $item = Get-Item -LiteralPath $path
     Assert-Condition ($item.Length -gt 0) "Expected build artifact '$RelativePath' is empty."
@@ -93,12 +122,18 @@ function Invoke-BunBuild {
     foreach ($relativePath in $generatedOutputDirectories) {
         $outputDirectory = Join-Path $repositoryRoot $relativePath
         if (Test-Path -LiteralPath $outputDirectory -PathType Container) {
+            Assert-NoReparsePoint -Path $outputDirectory -RelativePath $relativePath
             Remove-Item -LiteralPath $outputDirectory -Recurse -Force
         }
     }
 
     Push-Location -LiteralPath $repositoryRoot
     try {
+        & bun run db:generate
+        if ($LASTEXITCODE -ne 0) {
+            throw "FAIL: 'bun run db:generate' exited with code $LASTEXITCODE."
+        }
+
         & bun run build
         if ($LASTEXITCODE -ne 0) {
             throw "FAIL: 'bun run build' exited with code $LASTEXITCODE."
@@ -143,6 +178,7 @@ try {
         Assert-Condition ($manifest.scripts.start -eq $contract.Start) "The $($contract.Name) start script must remain '$($contract.Start)'."
     }
 
+    # -SkipBuild is intentionally artifact-only; it must not generate or build anything.
     if (-not $SkipBuild) {
         Invoke-BunBuild
     }

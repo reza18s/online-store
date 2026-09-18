@@ -9,7 +9,14 @@ import {
   type AdminShipmentStatus,
   type CheckoutOrderStatus,
 } from '@nova/api-client';
-import { Button } from '@nova/ui';
+import {
+  Badge,
+  Button,
+  Card,
+  Input as UiInput,
+  Select as UiSelect,
+  Textarea as UiTextarea,
+} from '@nova/ui';
 
 import {
   useAdminOrder,
@@ -62,6 +69,15 @@ const PAYMENT_STATUS_LABELS: Record<string, string> = {
   PAID: 'پرداخت موفق',
   FAILED: 'پرداخت ناموفق',
   REFUNDED: 'بازپرداخت شده',
+};
+
+const PAYMENT_ATTEMPT_STATUS_LABELS: Record<string, string> = {
+  PENDING: 'در انتظار پرداخت',
+  REDIRECTED: 'هدایت‌شده',
+  SUCCEEDED: 'موفق',
+  FAILED: 'ناموفق',
+  EXPIRED: 'منقضی‌شده',
+  CANCELLED: 'لغوشده',
 };
 
 const SHIPMENT_STATUS_LABELS: Record<string, string> = {
@@ -128,6 +144,10 @@ const SAFE_TRACKING_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 
 export function adminOrderStatusLabel(status: string): string {
   return ORDER_STATUS_LABELS[status] ?? status;
+}
+
+export function adminPaymentAttemptStatusLabel(status: string): string {
+  return PAYMENT_ATTEMPT_STATUS_LABELS[status] ?? status;
 }
 
 export function adminOrderStatusTone(
@@ -199,15 +219,10 @@ function formatSnapshot(snapshot: unknown): string {
     .join(' · ');
 }
 
-function statusClass(tone: ReturnType<typeof adminOrderStatusTone>): string {
-  const classes = {
-    success: 'border-success/30 bg-success-soft text-success',
-    warning: 'border-warning/30 bg-warning-soft text-warning',
-    danger: 'border-destructive/30 bg-error-soft text-destructive',
-    info: 'border-info/30 bg-info-soft text-info',
-    neutral: 'border-border bg-secondary text-muted-foreground',
-  };
-  return classes[tone];
+function statusBadgeVariant(
+  tone: ReturnType<typeof adminOrderStatusTone>,
+): 'success' | 'warning' | 'destructive' | 'info' | 'secondary' {
+  return tone === 'danger' ? 'destructive' : tone === 'neutral' ? 'secondary' : tone;
 }
 
 function StatusChip({
@@ -218,11 +233,12 @@ function StatusChip({
   label?: string;
 }) {
   return (
-    <span
-      className={`inline-flex min-h-7 items-center rounded-md border px-2.5 py-1 text-[11px] ${statusClass(adminOrderStatusTone(status))}`}
+    <Badge
+      variant={statusBadgeVariant(adminOrderStatusTone(status))}
+      className="min-h-7 rounded-md text-[11px]"
     >
       {label}
-    </span>
+    </Badge>
   );
 }
 
@@ -234,11 +250,9 @@ function PaymentChip({ status }: { status: string }) {
         ? 'danger'
         : 'warning';
   return (
-    <span
-      className={`inline-flex min-h-7 items-center rounded-md border px-2.5 py-1 text-[11px] ${statusClass(tone)}`}
-    >
+    <Badge variant={statusBadgeVariant(tone)} className="min-h-7 rounded-md text-[11px]">
       {PAYMENT_STATUS_LABELS[status] ?? status}
-    </span>
+    </Badge>
   );
 }
 
@@ -280,6 +294,34 @@ function PermissionPanel() {
       description="این بخش فقط برای اعضای مجاز پشتیبانی، عملیات یا مدیر سیستم در دسترس است."
       tone="danger"
     />
+  );
+}
+
+function OrderMetricCard({
+  label,
+  value,
+  icon,
+  tone,
+}: {
+  label: string;
+  value: number;
+  icon: 'arrow-left' | 'bag' | 'package' | 'tag';
+  tone: string;
+}) {
+  return (
+    <Card asChild className="min-h-28 p-4 md:p-5">
+      <article>
+        <div className="flex items-start justify-between gap-3">
+          <span className={`flex h-10 w-10 items-center justify-center rounded-full ${tone}`}>
+            <Icon name={icon} size={19} />
+          </span>
+          <span className="text-right text-xs text-muted-foreground">{label}</span>
+        </div>
+        <strong className="mt-5 block text-right font-display text-2xl leading-none tabular-nums">
+          {new Intl.NumberFormat('fa-IR').format(value)}
+        </strong>
+      </article>
+    </Card>
   );
 }
 
@@ -344,7 +386,7 @@ function Modal({
               <p className="mt-2 text-sm leading-7 text-muted-foreground">{description}</p>
             ) : null}
           </div>
-          <button
+          <Button
             ref={closeRef}
             aria-label="بستن پنجره"
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/25"
@@ -352,7 +394,7 @@ function Modal({
             type="button"
           >
             <Icon name="close" size={20} />
-          </button>
+          </Button>
         </div>
         <div className="pt-5">{children}</div>
       </div>
@@ -389,7 +431,7 @@ function ListFilters({
               name="search"
               size={18}
             />
-            <input
+            <UiInput
               aria-label="جست‌وجو در سفارش‌ها"
               className="min-h-12 w-full border border-border bg-background px-3 pe-10 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
               onChange={(event) => setSearch(event.target.value)}
@@ -400,7 +442,7 @@ function ListFilters({
         </label>
         <label className="block text-xs text-muted-foreground">
           وضعیت سفارش
-          <select
+          <UiSelect
             aria-label="فیلتر وضعیت سفارش"
             className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) =>
@@ -418,11 +460,11 @@ function ListFilters({
                 {label}
               </option>
             ))}
-          </select>
+          </UiSelect>
         </label>
         <label className="block text-xs text-muted-foreground">
           وضعیت پرداخت
-          <select
+          <UiSelect
             aria-label="فیلتر وضعیت پرداخت"
             className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) =>
@@ -440,7 +482,7 @@ function ListFilters({
                 {label}
               </option>
             ))}
-          </select>
+          </UiSelect>
         </label>
         <Button size="md" type="submit">
           <Icon name="search" size={17} />
@@ -561,6 +603,33 @@ export function AdminOrdersPage({
           </span>
         </div>
       </header>
+
+      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-label="شاخص‌های سفارش‌ها">
+        <OrderMetricCard
+          icon="bag"
+          label="کل سفارش‌ها"
+          tone="bg-warning-soft text-warning"
+          value={data?.total ?? 0}
+        />
+        <OrderMetricCard
+          icon="tag"
+          label="پرداخت موفق"
+          tone="bg-success-soft text-success"
+          value={orders.filter((order) => order.paymentStatus === 'PAID').length}
+        />
+        <OrderMetricCard
+          icon="package"
+          label="تکمیل شده"
+          tone="bg-success-soft text-success"
+          value={orders.filter((order) => order.status === 'DELIVERED').length}
+        />
+        <OrderMetricCard
+          icon="arrow-left"
+          label="در انتظار مرجوعی"
+          tone="bg-error-soft text-error"
+          value={orders.filter((order) => order.status === 'RETURNED').length}
+        />
+      </section>
 
       <ListFilters onChange={setFilters} value={filters} />
 
@@ -1036,7 +1105,7 @@ export function AdminOrderDetailPage({
             {pendingAction.kind === 'status' ? (
               <label className="block text-xs text-muted-foreground">
                 وضعیت هدف
-                <select
+                <UiSelect
                   className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   onChange={(event) =>
                     setPendingAction({
@@ -1051,13 +1120,13 @@ export function AdminOrderDetailPage({
                       {label}
                     </option>
                   ))}
-                </select>
+                </UiSelect>
               </label>
             ) : null}
             {pendingAction.kind === 'return' ? (
               <label className="block text-xs text-muted-foreground">
                 نتیجه بررسی
-                <select
+                <UiSelect
                   className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   onChange={(event) =>
                     setPendingAction({
@@ -1072,14 +1141,14 @@ export function AdminOrderDetailPage({
                       {label}
                     </option>
                   ))}
-                </select>
+                </UiSelect>
               </label>
             ) : null}
             {pendingAction.kind === 'shipment' ? (
               <div className="grid gap-3 md:grid-cols-2">
                 <label className="block text-xs text-muted-foreground">
                   سرویس ارسال
-                  <input
+                  <UiInput
                     required
                     className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     maxLength={80}
@@ -1091,7 +1160,7 @@ export function AdminOrderDetailPage({
                 </label>
                 <label className="block text-xs text-muted-foreground">
                   روش ارسال
-                  <input
+                  <UiInput
                     required
                     className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     maxLength={80}
@@ -1103,7 +1172,7 @@ export function AdminOrderDetailPage({
                 </label>
                 <label className="block text-xs text-muted-foreground">
                   وضعیت ارسال
-                  <select
+                  <UiSelect
                     className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                     onChange={(event) =>
                       setShipmentDraft((draft) => ({
@@ -1118,12 +1187,12 @@ export function AdminOrderDetailPage({
                         {label}
                       </option>
                     ))}
-                  </select>
+                  </UiSelect>
                 </label>
                 <label className="block text-xs text-muted-foreground">
                   شناسه رهگیری
                   <span className="relative mt-2 block">
-                    <input
+                    <UiInput
                       className="min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                       dir="ltr"
                       maxLength={128}
@@ -1142,7 +1211,7 @@ export function AdminOrderDetailPage({
             ) : null}
             <label className="block text-xs text-muted-foreground">
               دلیل عملیات
-              <textarea
+              <UiTextarea
                 required
                 aria-describedby={actionError ? 'admin-order-action-error' : undefined}
                 className="mt-2 min-h-28 w-full resize-y border border-border bg-background px-3 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -1419,7 +1488,7 @@ function RefundPanel({
           <p className="text-sm text-muted-foreground">بازپرداختی برای این سفارش ثبت نشده است.</p>
           {payment ? (
             <p className="mt-2 text-xs text-muted-foreground">
-              وضعیت تلاش پرداخت: {PAYMENT_STATUS_LABELS[payment.status] ?? payment.status}
+              وضعیت تلاش پرداخت: {adminPaymentAttemptStatusLabel(payment.status)}
             </p>
           ) : null}
         </div>

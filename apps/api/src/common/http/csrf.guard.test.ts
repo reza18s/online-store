@@ -2,9 +2,10 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import { ForbiddenException } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { environment } from '@nova/config';
 
-import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME, CsrfGuard } from './csrf.guard';
+import { CSRF_COOKIE_NAME, CSRF_HEADER_NAME, CsrfGuard, SkipCsrf } from './csrf.guard';
 import type { ResponseWithHeaders } from './request-id.middleware';
 
 class FakeResponse implements ResponseWithHeaders {
@@ -20,14 +21,18 @@ class FakeResponse implements ResponseWithHeaders {
 }
 
 function context(
-  request: { method: string; headers?: Record<string, string> },
+  request: { method: string; headers?: Record<string, string | string[] | undefined> },
   response: FakeResponse,
+  handler?: unknown,
+  classRef?: unknown,
 ) {
   return {
     switchToHttp: () => ({
       getRequest: () => request,
       getResponse: () => response,
     }),
+    getHandler: () => handler,
+    getClass: () => classRef,
   } as never;
 }
 
@@ -56,6 +61,64 @@ test('issues a readable CSRF cookie on safe requests', () => {
   assert.doesNotMatch(String(response.getHeader('Set-Cookie')), /HttpOnly/);
 });
 
+test('normalizes safe methods and does not rotate an existing valid CSRF cookie', () => {
+  const guard = new CsrfGuard();
+  const response = new FakeResponse();
+  const token = 'd'.repeat(43);
+
+  assert.equal(
+    guard.canActivate(
+      context({ method: 'head', headers: { cookie: `${CSRF_COOKIE_NAME}=${token}` } }, response),
+    ),
+    true,
+  );
+  assert.equal(response.getHeader('Set-Cookie'), undefined);
+});
+
+test('ignores malformed cookie segments before a valid CSRF cookie', () => {
+  const guard = new CsrfGuard();
+  const response = new FakeResponse();
+  const token = 'e'.repeat(43);
+
+  assert.equal(
+    guard.canActivate(
+      context(
+        {
+          method: 'POST',
+          headers: {
+            origin: environment.WEB_ORIGIN,
+            cookie: `malformed; ${CSRF_COOKIE_NAME}=${token}`,
+            [CSRF_HEADER_NAME]: token,
+          },
+        },
+        response,
+      ),
+    ),
+    true,
+  );
+});
+
+class SkippedController {
+  @SkipCsrf()
+  public handle(): undefined {
+    return undefined;
+  }
+}
+
+test('honors SkipCsrf metadata before requiring request credentials', () => {
+  const guard = new CsrfGuard(new Reflector());
+  const response = new FakeResponse();
+  const controller = new SkippedController();
+
+  assert.equal(
+    guard.canActivate(
+      context({ method: 'POST', headers: {} }, response, controller.handle, SkippedController),
+    ),
+    true,
+  );
+  assert.equal(response.getHeader('Set-Cookie'), undefined);
+});
+
 test('accepts a state-changing request only with the configured origin and matching token', () => {
   const guard = new CsrfGuard();
   const response = new FakeResponse();
@@ -70,6 +133,29 @@ test('accepts a state-changing request only with the configured origin and match
   };
 
   assert.equal(guard.canActivate(context(request, response)), true);
+});
+
+test('accepts the declared array-valued HTTP header shape for CSRF credentials', () => {
+  const guard = new CsrfGuard();
+  const response = new FakeResponse();
+  const token = 'f'.repeat(43);
+
+  assert.equal(
+    guard.canActivate(
+      context(
+        {
+          method: 'POST',
+          headers: {
+            origin: [environment.WEB_ORIGIN],
+            cookie: [`${CSRF_COOKIE_NAME}=${token}`],
+            [CSRF_HEADER_NAME]: [token],
+          },
+        },
+        response,
+      ),
+    ),
+    true,
+  );
 });
 
 test('rejects missing or mismatched CSRF credentials before a mutation runs', () => {

@@ -12,8 +12,30 @@ import { PaymentAdminService } from './payment-admin.service';
 import { PaymentController } from './payment.controller';
 import { PaymentService } from './payment.service';
 import { PAYMENT_GATEWAY } from '../checkout/payment.gateway';
-import { environment } from '@nova/config';
+import { environment, type Environment } from '@nova/config';
+import type { PaymentGateway } from '../checkout/payment.gateway';
+import { LocalPaymentGateway } from './local.payment.gateway';
 import { ZarinPalPaymentGateway } from './zarinpal.payment.gateway';
+
+export function createPaymentGateway(
+  config: Pick<
+    Environment,
+    | 'NODE_ENV'
+    | 'WEB_ORIGIN'
+    | 'AUTH_SECRET'
+    | 'ZARINPAL_MERCHANT_ID'
+    | 'ZARINPAL_BASE_URL'
+    | 'ZARINPAL_SANDBOX'
+  >,
+): PaymentGateway {
+  if (config.NODE_ENV === 'development' || config.NODE_ENV === 'test') {
+    return new LocalPaymentGateway({
+      WEB_ORIGIN: config.WEB_ORIGIN,
+      AUTH_SECRET: config.AUTH_SECRET,
+    });
+  }
+  return new ZarinPalPaymentGateway(config);
+}
 
 @Module({
   imports: [
@@ -31,7 +53,7 @@ import { ZarinPalPaymentGateway } from './zarinpal.payment.gateway';
     PaymentService,
     {
       provide: PAYMENT_GATEWAY,
-      useFactory: () => new ZarinPalPaymentGateway(environment),
+      useFactory: () => createPaymentGateway(environment),
     },
   ],
   exports: [PAYMENT_GATEWAY, PaymentService],

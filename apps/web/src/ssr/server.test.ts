@@ -558,7 +558,7 @@ test('renders home, category, and published content initial HTML from public rea
     redirect: null,
   });
   const categories: CatalogCategory[] = [{ id: 'women', slug: 'women', name: 'زنانه' }];
-  const { fetcher } = fixtureFetcher({
+  const { fetcher, calls } = fixtureFetcher({
     '/v1/seo/resolve?path=%2F': resolution('/'),
     '/v1/catalog/products?limit=8&sort=newest&page=1': {
       items: [product],
@@ -568,7 +568,7 @@ test('renders home, category, and published content initial HTML from public rea
     },
     '/v1/seo/resolve?path=%2Fcategory%2Fwomen': resolution('/category/women'),
     '/v1/catalog/categories': categories,
-    '/v1/catalog/products?audience=women&limit=4&sort=newest&page=1': {
+    '/v1/catalog/products?audience=women&limit=8&sort=newest&page=1': {
       items: [product],
       total: 1,
       page: 1,
@@ -589,7 +589,9 @@ test('renders home, category, and published content initial HTML from public rea
   assert.equal(category.initialData?.kind, 'category');
   if (category.initialData?.kind === 'category') {
     assert.equal(category.initialData.audience, 'women');
+    assert.equal(category.initialData.products.limit, 8);
   }
+  assert.ok(calls.includes('/v1/catalog/products?audience=women&limit=8&sort=newest&page=1'));
 
   const content = await renderRoute('/content/size-guide', { ...optionsBase, fetcher });
   assert.match(content.bodyHtml, /راهنمای اندازه/);

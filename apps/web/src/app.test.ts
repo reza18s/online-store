@@ -30,11 +30,31 @@ test('validates staff login fields with localized, field-specific errors', () =>
     field: 'password',
     message: 'رمز عبور را وارد کنید.',
   });
-  assert.deepEqual(validateStaffLoginInput('admin@example.com', 'secret', ''), {
-    field: 'factor',
-    message: 'کد تأیید دومرحله‌ای یا کد بازیابی را وارد کنید.',
+  assert.deepEqual(
+    validateStaffLoginInput('admin@example.com', 'correct horse battery staple', ''),
+    {
+      field: 'factor',
+      message: 'کد تأیید دومرحله‌ای یا کد بازیابی را وارد کنید.',
+    },
+  );
+  assert.equal(
+    validateStaffLoginInput('admin@example.com', 'correct horse battery staple', '123456'),
+    null,
+  );
+});
+
+test('rejects staff credentials shorter than the API minima with localized field errors', () => {
+  assert.deepEqual(validateStaffLoginInput('admin@example.com', 'short', '123456'), {
+    field: 'password',
+    message: 'رمز عبور باید حداقل ۱۲ کاراکتر باشد.',
   });
-  assert.equal(validateStaffLoginInput('admin@example.com', 'secret', '123456'), null);
+  assert.deepEqual(
+    validateStaffLoginInput('admin@example.com', 'correct horse battery staple', '12345'),
+    {
+      field: 'factor',
+      message: 'کد تأیید یا کد بازیابی باید حداقل ۶ کاراکتر باشد.',
+    },
+  );
 });
 
 test('uses client SEO metadata after navigating from another public data route', () => {

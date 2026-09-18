@@ -16,6 +16,14 @@ import {
   type CatalogSort,
   type ProductSummary,
 } from '@nova/api-client';
+import {
+  fakeCatalogCategories,
+  getFakeCatalogFacets,
+  getFakeCatalogProduct,
+  getFakeCatalogProducts,
+  getFakeCatalogSuggestions,
+  isStorefrontFakeDataEnabled,
+} from '../../shared/dev-store-fixtures';
 
 export type { CatalogAudience, CatalogSort };
 
@@ -98,6 +106,7 @@ export function catalogRequestPath(filters: CatalogFilters = {}): string {
 }
 
 export async function fetchCatalogCategories(): Promise<CatalogCategory[]> {
+  if (isStorefrontFakeDataEnabled()) return fakeCatalogCategories.map((category) => ({ ...category }));
   const response = await apiClient.getEnvelope<CatalogCategory[]>(catalogCategoriesPath);
   return response.data;
 }
@@ -110,6 +119,7 @@ export function catalogFacetsRequestPath(filters: CatalogFacetFilters = {}): str
 export async function fetchCatalogFacets(
   filters: CatalogFacetFilters = {},
 ): Promise<CatalogFacets> {
+  if (isStorefrontFakeDataEnabled()) return getFakeCatalogFacets(filters);
   const response = await apiClient.getEnvelope<CatalogFacets>(catalogFacetsRequestPath(filters));
   return response.data;
 }
@@ -126,6 +136,7 @@ export async function fetchCatalogSuggestions(
   query: string,
   limit = catalogSearchSuggestionsDefaultLimit,
 ): Promise<CatalogSearchSuggestion[]> {
+  if (isStorefrontFakeDataEnabled()) return getFakeCatalogSuggestions(query, limit);
   const response = await apiClient.getEnvelope<CatalogSearchSuggestion[]>(
     catalogSuggestionsRequestPath(query, limit),
   );
@@ -135,11 +146,13 @@ export async function fetchCatalogSuggestions(
 export async function fetchCatalogProducts(
   filters: CatalogFilters = {},
 ): Promise<CatalogProductPage> {
+  if (isStorefrontFakeDataEnabled()) return getFakeCatalogProducts(filters);
   const response = await apiClient.getEnvelope<CatalogProductPage>(catalogRequestPath(filters));
   return response.data;
 }
 
 export async function fetchCatalogProduct(slug: string): Promise<CatalogProduct> {
+  if (isStorefrontFakeDataEnabled()) return getFakeCatalogProduct(slug);
   const response = await apiClient.getEnvelope<CatalogProduct>(
     `/v1/catalog/products/${encodeURIComponent(slug)}`,
   );

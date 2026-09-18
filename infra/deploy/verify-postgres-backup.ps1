@@ -48,12 +48,18 @@ function Get-RequiredCommandPath {
         [string]$Name
     )
 
-    $command = Get-Command $Name -CommandType Application -ErrorAction SilentlyContinue
+    $command = Get-Command $Name -CommandType Application -ErrorAction SilentlyContinue |
+        Select-Object -First 1
     if ($null -eq $command) {
         throw "BLOCKED: PostgreSQL client command '$Name' was not found on PATH."
     }
 
-    return $command.Source
+    $commandPath = [string]$command.Source
+    if ([string]::IsNullOrWhiteSpace($commandPath)) {
+        throw "BLOCKED: PostgreSQL client command '$Name' did not resolve to an executable path."
+    }
+
+    return $commandPath
 }
 
 function Get-DatabaseIdentity {
@@ -246,20 +252,23 @@ function Invoke-PostgresProcess {
         'PGTARGETSESSIONATTRS'
     )
     $previous = @{}
-    foreach ($name in $connectionEnvironmentNames) {
-        $previous[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
-        [Environment]::SetEnvironmentVariable($name, $null, 'Process')
-    }
-    foreach ($name in $environment.Keys) {
-        [Environment]::SetEnvironmentVariable($name, $environment[$name], 'Process')
-    }
+    $preparedEnvironmentNames = [Collections.Generic.List[string]]::new()
 
     try {
+        foreach ($name in $connectionEnvironmentNames) {
+            $previous[$name] = [Environment]::GetEnvironmentVariable($name, 'Process')
+            $preparedEnvironmentNames.Add($name)
+            [Environment]::SetEnvironmentVariable($name, $null, 'Process')
+        }
+        foreach ($name in $environment.Keys) {
+            [Environment]::SetEnvironmentVariable($name, $environment[$name], 'Process')
+        }
+
         $output = @(& $CommandPath @Arguments 2>&1)
         $exitCode = $LASTEXITCODE
     }
     finally {
-        foreach ($name in $connectionEnvironmentNames) {
+        foreach ($name in $preparedEnvironmentNames) {
             [Environment]::SetEnvironmentVariable($name, $previous[$name], 'Process')
         }
     }
@@ -474,6 +483,31 @@ function Assert-ConnectedDatabaseIdentity {
     }
 }
 
+function Assert-ConnectedServerIdentity {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$PsqlPath,
+
+        [Parameter(Mandatory = $true)]
+        [string]$DatabaseUrl,
+
+        [Parameter(Mandatory = $true)]
+        [string]$ExpectedIdentity,
+
+        [Parameter(Mandatory = $true)]
+        [string]$Description
+    )
+
+    $actualIdentity = Get-ConnectedServerIdentity `
+        -PsqlPath $PsqlPath `
+        -DatabaseUrl $DatabaseUrl `
+        -Description $Description
+
+    if ($actualIdentity -ne $ExpectedIdentity) {
+        throw "BLOCKED: $Description changed between the approved identity check and the next operation."
+    }
+}
+
 function Assert-ConnectedClusterIdentity {
     param(
         [Parameter(Mandatory = $true)]
@@ -618,6 +652,15 @@ try {
         throw "BLOCKED: PostgreSQL client major version $clientMajorVersion does not match source server major version $sourceServerMajorVersion."
     }
 
+    $sourceConnectionIdentity = Get-ConnectedDatabaseIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $SourceDatabaseUrl `
+        -Description 'source database identity check'
+    $sourceServerIdentity = Get-ConnectedServerIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $SourceDatabaseUrl `
+        -Description 'source server identity check'
+
     if (-not $BackupOnly) {
         $restore = Get-DatabaseIdentity -ConnectionUrl $RestoreDatabaseUrl
         if ($source.Host -eq $restore.Host -and $source.Port -eq $restore.Port -and $source.Database -eq $restore.Database) {
@@ -636,19 +679,11 @@ try {
             throw "BLOCKED: PostgreSQL client major version $clientMajorVersion does not match restore-target server major version $restoreServerMajorVersion."
         }
 
-        $sourceConnectionIdentity = Get-ConnectedDatabaseIdentity `
-            -PsqlPath $psqlPath `
-            -DatabaseUrl $SourceDatabaseUrl `
-            -Description 'source database identity check'
         $restoreConnectionIdentity = Get-ConnectedDatabaseIdentity `
             -PsqlPath $psqlPath `
             -DatabaseUrl $RestoreDatabaseUrl `
             -Description 'restore-target identity check'
 
-        $sourceServerIdentity = Get-ConnectedServerIdentity `
-            -PsqlPath $psqlPath `
-            -DatabaseUrl $SourceDatabaseUrl `
-            -Description 'source server identity check'
         $restoreServerIdentity = Get-ConnectedServerIdentity `
             -PsqlPath $psqlPath `
             -DatabaseUrl $RestoreDatabaseUrl `
@@ -690,12 +725,17 @@ try {
         }
     }
 
+    Assert-ConnectedDatabaseIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $SourceDatabaseUrl `
+        -ExpectedIdentity $sourceConnectionIdentity `
+        -Description 'source database identity check before backup'
+    Assert-ConnectedServerIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $SourceDatabaseUrl `
+        -ExpectedIdentity $sourceServerIdentity `
+        -Description 'source server identity check before backup'
     if (-not $BackupOnly) {
-        Assert-ConnectedDatabaseIdentity `
-            -PsqlPath $psqlPath `
-            -DatabaseUrl $SourceDatabaseUrl `
-            -ExpectedIdentity $sourceConnectionIdentity `
-            -Description 'source database identity check before backup'
         Assert-ConnectedClusterIdentity `
             -PsqlPath $psqlPath `
             -DatabaseUrl $SourceDatabaseUrl `
@@ -710,12 +750,17 @@ try {
         -Description 'PostgreSQL backup' `
         -DatabaseUrl $SourceDatabaseUrl
 
+    Assert-ConnectedDatabaseIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $SourceDatabaseUrl `
+        -ExpectedIdentity $sourceConnectionIdentity `
+        -Description 'source database identity check after backup'
+    Assert-ConnectedServerIdentity `
+        -PsqlPath $psqlPath `
+        -DatabaseUrl $SourceDatabaseUrl `
+        -ExpectedIdentity $sourceServerIdentity `
+        -Description 'source server identity check after backup'
     if (-not $BackupOnly) {
-        Assert-ConnectedDatabaseIdentity `
-            -PsqlPath $psqlPath `
-            -DatabaseUrl $SourceDatabaseUrl `
-            -ExpectedIdentity $sourceConnectionIdentity `
-            -Description 'source database identity check after backup'
         Assert-ConnectedClusterIdentity `
             -PsqlPath $psqlPath `
             -DatabaseUrl $SourceDatabaseUrl `

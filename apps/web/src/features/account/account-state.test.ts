@@ -3,11 +3,16 @@ import { test } from 'node:test';
 
 import type { CustomerOrderDetail } from '@nova/api-client';
 
-import { addressFormIsComplete, findCustomerAddressByRouteId } from './account-pages';
+import {
+  addressFormIsComplete,
+  findCustomerAddressByRouteId,
+  getSubmittedOrderForRoute,
+} from './account-pages';
 import {
   CUSTOMER_RETURN_WINDOW_DAYS,
   canCancelCustomerOrder,
   getReturnEligibility,
+  getReturnOrderState,
   shouldShowCustomerOrderLoading,
 } from './account-state';
 
@@ -78,6 +83,20 @@ test('keeps return eligibility aligned with payment, delivery, request and seven
   assert.equal(CUSTOMER_RETURN_WINDOW_DAYS, 7);
 });
 
+test('keeps the return status route visible before a request exists', () => {
+  const now = new Date('2026-09-10T00:00:00.000Z');
+
+  assert.equal(getReturnOrderState(order(), now), 'not-requested');
+  assert.equal(getReturnOrderState(order({ status: 'SHIPPED' }), now), 'ineligible');
+  assert.equal(
+    getReturnOrderState(
+      order({ returnRequest: { id: 'return-1' } as CustomerOrderDetail['returnRequest'] }),
+      now,
+    ),
+    'requested',
+  );
+});
+
 test('requires every server-required address field before allowing a save', () => {
   const form = {
     label: 'خانه',
@@ -144,4 +163,11 @@ test('does not let a disabled order query keep an unauthenticated route in loadi
     }),
     false,
   );
+});
+
+test('does not reuse a submitted return response after the order route changes', () => {
+  const submittedOrder = { routeOrderNumber: 'NV-TEST-001', order: order() };
+
+  assert.equal(getSubmittedOrderForRoute(submittedOrder, 'NV-TEST-001'), submittedOrder.order);
+  assert.equal(getSubmittedOrderForRoute(submittedOrder, 'NV-TEST-002'), undefined);
 });

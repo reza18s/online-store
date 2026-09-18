@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import {
   apiClient,
   queryKeys,
@@ -45,6 +45,25 @@ export function shouldDiscardCartCacheOnCustomerVerification(cart: CartView | un
   return cart?.kind === 'CUSTOMER';
 }
 
+type CustomerVerificationQueryClient = Pick<
+  QueryClient,
+  'getQueryData' | 'removeQueries' | 'setQueryData'
+>;
+
+export function applyVerifiedCustomerSession(
+  queryClient: CustomerVerificationQueryClient,
+  user: CustomerUser,
+): void {
+  const currentCart = queryClient.getQueryData<CartView>(queryKeys.cart.current());
+
+  queryClient.removeQueries({ queryKey: queryKeys.account.addresses() });
+  queryClient.removeQueries({ queryKey: queryKeys.orders.all });
+  if (shouldDiscardCartCacheOnCustomerVerification(currentCart)) {
+    queryClient.removeQueries({ queryKey: queryKeys.cart.current() });
+  }
+  queryClient.setQueryData(queryKeys.account.current(), user);
+}
+
 export function useCurrentCustomer(enabled = true) {
   return useQuery({
     queryKey: queryKeys.account.current(),
@@ -63,13 +82,7 @@ export function useVerifyCustomerOtp() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: verifyCustomerOtp,
-    onSuccess: (result) => {
-      const currentCart = queryClient.getQueryData<CartView>(queryKeys.cart.current());
-      if (shouldDiscardCartCacheOnCustomerVerification(currentCart)) {
-        queryClient.removeQueries({ queryKey: queryKeys.cart.current() });
-      }
-      queryClient.setQueryData(queryKeys.account.current(), result.user);
-    },
+    onSuccess: (result) => applyVerifiedCustomerSession(queryClient, result.user),
   });
 }
 

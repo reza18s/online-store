@@ -13,10 +13,10 @@ import { CheckoutService } from './checkout.service';
 import { SHIPPING_PROVIDER } from './shipping.provider';
 import {
   createShippingProvider,
-  TAPIN_SHIPPING_TRANSPORT,
-  type TapinShippingTransport,
-  UnconfiguredTapinShippingTransport,
-} from './tapin-shipping.provider';
+  IRAN_POST_SHIPPING_TRANSPORT,
+  type IranPostShippingTransport,
+  UnconfiguredIranPostShippingTransport,
+} from './iran-post-shipping.provider';
 
 @Module({
   imports: [
@@ -31,11 +31,14 @@ import {
   controllers: [CheckoutController],
   providers: [
     CheckoutService,
-    { provide: TAPIN_SHIPPING_TRANSPORT, useClass: UnconfiguredTapinShippingTransport },
+    {
+      provide: IRAN_POST_SHIPPING_TRANSPORT,
+      useClass: UnconfiguredIranPostShippingTransport,
+    },
     {
       provide: SHIPPING_PROVIDER,
-      inject: [TAPIN_SHIPPING_TRANSPORT],
-      useFactory: (transport: TapinShippingTransport) =>
+      inject: [IRAN_POST_SHIPPING_TRANSPORT],
+      useFactory: (transport: IranPostShippingTransport) =>
         createShippingProvider(environment, transport),
     },
   ],

@@ -105,7 +105,12 @@ function isSuccessfulResponse(body: unknown): boolean {
 }
 
 export interface OtpDelivery {
-  send(phone: string, code: string): Promise<void>;
+  send(phone: string, code: string): Promise<OtpDeliveryResult | void>;
+}
+
+export interface OtpDeliveryResult {
+  /** Only local development adapters may return the code to the first-party UI. */
+  localCode?: string;
 }
 
 @Injectable()
@@ -148,12 +153,21 @@ export class SmsIrOtpDelivery implements OtpDelivery {
         throw deliveryError();
       }
       if (!isSuccessfulResponse(body)) throw deliveryError();
-    } catch (error) {
-      if (error instanceof ServiceUnavailableException) throw error;
+    } catch {
       throw deliveryError();
     } finally {
       clearTimeout(timeout);
     }
+  }
+}
+
+@Injectable()
+export class LocalOtpDelivery implements OtpDelivery {
+  public async send(phone: string, code: string): Promise<OtpDeliveryResult> {
+    if (!/^\+989\d{9}$/.test(phone) || !/^\d{6}$/.test(code)) {
+      throw new Error('local-otp-input-invalid');
+    }
+    return { localCode: code };
   }
 }
 

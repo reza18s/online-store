@@ -2,9 +2,12 @@ import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 
 import {
+  adminInventoryViewKey,
+  adminProductEditorKey,
   hasAdminRole,
   isInventoryDiscrepancy,
   normalizeAdminCatalogInventoryView,
+  resolveInventoryDetailState,
   resolveAdminMutationState,
   validateInventoryAdjustment,
   validateMediaDraft,
@@ -26,6 +29,18 @@ describe('admin catalog/inventory page helpers', () => {
     assert.equal(normalizeAdminCatalogInventoryView('categories'), 'categories');
     assert.equal(normalizeAdminCatalogInventoryView('inventory'), 'inventory');
     assert.equal(normalizeAdminCatalogInventoryView('unknown'), 'catalog');
+  });
+
+  test('remounts the product editor when its route identity changes', () => {
+    assert.equal(adminProductEditorKey(), 'new');
+    assert.equal(adminProductEditorKey('A'), 'product:A');
+    assert.notEqual(adminProductEditorKey('A'), adminProductEditorKey('B'));
+  });
+
+  test('remounts inventory detail when its route identity changes', () => {
+    assert.equal(adminInventoryViewKey(), 'inventory');
+    assert.equal(adminInventoryViewKey('A'), 'inventory:A');
+    assert.notEqual(adminInventoryViewKey('A'), adminInventoryViewKey('B'));
   });
 
   test('keeps mutations visible only for the matching staff roles', () => {
@@ -118,5 +133,53 @@ describe('admin catalog/inventory page helpers', () => {
   test('flags an inventory discrepancy only when the stock equation is inconsistent', () => {
     assert.equal(isInventoryDiscrepancy({ onHand: 12, reserved: 3, available: 9 }), false);
     assert.equal(isInventoryDiscrepancy({ onHand: 12, reserved: 3, available: 8 }), true);
+  });
+
+  test('keeps selected inventory detail loading and errors visible before data exists', () => {
+    assert.equal(
+      resolveInventoryDetailState({
+        hasItem: false,
+        enabled: true,
+        isPending: true,
+        isError: false,
+      }),
+      'loading',
+    );
+    assert.equal(
+      resolveInventoryDetailState({
+        hasItem: false,
+        enabled: true,
+        isPending: false,
+        isError: true,
+      }),
+      'error',
+    );
+    assert.equal(
+      resolveInventoryDetailState({
+        hasItem: false,
+        enabled: true,
+        isPending: false,
+        isError: false,
+      }),
+      'empty',
+    );
+    assert.equal(
+      resolveInventoryDetailState({
+        hasItem: true,
+        enabled: true,
+        isPending: false,
+        isError: true,
+      }),
+      'ready',
+    );
+    assert.equal(
+      resolveInventoryDetailState({
+        hasItem: false,
+        enabled: false,
+        isPending: true,
+        isError: false,
+      }),
+      'empty',
+    );
   });
 });

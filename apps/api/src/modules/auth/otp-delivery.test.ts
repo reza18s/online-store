@@ -5,9 +5,16 @@ import { ServiceUnavailableException } from '@nestjs/common';
 
 import {
   isValidSmsIrOtpDeliveryConfig,
+  LocalOtpDelivery,
   SmsIrOtpDelivery,
   type SmsIrHttpRequest,
 } from './otp-delivery';
+
+test('returns the generated code from the provider-free local adapter without network access', async () => {
+  const delivery = new LocalOtpDelivery();
+
+  assert.deepEqual(await delivery.send('+989123456789', '123456'), { localCode: '123456' });
+});
 
 function response(status: number, body: unknown) {
   return {
@@ -205,6 +212,22 @@ test('sanitizes transport failures and invalid normalized inputs', async () => {
   });
   await assert.rejects(delivery.send('09123456789', '123456'), /در دسترس نیست/);
   await assert.rejects(delivery.send('+989123456789', '12345'), /در دسترس نیست/);
+});
+
+test('sanitizes ServiceUnavailableException failures from the transport', async () => {
+  const delivery = configured(async () => {
+    throw new ServiceUnavailableException(
+      'apiKey=sandbox-api-key mobile=+989123456789 code=123456',
+    );
+  });
+
+  await assert.rejects(delivery.send('+989123456789', '123456'), (error: unknown) => {
+    return (
+      error instanceof ServiceUnavailableException &&
+      error.message === 'سرویس ارسال پیامک در دسترس نیست.' &&
+      !/sandbox-api-key|989123456789|123456/.test(error.message)
+    );
+  });
 });
 
 test('sanitizes abort-shaped transport failures without exposing OTP request data', async () => {

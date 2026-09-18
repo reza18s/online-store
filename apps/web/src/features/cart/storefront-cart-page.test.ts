@@ -140,3 +140,23 @@ test('keeps cached cart contents visible when a refresh fails', () => {
   assert.match(markup, /تلاش دوباره/);
   assert.doesNotMatch(markup, /سبد خرید بارگذاری نشد/);
 });
+
+test('keeps cart actions enabled when guest-cart merge is disabled', () => {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const markup = renderToStaticMarkup(
+    createElement(
+      QueryClientProvider,
+      { client },
+      createElement(StorefrontCartPage, {
+        cart,
+        isLoading: false,
+        isError: false,
+        customerId: 'customer-1',
+        enableGuestMerge: false,
+      }),
+    ),
+  );
+  const decrementButton = markup.match(/<button[^>]*aria-label="کاهش تعداد"[^>]*>/)?.[0];
+  assert.ok(decrementButton);
+  assert.doesNotMatch(decrementButton, /\sdisabled(?:=|\s|>)/);
+});

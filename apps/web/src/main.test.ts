@@ -46,7 +46,7 @@ test('hydrates SSR roots and creates a root for client-only markup', () => {
 test('seeds SSR public data under the same query keys used by the app', () => {
   const queryClient = new QueryClient();
   const categories = [{ id: 'women', slug: 'women', name: 'زنانه' }];
-  const products = { items: [], total: 0, page: 1, limit: 4 };
+  const products = { items: [], total: 0, page: 1, limit: 8 };
 
   seedInitialRenderData(queryClient, {
     path: '/category/women',
@@ -58,9 +58,15 @@ test('seeds SSR public data under the same query keys used by the app', () => {
   assert.deepEqual(queryClient.getQueryData(queryKeys.catalog.categories()), categories);
   assert.deepEqual(
     queryClient.getQueryData(
-      queryKeys.catalog.products({ audience: 'women', limit: 4, sort: 'newest' }),
+      queryKeys.catalog.products({ audience: 'women', limit: 8, sort: 'newest' }),
     ),
     products,
+  );
+  assert.equal(
+    queryClient.getQueryData(
+      queryKeys.catalog.products({ audience: 'women', limit: 4, sort: 'newest' }),
+    ),
+    undefined,
   );
   queryClient.clear();
 });

@@ -493,7 +493,7 @@ test('customer can request a full-line return within seven days of delivery', as
       shipment: {
         ...createOrder().shipment!,
         status: 'DELIVERED',
-        deliveredAt: new Date('2026-09-07T08:00:00.000Z'),
+        deliveredAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
       },
     }),
   );

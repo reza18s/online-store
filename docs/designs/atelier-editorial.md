@@ -212,8 +212,8 @@ preserve the exact final image and content heights.
 
 ### Buttons and CTAs
 
-The primary action is a oxblood pill (`36–40 px` high on compact cards,
-`44–48 px` on hero/PDP actions), `12–18 px` horizontal padding, `999 px`
+The primary action is a restrained oxblood editorial rectangle (`36–40 px` high on compact cards,
+`44–48 px` on hero actions, and `52 px` for primary purchase actions), `12–18 px` horizontal padding, `4–6 px`
 radius, white text, and a `16 px` line icon. The hero uses one primary CTA;
 secondary actions use a white/transparent surface with a `1 px` oxblood border.
 The sign-in control is outlined and compact. Product quick-add is a `40 px`
@@ -410,7 +410,7 @@ the design and implementation share one vocabulary:
 | `--secondary` | `color/bg/subtle` | `#EEE6DA` | Secondary button and category surface |
 | `--accent` | `color/accent/editorial` | `#B79A6B` | Small wordmark/editorial accent only |
 | `--destructive` | `error/700` | `#A83D38` | Destructive action and error state |
-| `--radius` | `radius/control` | `8 px` | Fields and utility controls; storefront actions use `999 px` |
+| `--radius` | `radius/control` | `8 px` | Base control radius; storefront CTAs override to `4–6 px`; `999 px` is reserved for circular actions, swatches, and compact status chips |
 
 Do not create a separate dark theme or a second “kit” palette for this
 direction. If the implementation later adds dark admin surfaces, it must be a
@@ -491,7 +491,7 @@ For `AE/Home/Desktop/Default` and `AE/Home/Mobile/Default`:
    Mobile keeps the rail horizontally scrollable with the first item fully
    visible and part of the next item visible as an affordance.
 4. Make `NewArrivals` the first product comparison surface. Use a `1:1` home
-   product image, four desktop columns, two mobile columns, a small green
+   product image, four desktop columns, two mobile columns, a small oxblood editorial
    badge, `12–14 px` color swatches, a visible toman price, and a `40 px`
    circular quick-add action. Products requiring a size choice open the size
    sheet instead of silently adding a default.
@@ -587,10 +587,10 @@ color/border/subtle        line/100
 color/action/primary       oxblood/700
 color/action/primary-hover oxblood/800
 color/action/selected      oxblood/100
-color/accent/editorial     gold/600
+color/accent/editorial     champagne/600
 ```
 
-Green is the only primary storefront action family. Gold is decorative and
+Oxblood is the only primary storefront action family. Champagne/brass is decorative and
 must not be used for small low-contrast text, price, stock, or errors. Error,
 stock, order, and payment statuses always include an icon and label.
 
@@ -628,7 +628,7 @@ Radius variables:
 - `8 px`: inputs, compact fields, and small utility controls.
 - `12 px`: product cards and contained image wells.
 - `14–16 px`: hero and supporting story cards.
-- `999 px`: CTA blocks, compact login control, badges, swatches, and circular actions.
+- `999 px`: badges, swatches, and circular icon actions only; storefront CTAs remain `4–6 px` and compact utility controls remain `8 px`.
 - `0 px`: data-table internals only; do not use square corners for the home
   image cards.
 
@@ -687,32 +687,84 @@ The global navigation must expose `زنانه`, `مردانه`, and `بچگان�
 
 ## 9. Component inventory
 
+This inventory is the implementation source of truth for reusable UI. Build screen-level compositions from these components rather than creating one-off screen-specific controls. A component named differently by shadcn/ui is treated as an implementation alias, not as a second design component.
+
 ### 9.1 Primitive components
 
-`Button`, `Icon Button`, `Link`, `Text Field`, `Text Area`, `Phone Field`, `Search Field`, `Select`, `Checkbox`, `Radio`, `Switch`, `Tabs`, `Chip`, `Badge`, `Tooltip`, `Toast`, `Dialog`, `Drawer`, `Bottom Sheet`, `Accordion`, `Breadcrumb`, `Pagination`, `Stepper`, `Skeleton`, `Empty State`, `Inline Message`, `Dropdown Menu`, and `Table`.
+#### Navigation and actions
+
+`Button`, `Icon Button`, `Link`, `Navigation Menu`, `Dropdown Menu`, `Breadcrumb`, `Pagination`, and `Tabs`.
+
+#### Form and selection controls
+
+`Form Field`, `Text Field`, `Text Area`, `Phone Field`, `Search Field`, `Select`, `Checkbox`, `Radio Group`, `Switch`, `Chip`, and `Quantity Stepper`.
+
+#### Feedback, disclosure, and overlays
+
+`Badge`, `Tooltip`, `Toast`, `Alert / Inline Message`, `Dialog`, `Sheet / Drawer`, `Bottom Sheet`, `Accordion`, `Separator`, `Progress`, `Skeleton`, and `Empty State`.
+
+#### Data and composition primitives
+
+`Card`, `Stepper`, `Command / Search Results`, and `Table`.
+
+Implementation aliases are fixed as follows so design and code use one vocabulary:
+
+- `Text Field` maps to shadcn/ui `Input`.
+- `Navigation Menu` maps to `NavigationMenu`.
+- `Radio Group` maps to `RadioGroup`.
+- `Sheet / Drawer` maps to shadcn/ui `Sheet`; `Bottom Sheet` is the mobile composition of the same overlay contract.
+- `Alert / Inline Message` maps to `Alert` for persistent in-flow feedback.
+- `Command / Search Results` maps to `Command` when used for search suggestions/results.
+- `Toast` maps to the project toast/Sonner implementation.
+- `Card` and `Separator` retain their shadcn/ui names.
 
 Every interactive primitive requires default, hover, focus, pressed/selected, disabled, loading, error, and success states where applicable. Default field height is `48 px`; primary purchase buttons are `52 px`; minimum pointer target is `44 × 44 px`.
 
-### 9.2 Commerce components
+### 9.2 Storefront and commerce components
 
-`Global Header`, `Mobile Header`, `Mega Menu`, `Mobile Bottom Nav`, `Category Card`, `Editorial Feature`, `Product Card`, `Compact Product Card`, `Price Block`, `Rating Summary`, `Color Swatch`, `Size Selector`, `Size Guide`, `Fit Indicator`, `Media Gallery`, `Inventory Message`, `Delivery Promise`, `Returns Summary`, `Product Details`, `Review Card`, `Cart Item`, `Coupon Field`, `Order Summary`, `Address Card`, `Shipping Method`, `Payment Method`, `Order Timeline`, `Support Entry`, `Trust Strip`, `Product Rail`, and `Recently Viewed`.
+#### Shell and discovery
 
-Home product-card image ratio is `1:1`, matching the contained shirt/product
-tiles in the reference. Desktop listing cards are `288–300 px` wide depending
-on grid context; the primary `1440 px` frame uses four cards of approximately
-`296 px`. Mobile cards are `173 px` wide in a `390 px` frame. PDP/gallery media
-may remain portrait (`4:5`) when the garment needs a full-length view. Titles
-may occupy two lines; price, stock, and sale information may not be hover-only.
+`Global Header`, `Mobile Header`, `Mega Menu`, `Mobile Bottom Nav`, `Search Overlay`, `Hero Commerce Cluster`, `Hero Story Card`, `Support Garment Card`, `Category Rail`, `Category Card`, `Editorial Feature`, `Collection Story`, and `Trust Strip`.
 
-### 9.3 Admin components
+#### Catalog and product discovery
 
-`Admin Sidebar`, `Admin Topbar`, `Stat Card`, `Filter Bar`, `Data Table`, `Status Badge`, `Product Form Section`, `Media Uploader`, `Variant Matrix`, `Inventory Cell`, `Order Event`, `Internal Note`, `Customer PII Field`, `Content Block`, and `Audit Event`.
+`Product Card`, `Compact Product Card`, `Product Rail`, `Price Block`, `Rating Summary`, `Wishlist Action`, `Quick Add Action`, `Color Swatch`, `Size Selector`, `Size Guide`, `Fit Indicator`, `Media Gallery`, `Inventory Message`, `Delivery Promise`, `Returns Summary`, `Product Details`, `Review Card`, and `Recently Viewed`.
 
-### 9.4 Interaction-state contract
+#### Filtering and sorting
+
+`Storefront Filter Bar`, `Filter Sheet`, `Sort Control`, and `Applied Filter Chip`.
+
+#### Cart, checkout, and orders
+
+`Cart Item`, `Quantity Control`, `Coupon Field`, `Order Summary`, `Address Card`, `Shipping Method`, `Payment Method`, `Checkout Stepper`, `Order Timeline`, and `Support Entry`.
+
+`Quantity Control` is a commerce composition built from the primitive `Quantity Stepper`; it owns cart-specific stock limits, async updating, and rollback/error behavior rather than duplicating increment/decrement primitives.
+
+Home product-card image ratio is `1:1`, matching the contained shirt/product tiles in the reference. Desktop listing cards are `288–300 px` wide depending on grid context; the primary `1440 px` frame uses four cards of approximately `296 px`. Mobile cards are `173 px` wide in a `390 px` frame. PDP/gallery media may remain portrait (`4:5`) when the garment needs a full-length view. Titles may occupy two lines; price, stock, and sale information may not be hover-only.
+
+### 9.3 Account, support, and content components
+
+`Account Navigation`, `Account Summary Card`, `Profile Form`, `Preference Row`, `Order Card`, `Order Status Badge`, `Session Row`, `Support Card`, `Return Request Card`, `Article Layout`, `Policy Navigation`, and `FAQ Item`.
+
+Customer account components reuse shared primitives and commerce components such as `Address Card`, `Badge`, `Dialog`, `Inline Message`, and `Order Timeline`; they do not fork visually similar variants just because they appear under `#account`.
+
+### 9.4 Admin components
+
+`Admin Sidebar`, `Admin Topbar`, `Stat Card`, `Admin Filter Bar`, `Data Table`, `Status Badge`, `Product Form Section`, `Media Uploader`, `Variant Matrix`, `Inventory Cell`, `Order Event`, `Internal Note`, `Customer PII Field`, `Content Block`, and `Audit Event`.
+
+Admin components may be denser than storefront components but consume the same typography, state, focus, spacing, and accessibility tokens unless this specification explicitly defines an admin-only override.
+
+### 9.5 System and edge-state components
+
+`Permission Gate`, `Restricted State`, `Offline State`, `Error State`, `Maintenance State`, `Image Fallback`, and `Loading Overlay`.
+
+These are reusable state compositions, not standalone routes. `Permission Gate` controls whether protected content/actions render; `Restricted State` explains unavailable access without exposing hidden PII or privileged metadata. `Offline State`, `Error State`, and `Maintenance State` must always provide a recovery or navigation action when one exists. `Image Fallback` preserves the final media bounds so failed assets do not shift layout.
+
+### 9.6 Interaction-state contract
 
 | State | Fill | Border | Text/icon | Additional rule |
 | --- | --- | --- | --- | --- |
-| Default primary | `oxblood/700` | `oxblood/700` | `surface/0` | Restrained 6 px shape; no heavy shadow |
+| Default primary | `oxblood/700` | `oxblood/700` | `surface/0` | Restrained `4–6 px` shape; no heavy shadow |
 | Hover primary | `oxblood/800` | `oxblood/800` | `surface/0` | `140 ms` transition |
 | Pressed primary | `ink/950` | `ink/950` | `surface/0` | No scale animation |
 | Focus | Existing state fill | Light separation plus `oxblood/700` | Existing state text | Two-ring focus remains outside component bounds |
@@ -721,31 +773,38 @@ may occupy two lines; price, stock, and sale information may not be hover-only.
 | Error | `error/100` | `error/700` | `error/700` | Icon, message, and error-summary link |
 | Success | `success/100` | `success/700` | `success/700` | Icon and confirmation text |
 
-### 9.5 Construction-level component contracts
+### 9.7 Construction-level component contracts
 
 | Component | Anatomy and exact measurements | Properties and variants | Responsive behavior |
 | --- | --- | --- | --- |
-| Button | Height `36/40/48 px`; inline padding `12/16/20 px`; icon `16/18 px`; label gap `8 px`; radius `6 px` for storefront CTA | Primary, Secondary, Outline, Ghost, Destructive; Small, Medium, Large; leading/trailing icon; default through loading states | Mobile purchase buttons fill available width; ordinary buttons hug content until below `360 px` |
-| Icon Button | `36/40/44 px` square; icon `16/18/20 px`; radius `999 px` for cart/quick-add or `8 px` for utility controls | Ghost, Surface, Outline; tooltip and accessible-label properties | Remains at least `44 px` on customer mobile surfaces |
-| Text/Phone Field | Height `48 px`; label gap `8 px`; inline padding `14 px`; icon `20 px`; helper gap `6 px`; error text `12/21 px` | Empty, filled, focus, disabled, error, success; prefix/suffix; LTR phone value | Full width on mobile; phone value is isolated LTR while label stays RTL |
+| Button | Height `36/40/48/52 px`; inline padding `12/16/20 px`; icon `16/18 px`; label gap `8 px`; radius `4–6 px` for storefront CTA | Primary, Secondary, Outline, Ghost, Destructive; Small, Medium, Large, Purchase; leading/trailing icon; default through loading states | Mobile purchase buttons fill available width; ordinary buttons hug content until below `360 px` |
+| Icon Button | Visible control `36/40/44 px`; pointer target minimum `44 × 44 px`; icon `16/18/20 px`; radius `999 px` for cart/quick-add or `8 px` for utility controls | Ghost, Surface, Outline; tooltip and accessible-label properties | Never drops below a `44 px` target on customer mobile surfaces |
+| Navigation Menu / Dropdown Menu | Navigation row minimum `44 px`; submenu padding `8 px`; menu item minimum `44 px`; indicator `2 px` | Default, active, hover, focus, open, disabled | Desktop opens anchored content; mobile navigation moves into `Sheet / Drawer` |
+| Form Field | Label gap `8 px`; control slot `48 px` by default; helper/error gap `6 px`; helper/error `12/21 px` | Optional/required, helper, error, success, disabled; owns label, description, control, validation | Full width in one-column mobile forms; preserves logical RTL label order |
+| Text / Phone Field | Height `48 px`; inline padding `14 px`; icon `20 px`; helper gap `6 px`; error text `12/21 px` | Empty, filled, focus, disabled, error, success; prefix/suffix; LTR phone value | Full width on mobile; phone value is isolated LTR while label stays RTL |
 | Search Field | Height `48 px`; search icon `18–20 px`; clear action `44 px`; suggestion row `52 px` | Empty, typing, loading, suggestions, no result, error | Desktop overlay `640 px`; mobile becomes a full-screen search surface |
 | Select | Trigger `48 px`; menu item `44 px`; chevron `20 px`; menu padding `8 px` | Placeholder, selected, open, disabled, error; single/multiple | Mobile filter selections may render inside a bottom sheet |
-| Checkbox/Radio/Switch | Checkbox/radio `20 px`; switch `44 × 24 px`; label gap `10 px` | Unchecked, checked, mixed where relevant, focus, disabled, error | Entire label row is clickable with `44 px` minimum height |
-| Tabs/Chip/Badge | Tab height `44 px`; chip `36 px`; badge `24 px`; horizontal padding `12/10/8 px` | Active, inactive, hover, focus, disabled; removable/selected chip; status badge | Tabs scroll horizontally on mobile with visible edge affordance |
+| Checkbox / Radio Group / Switch | Checkbox/radio `20 px`; switch `44 × 24 px`; label gap `10 px` | Unchecked, checked, mixed where relevant, focus, disabled, error | Entire label row is clickable with `44 px` minimum height |
+| Tabs / Chip / Badge | Tab height `44 px`; chip `36 px`; badge `24 px`; horizontal padding `12/10/8 px` | Active, inactive, hover, focus, disabled; removable/selected chip; status badge | Tabs scroll horizontally on mobile with visible edge affordance |
+| Card / Separator | Card padding `12/16/24 px` by density; radius follows family contract; separator `1 px` using `line/200` or `line/100` | Default, selected, interactive, disabled where applicable; horizontal/vertical separator | Cards reflow without changing semantic order; separators never carry state meaning alone |
 | Dialog | Width `480/640 px`; padding `24/32 px`; header gap `12 px`; footer gap `12 px`; radius `16 px` | Information, form, confirmation, destructive; loading/error | Mobile uses `calc(100% - 32px)` or bottom sheet for long forms |
-| Drawer/Bottom Sheet | Drawer `440 px`; sheet max height `90vh`; padding `24 px`; sticky header/footer | Navigation, cart, filters, size guide; open/closing/loading | Drawer becomes full width below `480 px`; sheet respects bottom safe area |
-| Toast/Inline Message | Toast width `360 px`, padding `16 px`, icon `20 px`; inline message padding `12 px` | Success, warning, error, info; optional one or two actions | Toast width becomes `calc(100% - 32px)` on mobile |
-| Breadcrumb/Pagination/Stepper | Breadcrumb row `32 px`; pagination target `44 px`; stepper node `28 px` | Full/collapsed breadcrumb; first/middle/last pagination; current/complete/error step | Breadcrumb collapses after first ancestor; checkout stepper uses labels only where space permits |
-| Product Card | Desktop width `288–300 px`; mobile `173 px`; home image `4:5`; content gap `8–10 px`; swatch `12–14 px`; quick-add `40 px`; wishlist target `44 px` | Regular, sale, new, low stock, out of stock, loading; optional swatches and quick-add | Four desktop, three filtered, two mobile; title stays two lines and price remains visible |
-| Media Gallery | Main image `4:5`; thumbnail `72 × 90 px`; thumbnail gap `10 px`; zoom target `44 px` | Image, video-ready, zoom, loading, failed asset | Desktop thumbnail rail; mobile swipe gallery with pagination and full-screen zoom |
-| Color/Size Selector | Swatch `28 px`; size cell minimum `44 × 44 px`; group gap `8 px` | Available, selected, low stock, unavailable, focus, error | Wraps without horizontal page overflow; size guide opens in a sheet on mobile |
-| Cart Item | Image `112 × 140 px` desktop and `88 × 110 px` mobile; quantity control `112 × 40 px`; row padding `16 px` | Default, updating, removed, stock conflict, price change, error | Mobile stacks price/quantity actions below garment metadata |
+| Sheet / Drawer / Bottom Sheet | Drawer `440 px`; sheet max height `90vh`; padding `24 px`; sticky header/footer | Navigation, cart, filters, size guide; open/closing/loading | Drawer becomes full width below `480 px`; bottom sheet respects safe area and keyboard inset |
+| Toast / Alert / Inline Message | Toast width `360 px`, padding `16 px`, icon `20 px`; inline alert padding `12 px` | Success, warning, error, info; optional one or two actions | Toast width becomes `calc(100% - 32px)` on mobile; alerts stay in document flow |
+| Breadcrumb / Pagination / Stepper | Breadcrumb row `32 px`; pagination target `44 px`; stepper node `28 px` | Full/collapsed breadcrumb; first/middle/last pagination; current/complete/error step | Breadcrumb collapses after first ancestor; checkout stepper uses labels only where space permits |
+| Command / Search Results | Result row minimum `52 px`; section gap `8–12 px`; keyboard-active state uses the same focus token | Empty, typing, loading, grouped results, no results, error | Desktop lives inside the search dialog/overlay; mobile fills the search surface |
+| Progress / Skeleton / Empty State | Progress track `4–8 px`; skeleton preserves final component bounds; empty-state action target minimum `44 px` | Determinate/indeterminate progress; loading skeleton; empty/no-results/error-adjacent compositions | Reduced motion removes shimmer/translation; no layout shift when content resolves |
+| Quantity Stepper | Minimum `112 × 40 px` cart composition; decrement/increment targets minimum `40 px` visible and `44 px` pointer area; centered numeric value | Default, min, max, updating, disabled, error/rollback | May expand to full row on narrow mobile; cannot exceed stock or fall below allowed minimum |
+| Product Card | Desktop width `288–300 px`; mobile `173 px`; home image `1:1`; content gap `8–10 px`; swatch `12–14 px`; quick-add `40 px`; wishlist target `44 px` | Regular, sale, new, low stock, out of stock, loading; optional swatches and quick-add | Four desktop, three filtered, two mobile; title stays two lines and price remains visible |
+| Media Gallery | Main PDP image `4:5`; thumbnail `72 × 90 px`; thumbnail gap `10 px`; zoom target `44 px` | Image, video-ready, zoom, loading, failed asset | Desktop thumbnail rail; mobile swipe gallery with pagination and full-screen zoom |
+| Color / Size Selector | Swatch `28 px`; size cell minimum `44 × 44 px`; group gap `8 px` | Available, selected, low stock, unavailable, focus, error | Wraps without horizontal page overflow; size guide opens in a sheet on mobile |
+| Cart Item | Image `112 × 140 px` desktop and `88 × 110 px` mobile; `Quantity Control` uses the shared `Quantity Stepper`; row padding `16 px` | Default, updating, removed, stock conflict, price change, error | Mobile stacks price/quantity actions below garment metadata |
 | Order Summary | Width `408 px`; padding `24 px`; row gap `12 px`; total divider and `52 px` CTA | Default, recalculating, coupon success/error, quote expired | Full width after items on mobile; CTA becomes sticky where specified |
-| Address/Shipping/Payment Card | Minimum height `88 px`; padding `16 px`; radio `20 px`; title/detail gap `4 px` | Default, hover, selected, disabled, unavailable, error | Stacks full width; selection never relies only on border color |
+| Address / Shipping / Payment Card | Minimum height `88 px`; padding `16 px`; radio `20 px`; title/detail gap `4 px` | Default, hover, selected, disabled, unavailable, error | Stacks full width; selection never relies only on border color |
+| Permission Gate / Restricted State | No visible wrapper is required for allowed content; denied state uses icon `20 px`, title, explanation, and optional recovery action | Allowed, hidden, read-only, denied, loading | Never exposes protected values in hidden DOM/UI text; mobile message stays within normal reading flow |
 | Data Table | Header `48 px`; dense row `48 px`; comfortable row `56 px`; cell padding `12 × 16 px` | Sort, select, hover, focus, expanded, loading, empty, error | Converts priority columns to labeled cards at `768 px` and below |
-| Product Form/Variant Matrix | Section padding `24 px`; field grid `2 × minmax(240px,1fr)`; matrix cell minimum `120 × 44 px` | Draft, invalid, saving, saved, publish-blocked; size × color variants | One-column fields below `768 px`; matrix scrolls inside its own labeled region |
+| Product Form / Variant Matrix | Section padding `24 px`; field grid `2 × minmax(240px,1fr)`; matrix cell minimum `120 × 44 px` | Draft, invalid, saving, saved, publish-blocked; size × color variants | One-column fields below `768 px`; matrix scrolls inside its own labeled region |
 
-### 9.6 Realistic Persian UI content set
+### 9.8 Realistic Persian UI content set
 
 Use these strings in final frames instead of generic English placeholders:
 
@@ -1078,7 +1137,7 @@ For every `AE/<Screen>/<Viewport>/<State>` frame, record the direct node URL, ow
 
 - all bounds and tokens match this appendix;
 - Persian RTL, mixed LTR references, focus, dialog return-focus, and reduced motion are checked;
-- contrast is checked for ink, green, gold, and every status alias;
+- contrast is checked for ink, oxblood, champagne/brass, and every status alias;
 - desktop/mobile crops and text wrapping match the asset/content record;
 - `360 px` has no horizontal scroll or clipped prices/actions;
 - loading, empty, offline, error, stock-conflict, payment-conflict, and success frames are linked;
@@ -1122,11 +1181,11 @@ theme package:
 | Soft surface | `#EEE6DA` | Category tiles, notes, selected controls, and secondary blocks |
 | Warm surface | `#E7DED2` | Lifestyle card backing and warm garment tiles |
 | Ink | `#272220` | Primary Persian text, headings, prices, and icons |
-| Green | `#6D2838` | Primary action, active state, links, cart, and progress |
-| Dark green | `#54202D` | Hover/pressed state, hero copy panel, and admin sidebar |
+| Oxblood | `#6D2838` | Primary action, active state, links, cart, and progress |
+| Deep oxblood | `#54202D` | Hover/pressed state, hero copy panel, and admin sidebar |
 | Gold | `#B79A6B` | Wordmark ornament, eyebrows, and quiet editorial accents |
 | Type | `Peyda Variable` + `Vazirmatn` + `Inter` | Peyda for compact headings/UI; Vazirmatn for body/prices; Inter for isolated LTR strings |
-| Shape | `999 / 16 / 14 / 12 / 8 px` | Pills/actions, hero, supporting cards, product cards, and controls |
+| Shape | `4–6 / 8 / 12 / 14–16 / 999 px` | Editorial CTAs; utility controls; product cards; hero/supporting cards; circular actions/status chips |
 | Scale | `11–14 px` UI; `24–30 px` hero | Compact labels and a short, readable heading step |
 
 This ivory/oxblood translation is the canonical customer-facing system for the

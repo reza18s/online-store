@@ -23,7 +23,10 @@
     "test": "bun test ./apps/api/src ./apps/web/src ./apps/worker/src ./packages/api-client/src ./packages/config/src ./packages/db/src ./packages/ui/src ./test",
     "typecheck:test": "tsc -p test/tsconfig.json --noEmit",
     "test:integration": "bun run test/integration/run.ts",
+    "test:local-providers": "bun test packages/config/src/env.test.ts apps/api/src/modules/auth/auth.test.ts apps/api/src/modules/auth/otp-delivery.test.ts apps/api/src/modules/checkout/shipping.provider.test.ts apps/api/src/modules/payments/local.payment.gateway.test.ts apps/api/src/modules/payments/payments.module.test.ts apps/api/src/modules/staff-auth/staff-auth.test.ts apps/worker/src/notification-sender.test.ts",
     "test:concurrency": "bun run test/integration/live-concurrency.ts",
+    "test:notification-live": "bun run test/integration/live-notification.ts",
+    "test:media-live": "bun run test/integration/live-media.ts",
     "test:e2e": "bun run test/e2e/run.ts",
     "test:e2e:browser": "node node_modules/@playwright/test/cli.js test",
     "verify:local-signals": "powershell -NoProfile -ExecutionPolicy Bypass -File infra/monitoring/verify-local-signals.ps1",
@@ -31,6 +34,7 @@
     "db:generate": "bun run --cwd packages/db db:generate",
     "db:migrate": "bun run --cwd packages/db db:migrate",
     "db:seed": "bun run --cwd packages/db db:seed",
+    "local:staff-code": "bun tools/local-staff-code.ts",
     "docker:config": "docker compose --env-file .env.example -f infra/docker/compose.yml config"
   },
   "devDependencies": {

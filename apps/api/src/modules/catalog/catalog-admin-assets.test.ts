@@ -66,7 +66,14 @@ interface FakeMedia {
 class FakeMediaStorage implements CatalogMediaStorage {
   public completeError: CatalogMediaStorageError | null = null;
   public failDatabaseCreate = false;
-  public readonly quarantineCalls: Array<{ mediaId: string; productId: string }> = [];
+  public quarantineFailuresRemaining = 0;
+  public onQuarantine: (() => void) | null = null;
+  public readonly quarantineCalls: Array<{
+    mediaId: string;
+    productId: string;
+    originalKey?: string;
+    derivativeKey?: string;
+  }> = [];
 
   public async createUpload(input: {
     assetId: string;
@@ -78,8 +85,16 @@ class FakeMediaStorage implements CatalogMediaStorage {
   }) {
     return {
       assetId: input.assetId,
-      original: { key: `catalog/products/${input.productId}/${input.assetId}/original.jpg`, url: 'https://upload.test/original', headers: {} },
-      derivative: { key: `catalog/products/${input.productId}/${input.assetId}/derivative.jpg`, url: 'https://upload.test/derivative', headers: {} },
+      original: {
+        key: `catalog/products/${input.productId}/${input.assetId}/original.jpg`,
+        url: 'https://upload.test/original',
+        headers: {},
+      },
+      derivative: {
+        key: `catalog/products/${input.productId}/${input.assetId}/derivative.jpg`,
+        url: 'https://upload.test/derivative',
+        headers: {},
+      },
       expiresInSeconds: 900,
       multipartExpiresHours: 24,
     };
@@ -106,8 +121,18 @@ class FakeMediaStorage implements CatalogMediaStorage {
     return 'https://cdn.test/ready.webp';
   }
 
-  public async quarantine(input: { mediaId: string; productId: string }): Promise<void> {
+  public async quarantine(input: {
+    mediaId: string;
+    productId: string;
+    originalKey?: string;
+    derivativeKey?: string;
+  }): Promise<void> {
     this.quarantineCalls.push(input);
+    this.onQuarantine?.();
+    if (this.quarantineFailuresRemaining > 0) {
+      this.quarantineFailuresRemaining -= 1;
+      throw new CatalogMediaStorageError('MEDIA_QUARANTINE_FAILED', 'quarantine failed');
+    }
   }
 }
 
@@ -207,6 +232,7 @@ function createService(
     { id: 'color-black', optionId: 'option-color', productId: product.id },
   ];
   const audits: AuditRecord[] = [];
+  const mediaUpdateCalls: unknown[] = [];
 
   const transaction = {
     product: {
@@ -333,19 +359,30 @@ function createService(
         where,
         data,
       }: {
-        where: { id: string; productId: string };
+        where: { id: string; productId: string; storageStatus?: FakeMedia['storageStatus'] };
         data: Record<string, unknown>;
       }) => {
+        mediaUpdateCalls.push({ where, data });
         const item = media.find(
-          (candidate) => candidate.id === where.id && candidate.productId === where.productId,
+          (candidate) =>
+            candidate.id === where.id &&
+            candidate.productId === where.productId &&
+            (where.storageStatus === undefined || candidate.storageStatus === where.storageStatus),
         );
         if (!item) return { count: 0 };
         Object.assign(item, data);
         return { count: 1 };
       },
-      deleteMany: async ({ where }: { where: { id: string; productId: string } }) => {
+      deleteMany: async ({
+        where,
+      }: {
+        where: { id: string; productId: string; storageStatus?: FakeMedia['storageStatus'] };
+      }) => {
         const index = media.findIndex(
-          (candidate) => candidate.id === where.id && candidate.productId === where.productId,
+          (candidate) =>
+            candidate.id === where.id &&
+            candidate.productId === where.productId &&
+            (where.storageStatus === undefined || candidate.storageStatus === where.storageStatus),
         );
         if (index < 0) return { count: 0 };
         media.splice(index, 1);
@@ -368,7 +405,7 @@ function createService(
   const audit = new AuditService({ prisma } as never);
   const service = new CatalogAdminService({ prisma } as never, audit, options.storage);
 
-  return { service, variants, media, audits };
+  return { service, variants, media, audits, mediaUpdateCalls };
 }
 
 test('creates an active variant with a zero-stock inventory row and audit', async () => {
@@ -603,7 +640,7 @@ test('quarantines uploaded objects when the media row cannot be created', async 
   await assert.rejects(service.completeMedia(createAdmin(), 'product-1', input));
   assert.equal(storage.quarantineCalls.length, 1);
   assert.equal(storage.quarantineCalls[0]?.productId, 'product-1');
-  assert.match(storage.quarantineCalls[0]?.mediaId ?? '', /^[A-Za-z0-9-]{36}$/);
+  assert.equal(storage.quarantineCalls[0]?.mediaId, 'asset-orphan');
 });
 
 test('rejects duplicate attachment and derivative-not-ready completion without writes', async () => {
@@ -643,6 +680,14 @@ test('rejects duplicate attachment and derivative-not-ready completion without w
       error instanceof ConflictException &&
       (error.getResponse() as { code?: string }).code === 'PRODUCT_MEDIA_OBJECT_NOT_READY',
   );
+  assert.deepEqual(failingStorage.quarantineCalls, [
+    {
+      mediaId: upload.assetId,
+      productId: 'product-1',
+      originalKey: `catalog/products/product-1/${upload.assetId}/original.png`,
+      derivativeKey: `catalog/products/product-1/${upload.assetId}/derivative.png`,
+    },
+  ]);
 });
 
 test('quarantines READY originals and derivatives before deleting stored media', async () => {
@@ -652,8 +697,8 @@ test('quarantines READY originals and derivatives before deleting stored media',
     media: [
       createMedia({
         storageStatus: 'READY',
-        originalKey: 'catalog/products/product-1/media-1/original.webp',
-        derivativeKey: 'catalog/products/product-1/media-1/derivative.webp',
+        originalKey: 'catalog/products/product-1/asset-1/original.webp',
+        derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
         contentType: 'image/webp',
         sizeBytes: 30_000,
       }),
@@ -664,11 +709,72 @@ test('quarantines READY originals and derivatives before deleting stored media',
   await fixture.service.deleteMedia(createAdmin(), 'product-1', 'media-1');
   assert.deepEqual(storage.quarantineCalls, [
     {
-      mediaId: 'media-1',
+      mediaId: 'asset-1',
       productId: 'product-1',
-      originalKey: 'catalog/products/product-1/media-1/original.webp',
-      derivativeKey: 'catalog/products/product-1/media-1/derivative.webp',
+      originalKey: 'catalog/products/product-1/asset-1/original.webp',
+      derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
     },
   ]);
   assert.equal(fixture.media.some((media) => media.id === 'media-1'), false);
+});
+
+test('rejects mismatched stored asset keys before changing lifecycle state', async () => {
+  const storage = new FakeMediaStorage();
+  const fixture = createService({
+    storage,
+    media: [
+      createMedia({
+        storageStatus: 'READY',
+        originalKey: 'catalog/products/product-1/asset-1/original.webp',
+        derivativeKey: 'catalog/products/product-1/asset-2/derivative.webp',
+        contentType: 'image/webp',
+        sizeBytes: 30_000,
+      }),
+    ],
+  });
+
+  await assert.rejects(
+    fixture.service.deleteMedia(createAdmin(), 'product-1', 'media-1'),
+    (error: unknown) =>
+      error instanceof BadRequestException &&
+      (error.getResponse() as { code?: string }).code === 'MEDIA_KEY_INVALID',
+  );
+  assert.equal(fixture.mediaUpdateCalls.length, 0);
+  assert.deepEqual(storage.quarantineCalls, []);
+  assert.equal(fixture.media[0]?.storageStatus, 'READY');
+});
+
+test('retries storage quarantine before deleting a row left in progress', async () => {
+  const storage = new FakeMediaStorage();
+  storage.quarantineFailuresRemaining = 1;
+  const fixture = createService({
+    storage,
+    media: [
+      createMedia({
+        storageStatus: 'READY',
+        originalKey: 'catalog/products/product-1/asset-1/original.webp',
+        derivativeKey: 'catalog/products/product-1/asset-1/derivative.webp',
+        contentType: 'image/webp',
+        sizeBytes: 30_000,
+      }),
+    ],
+  });
+  const statusesAtQuarantine: Array<FakeMedia['storageStatus']> = [];
+  storage.onQuarantine = () => {
+    statusesAtQuarantine.push(fixture.media[0]?.storageStatus);
+  };
+
+  await assert.rejects(
+    fixture.service.deleteMedia(createAdmin(), 'product-1', 'media-1'),
+    (error: unknown) =>
+      error instanceof ServiceUnavailableException &&
+      (error.getResponse() as { code?: string }).code === 'PRODUCT_MEDIA_QUARANTINE_UNAVAILABLE',
+  );
+  assert.deepEqual(statusesAtQuarantine, ['QUARANTINED']);
+  assert.equal(fixture.media[0]?.storageStatus, 'QUARANTINED');
+
+  await fixture.service.deleteMedia(createAdmin(), 'product-1', 'media-1');
+  assert.deepEqual(statusesAtQuarantine, ['QUARANTINED', 'QUARANTINED']);
+  assert.equal(fixture.media.some((media) => media.id === 'media-1'), false);
+  assert.equal(storage.quarantineCalls.length, 2);
 });

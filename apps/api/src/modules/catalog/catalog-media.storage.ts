@@ -83,11 +83,14 @@ export class CatalogMediaStorageError extends Error {
   public constructor(
     public readonly code: string,
     message: string,
-    options?: { cause?: unknown },
+    options?: { cause?: unknown; status?: number },
   ) {
     super(message, options);
     this.name = 'CatalogMediaStorageError';
+    this.status = options?.status;
   }
+
+  public readonly status?: number;
 }
 
 export interface S3CatalogMediaStorageConfig {
@@ -185,6 +188,67 @@ function assertOwnedKey(
       'Media object key is outside its ownership boundary.',
     );
   }
+}
+
+function assetIdFromOwnedKey(
+  productId: string,
+  key: string,
+  expectedRole: CatalogMediaObjectRole,
+): string {
+  assertSafeId(productId, 'product id');
+  const productPrefix = `catalog/products/${productId}/`;
+  if (!key.startsWith(productPrefix)) {
+    throw new CatalogMediaStorageError(
+      'MEDIA_KEY_INVALID',
+      'Media object key is outside its ownership boundary.',
+    );
+  }
+
+  const [assetId, objectName, ...extraSegments] = key.slice(productPrefix.length).split('/');
+  if (!assetId || !objectName || extraSegments.length > 0) {
+    throw new CatalogMediaStorageError(
+      'MEDIA_KEY_INVALID',
+      'Media object key is outside its ownership boundary.',
+    );
+  }
+  assertSafeId(assetId, 'asset id');
+  assertOwnedKey(key, `${productPrefix}${assetId}`, expectedRole);
+  return assetId;
+}
+
+function isMissingObject(error: unknown): boolean {
+  return (
+    error instanceof CatalogMediaStorageError &&
+    error.code === 'MEDIA_STORAGE_REQUEST_FAILED' &&
+    error.status === 404
+  );
+}
+
+export function catalogMediaAssetIdFromObjectKey(
+  productId: string,
+  key: string,
+  expectedRole: 'original' | 'derivative',
+): string {
+  return assetIdFromOwnedKey(productId, key, expectedRole);
+}
+
+export function catalogMediaAssetIdFromObjectKeys(
+  productId: string,
+  keys: Pick<CatalogMediaQuarantineInput, 'originalKey' | 'derivativeKey'>,
+): string {
+  const originalAssetId = catalogMediaAssetIdFromObjectKey(productId, keys.originalKey, 'original');
+  const derivativeAssetId = catalogMediaAssetIdFromObjectKey(
+    productId,
+    keys.derivativeKey,
+    'derivative',
+  );
+  if (originalAssetId !== derivativeAssetId) {
+    throw new CatalogMediaStorageError(
+      'MEDIA_KEY_INVALID',
+      'Media object keys do not belong to the same asset.',
+    );
+  }
+  return originalAssetId;
 }
 
 function configured(
@@ -310,12 +374,15 @@ export class S3CatalogMediaStorage implements CatalogMediaStorage {
   }
 
   public async quarantine(input: CatalogMediaQuarantineInput): Promise<void> {
-    assertSafeId(input.productId, 'product id');
+    const assetId = catalogMediaAssetIdFromObjectKeys(input.productId, input);
     assertSafeId(input.mediaId, 'media id');
-    const prefix = `catalog/products/${input.productId}/${input.mediaId}`;
-    assertOwnedKey(input.originalKey, prefix, 'original');
-    assertOwnedKey(input.derivativeKey, prefix, 'derivative');
-    const quarantinePrefix = `catalog/quarantine/${input.productId}/${input.mediaId}/${Date.now()}`;
+    if (input.mediaId !== assetId) {
+      throw new CatalogMediaStorageError(
+        'MEDIA_KEY_INVALID',
+        'Media id does not match the asset encoded by its object keys.',
+      );
+    }
+    const quarantinePrefix = `catalog/quarantine/${input.productId}/${assetId}/${Date.now()}`;
 
     for (const key of [input.originalKey, input.derivativeKey]) {
       const quarantineKey = `${quarantinePrefix}/${key.split('/').at(-1)}`;
@@ -323,8 +390,18 @@ export class S3CatalogMediaStorage implements CatalogMediaStorage {
         await this.request('PUT', quarantineKey, {
           'x-amz-copy-source': `/${this.options.bucket}/${key}`,
         });
+      } catch (error) {
+        if (isMissingObject(error)) continue;
+        throw new CatalogMediaStorageError(
+          'MEDIA_QUARANTINE_FAILED',
+          'Catalog media could not be quarantined.',
+          { cause: error },
+        );
+      }
+      try {
         await this.request('DELETE', key);
       } catch (error) {
+        if (isMissingObject(error)) continue;
         throw new CatalogMediaStorageError(
           'MEDIA_QUARANTINE_FAILED',
           'Catalog media could not be quarantined.',
@@ -471,6 +548,7 @@ export class S3CatalogMediaStorage implements CatalogMediaStorage {
       throw new CatalogMediaStorageError(
         'MEDIA_STORAGE_REQUEST_FAILED',
         'Object storage request failed.',
+        { status: response.status },
       );
     }
     return response;

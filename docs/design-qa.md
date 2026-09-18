@@ -13,6 +13,21 @@ entering credentials. Full authenticated, provider,
 assistive-technology and formal pixel-diff gates remain open. The original
 audit routes findings to owners and the later parent fixes are recorded below.
 
+### Current verified status — 2026-09-14
+
+The latest elevated pinned-Chromium Playwright evidence is fixture-backed: the
+inventory is `68` tests in `27` files and the one-worker matrix passed `68/68`.
+The current live `bun run test:e2e` preflight passed `12/12`; it is limited to
+unauthenticated, loopback/local API, dependency-readiness and storefront
+root-shell checks. It does not prove real staff password/TOTP/MFA or protected-
+route success. Those real-authentication gates are `BLOCKED / NOT RUN`.
+
+Full screen-reader/assistive-technology validation is `BLOCKED / NOT RUN`.
+Formal pixel comparison is `BLOCKED / NOT RUN` because the available board is
+not composed of exact-size standalone viewport references; resizing or
+trimming it would invent geometry. Earlier source, bounded-browser and visual
+audit findings remain historical evidence and are not erased by this update.
+
 ## Baseline and scope
 
 - Baseline: commit `465ce070cbdb31e9ab1dbad8c6b2f21bc06d12bb` on
@@ -56,12 +71,14 @@ current rendered evidence.
 | --- | --- | --- |
 | Requested baseline | `PASS` | The original audit matched `465ce07` on `codex/integration`; the later parent recheck ran from the current integration checkout. |
 | Route integration ownership | `PASS` | `RouteView` dispatches the integrated public, auth, commerce, account, content, admin, and fallback route kinds; `hash-route.test.ts` passed. |
-| Web focused tests | `PASS` | The current checkout reran `bun test`: **518 pass, 0 fail** across 106 files, including the staff-login validation, safe session-expiry, SSR content-link, admin modal-focus, customer-lookup, and stale payment-recovery-success regressions. |
+| Web focused tests | `PASS` | The current checkout ran `bun test apps/web/src`: **164 pass, 0 fail** across 33 files, including staff-login validation, safe session-expiry, SSR content-link, admin modal-focus, customer-lookup, and stale payment-recovery-success regressions. |
 | Web typecheck | `PASS` | `bun run --cwd apps/web typecheck` exited successfully. |
 | Deterministic integration matrix | `PASS` | The parent recheck ran `bun run test:integration`: all 8 deterministic suites passed with no failures. |
-| Live API/storefront smoke | `PASS` (unauthenticated) / `NOT RUN` (authenticated) | The continuation ran the API and Vite storefront against isolated PostgreSQL 16/Redis 7: `/health/live` and `/health/ready` returned `200` with `database: "ok"`, public catalog endpoints returned seeded data, the default `test:e2e` root-shell preflight passed, and CUA observed live home/catalog content plus the unauthenticated admin guard. A 2026-09-12 built-SSR smoke also returned `200` for robots, sitemap, home, product and supported public category routes, while account/private and unknown routes stayed noindex/fail-closed. Authenticated data-backed operations remain unrun. |
-| Browser harness | `PARTIAL` | CUA supplied default-viewport AX evidence; the parent also used an isolated headless Chrome CDP runner for exact CSS viewports and bounded route/state checks. No full Playwright journey or screen-reader/AT run exists, so this is not authenticated E2E coverage. |
-| Screenshot/pixel regression | `PARTIAL` | Exact `1440x900` and `390x844` default/invalid-email/session-expiry/loading/API-error captures were generated and visually inspected; temporary captures and runners were removed after QA. Formal crop registration and pixel-diff tolerance against the composite artifact remain open. |
+| Live API/storefront smoke | `PASS` (`12/12` unauthenticated/local preflight) / `BLOCKED / NOT RUN` (real staff auth and protected-route success) | The current `bun run test:e2e` preflight passed `12/12` against local loopback API/dependency-readiness and storefront root-shell probes. Earlier runtime checks also observed live home/catalog content and the unauthenticated admin guard. No real staff password, TOTP, MFA or protected-route success was exercised. |
+| Browser harness | `PASS` (fixture-backed matrix only) / `BLOCKED` (real auth and full AT) | The latest elevated pinned-Chromium Playwright matrix is `68` tests in `27` files and passed `68/68`; its authenticated-looking journeys use synthetic local fixtures. CUA/CDP also supplied bounded route, overflow and state evidence. The matrix does not prove real staff authentication/MFA, protected-route success or screen-reader/AT behavior. |
+| Real staff password/TOTP/MFA and protected-route success | `BLOCKED / NOT RUN` | No real credentials or live staff-authentication flow was used. Fixture-backed browser sessions and unauthenticated guards are not evidence of real credential, MFA or protected-route success. |
+| Full screen-reader / assistive technology | `BLOCKED / NOT RUN` | Bounded accessibility-tree and keyboard evidence exists for selected states, but no full screen-reader or formal cross-browser AT run is available. |
+| Screenshot/pixel regression | `BLOCKED / NOT RUN` | Exact `1440x900` and `390x844` captures were generated and visually inspected for bounded states; formal comparison is blocked because `auth-staff-login-atelier.png` is a presentation board, not exact-size standalone viewport references. |
 | Production code changes | `PASS` (bounded follow-up) | The current parent follow-up removes the mobile `.site-nav` display override regression, adds localized field-specific staff-login validation with accessible error associations, and preserves the safe session-expiry route marker after protected-cache clearing. No provider, package/lockfile, generated output or shared contract changed. |
 
 ## Required responsive widths
@@ -122,7 +139,7 @@ unavailable rendered-browser gate.
 | Payment failed/recovery | `PASS` (logic/source) / `NOT RUN` (browser) | Failed and recovery routes preserve safe retry/continue guidance; focused checkout tests passed. |
 | Refund / return | `PASS` (logic/source) / `NOT RUN` (browser) | Customer return states and `REFUNDED` status copy exist; orders/payment refund integration tests passed, but no browser return/refund render was exercised. |
 
-## Parent browser follow-up — 2026-09-13
+## Historical parent browser follow-up — 2026-09-13
 
 The current parent checkout now has five bounded, fixture-backed authenticated
 dashboard sidecars:
@@ -145,6 +162,11 @@ in `26` files. These sidecars use synthetic staff/API fixtures, loopback-only
 route guards and read-only GET assertions; they improve bounded rendered
 evidence but do not close real staff authentication/MFA, screen-reader AT,
 formal pixel comparison, provider, storage-upload or production gates.
+
+The 2026-09-14 repository snapshot supersedes only these matrix counts: the
+latest elevated pinned-Chromium fixture-backed inventory is `68` tests in `27`
+files with `68/68` passed. The historical dashboard findings and their
+limitations remain unchanged.
 
 ## Visual regression status
 
@@ -436,14 +458,20 @@ bun run --cwd apps/web typecheck
   PASS — tsc -p tsconfig.json --noEmit
 
 bun run test:integration
-  PASS — 8 deterministic suites, 131 underlying tests, 0 failures at the
-  recorded parent snapshot; the current integrated matrix is 137 underlying
-  tests with 0 failures
+  PASS — historical parent snapshot: 8 deterministic suites, 131 underlying
+  tests, 0 failures; current 2026-09-14 recheck: 8 suites, 146 underlying
+  tests, 0 failures
 
 bun run test:e2e
-  PASS — default API liveness/readiness and storefront root-shell preflight on
-  127.0.0.1:4000 and 127.0.0.1:5173 after the Vite IPv4 bind correction;
-  this runner still does not claim browser or authenticated coverage
+  PASS — 12/12 current unauthenticated/local runtime preflight probes covering
+  API/dependency readiness and the storefront root shell on loopback origins;
+  this runner does not claim real staff password/TOTP/MFA or protected-route
+  success
+
+Latest pinned-Chromium fixture-backed Playwright matrix (2026-09-14)
+  PASS — 68/68 with discovery of 68 tests in 27 files under the approved
+  elevated local process boundary; synthetic fixtures do not claim real auth,
+  full screen-reader/AT or formal pixel comparison
 ```
 
 ## Unrequested issues found
@@ -455,5 +483,7 @@ production fix was attempted in this audit.
 layout/overflow evidence for the audited route matrix is now `PASS`, and the
 three accessibility findings remain `CLOSED` at source/bounded-runtime scope.
 The visual finding is `SUPERSEDED` for the audited default/exact composition,
-but formal pixel comparison, full assistive-technology output, authenticated
-state coverage and provider-backed journeys remain `NOT RUN`/`BLOCKED`.
+but the latest evidence still leaves real staff password/TOTP/MFA and
+protected-route success `BLOCKED / NOT RUN`, full screen-reader/AT
+`BLOCKED / NOT RUN`, and formal pixel comparison `BLOCKED / NOT RUN` because
+the available board is not an exact-size standalone reference set.

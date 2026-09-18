@@ -49,6 +49,7 @@ function renderPage(
 
 test('normalizes published slugs and keeps canonical/hash links encoded', () => {
   assert.equal(normalizePublicContentSlug(' Shipping-Policy '), 'shipping-policy');
+  assert.equal(normalizePublicContentSlug('%20Shipping-Policy%20'), 'shipping-policy');
   assert.equal(normalizePublicContentSlug('shipping%2Dpolicy'), 'shipping-policy');
   assert.equal(normalizePublicContentSlug('../admin'), null);
   assert.equal(publicContentPath(' Shipping-Policy '), '/content/shipping-policy');

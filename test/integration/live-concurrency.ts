@@ -2,6 +2,9 @@ import { DatabaseClient } from '../../packages/db/src/client';
 import type { InventoryReservationBatch } from '../../apps/api/src/modules/inventory/inventory.service';
 import { InventoryService } from '../../apps/api/src/modules/inventory/inventory.service';
 
+const DISPOSABLE_DATABASE_PREFIX = 'nova_concurrency_validation_';
+const DISPOSABLE_DATABASE_NAME_PATTERN = /^nova_concurrency_validation_[a-z0-9-]+$/;
+
 interface TargetInventory {
   id: string;
   variantId: string;
@@ -43,12 +46,60 @@ function errorMessage(error: unknown): string {
   return String(error);
 }
 
+function parseDatabaseTarget(databaseUrl: string): void {
+  let parsed: URL;
+  try {
+    parsed = new URL(databaseUrl);
+  } catch {
+    throw new Error('DATABASE_URL must be a valid PostgreSQL URL.');
+  }
+
+  assertCondition(
+    parsed.protocol === 'postgres:' || parsed.protocol === 'postgresql:',
+    'DATABASE_URL must use the PostgreSQL protocol.',
+  );
+  const hostname = parsed.hostname.toLowerCase();
+  assertCondition(
+    hostname === '127.0.0.1' || hostname === 'localhost',
+    'DATABASE_URL must target the local loopback host.',
+  );
+  assertCondition(!parsed.hash, 'DATABASE_URL must not contain a fragment.');
+
+  const targetOverrideParameters = new Set([
+    'database',
+    'dbname',
+    'host',
+    'hostaddr',
+    'port',
+    'service',
+  ]);
+  assertCondition(
+    [...parsed.searchParams.keys()].every(
+      (parameter) => !targetOverrideParameters.has(parameter.toLowerCase()),
+    ),
+    'DATABASE_URL must not contain target-override query parameters.',
+  );
+
+  let databaseName: string;
+  try {
+    databaseName = decodeURIComponent(parsed.pathname.slice(1));
+  } catch {
+    throw new Error('DATABASE_URL must contain a valid database name.');
+  }
+  assertCondition(
+    databaseName.startsWith(DISPOSABLE_DATABASE_PREFIX) &&
+      DISPOSABLE_DATABASE_NAME_PATTERN.test(databaseName),
+    `DATABASE_URL must target a disposable database named ${DISPOSABLE_DATABASE_PREFIX}<run-id>.`,
+  );
+}
+
 async function main(): Promise<void> {
   const databaseUrl = process.env.DATABASE_URL?.trim();
   assertCondition(
     databaseUrl,
     'DATABASE_URL is required. This harness never falls back to the local database default.',
   );
+  parseDatabaseTarget(databaseUrl);
 
   const control = new DatabaseClient({ connectionString: databaseUrl });
   const first = new DatabaseClient({ connectionString: databaseUrl });

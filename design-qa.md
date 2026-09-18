@@ -98,3 +98,113 @@ final result: passed
 - [ ] Exact 390 px mobile runtime capture.
 
 final result: blocked
+
+---
+
+# NOVA lookbook homepage visual QA
+
+## Source and implementation
+
+- Source visual truth: `C:\Users\Asus\Documents\ChatGPT\online store\docs\designs\atelier-editorial\lookbook.png`.
+- Source pixels: `1490 × 1090`; the board contains both a desktop composition and a framed mobile composition.
+- Implementation URL: `http://127.0.0.1:5173/#home`.
+- Browser-rendered implementation evidence: Codex in-app Browser inline captures at `1280 × 720` CSS px desktop (`1265 × 1622` document, device scale factor unavailable) and `390 × 844` CSS px mobile (`375 × 1593` document, device scale factor unavailable).
+- Implementation screenshot path: unavailable. The selected browser returned inline screenshot bytes only, and its security policy rejected the attempted local persistence page; no alternate browser or indirect capture was used.
+- State: development fixtures, light theme, RTL, seeded cart count `3`, homepage at initial scroll position.
+
+## Full-view and focused comparison evidence
+
+- Full view: the supplied board and the live desktop/mobile homepage were opened and visually inspected. The implementation follows the source hierarchy: centered editorial navigation, wide photographic lookbook hero, four compact style stories, a three-part manifesto band, a six-item shop-the-look strip, and mobile fixed navigation.
+- Focused hero: typography, oxblood CTA, warm neutral palette, dark photographic treatment, and left/right editorial notes were checked against the source. The project-owned hero intentionally preserves its existing model and architecture scene rather than copying the reference person.
+- Focused story grid: desktop uses four equal split-image cards; mobile exposes compact image-first cards in a horizontal rail, matching the source's denser mobile treatment.
+- Focused manifesto and product strip: desktop preserves the source's image/copy/image rhythm and compact product density; mobile collapses the manifesto over photography and keeps products horizontally scrollable.
+- A persisted same-input source/implementation composite could not be created because the in-app browser blocked the temporary local comparison page. The two artifacts were inspected separately; this report does not claim pixel-certified side-by-side evidence.
+
+## Required fidelity surfaces
+
+- Fonts and typography: existing NOVA Persian/display families and Georgia wordmark were preserved; hierarchy and wraps match the reference closely at both verified widths.
+- Spacing and layout rhythm: hero, story cards, manifesto, and product strip use the compact vertical density and rounded editorial frames visible in the source. No horizontal document overflow was observed at `390 × 844` or `1280 × 720`.
+- Colors and tokens: existing warm background, oxblood primary, cream surface, muted ink, borders, and flat translucent image veils were reused.
+- Image quality and assets: all visible photography comes from existing project-owned NOVA raster assets; no placeholder art, CSS drawings, or handcrafted SVG imagery was introduced.
+- Copy and content: the Persian lookbook headline, editorial story labels, manifesto copy, and shop-the-look messaging follow the source intent while using project catalog data for products and prices.
+
+## Comparison history
+
+1. Initial implementation capture: no visible P0/P1/P2 layout defect was found in the separately inspected desktop and mobile renders. Mobile initially showed the expected three-card rail and fixed navigation without document overflow; desktop showed the reference-like full hero and four-card row.
+2. Interaction verification: wishlist toggle changed to the selected state and was reverted; the primary lookbook CTA navigated to `#campaign` and returned to `#home`; both desktop and mobile console checks returned no warnings or errors.
+
+## Findings
+
+- [P2] Persisted normalized comparison artifact unavailable. Location: visual QA evidence. Evidence: source and implementation captures are visible in the session, but the selected browser denied the temporary local persistence/comparison page and exposes no screenshot path. Impact: the implementation is visually verified in-browser but cannot satisfy the workflow's archived same-input comparison requirement. Fix: repeat only the final composite comparison in a permitted capture surface.
+
+## Implementation checklist
+
+- [x] Desktop hero, story grid, manifesto band, and product strip implemented.
+- [x] Mobile hero, horizontal content rails, compact manifesto, and fixed navigation verified.
+- [x] Wishlist state and primary CTA tested.
+- [x] Desktop and mobile console checks passed with no warnings or errors.
+- [x] Web typecheck and focused tests passed.
+- [ ] Persisted same-input source/implementation comparison.
+
+final result: blocked
+
+---
+
+# Development fixture and imagery QA
+
+## Scope
+
+- Added development-only storefront fixtures in `apps/web/src/shared/dev-store-fixtures.ts`.
+- Added generated hero asset `apps/web/public/assets/nova-hero-editorial-v2.png`.
+
+## Verification
+
+- [x] Home renders the generated editorial hero and six seeded product cards.
+- [x] Product listing renders six local products with prices, sale labels, images, and add-to-cart controls.
+- [x] Product detail renders a seeded product, variants, related products, and interactive add-to-cart feedback.
+- [x] Editorial article renders seeded title/body/blocks and the generated hero image.
+- [x] Cart renders seeded lines, quantities, subtotal, recommendations, and the updated item count after a local add-to-cart action.
+- [x] Focused fixture/catalog/cart/content tests passed: 37/37.
+- [x] Web typecheck passed after fixture integration.
+
+## Limitations
+
+- Fixtures are intentionally development-only; production builds remain API-backed.
+- Customer account, checkout submission, staff admin, and live CMS persistence remain protected by their real auth/API boundaries and were not replaced with fabricated sessions or orders.
+- The local API/Docker runtime remains unavailable, so server-backed behavior still requires the documented local stack.
+
+final result: passed for the development-only public storefront fixture scope
+
+---
+
+# Atelier Editorial reference integration QA
+
+## Scope
+
+- Renamed reference set: `docs/designs/atelier-editorial/` (43 descriptive PNG filenames).
+- Shared UI updates: admin login composition, public content hero asset mapping, account navigation promo, and authenticated admin shell styling.
+- Runtime preview: `http://127.0.0.1:5173/` in the Codex in-app browser.
+
+## Verification
+
+- [x] Mobile `#admin/login` renders the editorial image panel, branded form, security note, and return link without overflow.
+- [x] Mobile `#home` preserves the storefront header, hero imagery, navigation, and existing loading states.
+- [x] Mobile `#admin` renders the development dashboard, KPI grid, chart, and fixed admin navigation.
+- [x] `#content/article` reaches the controlled loading state while the local API is unavailable; the published hero mapping remains isolated to the published-content component.
+- [x] Web typecheck passed.
+- [x] Focused storefront/account/content/checkout tests passed: 55/55.
+- [x] Production client and SSR build passed with only the existing Vite CJS deprecation and bundle-size warnings.
+- [x] Route sweep completed for home, category, listing, product, cart, checkout, account, content, admin, and admin login with no browser console errors.
+- [x] Full 43-reference route mapping completed with zero browser console errors, including account address states, returns, editorial utilities, admin detail paths, and order detail.
+- [x] Full 43-reference route mapping completed with zero browser console errors, including account address states, returns, editorial utilities, admin detail paths, and order detail.
+
+## Limitations
+
+- The local API was not running during this capture, so published CMS content and authenticated account data could not be rendered from live responses. Direct checks confirmed port `4000` refused connections and the Vite proxy returned HTTP 500 for catalog/content requests.
+- Docker Desktop was started, but its Linux engine remained unavailable: `docker version` could not open `dockerDesktopLinuxEngine`. The documented PostgreSQL/Redis/MinIO stack therefore could not be started in this session.
+- The selected browser exposed a narrow viewport but not an exact desktop/mobile viewport control or persistent screenshot path; visual checks are structural rather than pixel-certified.
+- The final fresh browser route sweep reported no console errors.
+- The account shell was corrected to place its navigation column on the right in RTL desktop layouts, matching the supplied account boards.
+- The account shell was corrected to place its navigation column on the right in RTL desktop layouts, matching the supplied account boards.
+
+final result: blocked

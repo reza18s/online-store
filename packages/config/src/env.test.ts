@@ -17,7 +17,18 @@ test('environment validation supplies safe local defaults', () => {
   assert.equal(environment.S3_FORCE_PATH_STYLE, true);
   assert.equal(environment.ZARINPAL_SANDBOX, true);
   assert.equal(environment.SMS_IR_SANDBOX, true);
-  assert.equal(environment.TAPIN_SANDBOX, true);
+  assert.equal(environment.IRAN_POST_SANDBOX, true);
+  assert.equal(environment.LOCAL_TEST_MODE, false);
+});
+
+test('environment validation accepts the explicit local fixture mode only for development/test', () => {
+  assert.equal(parseEnvironment({ LOCAL_TEST_MODE: 'true' }).LOCAL_TEST_MODE, true);
+  assert.equal(
+    parseEnvironment({ NODE_ENV: 'test', LOCAL_TEST_MODE: 'true' }).LOCAL_TEST_MODE,
+    true,
+  );
+  assert.throws(() => parseEnvironment({ NODE_ENV: 'staging', LOCAL_TEST_MODE: 'true' }));
+  assert.throws(() => parseEnvironment({ NODE_ENV: 'production', LOCAL_TEST_MODE: 'true' }));
 });
 
 test('environment validation coerces a valid port and preserves URLs', () => {
@@ -31,7 +42,7 @@ test('environment validation coerces a valid port and preserves URLs', () => {
     ZARINPAL_SANDBOX: 'false',
     SMS_IR_SANDBOX: 'false',
     SMS_IR_TEMPLATE_ID: '12345',
-    TAPIN_SANDBOX: 'false',
+    IRAN_POST_SANDBOX: 'false',
   });
 
   assert.equal(environment.NODE_ENV, 'staging');
@@ -41,7 +52,7 @@ test('environment validation coerces a valid port and preserves URLs', () => {
   assert.equal(environment.ZARINPAL_SANDBOX, false);
   assert.equal(environment.SMS_IR_SANDBOX, false);
   assert.equal(environment.SMS_IR_TEMPLATE_ID, 12345);
-  assert.equal(environment.TAPIN_SANDBOX, false);
+  assert.equal(environment.IRAN_POST_SANDBOX, false);
 });
 
 test('environment validation rejects an invalid port', () => {
@@ -55,13 +66,13 @@ test('environment validation treats blank optional provider settings as unconfig
     SMS_IR_API_KEY: '',
     SMS_IR_LINE_NUMBER: '',
     SMS_IR_TEMPLATE_ID: '',
-    TAPIN_API_KEY: '',
-    TAPIN_BASE_URL: '',
+    IRAN_POST_API_KEY: '',
+    IRAN_POST_BASE_URL: '',
   });
 
   assert.equal(environment.ZARINPAL_MERCHANT_ID, undefined);
   assert.equal(environment.ZARINPAL_BASE_URL, undefined);
   assert.equal(environment.SMS_IR_API_KEY, undefined);
   assert.equal(environment.SMS_IR_TEMPLATE_ID, undefined);
-  assert.equal(environment.TAPIN_BASE_URL, undefined);
+  assert.equal(environment.IRAN_POST_BASE_URL, undefined);
 });

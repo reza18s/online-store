@@ -6,10 +6,12 @@ import {
   type CheckoutOrder,
   type CheckoutQuote,
   type CheckoutRequestInput,
+  type PaymentCallbackResponse,
 } from '@nova/api-client';
 
 export const checkoutQuotePath = '/v1/checkout/quote';
 export const checkoutSubmitPath = '/v1/checkout';
+export const localPaymentCallbackPath = '/v1/payments/local/callback';
 
 export function normalizeCheckoutInput(input: CheckoutRequestInput): CheckoutRequestInput {
   const couponCode = input.couponCode?.trim();
@@ -38,6 +40,24 @@ export async function submitCheckout(
     headers: { 'Idempotency-Key': normalizedKey },
     body: JSON.stringify(normalizeCheckoutInput(input)),
   });
+  return response.data;
+}
+
+export async function completeLocalPayment(input: {
+  orderNumber: string;
+  amountToman: number;
+  transactionId: string;
+  token: string;
+}): Promise<PaymentCallbackResponse> {
+  const params = new URLSearchParams({
+    orderNumber: input.orderNumber,
+    amountToman: String(input.amountToman),
+    transactionId: input.transactionId,
+    token: input.token,
+  });
+  const response = await apiClient.getEnvelope<PaymentCallbackResponse>(
+    `${localPaymentCallbackPath}?${params.toString()}`,
+  );
   return response.data;
 }
 

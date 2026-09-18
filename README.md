@@ -12,7 +12,7 @@ NOVA Store is an Iran-first, single-merchant clothing commerce platform for Pers
 - TanStack Query for server state and Zustand for local cart/UI state
 - Tailwind CSS tokens and shadcn-style shared primitives in `packages/ui`
 
-The current implementation includes the Phase 1 engineering foundation plus catalog/discovery, guest/customer-cart ownership, checkout-time inventory reservation, customer OTP/session security, staff password/TOTP sessions, address persistence, and the first authoritative checkout boundary. It provides a Persian RTL web shell, API liveness/readiness endpoints, typed client contracts, validated environment configuration, a Prisma schema and seed catalog, read-only catalog/search routes with filters, sorting, pagination, inventory-aware availability, Persian text normalization, full-text/trigram typo tolerance, and bounded category/product search suggestions, plus API-backed home, category, product-list, search, product-detail, and guest-cart views. The API now also has Redis-backed OTP state, opaque PostgreSQL customer/admin sessions, encrypted staff TOTP credentials, explicit role guards, exact-origin/double-submit CSRF protection, customer address CRUD, idempotent order-intent creation, order/address snapshots, live integer-toman quotes, default shipment creation, reservation cleanup, browser client support for CSRF mutation headers, explicit guest-cart merge conflicts for stale lifecycle/stock/quantity state, protected admin product list/create/edit operations, audited admin product lifecycle mutations with publish/archive/draft transitions, protected admin variant/media operations with inventory-row creation and primary-image safeguards, protected category/assignment/option administration with cycle, ownership, active-category, and variant-option integrity guards, a protected inventory read/adjustment/reorder-point API with signed stock movements, reserved-stock safeguards, optimistic concurrency, and transactional audit events, verified payment callbacks with replay protection and late-payment refund reconciliation, bounded fixed/percentage coupons with minimum-order checks, row-locked global/per-user redemption reservations, payment-aware commit/release transitions, and audited admin coupon management, transactional payment success/failure notification outbox jobs with idempotent dedupe keys and worker retry leasing, paid-order fulfillment/shipment state transitions with transactional order events and audit records, customer cancellation/return requests with support/admin review and observable idempotent refund retries, and admin-only paginated audit-event and payment-attempt/refund inspection reads. The browser now has page-agnostic customer-auth, customer-address, checkout quote/submit, staff-session, admin-catalog, admin-inventory, admin-order, admin-audit, admin-payment, admin-coupon, guest-cart merge, and catalog category/search-suggestion transport/query/mutation layers with cache-safe category/product/option/variant/media/inventory/order/coupon updates. SMS/notification delivery and the payment adapter remain intentionally fail-closed until real providers are selected; SSR/hybrid storefront rendering and the non-dashboard admin catalog, inventory, order, audit, payment, and coupon UI still await their supplied page references before visual implementation.
+The current implementation includes the Phase 1 engineering foundation plus catalog/discovery, guest/customer-cart ownership, checkout-time inventory reservation, customer OTP/session security, staff password/TOTP sessions, address persistence, and the first authoritative checkout boundary. It provides a Persian RTL web shell, API liveness/readiness endpoints, typed client contracts, validated environment configuration, a Prisma schema and seed catalog, read-only catalog/search routes with filters, sorting, pagination, inventory-aware availability, Persian text normalization, full-text/trigram typo tolerance, and bounded category/product search suggestions, plus API-backed home, category, product-list, search, product-detail, and guest-cart views. The API now also has Redis-backed OTP state, opaque PostgreSQL customer/admin sessions, encrypted staff TOTP credentials, explicit role guards, exact-origin/double-submit CSRF protection, customer address CRUD, idempotent order-intent creation, order/address snapshots, live integer-toman quotes, default shipment creation, reservation cleanup, browser client support for CSRF mutation headers, explicit guest-cart merge conflicts for stale lifecycle/stock/quantity state, protected admin product list/create/edit operations, audited admin product lifecycle mutations with publish/archive/draft transitions, protected admin variant/media operations with inventory-row creation and primary-image safeguards, protected category/assignment/option administration with cycle, ownership, active-category, and variant-option integrity guards, a protected inventory read/adjustment/reorder-point API with signed stock movements, reserved-stock safeguards, optimistic concurrency, and transactional audit events, verified payment callbacks with replay protection and late-payment refund reconciliation, bounded fixed/percentage coupons with minimum-order checks, row-locked global/per-user redemption reservations, payment-aware commit/release transitions, and audited admin coupon management, transactional payment success/failure notification outbox jobs with idempotent dedupe keys and worker retry leasing, paid-order fulfillment/shipment state transitions with transactional order events and audit records, customer cancellation/return requests with support/admin review and observable idempotent refund retries, and admin-only paginated audit-event and payment-attempt/refund inspection reads. The browser now has page-agnostic customer-auth, customer-address, checkout quote/submit, staff-session, admin-catalog, admin-inventory, admin-order, admin-audit, admin-payment, admin-coupon, guest-cart merge, and catalog category/search-suggestion transport/query/mutation layers with cache-safe category/product/option/variant/media/inventory/order/coupon updates. Development/test use provider-free local adapters for OTP, payment, shipping and notification delivery; provider-backed staging/production boundaries remain intentionally fail-closed until real providers are selected. SSR/hybrid storefront rendering and the non-dashboard admin catalog, inventory, order, audit, payment, and coupon UI still await their supplied page references before visual implementation.
 
 The API also exposes session-scoped customer order history/detail reads, customer cancellation and return-request actions, read-only staff order search/detail and support customer lookup reads, operations/admin-only fulfillment and shipment mutations, support/admin return review/refund actions, operations/admin-only redacted notification delivery inspection, and admin-only audit-event and payment-attempt/refund reads. Their page-agnostic browser transport lives in `apps/web/src/features/orders/orders-api.ts`, `apps/web/src/features/admin/admin-orders-api.ts`, `apps/web/src/features/admin/admin-customers-api.ts`, `apps/web/src/features/admin/admin-notifications-api.ts`, `apps/web/src/features/admin/admin-audit-api.ts`, and `apps/web/src/features/admin/admin-payments-api.ts`; visual wiring remains pending the supplied page references.
 
@@ -22,12 +22,34 @@ The content domain now exposes `GET /v1/seo/resolve` for SSR/hybrid metadata and
 
 ```powershell
 bun install
+if (-not (Test-Path .env)) { Copy-Item .env.example .env }
 bun run db:generate
 bun run docker:config
+```
+
+For the provider-free local flow, start the API and its local PostgreSQL/Redis/MinIO dependencies in one terminal, then start the web shell in a second terminal:
+
+```powershell
+# Terminal 1
+bun run dev:api:local
+
+# Terminal 2
 bun run dev
 ```
 
-The web shell runs at `http://127.0.0.1:5173`. To run the API or worker independently:
+The web shell runs at `http://127.0.0.1:5173`. In development/test, OTP, payment, shipping and notification delivery use local adapters, so SMS.ir, ZarinPal and Iran Post credentials are not needed. `dev:api:local` also enables the explicit local fixture mode and seeds a synthetic admin account. To test the admin flow, open `http://127.0.0.1:5173/#admin/login` with:
+
+```text
+email:    admin@nova.local
+password: nova-local-admin-password-2026
+factor:   the current code from `bun run local:staff-code`
+```
+
+The one-time recovery factor `NOVAADMIN1` is also reset by `bun run db:seed`, so it can be used once when a TOTP code is inconvenient. These credentials are synthetic local fixtures only. They are never accepted when `NODE_ENV` is `staging` or `production`, and `LOCAL_TEST_MODE=true` is rejected outside `development`/`test`.
+
+For the customer flow, open `http://127.0.0.1:5173/#auth`, enter any valid Iranian test mobile number, and use the six-digit `کد تست محلی` shown on the verification screen. No SMS is sent. Checkout uses the same-origin local payment callback, standard shipping uses the local Iran Post-labelled quote, and notifications use the local outbox sender; none of these paths requires a provider key.
+
+To run the API or worker independently:
 
 ```powershell
 bun run dev:api
@@ -41,6 +63,27 @@ docker compose --env-file .env.example -f infra/docker/compose.yml up -d postgre
 bun run db:migrate
 bun run db:seed
 ```
+
+If the API is started manually rather than through `dev:api:local`, set the local fixture flag before seeding and starting it:
+
+```powershell
+$env:NODE_ENV = 'development'
+$env:LOCAL_TEST_MODE = 'true'
+bun run db:seed
+bun run dev:api
+```
+
+`bun run local:staff-code` prints only the current six-digit TOTP factor; it does not print the secret. Keep the local `.env` values local and never copy them into staging or production.
+
+To run the complete no-key provider/auth check in one command:
+
+```powershell
+bun run test:local-providers
+```
+
+This checks the local OTP, staff-auth, local payment, shipping, notification and
+configuration boundaries. It uses repository-owned deterministic adapters and
+does not call SMS.ir, ZarinPal or Iran Post.
 
 The local `s3` service is MinIO. The E2E runtime preflight also checks its loopback liveness endpoint, so start it with PostgreSQL and Redis whenever running database-backed API or browser verification.
 
@@ -63,4 +106,4 @@ meaningful regression risk changes. Otherwise, use the narrowest applicable
 existing tests and static checks; broader suites belong at integration or
 release gates rather than on every file change.
 
-Do not place production credentials in this repository. Copy `.env.example` to a local `.env` only for development and resolve the provider, hosting, domain, brand, and compliance decisions listed in `arch.md` before production work.
+Do not place production credentials in this repository. Copy `.env.example` to a local `.env` only for development. Development and test environments use provider-free local adapters for OTP, payment, shipping, and notification outbox delivery, so SMS.ir, ZarinPal, and Iran Post credentials are not required for the local app flow. Staging and production keep the real provider boundaries and fail closed until their credentials and sandbox/production decisions are configured. Resolve the provider, hosting, domain, brand, and compliance decisions listed in `arch.md` before production work.

@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
+import { ConflictException } from '@nestjs/common';
+
 import type { AuditService } from '../audit/audit.service';
 import type { PaymentGateway } from '../checkout/payment.gateway';
 import type { InventoryService } from '../inventory/inventory.service';
@@ -8,6 +10,11 @@ import { PaymentService, type ProcessRefundInput } from './payment.service';
 
 interface RefundRecord {
   id: string;
+  orderId: string;
+  provider: string;
+  amountToman: number;
+  paymentAttemptId: string | null;
+  returnRequestId: string | null;
   status: 'PENDING' | 'SUCCEEDED' | 'FAILED';
   providerRefundId: string | null;
 }
@@ -61,10 +68,22 @@ function createFixture() {
       create: async ({
         data,
       }: {
-        data: { idempotencyKey: string };
+        data: {
+          idempotencyKey: string;
+          orderId: string;
+          provider: string;
+          amountToman: number;
+          paymentAttemptId?: string;
+          returnRequestId?: string;
+        };
       }) => {
         const refund = {
           id: data.idempotencyKey,
+          orderId: data.orderId,
+          provider: data.provider,
+          amountToman: data.amountToman,
+          paymentAttemptId: data.paymentAttemptId ?? null,
+          returnRequestId: data.returnRequestId ?? null,
           status: 'PENDING' as const,
           providerRefundId: null,
         };
@@ -157,6 +176,22 @@ test('failed refunds remain observable and can be retried with the same key', as
   assert.equal(retried.refundStatus, 'SUCCEEDED');
   assert.equal(fixture.order.paymentStatus, 'REFUNDED');
   assert.equal(fixture.gatewayCalls, 2);
+});
+
+test('rejects a retry that reuses an idempotency key with a different refund amount', async () => {
+  const fixture = createFixture();
+  fixture.setGatewayFailure(true);
+  const failed = await fixture.service.processRefund(input({ amountToman: 1_000_000 }));
+
+  assert.equal(failed.refundStatus, 'FAILED');
+  fixture.setGatewayFailure(false);
+
+  await assert.rejects(
+    fixture.service.processRefund(input({ amountToman: 2_000_000 })),
+    (error: unknown) => error instanceof ConflictException,
+  );
+  assert.equal(fixture.gatewayCalls, 1);
+  assert.equal(fixture.refunds.get('cancel:order-refund-1')?.status, 'FAILED');
 });
 
 test('partial refunds preserve paid payment status for later reconciliation', async () => {

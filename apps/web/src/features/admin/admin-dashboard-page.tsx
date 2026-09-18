@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { ApiClientError, type AdminDashboardSummary } from '@nova/api-client';
+import { Button, Card, Select as UiSelect } from '@nova/ui';
 
 import { Icon, type IconName } from '../../shared/icon';
 import { useAdminDashboardSummary } from './admin-dashboard-api';
@@ -94,17 +95,20 @@ export function adminDashboardErrorMessage(error: unknown): string {
 
 function DashboardAccessDenied() {
   return (
-    <section
+    <Card
+      asChild
       className="mx-auto max-w-xl bg-surface p-6 text-right shadow-card"
       dir="rtl"
       role="alert"
     >
-      <span className="section-heading__eyebrow">NOVA / ADMIN ACCESS</span>
-      <h1 className="mt-2 text-xl leading-relaxed">دسترسی کافی نیست</h1>
-      <p className="mt-3 text-sm leading-8 text-muted-foreground">
-        حساب کاربری شما برای مشاهده خلاصه داشبورد مجوز مدیر را ندارد.
-      </p>
-    </section>
+      <section>
+        <span className="section-heading__eyebrow">NOVA / ADMIN ACCESS</span>
+        <h1 className="mt-2 text-xl leading-relaxed">دسترسی کافی نیست</h1>
+        <p className="mt-3 text-sm leading-8 text-muted-foreground">
+          حساب کاربری شما برای مشاهده خلاصه داشبورد مجوز مدیر را ندارد.
+        </p>
+      </section>
+    </Card>
   );
 }
 
@@ -128,38 +132,44 @@ function DashboardLoadingState() {
 
 function DashboardErrorState({ error, onRetry }: { error: unknown; onRetry: () => void }) {
   return (
-    <section
+    <Card
+      asChild
       className="border border-destructive/30 bg-surface p-6 text-right shadow-card"
       dir="rtl"
       role="alert"
     >
-      <h2 className="text-lg leading-relaxed">خلاصه داشبورد در دسترس نیست</h2>
-      <p className="mt-2 text-sm leading-8 text-muted-foreground">
-        {adminDashboardErrorMessage(error)}
-      </p>
-      <button
-        className="mt-4 inline-flex min-h-11 items-center justify-center rounded-control bg-primary px-4 text-xs text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-        type="button"
-        onClick={onRetry}
-      >
-        تلاش دوباره
-      </button>
-    </section>
+      <section>
+        <h2 className="text-lg leading-relaxed">خلاصه داشبورد در دسترس نیست</h2>
+        <p className="mt-2 text-sm leading-8 text-muted-foreground">
+          {adminDashboardErrorMessage(error)}
+        </p>
+        <Button
+          className="mt-4 inline-flex min-h-11 items-center justify-center rounded-control bg-primary px-4 text-xs text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          type="button"
+          onClick={onRetry}
+        >
+          تلاش دوباره
+        </Button>
+      </section>
+    </Card>
   );
 }
 
 function DashboardEmptyState() {
   return (
-    <section
+    <Card
+      asChild
       className="border border-border bg-surface p-6 text-right shadow-card"
       dir="rtl"
       role="status"
     >
-      <h2 className="text-lg leading-relaxed">خلاصه‌ای برای نمایش وجود ندارد</h2>
-      <p className="mt-2 text-sm leading-8 text-muted-foreground">
-        در این بازه داده‌ای از API دریافت نشد.
-      </p>
-    </section>
+      <section>
+        <h2 className="text-lg leading-relaxed">خلاصه‌ای برای نمایش وجود ندارد</h2>
+        <p className="mt-2 text-sm leading-8 text-muted-foreground">
+          در این بازه داده‌ای از API دریافت نشد.
+        </p>
+      </section>
+    </Card>
   );
 }
 
@@ -167,32 +177,34 @@ function OrderStatusCounts({ summary }: { summary: AdminDashboardSummary }) {
   const entries = Object.entries(summary.orderStatusCounts);
 
   return (
-    <section className="border border-border bg-surface p-5 text-right shadow-card" dir="rtl">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <span className="section-heading__eyebrow">SUMMARY FIELD ۶ / ۶</span>
-          <h2 className="mt-1 text-lg leading-relaxed">تعداد سفارش‌ها بر اساس وضعیت</h2>
+    <Card asChild className="border border-border bg-surface p-5 text-right shadow-card" dir="rtl">
+      <section>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <span className="section-heading__eyebrow">SUMMARY FIELD ۶ / ۶</span>
+            <h2 className="mt-1 text-lg leading-relaxed">تعداد سفارش‌ها بر اساس وضعیت</h2>
+          </div>
+          <Icon name="layers" size={20} className="text-primary" aria-hidden="true" />
         </div>
-        <Icon name="layers" size={20} className="text-primary" aria-hidden="true" />
-      </div>
-      {entries.length > 0 ? (
-        <dl className="mt-4 grid gap-2 sm:grid-cols-2">
-          {entries.map(([status, count]) => (
-            <div
-              className="flex items-center justify-between gap-3 border-b border-border py-2 last:border-b-0"
-              key={status}
-            >
-              <dt className="text-sm text-muted-foreground">
-                {ORDER_STATUS_LABELS[status] ?? status}
-              </dt>
-              <dd className="text-sm font-semibold tabular-nums">{formatPersianNumber(count)}</dd>
-            </div>
-          ))}
-        </dl>
-      ) : (
-        <p className="mt-4 text-sm text-muted-foreground">وضعیتی برای این بازه ثبت نشده است.</p>
-      )}
-    </section>
+        {entries.length > 0 ? (
+          <dl className="mt-4 grid gap-2 sm:grid-cols-2">
+            {entries.map(([status, count]) => (
+              <div
+                className="flex items-center justify-between gap-3 border-b border-border py-2 last:border-b-0"
+                key={status}
+              >
+                <dt className="text-sm text-muted-foreground">
+                  {ORDER_STATUS_LABELS[status] ?? status}
+                </dt>
+                <dd className="text-sm font-semibold tabular-nums">{formatPersianNumber(count)}</dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <p className="mt-4 text-sm text-muted-foreground">وضعیتی برای این بازه ثبت نشده است.</p>
+        )}
+      </section>
+    </Card>
   );
 }
 
@@ -225,7 +237,7 @@ export function AdminDashboardPage({ staffRoles }: { staffRoles: readonly string
           htmlFor="admin-dashboard-period"
         >
           <span>بازه گزارش</span>
-          <select
+          <UiSelect
             className="min-h-9 bg-transparent text-foreground outline-none focus-visible:outline-2 focus-visible:outline-primary"
             id="admin-dashboard-period"
             value={periodDays}
@@ -236,7 +248,7 @@ export function AdminDashboardPage({ staffRoles }: { staffRoles: readonly string
                 {option.label}
               </option>
             ))}
-          </select>
+          </UiSelect>
         </label>
       </header>
 
@@ -245,20 +257,28 @@ export function AdminDashboardPage({ staffRoles }: { staffRoles: readonly string
         aria-label="شاخص‌های خلاصه داشبورد"
       >
         {SUMMARY_METRICS.map((metric) => (
-          <article className="border border-border bg-surface p-4 shadow-card" key={metric.key}>
-            <div className="flex items-start justify-between gap-3">
-              <span
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-primary"
-                aria-hidden="true"
-              >
-                <Icon name={metric.icon} size={17} />
-              </span>
-              <h2 className="text-right text-xs leading-6 text-muted-foreground">{metric.label}</h2>
-            </div>
-            <p className="mt-5 text-right text-xl font-semibold tabular-nums" dir="rtl">
-              {metric.format(summaryQuery.data[metric.key])}
-            </p>
-          </article>
+          <Card
+            asChild
+            className="border border-border bg-surface p-4 shadow-card"
+            key={metric.key}
+          >
+            <article>
+              <div className="flex items-start justify-between gap-3">
+                <span
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-primary"
+                  aria-hidden="true"
+                >
+                  <Icon name={metric.icon} size={17} />
+                </span>
+                <h2 className="text-right text-xs leading-6 text-muted-foreground">
+                  {metric.label}
+                </h2>
+              </div>
+              <p className="mt-5 text-right text-xl font-semibold tabular-nums" dir="rtl">
+                {metric.format(summaryQuery.data[metric.key])}
+              </p>
+            </article>
+          </Card>
         ))}
       </section>
 

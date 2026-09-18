@@ -2,7 +2,11 @@
 module.exports = {
   content: {
     relative: true,
-    files: ['./apps/web/index.html', './apps/web/src/**/*.{ts,tsx}', './packages/ui/src/**/*.{ts,tsx}'],
+    files: [
+      './apps/web/index.html',
+      './apps/web/src/**/*.{ts,tsx}',
+      './packages/ui/src/**/*.{ts,tsx}',
+    ],
   },
   theme: {
     extend: {
@@ -27,10 +31,14 @@ module.exports = {
           DEFAULT: 'var(--success)',
           100: 'var(--success-soft)',
         },
+        'success-soft': 'var(--success-soft)',
         warning: {
           DEFAULT: 'var(--warning)',
           100: 'var(--warning-soft)',
         },
+        'warning-soft': 'var(--warning-soft)',
+        error: 'var(--error)',
+        'error-soft': 'var(--error-soft)',
         destructive: {
           DEFAULT: 'var(--destructive)',
           100: 'var(--error-soft)',
@@ -40,12 +48,13 @@ module.exports = {
           DEFAULT: 'var(--info)',
           100: 'var(--info-soft)',
         },
+        'info-soft': 'var(--info-soft)',
       },
       borderRadius: {
         control: '8px',
-        panel: '12px',
+        panel: '14px',
         dialog: '16px',
-        editorial: '4px',
+        editorial: '16px',
         pill: '999px',
       },
       boxShadow: {

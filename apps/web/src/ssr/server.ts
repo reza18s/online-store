@@ -882,7 +882,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
           getRouteApi<CatalogCategory[]>('/v1/catalog/categories'),
           getRouteApi<CatalogProductPage>(
             catalogProductsPath(
-              `audience=${encodeURIComponent(route.slug)}&limit=4&sort=newest&page=1`,
+              `audience=${encodeURIComponent(route.slug)}&limit=8&sort=newest&page=1`,
             ),
           ),
         ]);

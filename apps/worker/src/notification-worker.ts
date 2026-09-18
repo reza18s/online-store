@@ -120,3 +120,10 @@ export class UnconfiguredNotificationSender implements NotificationSender {
     throw new Error('notification-provider-unconfigured');
   }
 }
+
+/** Marks local outbox jobs as delivered without contacting an external SMS provider. */
+export class LocalNotificationSender implements NotificationSender {
+  public async send(): Promise<void> {
+    return undefined;
+  }
+}

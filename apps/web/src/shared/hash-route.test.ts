@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { hashRouteFromLocation, parseHashRoute } from './hash-route';
+import { browserPathFromHash, hashRouteFromLocation, parseHashRoute } from './hash-route';
 
 function assertRoute(route: string, expected: Record<string, unknown>): void {
   const actual = parseHashRoute(route) as unknown as Record<string, unknown>;
@@ -20,6 +20,14 @@ test('adapts React Router locations to the app hash-route contract', () => {
     '#product/linen-overshirt',
   );
   assert.equal(hashRouteFromLocation({ pathname: '/', search: '' }), '#home');
+});
+
+test('converts legacy hash destinations to clean browser paths', () => {
+  assert.equal(browserPathFromHash('#admin/orders'), '/admin/orders');
+  assert.equal(browserPathFromHash('#products?sort=newest'), '/products?sort=newest');
+  assert.equal(browserPathFromHash('#/checkout/address'), '/checkout/address');
+  assert.equal(browserPathFromHash('#'), '/');
+  assert.equal(browserPathFromHash('/admin'), undefined);
 });
 
 test('keeps storefront home aliases and query strings explicit', () => {

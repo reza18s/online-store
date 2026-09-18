@@ -47,6 +47,7 @@ export type PublicRenderRoute =
   | { kind: 'category'; path: string; slug: CatalogAudience }
   | { kind: 'product'; path: string; slug: string }
   | { kind: 'content'; path: string; slug: string }
+  | { kind: 'client'; path: string }
   | { kind: 'private'; path: string }
   | { kind: 'unknown'; path: string };
 
@@ -65,6 +66,29 @@ const categoryCopy: Record<string, { label: string; description: string }> = {
     description: 'لباس‌های راحت و مقاوم برای حرکت، کشف و روزهایی که باید آزاد باشند.',
   },
 };
+
+const clientOnlyRenderPaths = new Set([
+  '/search',
+  '/campaign',
+  '/guide',
+  '/article',
+  '/lookbook',
+  '/about',
+  '/trust',
+  '/size-guide',
+  '/shipping-policy',
+  '/returns-policy',
+  '/care-guide',
+  '/faq',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/support',
+  '/not-found',
+  '/state/offline',
+  '/state/error',
+  '/state/maintenance',
+]);
 
 function decodePathSegment(value: string): string | undefined {
   try {
@@ -97,6 +121,9 @@ export function parsePublicRenderPath(input: string): PublicRenderRoute {
 
   if (/^\/(?:auth|account|admin|cart|checkout|order|return)(?:\/|$)/.test(path)) {
     return { kind: 'private', path };
+  }
+  if (path === '/products' || path.startsWith('/products/') || clientOnlyRenderPaths.has(path)) {
+    return { kind: 'client', path };
   }
   return { kind: 'unknown', path };
 }

@@ -86,6 +86,13 @@ export function hashRouteFromLocation(location: { pathname: string; search: stri
   return `${routePath}${location.search}`;
 }
 
+export function browserPathFromHash(hash: string): string | undefined {
+  if (!hash.startsWith('#')) return undefined;
+  const route = hash.slice(1);
+  if (!route || route === '/') return '/';
+  return route.startsWith('/') ? route : `/${route}`;
+}
+
 export function parseHashRoute(route: string): HashRoute {
   const { path, queryString } = routeParts(route);
   const shared = { path, queryString };
@@ -177,13 +184,47 @@ export function useHashRoute(): string {
   return hashRouteFromLocation(location);
 }
 
-export function HashNavigationBridge(): null {
+export function CleanNavigationBridge(): null {
   useEffect(() => {
-    const onHashChange = () => {
+    const dispatchNavigation = () => {
       window.dispatchEvent(new PopStateEvent('popstate'));
     };
+    const normalizeLegacyHash = () => {
+      const nextPath = browserPathFromHash(window.location.hash);
+      if (!nextPath) return;
+      window.history.replaceState(window.history.state, '', nextPath);
+      dispatchNavigation();
+    };
+    const onClick = (event: MouseEvent) => {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const anchor = target.closest<HTMLAnchorElement>('a[href]');
+      const nextPath = anchor ? browserPathFromHash(anchor.getAttribute('href') ?? '') : undefined;
+      if (!anchor || !nextPath) return;
+      event.preventDefault();
+      window.history.pushState(window.history.state, '', nextPath);
+      dispatchNavigation();
+    };
+    const onHashChange = () => {
+      normalizeLegacyHash();
+    };
+    normalizeLegacyHash();
+    document.addEventListener('click', onClick, true);
     window.addEventListener('hashchange', onHashChange);
-    return () => window.removeEventListener('hashchange', onHashChange);
+    return () => {
+      document.removeEventListener('click', onClick, true);
+      window.removeEventListener('hashchange', onHashChange);
+    };
   }, []);
 
   return null;

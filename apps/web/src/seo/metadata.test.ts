@@ -24,6 +24,14 @@ test('parses only the clean public rendering paths', () => {
     kind: 'private',
     path: '/account/orders',
   });
+  assert.deepEqual(parsePublicRenderPath('/products/new'), {
+    kind: 'client',
+    path: '/products/new',
+  });
+  assert.deepEqual(parsePublicRenderPath('/support'), {
+    kind: 'client',
+    path: '/support',
+  });
   assert.equal(parsePublicRenderPath('/category/not-a-public-audience').kind, 'unknown');
   assert.equal(parsePublicRenderPath('/product/bad%2Fslug').kind, 'unknown');
   assert.equal(parsePublicRenderPath(`/content/${'a'.repeat(121)}`).kind, 'unknown');

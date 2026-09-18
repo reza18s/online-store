@@ -707,6 +707,15 @@ test('keeps private clean paths on their existing client routes while excluding 
   assert.equal(context.seo.canonicalUrl, null);
 });
 
+test('serves clean client-only routes through the app shell', async () => {
+  for (const path of ['/products/new', '/checkout/address', '/support']) {
+    const context = await renderRoute(path, optionsBase);
+    assert.equal(context.status, 200, path);
+    assert.equal(context.seo.robots, 'noindex, nofollow', path);
+    assert.equal(context.seo.canonicalUrl, null, path);
+  }
+});
+
 test('keeps private, system, and asset paths out of resolver lookup and indexing', async () => {
   const { fetcher, calls } = fixtureFetcher({});
   for (const path of [

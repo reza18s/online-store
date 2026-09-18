@@ -503,6 +503,8 @@ function routeHash(route: PublicRenderRoute): string {
       return `#product/${route.slug}`;
     case 'content':
       return `#content/${route.slug}`;
+    case 'client':
+      return route.path === '/' ? '#home' : `#${route.path.slice(1)}`;
     case 'private':
       if (route.path.startsWith('/auth')) return '#auth';
       if (route.path.startsWith('/account')) return '#account';
@@ -763,6 +765,8 @@ function metadataFallback(
         type: 'article',
         jsonLd: null,
       };
+    case 'client':
+      return { title: 'NOVA', description: defaultSiteDescription, noIndex: true };
     case 'private':
       return { title: 'NOVA', description: defaultSiteDescription, noIndex: true };
     case 'unknown':
@@ -808,7 +812,7 @@ function serviceUnavailableContext(origin: string, route: PublicRenderRoute): Re
 export async function renderRoute(path: string, options: RenderOptions): Promise<RenderContext> {
   const origin = trimOrigin(options.origin);
   const route = parsePublicRenderPath(path);
-  if (route.kind === 'private') {
+  if (route.kind === 'private' || route.kind === 'client') {
     return {
       path: route.path,
       hashRoute: routeHash(route),

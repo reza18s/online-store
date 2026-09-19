@@ -1,700 +1,586 @@
-# NOVA Store
+# NOVA Store Architecture
 
-> Product, engineering, architecture, security, infrastructure, design, SEO, and launch plan for an Iran-first single-merchant ecommerce platform built with Node.js, NestJS, Prisma, PostgreSQL, React, Vite, TanStack Query, shadcn/ui, Zustand, Tailwind CSS, Redis, and S3-compatible storage.
+> Status: canonical V1 architecture
+>
+> Last updated: 2026-09-18
+>
+> Source: search.md, active repository behavior, accepted ADRs, Prisma schema,
+> and the confirmed architecture decisions from the project review.
 
----
+## 1. Purpose
 
-## 1. Project status
+NOVA Store is an Iran-first, single-merchant clothing commerce platform for
+Persian-speaking customers. It sells women's, men's, and children's clothing,
+selected accessories, and seasonal collections.
 
-The repository currently contains:
+This document defines the architecture to implement and operate V1. It is an
+implementation contract, not a list of speculative future services. It records:
 
-- The initial Bun workspace scaffold.
-- A front-end-only **Atelier Editorial** preview in `apps/web`.
-- Persian RTL storefront and admin preview screens.
-- Responsive static customer journeys.
-- Locally stored editorial assets.
-- Architecture and design documentation.
+- technology choices;
+- ownership boundaries;
+- runtime topology;
+- frontend and backend composition;
+- commerce and security invariants;
+- external integration seams;
+- data and state rules;
+- deployment and validation requirements;
+- explicit non-goals and upgrade triggers.
 
-The preview is intentionally non-production. It demonstrates layout, navigation, storefront flows, account states, checkout states, and admin concepts without requiring:
-
-- A production database.
-- Real authentication.
-- Payment credentials.
-- SMS credentials.
-- Shipping integration.
-- Production infrastructure.
-
-Production application modules, persistence, authentication, payment processing, inventory mutation, checkout orchestration, and real admin operations are not implemented yet.
-
-The product category is:
-
-- Women’s clothing.
-- Men’s clothing.
-- Children’s clothing.
-- Selected accessories.
-- Seasonal collections.
-
-All domain money values use **integer toman values**.
-
-Implementation may begin once the architecture decisions that affect domain invariants are resolved. Vendor, marketing, hosting, and brand decisions do not block unrelated engineering work.
+The repository's active source code, database schema, public API contracts, and
+accepted ADRs remain the most precise evidence for current behavior. When this
+document disagrees with active behavior, the disagreement must be resolved
+explicitly; no third architecture may be invented silently.
 
 ---
 
-# 2. Front-end preview
+## 2. Product Boundary
 
-The first visual direction is **Atelier Editorial**.
+### 2.1 Product model
 
-It currently lives in:
+NOVA is:
 
-```text
-apps/web
+- a single-merchant store;
+- focused on apparel and selected accessories;
+- Persian and RTL-first;
+- primarily mobile-oriented;
+- guest-checkout capable;
+- operated by a small staff team;
+- deployed primarily within an Iran-first infrastructure strategy.
+
+### 2.2 Primary customer journey
+
 ```
-
-Run it with:
-
-```powershell
-cd apps/web
-bun run dev
-```
-
-Open:
-
-```text
-http://localhost:5173
-```
-
-The preview:
-
-- Does not require a backend.
-- Does not require production credentials.
-- Uses local editorial images.
-- Demonstrates Persian RTL behavior.
-- Demonstrates major customer and admin screen groups.
-- Is not the production application architecture.
-
-The production storefront remains based on:
-
-```text
-React
-Vite
-TypeScript
-TanStack Query
-React Hook Form
-Zod
-shadcn/ui
-Tailwind CSS
-```
-
-Production behavior must use shared API contracts and server-owned commerce state rather than the static data currently used by the preview.
-
----
-
-# 3. Executive decisions
-
-| Area                   | Decision                                                |
-| ---------------------- | ------------------------------------------------------- |
-| Business model         | Single-merchant ecommerce                               |
-| Audience               | Persian-speaking customers in Iran                      |
-| Product category       | Women’s, men’s, and children’s clothing                 |
-| Domain money unit      | Integer toman                                           |
-| Backend                | Node.js + NestJS                                        |
-| Database               | PostgreSQL                                              |
-| ORM                    | Prisma                                                  |
-| Frontend               | React + Vite + TypeScript                               |
-| Server state           | TanStack Query                                          |
-| Local UI state         | Zustand                                                 |
-| Forms                  | React Hook Form + Zod                                   |
-| UI primitives          | shadcn/ui                                               |
-| Styling                | Tailwind CSS + CSS variables                            |
-| Queue/cache            | Redis-compatible service                                |
-| Media                  | S3-compatible object storage                            |
-| API style              | REST-first                                              |
-| Public rendering       | SSR/hybrid rendering for indexable storefront pages     |
-| Admin rendering        | Client-rendered application                             |
-| Architecture style     | Modular monolith                                        |
-| Deployment             | Docker-based                                            |
-| Primary infrastructure | Iranian provider                                        |
-| Backup                 | Independent second Iranian failure domain               |
-| Search V1              | PostgreSQL full-text search + trigram matching          |
-| Authentication         | Customer phone OTP; staff password + TOTP               |
-| Checkout               | Guest checkout supported                                |
-| Inventory              | Reserve only during checkout                            |
-| Payment                | One gateway at launch behind an adapter                 |
-| Shipping               | One simple nationwide shipping policy behind an adapter |
-| CI                     | From Phase 1                                            |
-| CD                     | Added after deployment workflow is stable               |
-
----
-
-# 4. Architectural principles
-
-NOVA should be designed around a small number of rules.
-
-## 4.1 Build a strong V1, not the final company
-
-The first release must support reliable commerce without implementing every possible future feature.
-
-Do not build speculative systems for:
-
-- Marketplace vendors.
-- Loyalty tiers.
-- Multiple warehouses.
-- Dynamic policy engines.
-- Arbitrary promotion rules.
-- Recommendation engines.
-- Social login.
-- SSO.
-- Native mobile applications.
-- Generic workflow engines.
-
-Future features should be possible because the core boundaries are clean, not because every future abstraction already exists.
-
----
-
-## 4.2 Deep modules over shallow wrappers
-
-Each important module should hide meaningful behavior.
-
-Good module boundaries include:
-
-- Identity.
-- Catalog.
-- Search.
-- Cart.
-- Checkout.
-- Inventory.
-- Orders.
-- Payments.
-- Shipping.
-- Returns.
-
-Avoid modules that only rename or pass through another module.
-
----
-
-## 4.3 One owner for every business invariant
-
-Examples:
-
-- Checkout owns checkout sequencing.
-- Inventory owns reservation and stock mutation.
-- Payment owns payment attempt semantics.
-- Orders own fulfillment state.
-- Identity owns sessions and authentication.
-- Search owns Persian normalization and query behavior.
-
-Do not spread one invariant across controllers, frontend components, jobs, and database hooks.
-
----
-
-## 4.4 Server is authoritative for commerce truth
-
-The browser must never be authoritative for:
-
-- Price.
-- Discount.
-- Shipping cost.
-- Inventory.
-- Order total.
-- Payment status.
-- Refund status.
-- Fulfillment status.
-
-The server may accept customer intent, but the server recomputes and validates all authoritative values.
-
----
-
-## 4.5 External providers are replaceable effects
-
-Use adapters for real external variation:
-
-```text
-PaymentGateway
-SmsProvider
-ShippingProvider
-ObjectStorage
-AnalyticsSink
-```
-
-Provider-specific vocabulary, retry rules, signatures, timeouts, and conversions should not leak through the application.
-
----
-
-# 5. Goals
-
-NOVA should:
-
-- Load quickly on typical Iranian mobile connections.
-- Work correctly in Persian RTL.
-- Safely display mixed Persian and Latin content.
-- Make product discovery simple.
-- Make size, color, price, availability, delivery, and returns easy to understand.
-- Support guest checkout.
-- Prevent overselling.
-- Prevent duplicate orders.
-- Recover cleanly from payment failures.
-- Keep historic orders immutable.
-- Provide operational visibility for staff.
-- Support indexable public pages.
-- Avoid mandatory foreign infrastructure dependencies.
-- Remain portable between Iranian providers.
-- Have measurable acquisition and contribution margin.
-
----
-
-# 6. Non-goals for the first release
-
-The following are explicitly out of V1:
-
-- Marketplace/vendor settlement.
-- Multi-vendor catalog ownership.
-- Multi-warehouse routing.
-- Native Android or iOS applications.
-- Loyalty levels and points.
-- Advanced recommendation engines.
-- Social authentication.
-- Passkeys.
-- SSO.
-- User-created staff roles.
-- Dynamic authorization policy engine.
-- Generic promotion rule engine.
-- Arbitrary partial refunds.
-- Direct product exchanges.
-- Multiple payment gateways.
-- Cash on delivery.
-- Live carrier pricing.
-- Complex referral system.
-- Price history.
-- Advanced personalization.
-- Full experimentation platform.
-
----
-
-# 7. Product scope
-
-## 7.1 Primary customer journey
-
-```text
 Home
   ↓
 Category / Search
   ↓
-Product
+Product detail
+  ↓
+Variant / size selection
   ↓
 Cart
   ↓
-Address
+Phone verification
   ↓
-Shipping
+Address and shipping quote
   ↓
-Payment
+Payment redirect
   ↓
-Confirmation
+Verified callback / reconciliation
   ↓
-Tracking
+Order confirmation
   ↓
-Support / Return
+Fulfillment and tracking
+  ↓
+Cancellation / return / refund when applicable
 ```
 
----
+### 2.3 Staff journey
 
-# 8. P0 launch features
+```
+Staff login + TOTP
+  ↓
+Catalog / media / publication
+  ↓
+Inventory operations
+  ↓
+Order, payment, fulfillment, return, refund operations
+  ↓
+Customer support lookup
+  ↓
+Content / SEO / redirect management
+  ↓
+Audit and notification inspection
+```
 
-## 8.1 Storefront
+### 2.4 Money and locale
 
-- Home page.
-- Women’s category.
-- Men’s category.
-- Children’s category.
-- Category landing pages.
-- Product listings.
-- Search.
-- Filtering.
-- Sorting.
-- Pagination.
-- Product detail.
-- Variant selection.
-- Size selection.
-- Stock state.
-- Guest cart.
-- Authenticated cart.
-- Cart merge after authentication.
-- Address entry.
-- Shipping selection.
-- Checkout.
-- Payment redirect.
-- Payment recovery.
-- Order confirmation.
-- Order tracking.
-- Customer profile.
-- Addresses.
-- Orders.
-- Support entry.
-- Shipping policy.
-- Returns policy.
-- Size guide.
-- Privacy and terms.
-- Offline/error/maintenance states.
-- Persian RTL.
-- Responsive mobile-first behavior.
-- Keyboard accessibility.
+- Domain money is an integer amount in TOMAN.
+- Floating-point money is forbidden.
+- Provider-specific conversion, such as toman to rial, occurs only inside the
+  provider adapter.
+- Customer-facing numbers use Persian-friendly formatting where appropriate.
+- Product titles, descriptions, brand names, SKUs, and provider identifiers may
+  contain mixed Persian and Latin text.
+- All public storefront flows must support RTL layout, keyboard use, mobile
+  layouts, loading states, empty states, and error recovery.
 
 ---
 
-## 8.2 Admin
+## 3. Architectural Decisions
 
-- Staff login.
-- Product CRUD.
-- Variant CRUD.
-- Category CRUD.
-- Media management.
-- Inventory management.
-- Product publication lifecycle.
-- Order list.
-- Order detail.
-- Fulfillment state changes.
-- Payment inspection.
-- Refund workflow.
-- Return requests.
-- Coupon management.
-- Customer case lookup.
-- SEO metadata.
-- Content pages.
-- Redirects.
-- Audit log.
+The following decisions are confirmed and must be preserved unless a new
+architecture decision explicitly supersedes them.
 
-The admin frontend is a caller of domain modules. There is no generic backend `Admin` domain module owning unrelated business behavior.
+| Area                   | Decision                                                                           |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| Backend runtime        | NestJS modular monolith                                                            |
+| Persistence            | PostgreSQL through Prisma                                                          |
+| API style              | REST-first with typed contracts and OpenAPI-compatible descriptions                |
+| Frontend runtime       | Two React/Vite TypeScript apps: public `apps/web` and admin `apps/admin`           |
+| Frontend routing       | React Router as the primary router; hash compatibility retained                    |
+| Styling                | Tailwind CSS and repository design tokens                                          |
+| Components             | shadcn/ui-style accessible primitives                                              |
+| Motion                 | Animate UI as an optional motion layer; motion never owns business state           |
+| Server state           | TanStack Query                                                                     |
+| Local state            | Zustand for cart/UI intent only                                                    |
+| Background work        | Separate worker with transactional outbox and retry leasing                        |
+| Durable state          | PostgreSQL is authoritative                                                        |
+| Temporary coordination | Redis for OTP, rate limits, short-lived state, and coordination                    |
+| Search V1              | PostgreSQL full-text search, pg_trgm, and Persian normalization                    |
+| Media                  | S3-compatible object storage behind an adapter; MinIO locally                      |
+| Customer auth          | Phone OTP and opaque customer sessions                                             |
+| Staff auth             | Password, TOTP MFA, recovery codes, and opaque staff sessions                      |
+| Authorization          | Fixed V1 roles: SUPPORT, OPERATIONS, ADMIN                                         |
+| Payment                | One gateway at launch behind a PaymentGateway adapter                              |
+| Shipping               | One simple nationwide policy behind a ShippingProvider adapter                     |
+| Deployment             | Docker-oriented deployment; Compose is sufficient for first production shape       |
+| Public rendering       | Hybrid SSR in `apps/web` for indexable public pages; client-rendered private flows |
+| Admin runtime          | Independent Vite SPA in `apps/admin`, served separately from the public web app    |
 
----
+### 3.1 Why this architecture
 
-## 8.3 Operations
+NOVA's difficult problems are commerce invariants, not framework scale:
 
-- Inventory reservations.
-- Reservation expiry.
-- Idempotent checkout.
-- Idempotent payment callbacks.
-- Payment reconciliation.
-- Refund workflow.
-- Retryable notifications.
-- Shipping tracking reference.
-- Structured application logs.
-- Health checks.
-- Metrics.
-- Backup verification.
-- Audit events.
-- Operational alerts.
+- preventing overselling;
+- preserving order and payment truth;
+- handling provider callbacks and retries;
+- keeping historic orders immutable;
+- protecting staff operations;
+- operating reliably on local infrastructure;
+- delivering a fast Persian storefront.
 
----
+A modular monolith keeps related transactions close together and is easier to
+operate than microservices. The separate worker isolates retryable external
+effects without splitting every domain into a deployable service.
 
-# 9. P1 after launch
+### 3.2 Architecture rule
 
-P1 should be selected from real customer evidence.
-
-Likely candidates:
-
-- Wishlist.
-- Back-in-stock alerts.
-- Verified purchase reviews.
-- Review moderation.
-- Product Q&A.
-- Abandoned-cart reminders.
-- Browse reminders.
-- Referral codes.
-- Simple store credit.
-- Product comparison.
-- Bundles.
-- Flash campaigns.
-- Related-product rules.
-- Customer support inbox integration.
-- Multiple shipping options.
-- Additional payment provider.
+Use the smallest architecture that satisfies the current product and its
+invariants. Do not add microservices, Kafka, Kubernetes, a dedicated search
+cluster, a generic workflow engine, dynamic policy engines, or multi-tenant
+abstractions without a measured requirement.
 
 ---
 
-# 10. P2 after product evidence
+## 4. System Topology
 
-Potential P2 features:
+```
+                         ┌──────────────────────────────┐
+                         │ Browser / mobile web         │
+                         └──────────────┬───────────────┘
+                                        │ HTTPS
+                                        ▼
+                         ┌────────────────────────────────┐
+                         │ Reverse proxy / TLS / CDN      │
+                         └──────────────┬─────────────────┘
+                                        │
+                       ┌────────────────┴────────────────┐
+                       ▼                                 ▼
+              ┌─────────────────┐               ┌─────────────────┐
+              │ Public web       │               │ Admin web        │
+              │ apps/web         │               │ apps/admin       │
+              │ Vite + SSR       │               │ Vite SPA         │
+              │ :5173            │               │ :5174            │
+              └────────┬────────┘               └───────┬─────────┘
+                       │ public/customer API reads        │ staff/admin API reads
+                       └────────────────┬────────────────┘
+                                        ▼
+                               ┌─────────────────┐
+                               │ NestJS API      │
+                               │ REST + auth     │
+                               │ :4000           │
+                               └────────┬────────┘
+                 ┌──────────────────────────────────────┼────────────────────┐
+                 ▼                                      ▼                    ▼
+        ┌─────────────────┐                    ┌────────────────┐   ┌────────────────┐
+        │ PostgreSQL       │                    │ Redis           │   │ Object storage  │
+        │ durable truth    │                    │ temp/coord      │   │ media           │
+        └────────┬────────┘                    └────────────────┘   └────────────────┘
+                 │
+                 ▼
+        ┌─────────────────┐
+        │ Worker           │
+        │ outbox, cleanup, │
+        │ reconciliation   │
+        └────────┬────────┘
+                 │ external effects
+       ┌─────────┼──────────┬──────────────┐
+       ▼         ▼          ▼              ▼
+   Payment     SMS       Shipping       Analytics
+   gateway     provider  provider       sink
+```
 
-- Loyalty points.
-- Loyalty tiers.
-- Price-drop alerts.
-- Advanced recommendation system.
-- Multi-warehouse inventory.
-- Marketplace vendors.
-- Native apps.
-- Advanced customer segmentation.
-- Automated LTV models.
-- Experiment platform.
+### 4.1 Process responsibilities
+
+#### Web / SSR process
+
+- Serves the built browser bundle.
+- Renders only public, indexable document boundaries.
+- Resolves public SEO metadata and redirects.
+- Reads public catalog/content data from the API.
+- Owns the public storefront, customer account, cart, checkout, and public
+  document handoff.
+- Does not own checkout, pricing, inventory, payment, authorization, or
+  mutation logic.
+
+#### Admin web process
+
+- Serves the independent `apps/admin` Vite application.
+- Runs separately from the public web process (local default `127.0.0.1:5174`).
+- Owns staff login, role-aware admin navigation, catalog, inventory, order,
+  payment, refund, customer-support, content, SEO, audit, and notification
+  inspection UI.
+- Uses the same versioned API and typed `packages/api-client` boundary as the
+  public app; it does not import public web components or server code.
+- Is client-rendered and noindex. Staff authorization remains server-side.
+
+Local process commands are intentionally separate:
+
+```bash
+bun run dev          # public web, default 127.0.0.1:5173
+bun run dev:admin    # admin web, default 127.0.0.1:5174
+bun run dev:api      # shared NestJS API, default 127.0.0.1:4000
+```
+
+#### NestJS API
+
+- Owns REST transport, authentication, authorization, domain use cases,
+  transactions, and public/admin/customer contracts.
+- Recomputes authoritative money, stock, discounts, shipping, order totals, and
+  payment state.
+- Writes transactional notification intents and durable audit/order events.
+- Calls external providers only through adapters and only where the operation's
+  consistency boundary requires it.
+
+#### Worker
+
+- Claims and processes notification outbox jobs.
+- Runs reservation/coupon cleanup and provider reconciliation jobs.
+- Performs retryable media derivative work when enabled.
+- Uses leases, bounded retries, dedupe keys, and structured diagnostics.
+- Never silently converts an unconfigured provider into success.
+
+#### PostgreSQL
+
+- Owns all durable commerce, identity, audit, event, content, and operational
+  records.
+- Is the source of truth for price, stock, order, payment, refund, shipment,
+  return, coupon, and staff/customer session state.
+
+#### Redis
+
+- Stores temporary OTP challenges, rate-limit counters, short-lived security
+  state, and bounded coordination/lease state.
+- May support future cache or fan-out needs.
+- Must not become the source of truth for orders, payment, inventory, or refunds.
+
+#### Object storage
+
+- Stores original and derivative media.
+- Is accessed through an ObjectStorage adapter.
+- Receives direct browser uploads only through short-lived server-issued signed
+  URLs.
+- Does not determine whether a media row is published or usable; the database
+  media lifecycle does.
 
 ---
 
-# 11. Repository structure
+## 5. Repository Structure and Ownership
 
-Recommended production structure:
-
-```text
-CONTEXT.md
-
+```
 apps/
-  storefront/
-  admin/
-  api/
-  worker/
+  api/                         NestJS modular monolith
+  web/                         React/Vite public storefront, account, and SSR
+  admin/                       Independent React/Vite staff/admin application
+  worker/                      Background jobs and external effects
 
 packages/
-  db/
-  api-client/
-  contracts/
-  ui/
-  config/
+  api-client/                  Typed REST client, contracts, query keys
+  config/                      Validated environment configuration
+  db/                          Prisma schema, migrations, seed, database client
+  ui/                          Shared UI primitives and design tokens
 
 infra/
-  docker/
-  deploy/
-  monitoring/
+  docker/                      Local Compose and dependency startup
+  deploy/                      Build/release/deployment verification
+  monitoring/                  Local health and signal verification
 
 docs/
-  adr/
-  designs/
-  runbooks/
-  seo/
-  marketing/
-  infrastructure/
+  adr/                         Durable architecture decisions
+  designs/                     Product and visual direction
+  runbooks/                    Operational procedures
+
+search.md                     Product and technology research
+arch.md                       Canonical implementation architecture
 ```
 
-Responsibilities:
+### 5.1 Ownership rules
 
-```text
-apps/storefront
-Customer storefront and account surface.
+- apps/api owns server use cases and transport wiring.
+- apps/admin owns staff/admin presentation, route composition, staff query
+  cache behavior, and browser intent for operational screens.
+- packages/db owns persistence shape and migration workflow, not business
+  orchestration.
+- packages/api-client owns browser-facing transport types and query-key
+  conventions, not server cache truth.
+- apps/web owns public/customer presentation, route composition, browser intent,
+  and public document handoff, not commerce authority or admin UI.
+- apps/worker owns asynchronous provider effects, not synchronous order truth.
+- packages/ui owns reusable visual primitives, not feature-specific business
+  rules.
+- packages/config owns startup validation and environment parsing.
 
-apps/admin
-Internal operations application.
+No module may become a generic dumping ground. A module is justified when it
+owns meaningful rules, persistence access, failure semantics, or a stable
+integration boundary.
 
-apps/api
-NestJS modular monolith.
+### 5.2 Dependency direction
 
-apps/worker
-Background queues and asynchronous provider effects.
-
-packages/db
-Prisma schema, migrations, seed data, database helpers.
-
-packages/api-client
-Generated typed REST client.
-
-packages/contracts
-Shared schemas and transport contracts where appropriate.
-
-packages/ui
-Reusable branded UI composition and design tokens.
-
-packages/config
-Shared TypeScript, lint, Tailwind, env, and build configuration.
 ```
+web ───────────────► api-client ─────────────► shared contracts/types
+admin ─────────────► api-client + ui ─────────► shared contracts/types
+api ───────────────► api-client contracts
+api ───────────────► db
+worker ────────────► db + config
+all processes ─────► config
+ui ────────────────► no domain package
+```
+
+The browser must not import Prisma, server-only configuration, provider SDKs,
+or server secrets. The API must not import browser components. The worker must
+not become a second API implementation.
 
 ---
 
-# 12. Domain context
+## 6. Backend Architecture
 
-`CONTEXT.md` must define the vocabulary used throughout the project.
+### 6.1 NestJS module boundaries
 
-At minimum:
+The API is a modular monolith. The recommended capability boundaries are:
 
-```text
-Customer
-Staff
-Product
-Variant
-Option
-Inventory
-Reservation
-Available to sell
-Cart
-Checkout
-Order
-Payment attempt
-Refund
-Return
-Shipment
-Coupon
-Audit event
-Provider callback
 ```
+Identity / Auth
+Customers / Addresses
 
-Important invariants must also be recorded there.
-
----
-
-# 13. Backend module boundaries
-
-Recommended NestJS capability boundaries:
-
-```text
-Identity
-Customers
-
-Catalog
+Catalog / Media
 Search
+Content / SEO
 
 Cart
 Checkout
 Orders
-
 Inventory
 Payments
 Shipping
-
 Coupons
 Returns
 
-Content
 Notifications
 Audit
+Admin transport / operations
+Health / readiness
 ```
 
-Modules should own:
+The exact NestJS folder structure may follow the active repository convention,
+but each capability must keep its controller, DTO/contract mapping, use cases,
+domain rules, persistence access, and tests close enough to reveal ownership.
 
-- Application use cases.
-- Domain rules.
-- Persistence access.
-- Internal policies.
-- Public contracts.
-- Their own failure semantics.
+### 6.2 Request flow
 
-A module should expose only what another module genuinely needs.
+```
+HTTP request
+  ↓
+NestJS controller / validation pipe
+  ↓
+authentication guard, when required
+  ↓
+role/use-case authorization
+  ↓
+application service / use case
+  ↓
+domain module rules
+  ↓
+Prisma transaction and/or provider adapter
+  ↓
+typed response contract
+```
+
+Controllers translate transport concerns. They must not contain checkout
+sequencing, payment confirmation, stock mutation, refund policy, or role-only
+business decisions.
+
+### 6.3 Contracts
+
+- Public and private HTTP routes use the /v1 prefix; health endpoints remain
+  stable outside /v1.
+- Request validation rejects malformed types before side effects.
+- Response shapes must not expose credentials, raw provider payloads, OTPs,
+  TOTP secrets, recovery codes, session tokens, or unnecessary customer data.
+- Browser mutations use CSRF protections appropriate to cookie authentication.
+- Every mutation with retry or duplicate risk defines an idempotency boundary.
+- API client query keys must identify the same server resource identity used by
+  invalidation and route transitions.
+
+### 6.4 Module communication
+
+Prefer explicit application-service calls and narrow internal contracts. Avoid
+direct cross-module writes into another module's tables. A module may expose:
+
+- a use-case method;
+- a small read model/query method;
+- an adapter interface;
+- a domain event/outbox intent;
+- a typed contract required by a real consumer.
+
+Do not use database triggers or hidden Prisma middleware for core business
+transitions unless a future decision documents the invariant and its recovery
+behavior.
 
 ---
 
-# 14. Identity and access
+## 7. Frontend Architecture
 
-Identity is a deep module, not a generic security bucket.
+### 7.1 Stack
 
-## 14.1 Customer identity
+- React and TypeScript.
+- Vite for browser and build tooling.
+- React Router for route ownership and navigation.
+- Tailwind CSS for layout and styling.
+- shadcn/ui-style primitives in packages/ui.
+- Animate UI for optional accessible motion and transition composition.
+- TanStack Query for server data, loading/error states, and cache invalidation.
+- Zustand for local cart/UI intent only.
 
-Customer identity is based on a:
+### 7.2 Route ownership
 
-```text
-normalized verified phone number
-```
+React Router is the primary in-app route owner. The legacy hash-router behavior
+remains supported for existing links and compatibility, but hash URLs are not
+canonical for crawler-facing pages.
 
-V1 does not support:
+| Route class       | Examples                              | Rendering              | Indexing                    |
+| ----------------- | ------------------------------------- | ---------------------- | --------------------------- |
+| Public home       | /, legacy #home                       | SSR + client hydration | index/follow                |
+| Public category   | /category/:slug                       | SSR + client hydration | index/follow when canonical |
+| Public product    | /product/:slug                        | SSR + client hydration | index/follow when published |
+| Public content    | /content/:slug                        | SSR + client hydration | index/follow when published |
+| Search/list state | /search, filters, sorting, pagination | Client-rendered        | noindex                     |
+| Auth              | /auth, /auth/verify                   | Client-rendered        | noindex                     |
+| Customer          | /account/_, /orders/_                 | Client-rendered        | noindex                     |
+| Commerce mutation | /cart, /checkout, /checkout/*         | Client-rendered        | noindex                     |
+| Staff/admin       | `/admin/*` on the separate admin app  | Client-rendered        | noindex                     |
+| System            | /robots.txt, /sitemap.xml, assets     | Server/system response | controlled                  |
 
-- Username login.
-- Email login.
-- Social login.
-- Passkeys.
+The SSR process may read public catalog/content data and SEO metadata, but it
+must never perform customer mutations or recreate server commerce logic.
 
-Email may exist as optional profile data.
+### 7.3 Server-state ownership
+
+TanStack Query owns:
+
+- catalog and product reads;
+- search results and suggestions;
+- public content and SEO reads;
+- customer identity/profile reads;
+- carts and cart mutation results;
+- addresses;
+- checkout quotes and order reads;
+- public/customer reads in `apps/web`;
+- staff/admin catalog, inventory, order, payment, return, audit, content, SEO,
+  customer-support, and notification-inspection reads in `apps/admin`.
+
+The two frontend apps use separate query-client instances. The admin instance
+also owns staff-scoped 401/403 cache behavior and redirects expired sessions to
+the admin login route; the public instance has no staff/admin cache boundary.
+
+Mutation success must invalidate or update the relevant query keys. Query keys
+must include route identity and material parameters so navigating from one
+product, variant, order, or customer to another cannot reuse stale data.
+
+### 7.4 Zustand ownership
+
+Zustand may own:
+
+- cart-local feedback;
+- guest-cart merge conflict presentation;
+- open overlays and drawers;
+- temporary form/UI intent that is not server truth;
+- local presentation preferences.
+
+Zustand must not be the authority for:
+
+- prices;
+- inventory;
+- payment status;
+- order status;
+- refund status;
+- authoritative customer/session data;
+- server query caches.
+
+### 7.5 UI system
+
+Use packages/ui and shadcn/ui conventions for inputs, buttons, labels, cards,
+dialogs, badges, selects, radio groups, and feedback states. Tailwind tokens
+and CSS variables define the visual system.
+
+Animate UI is an optional layer for:
+
+- route transitions;
+- drawer/dialog entry and exit;
+- loading/skeleton transitions;
+- cart feedback;
+- non-blocking confirmation states.
+
+Animation must be:
+
+- disabled or reduced for prefers-reduced-motion;
+- independent of domain state transitions;
+- resilient when data loading fails;
+- free of animation-only layout hacks;
+- removable without changing business behavior.
+
+### 7.6 Accessibility and RTL
+
+- Use semantic HTML and keyboard-operable controls.
+- Preserve visible focus states.
+- Keep labels and validation messages connected to fields.
+- Test dialogs, menus, route transitions, and form errors with keyboard flows.
+- Use logical CSS properties where practical.
+- Treat mixed Persian/Latin strings, numbers, SKUs, and phone numbers as
+  explicit formatting cases.
+- Do not rely on visual direction alone for meaning or status.
 
 ---
 
-## 14.2 Customer authentication
+## 8. Domain Architecture and Invariants
 
-Customer authentication uses:
+### 8.1 Identity and sessions
 
-```text
-6-digit OTP
+#### Customer
+
+- Primary identity is a normalized, verified phone number.
+- Customer OTP is six digits, single-use, short-lived, throttled, and never
+  logged.
+- OTP challenges use keyed verification or an equivalent server-secret-backed
+  construction.
+- Customer sessions are opaque, stored as hashes, and delivered with secure
+  cookies.
+- Guest checkout supports phone verification and cart association.
+
+#### Staff
+
+- Staff uses password plus TOTP MFA or a one-time recovery code.
+- Passwords use a versioned strong password hash.
+- TOTP secrets are encrypted at rest.
+- Recovery codes are stored as keyed digests and claimed once.
+- Staff sessions are distinct from customer sessions and immediately revocable.
+- Login attempts are throttled by account/IP/security-state signals.
+
+#### Authorization
+
+V1 roles are fixed:
+
 ```
-
-Rules:
-
-- Expires after 5 minutes.
-- Single-use.
-- Maximum 5 verification attempts.
-- 60-second resend cooldown.
-- Creating a new OTP invalidates the previous OTP.
-- Rate-limit by phone.
-- Rate-limit by IP.
-- Rate-limit by device/session signals where practical.
-- Generic error responses.
-- OTP value must never be logged.
-
----
-
-## 14.3 OTP storage
-
-A six-digit code has limited entropy.
-
-Do not rely only on a normal unkeyed hash.
-
-Store a keyed verifier such as:
-
-```text
-HMAC(serverSecret, challengeId + otp)
-```
-
-or an equivalent server-secret-backed construction.
-
-Temporary OTP state belongs in Redis.
-
-Persist only information that genuinely requires durable storage.
-
----
-
-# 15. Customer and staff separation
-
-Use separate identity classes.
-
-Recommended model:
-
-```text
-Customer
-CustomerSession
-
-StaffUser
-StaffSession
-StaffRole
-```
-
-Do not represent customers and privileged staff as one interchangeable session type.
-
-A customer session must never become a staff session.
-
----
-
-# 16. Staff authentication
-
-Staff users authenticate using:
-
-```text
-password
-+
-TOTP MFA
-```
-
-Recovery codes are supported.
-
-Rules:
-
-- Strong password hashing.
-- TOTP required for privileged access.
-- Recovery codes hashed at rest.
-- Login throttling.
-- Sensitive security events audited.
-- Session revoked after critical credential changes.
-
----
-
-# 17. Staff roles
-
-V1 has exactly:
-
-```text
-SUPPORT
-OPERATIONS
-ADMIN
-```
-
-Do not create a custom role editor.
-
-Do not create a policy engine.
-
-Permissions are explicit in code.
-
-Conceptually:
-
-```text
 SUPPORT
   order.read
   customer.case_read
@@ -708,3610 +594,794 @@ OPERATIONS
   inventory.read
 
 ADMIN
-  privileged commerce administration
+  privileged catalog, content, payment, coupon, audit, and staff operations
 ```
 
-Deny by default.
+The backend use case is the authorization boundary. Frontend route guards are
+only a usability feature.
 
-Authorization must be enforced inside use cases, not only in controllers or frontend navigation.
+### 8.2 Catalog
 
----
-
-# 18. Session model
-
-Use opaque server sessions.
-
-Storage:
-
-```text
-PostgreSQL → durable session record
-Redis → temporary security/rate-limit state
 ```
-
-Cookie requirements:
-
-```text
-Secure
-HttpOnly
-SameSite=Lax
-Path=/
-__Host- prefix where deployment topology permits
-```
-
-Customer sessions:
-
-```text
-30-day idle timeout
-90-day absolute maximum
-```
-
-Staff sessions:
-
-```text
-8-hour idle timeout
-24-hour absolute maximum
-```
-
-Rotate session identifiers:
-
-- After authentication.
-- After privilege changes.
-- After sensitive recovery actions.
-
-Support immediate session revocation.
-
----
-
-# 19. CSRF
-
-Cookie-authenticated state-changing requests require:
-
-- CSRF token in a custom request header.
-- Origin validation.
-
-`GET` requests must never mutate application state.
-
----
-
-# 20. Customer recovery
-
-Lost-phone recovery is not automated in V1.
-
-It is a manual support process with documented verification rules.
-
-Changing a phone number requires:
-
-1. Verify the old phone.
-2. Verify the new phone.
-3. Change identity.
-4. Revoke all existing sessions.
-5. Record a security audit event.
-
----
-
-# 21. Guest checkout
-
-Guest checkout is supported.
-
-During checkout:
-
-1. Customer provides a phone number.
-2. Phone is verified.
-3. Guest cart is associated with the verified identity.
-4. Compatible cart lines merge.
-5. Server price and stock always win.
-6. Conflicts are shown to the customer before continuation.
-
-A guest order may be accessed using:
-
-```text
-order number
-+
-fresh phone OTP
-```
-
----
-
-# 22. Catalog model
-
-Recommended first-release product model:
-
-```text
 Product
 ProductVariant
-
 ProductOption
 ProductOptionValue
 ProductVariantOptionValue
-
 Category
 ProductCategory
-
 ProductMedia
 VariantMedia
+ProductAttribute
 ```
 
----
+- A product represents the sellable concept.
+- A variant represents a sellable option combination such as color and size.
+- Every sellable variant has a stable SKU and price.
+- Product lifecycle is DRAFT, PUBLISHED, or ARCHIVED.
+- Historic orders do not depend on a mutable product row.
+- Products used by historic orders are archived, not deleted.
+- Category trees reject cycles and invalid assignment states.
+- Public catalog reads expose only published and valid records.
 
-# 23. Product and variant semantics
+Clothing-specific product confidence should be modeled deliberately: material,
+care, garment measurements, fit note, model measurements, size guidance,
+availability, delivery expectation, and returns policy.
 
-A product represents the sellable concept.
+### 8.3 Search
 
-Example:
+- Normalize Persian and Arabic character variants at the search boundary.
+- Keep PostgreSQL as catalog/search truth for V1.
+- Use full-text search and pg_trgm indexes for bounded typo and partial-match
+  behavior.
+- Bound result limits, suggestion limits, and expensive predicates.
+- Keep price/stock authoritative reads in PostgreSQL and the domain modules.
+- Capture no-result/search-quality signals for future ranking decisions.
 
-```text
-Classic Cotton T-Shirt
+Upgrade to a dedicated engine only after measured latency, catalog volume,
+ranking, synonym, facet, or independently-scaled search requirements exist.
+
+### 8.4 Cart
+
+- Guest carts use an opaque token whose server representation is hashed.
+- Authenticated cart ownership is durable and unique per customer where the
+  product invariant requires it.
+- Cart mutation idempotency prevents duplicate quantity changes.
+- Cart state does not reserve inventory.
+- When a guest authenticates, compatible lines merge through a server-owned
+  conflict contract.
+- Server price and stock always win during merge and checkout.
+
+### 8.5 Checkout
+
+One checkout application service owns final order intake and sequences:
+
 ```
-
-Options describe customer choices:
-
-```text
-Color
-Size
-```
-
-Values:
-
-```text
-Color
-  Black
-  White
-  Blue
-
-Size
-  S
-  M
-  L
-```
-
-Variants represent sellable combinations:
-
-```text
-Black / S
-Black / M
-Black / L
-White / S
-...
-```
-
-Each variant may own:
-
-- SKU.
-- Price.
-- Compare-at price.
-- Inventory item.
-- Barcode if required.
-- Availability.
-- Variant-specific media.
-
-Do not use a fully generic EAV architecture for every product property.
-
-Non-variant descriptive specifications may use structured fields or controlled JSON where appropriate.
-
----
-
-# 24. Catalog lifecycle
-
-Products support:
-
-```text
-DRAFT
-PUBLISHED
-ARCHIVED
-```
-
-Historic order data never depends on the current product record.
-
-Deleting a product used by a historic order is not allowed.
-
-Archive it instead.
-
----
-
-# 25. Money contract
-
-The domain money unit is:
-
-```text
-TOMAN
-```
-
-All domain money values are integers.
-
-Examples:
-
-```text
-2490000
-```
-
-Customer display:
-
-```text
-۲٬۴۹۰٬۰۰۰ تومان
-```
-
-Never store floating-point monetary values.
-
----
-
-# 26. Provider money boundary
-
-Some providers may use a different monetary unit.
-
-Conversion happens only inside the provider adapter.
-
-Example:
-
-```text
-Domain:
-2,490,000 TOMAN
-
-Gateway:
-24,900,000 RIAL
-```
-
-Payment records should make this auditable.
-
-Where needed record:
-
-```text
-domainAmount
-domainUnit
-
-providerAmount
-providerUnit
-
-conversionFactor
-```
-
-Never scatter:
-
-```text
-amount * 10
-```
-
-through controllers or checkout code.
-
----
-
-# 27. Inventory model
-
-Recommended model:
-
-```text
-InventoryItem
-InventoryReservation
-StockMovement
-```
-
-For the first release, assume one logical stock location.
-
-Do not introduce multi-warehouse routing yet.
-
----
-
-# 28. Inventory availability
-
-Conceptually:
-
-```text
-availableToSell =
-onHand
--
-activeReservations
-```
-
-Do not infer real inventory from cached product responses.
-
-All inventory mutations must pass through the inventory module.
-
----
-
-# 29. Reservation states
-
-Inventory reservations use explicit states:
-
-```text
-ACTIVE
-CONSUMED
-RELEASED
-EXPIRED
-```
-
-Rules:
-
-- Cart does not reserve stock.
-- Checkout creates reservations.
-- Default reservation TTL is 15 minutes.
-- Successful order/payment flow consumes the reservation.
-- Payment failure releases it.
-- Expiry releases it.
-- Reservation transitions are idempotent.
-
----
-
-# 30. Checkout ownership
-
-One checkout application service owns final order intake.
-
-It orchestrates:
-
-```text
-cart
-↓
 identity
-↓
-pricing
-↓
-coupon
-↓
-inventory
-↓
-shipping
-↓
-order
-↓
+  ↓
+authoritative cart
+  ↓
+variant and publication validation
+  ↓
+price and discount recalculation
+  ↓
+stock validation
+  ↓
+address validation
+  ↓
+shipping quote
+  ↓
+idempotent order intent
+  ↓
+inventory reservation
+  ↓
+order and address snapshots
+  ↓
 payment attempt
+  ↓
+provider redirect or fail-closed response
 ```
 
-The browser never decides workflow order.
+The checkout transaction persists the durable intent and reservation boundary
+before external provider work. The payment adapter must not be called while a
+database transaction is holding locks unnecessarily.
 
----
+Checkout must be safe under:
 
-# 31. Checkout sequence
+- duplicate submits;
+- browser refreshes;
+- network timeouts;
+- stale carts;
+- changed price or stock;
+- expired reservations;
+- payment provider delays;
+- contradictory callbacks;
+- provider outages.
 
-Recommended simplified sequence:
+### 8.6 Inventory
 
-```text
-1. Validate customer identity.
-2. Load authoritative cart.
-3. Validate variants.
-4. Recalculate prices.
-5. Recalculate discounts.
-6. Validate stock.
-7. Validate address.
-8. Calculate shipping.
-9. Create checkout/order idempotency record.
-10. Create inventory reservations.
-11. Create pending order.
-12. Create payment attempt.
-13. Return provider redirect information.
+V1 uses one logical stock location:
+
 ```
-
-Exact transaction boundaries must be documented in an ADR.
-
----
-
-# 32. Checkout idempotency
-
-Every checkout submission requires an idempotency key.
-
-Repeated requests with the same valid key must not create:
-
-- Additional orders.
-- Additional reservations.
-- Additional payment intents unless the existing payment attempt explicitly allows retry.
-
-Duplicate clicks and network retries must reuse the same checkout intent.
-
----
-
-# 33. Order status
-
-Order fulfillment and payment are separate state machines.
-
-Order state:
-
-```text
-PENDING_PAYMENT
-CONFIRMED
-PREPARING
-SHIPPED
-DELIVERED
-
-CANCELLED
-RETURNED
-```
-
-Do not encode payment state into the order state.
-
----
-
-# 34. Payment state
-
-Payment attempt state:
-
-```text
-CREATED
-REDIRECTED
-PENDING
-PAID
-FAILED
-CANCELLED
-EXPIRED
-```
-
-A payment is `PAID` only after:
-
-- A verified provider callback.
-
-or:
-
-- Server-side reconciliation with the provider.
-
-Browser redirect success is not authoritative.
-
----
-
-# 35. Refund state
-
-Refund is a separate object.
-
-Recommended states:
-
-```text
-PENDING
-SUCCEEDED
-FAILED
-```
-
-A refund request is not equivalent to a completed refund.
-
-This must remain observable to operators.
-
----
-
-# 36. Payment callbacks
-
-Payment webhooks/callbacks must:
-
-- Verify signature where available.
-- Validate expected provider identifiers.
-- Use a unique provider event identifier where possible.
-- Be idempotent.
-- Record processing outcome.
-- Store a safe payload hash or sanitized event record.
-- Never leak secrets into logs.
-
-Duplicate callbacks must be harmless.
-
----
-
-# 37. Late payment after reservation expiry
-
-This is an explicit business invariant.
-
-Example:
-
-```text
-Reservation expires at minute 15.
-Provider confirms payment at minute 16.
-```
-
-NOVA must not silently confirm an unavailable order.
-
-Required behavior:
-
-```text
-Late paid callback
-        ↓
-Attempt to reacquire required inventory
-        ↓
-   ┌───────────────┐
-   │               │
-Success         Unavailable
-   │               │
-Confirm       Payment exception
-order               │
-                    ↓
-                 refund
-                    +
-              operator alert
-```
-
-This scenario requires an integration test.
-
----
-
-# 38. Immutable order snapshots
-
-Once an order is submitted, store snapshots for:
-
-- Product identity.
-- Product title.
-- SKU.
-- Selected options.
-- Quantity.
-- Unit price.
-- Discount.
-- Tax-relevant values if used.
-- Shipping amount.
-- Order totals.
-- Delivery address.
-- Delivery method.
-
-Changing the product later must not alter historic orders.
-
----
-
-# 39. Orders cannot be edited after submission
-
-Customers cannot directly edit submitted orders.
-
-Before fulfillment they may request cancellation where policy permits.
-
-Paid cancellation creates a refund workflow.
-
-Staff state overrides require:
-
-- Appropriate permission.
-- Reason.
-- Audit event.
-
----
-
-# 40. Returns
-
-Launch return policy:
-
-- Customer may request a return within seven days after delivery.
-- Product must be unused.
-- Product must be unwashed.
-- Required tags must remain attached.
-- Direct exchange is not supported in V1.
-
-Recommended entities:
-
-```text
-ReturnRequest
-ReturnItem
-Refund
-```
-
----
-
-# 41. Return shipping
-
-Store covers return shipping when the reason is:
-
-- Damaged item.
-- Incorrect item.
-- Defective item.
-
-Customer covers return shipping when the reason is:
-
-- Size preference.
-- Color preference.
-- Change of mind where policy permits.
-
----
-
-# 42. Shipping
-
-V1 supports:
-
-- Nationwide delivery.
-- One shipping method.
-- Simple fixed or destination-based pricing.
-- Tracking reference.
-
-Carrier/provider behavior is hidden behind:
-
-```text
-ShippingProvider
-```
-
-Do not introduce live carrier quoting until needed.
-
----
-
-# 43. Coupons
-
-Keep V1 promotions intentionally small.
-
-Recommended model:
-
-```text
-Coupon
-CouponRedemption
-```
-
-Supported rules may include:
-
-- Fixed amount.
-- Percentage discount.
-- Minimum order.
-- Start date.
-- End date.
-- Global usage limit.
-- Per-customer usage limit.
-- Product/category restriction.
-
-Do not create a generic dynamic promotion rules engine in V1.
-
----
-
-# 44. Search architecture
-
-Search is a first-class capability.
-
-V1 uses PostgreSQL.
-
-Recommended:
-
-```text
-PostgreSQL full-text search
-+
-pg_trgm
-+
-normalized searchable columns
-```
-
-A dedicated search engine should be introduced only when measured requirements justify it.
-
----
-
-# 45. Persian search normalization
-
-Search normalization must explicitly handle Persian/Arabic text differences.
-
-Examples:
-
-```text
-ي → ی
-ك → ک
-```
-
-Also normalize where appropriate:
-
-- Arabic/Persian digits.
-- Extra whitespace.
-- Zero-width characters.
-- Half-space variants.
-- Repeated spaces.
-- Search punctuation.
-- Case for embedded Latin terms.
-
-Original customer-visible text remains unchanged.
-
-Normalization is for search indexes/query processing.
-
----
-
-# 46. Search P0 behavior
-
-P0 search supports:
-
-- Product title matching.
-- Category matching.
-- SKU matching where appropriate.
-- Typo tolerance through trigram similarity.
-- Search suggestions.
-- Recent local searches.
-- Popular query support when enough data exists.
-- No-result recovery.
-- Filtering.
-- Sorting.
-- Pagination.
-
-Do not promise sophisticated semantic search in V1.
-
----
-
-# 47. Initial data model
-
-First-release Prisma schema should focus on actually shipping features.
-
-Recommended minimum:
-
-```text
-Customer
-CustomerSession
-Address
-
-StaffUser
-StaffSession
-
-Product
-ProductVariant
-ProductOption
-ProductOptionValue
-ProductVariantOptionValue
-ProductMedia
-VariantMedia
-
-Category
-ProductCategory
-
 InventoryItem
 InventoryReservation
 StockMovement
-
-Cart
-CartItem
-
-Order
-OrderItem
-OrderAddressSnapshot
-OrderEvent
-
-PaymentAttempt
-WebhookEvent
-Refund
-
-Shipment
-
-Coupon
-CouponRedemption
-
-ReturnRequest
-ReturnItem
-
-ContentPage
-SeoMetadata
-Redirect
-
-AuditEvent
-NotificationJob
 ```
-
-Do not add future-feature tables merely because they may eventually be useful.
-
----
-
-# 48. Database rules
-
-At minimum:
-
-- Unique normalized customer phone.
-- Unique active product slug.
-- Unique SKU.
-- Unique order number.
-- Unique payment provider transaction identifier where required.
-- Unique webhook provider event identifier where available.
-- Indexed order status + creation date.
-- Indexed payment status.
-- Indexed inventory variant/item reference.
-- Indexed active reservations + expiration.
-- Indexed coupon code.
-- Indexed content slug.
-- Indexed redirect source path.
-
-Use PostgreSQL constraints where they strengthen invariants.
-
-Do not rely only on application validation.
-
----
-
-# 49. Transactions and concurrency
-
-Transaction boundaries must explicitly cover:
-
-- Reservation creation.
-- Reservation consumption.
-- Stock movement.
-- Order creation.
-- Coupon redemption.
-- Payment reconciliation updates where necessary.
-
-Concurrency tests must include:
-
-```text
-multiple customers buying the final unit
-duplicate checkout request
-duplicate webhook
-simultaneous reservation expiry/payment callback
-coupon limit race
-```
-
----
-
-# 50. API architecture
-
-V1 API is REST-first.
-
-Prefix:
-
-```text
-/v1
-```
-
-Example customer routes:
-
-```text
-GET    /v1/catalog/categories
-GET    /v1/catalog/products
-GET    /v1/catalog/products/:slug
-
-GET    /v1/search
-
-POST   /v1/auth/otp/request
-POST   /v1/auth/otp/verify
-POST   /v1/auth/logout
-
-POST   /v1/carts
-GET    /v1/cart
-POST   /v1/cart/items
-PATCH  /v1/cart/items/:itemId
-DELETE /v1/cart/items/:itemId
-
-POST   /v1/checkout/quote
-POST   /v1/checkout/orders
-
-GET    /v1/orders
-GET    /v1/orders/:orderNumber
-
-POST   /v1/orders/:orderNumber/cancel
-POST   /v1/orders/:orderNumber/returns
-
-POST   /v1/payments/:provider/callback
-```
-
-Admin routes are separately namespaced and guarded:
-
-```text
-/v1/admin/...
-```
-
----
-
-# 51. API contracts
-
-Generate or derive a typed client from the API contract.
-
-Recommended approach:
-
-```text
-NestJS
-  ↓
-OpenAPI
-  ↓
-generated TypeScript client
-  ↓
-storefront/admin
-```
-
-Avoid manually duplicating every transport interface across frontend and backend.
-
-Domain internals do not need to be exposed merely because the transport is typed.
-
----
-
-# 52. API error format
-
-Use one predictable application error format.
 
 Conceptually:
 
-```json
-{
-  "code": "CART_STOCK_CONFLICT",
-  "message": "Customer-safe localized message",
-  "details": {},
-  "requestId": "..."
-}
 ```
-
-Do not expose:
-
-- Stack traces.
-- SQL errors.
-- Provider secrets.
-- Internal exception messages.
-
-Frontend logic should branch on stable error codes, not translated error strings.
-
----
-
-# 53. Frontend state ownership
-
-Do not duplicate server commerce state between Zustand and TanStack Query.
-
-## TanStack Query owns
-
-- Products.
-- Categories.
-- Search responses.
-- Server cart.
-- Cart lines.
-- Cart totals.
-- Prices.
-- Availability.
-- Checkout quotes.
-- Orders.
-- Payments.
-- Customer profile.
-- Addresses.
-- Admin server data.
-
-It also owns optimistic server mutations and rollback where appropriate.
-
----
-
-## Zustand owns
-
-Only client-local cross-component interaction state such as:
-
-- Cart drawer open/closed.
-- Navigation UI.
-- Theme if needed.
-- UI preferences.
-- Recently chosen option UI where appropriate.
-- Very small guest session references if required.
-
-Zustand is not a second API cache.
-
----
-
-# 54. URL state
-
-Use router/search parameters for shareable state.
-
-Examples:
-
-- Audience.
-- Category.
-- Size.
-- Color.
-- Material.
-- Price.
-- Stock.
-- Sale.
-- Sort.
-- Pagination.
-
-Changing filter/sort resets pagination.
-
-Back/forward navigation must restore the result state correctly.
-
----
-
-# 55. Forms
-
-Use:
-
-```text
-React Hook Form
-+
-Zod
-```
-
-for customer and admin forms.
-
-Server validation remains authoritative.
-
-Frontend validation improves UX but is not a security boundary.
-
----
-
-# 56. Cart behavior
-
-Cart server truth belongs to the API.
-
-Optimistic quantity changes may be handled through TanStack Query.
-
-On server conflict:
-
-- Roll back optimistic state.
-- Display exact conflict.
-- Show current stock.
-- Show updated price.
-- Preserve unaffected lines.
-
-Do not silently remove or alter customer selections.
-
----
-
-# 57. Guest cart merge
-
-After successful customer verification:
-
-```text
-guest cart
-+
-existing customer cart
-↓
-server merge
+availableToSell = onHand - activeReservations
 ```
 
 Rules:
 
-- Compatible identical lines may combine.
-- Server stock wins.
-- Current server price wins.
-- Invalid variants are not silently retained.
-- Conflicts are returned explicitly.
-- Customer receives a conflict UI before destructive changes where practical.
+- carts do not reserve stock;
+- checkout creates reservations;
+- reservations have explicit states: ACTIVE, CONSUMED, RELEASED, EXPIRED;
+- reservation transitions are idempotent;
+- concurrent checkout uses database locking/conditional updates;
+- successful payment/order confirmation consumes the reservation;
+- payment failure or expiry releases it;
+- stock corrections create signed/audited movements;
+- reserved stock cannot be manually reduced below the reserved quantity;
+- every inventory adjustment records actor, reason, quantity, and reference.
 
----
-
-# 58. Rendering strategy
-
-The storefront requires indexable initial HTML.
-
-Architecture decision:
-
-```text
-Public storefront → SSR / hybrid rendering
-Admin → SPA
-Editorial/static pages → prerender where beneficial
-```
-
-Do not leave production rendering indefinitely defined as:
-
-```text
-SSR or prerender
-```
-
-The selected implementation must be documented in an ADR before production storefront development.
-
----
-
-# 59. Public read model
-
-SSR, API reads, sitemap generation, metadata, canonical links, and structured data must agree on the same public catalog truth.
-
-Do not create separate SEO-only catalog behavior that can disagree with customer-visible product state.
-
----
-
-# 60. Design directions
-
-Current design candidates:
-
-```text
-AE  = Atelier Editorial
-NAE = NOVA Atelier Editorial
-QG  = Quiet Grid
-```
-
-No other direction identifier should appear unless explicitly added later.
-
----
-
-# 61. Design selection process
-
-Do not fully design every state for every direction.
-
-## Stage 1 — compare directions
-
-Each direction should initially cover:
-
-```text
-HOME
-PLP
-PDP
-CART
-CHECKOUT
-ADMIN representative screen
-```
-
-At:
-
-```text
-1440 desktop
-390 mobile
-```
-
-Review:
-
-- Brand fit.
-- Persian RTL.
-- Product clarity.
-- Product comparison.
-- Mobile usability.
-- Checkout clarity.
-- Admin usability.
-- Accessibility.
-- Photography compatibility.
-
----
-
-## Stage 2 — select production direction
-
-Choose one winner.
-
-Only the selected direction receives the complete production design system.
-
----
-
-## Stage 3 — expand winner
-
-The selected direction then receives:
-
-- Tablet layouts.
-- 360 px layouts.
-- Full account screens.
-- Full checkout states.
-- Admin screens.
-- Loading.
-- Error.
-- Empty.
-- Offline.
-- Permission states.
-- Conflict states.
-- Payment recovery.
-- Accessibility states.
-
-This avoids producing hundreds of throwaway frames.
-
----
-
-# 62. Design system contract
-
-Use a shared token layer for:
-
-- Color.
-- Typography.
-- Spacing.
-- Radius.
-- Elevation.
-- Motion.
-- z-index.
-
-Prefer CSS logical properties:
-
-```text
-margin-inline
-padding-inline
-inset-inline
-border-inline
-```
-
-Avoid hardcoding directional left/right assumptions when a logical equivalent exists.
-
----
-
-# 63. Layout contract
-
-The architecture document defines:
-
-- Breakpoints.
-- Grids.
-- Containers.
-- Gaps.
-- Min/max sizing.
-- Sticky behavior.
-- Safe areas.
-- Content constraints.
-
-Exact Figma x/y coordinates and screenshot scroll offsets belong in:
-
-```text
-docs/designs/
-```
-
-They are QA evidence, not application architecture.
-
----
-
-# 64. Required responsive widths
-
-Production review includes:
+### 8.7 Orders, payment, shipping, returns
 
-```text
-1440
-1280
-1024
-768
-390
-360
-```
-
-Important guarantees at 360:
-
-- No unintended horizontal scroll.
-- Minimum usable touch targets.
-- Long Persian labels remain usable.
-- Prices do not clip.
-- Mixed Latin references do not corrupt RTL layout.
-- Primary actions remain reachable.
-
----
-
-# 65. Accessibility target
-
-Public storefront and admin target:
-
-```text
-WCAG 2.2 Level AA
-```
-
-At minimum test:
-
-- Keyboard navigation.
-- Focus visibility.
-- Dialog focus trapping.
-- Focus restoration.
-- Form labels.
-- Validation messages.
-- Status announcements.
-- Reduced motion.
-- Touch target size.
-- Contrast.
-- Semantic landmarks.
-- RTL screen-reader behavior.
-- Mixed LTR references.
-
-Do not communicate status using color alone.
-
----
-
-# 66. Customer-visible Persian taxonomy
-
-Fixed audience labels:
-
-```text
-زنانه
-مردانه
-بچگانه
-```
+Orders store immutable snapshots of:
 
-Use consistently across:
+- product/variant names and SKU;
+- variant options;
+- unit, discount, tax, shipping, and total amounts;
+- recipient and address information;
+- payment attempts and provider references required for audit;
+- shipment method and tracking state.
 
-- Navigation.
-- Categories.
-- Breadcrumbs.
-- Campaigns.
-- Filters.
-- Fixtures.
-- Admin taxonomy.
+Order, payment, shipment, return, and refund transitions are explicit. No
+generic status mutation endpoint may bypass transition validation.
 
----
-
-# 67. Mixed-direction text
-
-Explicitly isolate LTR strings such as:
-
-- SKU.
-- Phone.
-- Order number.
-- Tracking code.
-- Payment reference.
-- Coupon.
-- URLs.
-
-Use appropriate direction isolation rather than relying on surrounding RTL context.
-
----
-
-# 68. Infrastructure objectives
+The browser redirect is never payment authority. A verified provider callback or
+later reconciliation result must validate:
 
-Production infrastructure should:
+- provider and signature;
+- provider event identity and replay hash;
+- order/payment-attempt identity;
+- expected amount and currency unit;
+- current state and allowed transition.
 
-- Keep critical services available to Iranian customers.
-- Avoid unnecessary foreign dependencies.
-- Keep application deployment portable.
-- Keep PostgreSQL and Redis private.
-- Maintain independent backups.
-- Support tested restores.
-- Support rollback.
-- Provide observable failures.
+If payment succeeds after an inventory reservation expires, the system attempts
+safe reacquisition. If stock cannot be reacquired, the payment remains
+observable and a separate idempotent refund record is created.
 
----
-
-# 69. Initial production topology
-
-Conceptually:
-
-```text
-Browser
-   |
-   v
-DNS + TLS
-   |
-Reverse Proxy
-   |
-   +-------------------+
-   |                   |
-Storefront          NestJS API
-                       |
-        +--------------+-------------+
-        |              |             |
-    PostgreSQL       Redis        Object storage
-        |
-    Backup/WAL
-        |
-Independent Iranian backup target
-```
-
----
-
-# 70. Initial capacity
+Shipment state is separate from payment state but synchronized through the
+fulfillment use case. Paid orders may progress through preparation, shipping,
+and delivery. Returns and refunds are distinct records and transitions.
 
-Starting pilot target:
+### 8.8 Coupons and promotions
 
-```text
-Application/worker:
-~4 vCPU
-~8 GB RAM
+V1 supports bounded fixed/percentage coupon rules, minimum-order checks, and
+global/per-user limits. Order-time redemption uses a durable reservation:
 
-PostgreSQL:
-~4 vCPU
-~8 GB RAM
-NVMe-backed storage
 ```
-
-These are not guaranteed production capacity values.
-
-Benchmark with realistic:
-
-- Catalog.
-- Image volume.
-- Search traffic.
-- Checkout concurrency.
-- Worker jobs.
-
-Scale based on measured bottlenecks.
-
----
-
-# 71. Environment separation
-
-## Local
-
-- Seed data.
-- Local credentials.
-- No production secrets.
-
-## Staging
-
-- Integration testing.
-- Provider sandbox.
-- Synthetic/anonymized data.
-- Production-like deployment topology where practical.
-
-## Production
-
-- Real customer data.
-- Restricted access.
-- Audited privileged actions.
-- Tested backups.
-
----
-
-# 72. Provider selection
-
-Choose primary infrastructure using a measured pilot rather than brand preference.
-
-Evaluate:
-
-- Iranian network latency.
-- Stability.
-- SLA.
-- Incident transparency.
-- Private networking.
-- Backup support.
-- Restore capability.
-- Storage.
-- Migration path.
-- Support.
-- Price predictability.
-- Exit procedure.
-
-Run the same release on at least two shortlisted providers before final selection where practical.
-
----
-
-# 73. Backup policy
-
-Starting objectives:
-
-```text
-RPO:
-15 minutes where WAL/continuous archiving is available.
-
-RTO:
-60 minutes for core commerce recovery.
+RESERVED → COMMITTED
+RESERVED → RELEASED
 ```
-
-Minimum policy:
-
-- Daily encrypted full backup.
-- 30-day retention.
-- Frequent transactional backup/WAL where supported.
-- Media versioning or independent media sync.
-- Monthly restore drill.
-- Quarterly provider-failure exercise.
-- Backup keys separated from the application VM.
-
-A backup is not considered valid until restoration succeeds.
-
----
-
-# 74. Security baseline
-
-At minimum:
-
-- Private PostgreSQL.
-- Private Redis.
-- Restricted object-storage management.
-- Least-privilege database users.
-- Separate migration/runtime database credentials.
-- Secure server sessions.
-- Admin TOTP MFA.
-- OTP throttling.
-- CSRF protection.
-- Origin verification.
-- Provider signature verification.
-- Webhook idempotency.
-- Rate limits.
-- Input validation.
-- Authorization inside use cases.
-- Sensitive log redaction.
-- Upload MIME and size restrictions.
-- Dependency security updates.
-- Audit events.
-- Incident runbooks.
-
----
 
-# 75. Logging
-
-Structured logs should include useful operational context such as:
-
-```text
-requestId
-actorType
-safe actor identifier
-orderId
-paymentAttemptId
-module
-operation
-result
-duration
-errorCode
-```
+Concurrent order attempts use conditional/locked capacity checks. Refunds do
+not silently recreate coupon capacity; any future refund-credit rule requires a
+new explicit decision.
 
-Never log:
+### 8.9 Content and SEO
 
-- OTP values.
-- Passwords.
-- Session tokens.
-- Authorization headers.
-- Recovery codes.
-- Payment secrets.
-- Full sensitive customer data.
-- Raw unrestricted provider payloads.
+- Content pages are draft-first and publish only when usable.
+- Public content reads expose published pages only.
+- SEO metadata and redirects are managed through the API.
+- Public clean routes are canonical; hash routes remain compatibility paths.
+- SSR emits route-specific metadata, canonical URLs, Open Graph data, and safe
+  JSON-LD where applicable.
+- Private, search, temporary-state, admin, account, cart, checkout, and error
+  routes are noindex.
+- SSR/API failure produces a non-cacheable noindex response rather than partial
+  indexable commerce content.
+- HTML and JSON contexts are escaped before document insertion.
 
 ---
-
-# 76. Monitoring
-
-Track:
-
-- Availability.
-- TLS expiry.
-- HTTP 5xx.
-- p50/p95/p99 latency.
-- Request rate.
-- Checkout conversion.
-- Order creation failures.
-- Payment callback failures.
-- Old pending payments.
-- Queue depth.
-- Queue retries.
-- Dead-letter jobs.
-- Database connections.
-- Slow queries.
-- Database disk.
-- Backup age.
-- WAL/archive health.
-- Redis memory.
-- Redis evictions.
-- Object-storage errors.
-- CPU.
-- Memory.
-- Disk.
-- Network saturation.
-
-Alert on actionable customer-facing or recovery risks.
 
----
+## 9. External Integration Boundaries
 
-# 77. Deployment
-
-Production deployment must use immutable versioning.
-
-Suggested flow:
-
-```text
-build
-↓
-test
-↓
-tag image/release
-↓
-migrate
-↓
-deploy
-↓
-readiness
-↓
-smoke tests
-```
+Every external provider is a replaceable effect, not a domain owner.
 
-Use:
+### 9.1 PaymentGateway
 
-```bash
-prisma migrate deploy
-```
+Responsibilities:
 
-Never use destructive development reset commands in production.
+- create a provider payment request;
+- verify callback signatures and payloads;
+- return a small internal verification result;
+- request idempotent refunds;
+- expose provider transaction/event identifiers;
+- translate provider units into integer toman domain values at the boundary.
 
----
+The application never stores raw provider secrets or treats raw provider
+payloads as domain state. It stores a payload hash and bounded diagnostics.
 
-# 78. CI and CD
+### 9.2 SmsProvider
 
-CI starts in Phase 1.
+Responsibilities:
 
-CI should run:
+- send OTP or transactional notifications;
+- expose sanitized provider outcome/error categories;
+- enforce provider-specific timeout, template, and retry behavior.
 
-```bash
-bun install --frozen-lockfile
-bun run typecheck
-bun run lint
-bun run test
-bun run build
-```
+OTP values, secrets, and full provider responses never enter logs.
 
-Add integration/e2e suites as the application grows.
+### 9.3 ShippingProvider
 
-CD is introduced after deployment and rollback behavior is sufficiently stable.
+Responsibilities:
 
----
+- return a bounded quote/ETA for supported methods;
+- translate local policy/provider data into the domain shipping contract;
+- create or update tracking references when a real provider is certified;
+- expose sanitized failure categories.
 
-# 79. Health endpoints
+Launch starts with one nationwide policy. Live carrier pricing and multiple
+fulfillment locations are deferred until the real provider contract is known.
 
-Provide:
+### 9.4 ObjectStorage
 
-```text
-GET /health/live
-GET /health/ready
-```
+Responsibilities:
 
-`live` checks process viability.
+- create short-lived presigned upload/download URLs;
+- restrict object key, operation, content type, and expiry;
+- verify object metadata/checksum after upload;
+- support quarantine, derivative, and deletion operations;
+- keep provider-specific endpoint and credential handling out of domain code.
 
-`ready` checks dependencies required to safely receive production traffic.
+### 9.5 AnalyticsSink
 
-Do not make readiness so strict that harmless optional providers constantly remove the application from service.
+Analytics is an asynchronous, non-authoritative effect. A failure to deliver an
+analytics event must not fail checkout, payment, fulfillment, or staff actions.
 
 ---
-
-# 80. SEO architecture
 
-SEO applies to public indexable pages.
+## 10. Media Lifecycle
 
-Primary locale:
-
-```text
-fa-IR
 ```
-
-Document direction:
-
-```text
-rtl
+REQUESTED
+  ↓ signed PUT
+UPLOADED / PENDING VERIFICATION
+  ↓ metadata, size, content, checksum validation
+READY or QUARANTINED
+  ↓ optional derivative worker
+PUBLISHED / DERIVATIVE READY
+  ↓ catalog removal
+QUARANTINED / DELETED according to retention policy
 ```
-
-Use one canonical public domain.
-
----
 
-# 81. Indexable pages
+Rules:
 
-Generally index:
+- Staff authorization occurs before issuing an upload URL.
+- Object keys are server-generated and do not trust user-provided paths.
+- Upload content type, size, and extension are validated.
+- Public URLs come from persisted media state, not guessed identifiers.
+- Deleting catalog media does not automatically destroy historic evidence or
+  backups without an explicit retention policy.
+- Production media backups use a second failure domain.
 
-- Home.
-- Category landing pages.
-- Product pages.
-- Useful editorial content.
-- Buying guides.
-- Campaign landing pages where valuable.
-- Trust/support pages where appropriate.
-
-Generally do not index:
-
-- Search result pages.
-- Arbitrary filter combinations.
-- Sort URLs.
-- Cart.
-- Checkout.
-- Account.
-- Admin.
-- Temporary state URLs.
-
----
-
-# 82. SEO rendering
-
-Important public pages must contain useful initial HTML.
-
-Do not require a crawler to wait for client-only catalog fetching before seeing:
-
-- Product title.
-- Price.
-- Availability.
-- Description.
-- Internal links.
-- Metadata.
-
----
-
-# 83. SEO contracts
-
-Implement:
-
-- Canonical URLs.
-- Redirects.
-- `robots.txt`.
-- XML sitemap.
-- Product sitemap.
-- Category sitemap.
-- Content sitemap.
-- Image sitemap where valuable.
-- Real 404 responses.
-- Product structured data.
-- Offer structured data.
-- Breadcrumb structured data.
-- Organization data.
-- Review data only when truthful.
-- Shipping/returns data where supported.
-
-Visible information and structured data must agree.
-
 ---
 
-# 84. URL policy
+## 11. Background Jobs and Outbox
 
-Choose exactly one slug strategy before publishing production pages.
+The API writes notification intents in the same transaction as the business
+transition that requires them.
 
-Either:
-
-```text
-Persian Unicode
 ```
-
-or:
-
-```text
-normalized Latin transliteration
+database transaction
+  ├─ order/payment/shipment state change
+  ├─ order/audit event
+  └─ notification intent with unique dedupe key
+             ↓ commit
+worker lease
+             ↓
+provider adapter
+             ↓
+success / retry with backoff / terminal failure
 ```
 
-Do not casually mix policies.
+Worker rules:
 
-Once public URLs exist:
+- at-least-once processing is expected;
+- consumers must be idempotent;
+- jobs are claimed conditionally with a lease/visibility window;
+- retries use bounded exponential backoff;
+- terminal failures remain operator-visible;
+- payloads contain only the delivery intent required by the adapter;
+- provider secrets and response bodies are not persisted;
+- job metrics include backlog, oldest job, attempt count, and terminal failure.
 
-- Preserve them.
-- Redirect intentionally.
-- Avoid mass unnecessary slug changes.
+The worker may later own scheduled reservation cleanup, coupon cleanup, payment
+reconciliation, shipment reconciliation, media derivatives, and analytics
+delivery. Each job must have an owner, dedupe rule, retry policy, and failure
+signal.
 
 ---
 
-# 85. Image SEO and performance
+## 12. Security Architecture
 
-Images should include:
+### 12.1 Cookie and session controls
 
-- Correct intrinsic dimensions.
-- Responsive variants.
-- Modern formats where supported.
-- Useful Persian alt text.
-- Reserved aspect ratios.
-- Lazy loading below fold.
-- Meaningful focal cropping.
-- Long-lived caching for immutable transformed media.
+- Opaque session tokens are random and only hashes are persisted.
+- Session cookies are Secure, HttpOnly, SameSite=Lax unless a documented flow
+  requires a stricter setting, and use an appropriate path/domain policy.
+- Use a __Host- prefix where deployment topology permits.
+- Rotate sessions after authentication and privilege-sensitive recovery.
+- Support immediate staff session revocation.
 
-Do not serve large original assets through the API process.
+### 12.2 CSRF and origin protection
 
----
+Cookie-authenticated state-changing browser requests require:
 
-# 86. Advertising
+- a readable bootstrap token where necessary;
+- a custom CSRF request header;
+- exact-origin validation;
+- no state mutation on safe methods.
 
-NOVA should not depend on restricted foreign ad services to launch.
+SameSite is defense in depth, not the only CSRF defense. Provider callbacks are
+server-to-server endpoints and instead require provider signature verification.
 
-Do not design operational plans around:
+### 12.3 Authorization
 
-- Borrowed accounts.
-- False billing addresses.
-- Proxy ownership.
-- Policy circumvention.
+Authorization is enforced in guards and, more importantly, in the application
+use case where the business mutation occurs. The frontend may hide controls but
+cannot grant access.
 
-Advertising policy and availability should be rechecked at campaign execution time.
+### 12.4 Data minimization
 
----
+Never log or return:
 
-# 87. Iran-first acquisition
+- OTPs;
+- passwords;
+- TOTP secrets;
+- recovery codes;
+- session tokens;
+- storage credentials;
+- payment credentials or raw payloads;
+- unnecessary full addresses or customer records.
 
-Potential channels:
+Operational inspection returns redacted, bounded data.
 
-- Local search/display networks.
-- Persian publishers.
-- Native placements.
-- Creators.
-- Influencers.
-- Affiliates.
-- Referral partnerships.
-- Consent-based email.
-- Consent-based SMS.
-- Telegram or other business-supported owned channels.
+### 12.5 Provider fail-closed policy
 
-Do not hard-code one advertising provider into the application.
+Development/test may use explicit local adapters. Staging/production must fail
+closed when payment, SMS, shipping, notification, storage, or encryption
+credentials are not configured. A missing provider must never be reported as a
+successful side effect.
 
 ---
-
-# 88. Attribution
-
-Capture:
-
-```text
-utm_source
-utm_medium
-utm_campaign
-utm_content
-utm_term
-```
 
-Recommended funnel events:
-
-```text
-page_view
-search_submitted
-product_viewed
-filter_applied
-add_to_cart
-checkout_started
-shipping_selected
-payment_started
-payment_succeeded
-order_created
-order_cancelled
-return_requested
-refund_created
-```
+## 13. Caching and Consistency
 
-Do not make business decisions using clicks alone.
+- PostgreSQL is the source of truth.
+- TanStack Query caches server reads in the browser.
+- Public SSR HTML may use short shared freshness and stale-while-revalidate
+  headers after the route data is complete.
+- Private, 404, 503, callback, mutation, and error responses use no-store or
+  appropriately restrictive cache behavior.
+- Search indexes, CDN media, and analytics are derived state.
+- Cache invalidation follows successful mutation contracts and route identity.
+- No cache may authorize a staff action or confirm payment.
 
 ---
 
-# 89. Business north star
+## 14. Infrastructure and Deployment
 
-Primary outcome:
-
-```text
-successfully paid completed orders
-with healthy contribution margin
-```
+### 14.1 First production shape
 
-Conceptually:
-
-```text
-Contribution margin =
-revenue
-- product cost
-- payment cost
-- shipping subsidy
-- support cost
-- refund/return cost
 ```
-
-Allowable CAC must be derived from contribution economics, not copied from another ecommerce business.
-
----
-
-# 90. Marketing document split
-
-Detailed:
-
-- Creator strategy.
-- Lifecycle campaigns.
-- Budget allocation.
-- Content calendar.
-- Campaign templates.
-- Creative guidelines.
-
-belong in:
-
-```text
-docs/marketing/
+web/SSR container
+api container
+worker container
+PostgreSQL service
+Redis service
+S3-compatible object storage
+reverse proxy / TLS / optional CDN
 ```
 
-The root architecture document only defines the measurement and integration requirements required by engineering.
+The first deployment may use Docker Compose or an equivalent small container
+orchestration layer. Application code is built into images; production must not
+depend on host bind mounts for source code.
 
----
-
-# 91. SEO document split
-
-Detailed:
-
-- Keyword research.
-- 90-day content plan.
-- Search demand analysis.
-- Editorial schedule.
-- Content briefs.
+### 14.2 Environment configuration
 
-belong in:
-
-```text
-docs/seo/
-```
-
----
+packages/config validates environment values at process startup. Configuration
+is injected by the deployment environment and never committed as credentials.
 
-# 92. Infrastructure document split
+Representative groups:
 
-Detailed:
+- NODE_ENV and LOCAL_TEST_MODE safety gates;
+- PostgreSQL connection and migration configuration;
+- Redis connection and security-state configuration;
+- public web/API origins and CSRF allowlists;
+- session and encryption secrets;
+- payment/SMS/shipping provider credentials;
+- object-storage endpoint, bucket, access key, and secret;
+- worker lease, retry, and polling intervals;
+- SSR API origin and web origin;
+- logging, metrics, and trace exporters.
 
-- Provider scorecards.
-- Provider-specific commands.
-- DNS configuration.
-- Backup commands.
-- Firewall rules.
-- Deployment scripts.
-- Restore procedures.
+Local fixtures are accepted only in development/test. They are rejected in
+staging/production.
 
-belong in:
+### 14.3 Health and readiness
 
-```text
-docs/infrastructure/
-docs/runbooks/
-```
+- /health/live must not depend on PostgreSQL and answers process liveness.
+- /health/ready verifies required dependencies for serving traffic.
+- Worker health reports database connectivity and active worker state.
+- Object storage, Redis, API, and worker health are included in deployment
+  probes where the target environment supports them.
 
----
+### 14.4 Backup and recovery
 
-# 93. Design document split
+Backups cover both:
 
-Exact:
+- PostgreSQL durable state;
+- object-storage media and media metadata.
 
-- Figma frame coordinates.
-- Long-page scroll offsets.
-- Screenshot paths.
-- Visual regression dimensions.
-- Screen-sheet x/y geometry.
+The database strategy must define dump/base backup, retention, encryption,
+restore target, RPO, RTO, and a recurring restore drill. The second backup
+location must be independent from the primary failure domain. A backup that has
+not been restored is not launch evidence.
 
-belong in:
+### 14.5 Deployment sequence
 
-```text
-docs/designs/
 ```
-
-The architecture document defines behavioral and responsive contracts only.
-
----
-
-# 94. Required architecture ADRs
-
-Before the relevant production module is implemented, create:
-
-```text
-ADR-001 Money and provider money units
-ADR-002 Customer and staff identity model
-ADR-003 Session and OTP security
-ADR-004 Product option and variant model
-ADR-005 Inventory reservation and concurrency
-ADR-006 Checkout transaction and idempotency
-ADR-007 Payment callback and reconciliation
-ADR-008 Search and Persian normalization
-ADR-009 Public storefront rendering
-ADR-010 External provider adapter ownership
+build immutable artifacts
+  ↓
+validate configuration and health probes
+  ↓
+run compatible database migrations
+  ↓
+start/restart web, API, and worker
+  ↓
+wait for readiness
+  ↓
+run smoke checks
+  ↓
+observe provider, queue, and error signals
 ```
-
-Additional ADRs should be created only for durable, significant decisions.
-
-Do not create ADRs for trivial implementation details.
 
----
-
-# 95. Phase 0 — architecture cleanup
-
-Resolve only blocking invariants.
-
-Deliver:
-
-- `CONTEXT.md`.
-- Core ADRs.
-- Domain vocabulary.
-- Product variant model.
-- Inventory semantics.
-- Checkout semantics.
-- Payment state model.
-- Refund model.
-- Search strategy.
-- Rendering strategy.
-- Reduced P0 scope.
-
-Do not block Phase 1 on:
-
-- Final ad network.
-- Final creator partners.
-- Final hosting winner.
-- Final payment vendor selection.
-- Final SMS vendor.
-- Final brand assets.
-
-### Exit gate
+Rollback must distinguish application rollback from irreversible database
+migrations. Destructive schema changes require a backward-compatible migration
+plan, backup evidence, and a recovery plan before execution.
 
-Core domain invariants are written and mutually consistent.
-
 ---
 
-# 96. Phase 1 — engineering foundation
+## 15. CI/CD and Quality Gates
 
-Build:
+### 15.1 Required CI checks
 
-```text
-apps/storefront
-apps/admin
-apps/api
-apps/worker
 ```
-
-Add:
-
-- Bun workspace.
-- TypeScript strict mode.
-- ESLint.
-- Formatting.
-- Environment validation.
-- PostgreSQL.
-- Redis.
-- Prisma.
-- NestJS.
-- Error contract.
-- Logging.
-- OpenAPI.
-- Generated API client.
-- Basic UI tokens.
-- CI.
-- Docker development stack.
-
-### Exit gate
-
-From a clean environment:
-
-```bash
-bun install
-bun run typecheck
-bun run lint
-bun run test
-bun run build
-docker compose up
+install pinned dependencies
+  ↓
+format check
+  ↓
+lint
+  ↓
+typecheck
+  ↓
+focused unit and contract tests
+  ↓
+integration tests
+  ↓
+production build for API/web SSR/worker
+  ↓
+Docker Compose configuration validation
+  ↓
+provider-free smoke checks
 ```
-
-works using documented steps.
-
----
-
-# 97. Phase 2 — catalog and discovery
-
-Build:
-
-- Product model.
-- Product options.
-- Variants.
-- Categories.
-- Media.
-- Inventory basics.
-- Admin catalog.
-- Home.
-- Category.
-- PLP.
-- PDP.
-- PostgreSQL Persian search.
-- Filter/sort/pagination.
-- SEO metadata contracts.
 
-### Exit gate
+### 15.2 Staging gates
 
-A seeded product can be:
+Staging must add real, credentialed or sandboxed checks for:
 
-- Created.
-- Published.
-- Searched.
-- Filtered.
-- Viewed.
+- payment request, callback, replay, wrong amount, timeout, and refund;
+- SMS OTP delivery and throttling;
+- shipping quote/ETA/tracking contract;
+- object upload, quarantine, derivative, and deletion;
+- notification delivery and retry behavior;
+- PostgreSQL backup and restore;
+- SSR/public route behavior behind the real proxy/TLS topology.
 
-on desktop and mobile.
+### 15.3 Validation truthfulness
 
----
-
-# 98. Phase 3 — identity and cart
-
-Build:
-
-- Customer OTP.
-- Customer sessions.
-- Staff password login.
-- Staff TOTP.
-- Staff sessions.
-- Authorization.
-- Audit events.
-- Rate limiting.
-- Guest cart.
-- Customer cart.
-- Cart persistence.
-- Cart merge.
-- Cart conflict responses.
-- Addresses.
-
-### Exit gate
-
-A guest and authenticated customer can maintain a valid cart across refresh and authentication.
-
----
+Every release reports checks as PASS, FAIL, PRE-EXISTING FAILURE, NOT RUN, or
+BLOCKED. Local provider-free checks are not described as proof of production
+provider readiness.
 
-# 99. Phase 4 — checkout and commerce core
-
-Build:
-
-- Checkout quote.
-- Final validation.
-- Inventory reservations.
-- Reservation expiry.
-- Order creation.
-- Immutable snapshots.
-- Payment attempts.
-- Gateway adapter.
-- Payment callbacks.
-- Idempotency.
-- Payment reconciliation.
-- Shipping calculation.
-- Customer confirmation.
-
-This phase receives the strongest integration and concurrency testing.
-
-### Exit gate
-
-All of these pass:
-
-- Successful payment.
-- Failed payment.
-- Cancelled payment.
-- Timeout.
-- Duplicate checkout.
-- Duplicate callback.
-- Delayed callback.
-- Reservation expiry.
-- Late paid callback after expiry.
-- Concurrent purchase of final stock.
-
 ---
-
-# 100. Phase 5 — operations
-
-Build:
-
-- Order admin.
-- Fulfillment workflow.
-- Shipment.
-- Tracking.
-- Return request.
-- Refund.
-- Coupon.
-- Customer support lookup.
-- Notifications.
-- Payment inspection.
-- Audit interface.
 
-### Exit gate
+## 16. Testing Strategy
 
-An operator can process an order without editing the database directly.
+### 16.1 Unit tests
 
----
-
-# 101. Phase 6 — production design completion
+Cover pure domain rules and bounded helpers:
 
-After one design direction wins:
+- Persian normalization;
+- money and provider-unit conversion;
+- price/discount/coupon rules;
+- state transition guards;
+- reservation expiry/consume/release;
+- idempotency conflict behavior;
+- role assertions;
+- route/metadata/SEO resolution;
+- query-key identity and local UI state transitions.
 
-- Complete account screens.
-- Complete checkout states.
-- Complete admin workflows.
-- Tablet layouts.
-- 360 px QA.
-- Error states.
-- Offline states.
-- Payment recovery.
-- Stock conflict.
-- Accessibility review.
-- Visual regression.
+### 16.2 API and integration tests
 
-### Exit gate
+Cover database-backed invariants:
 
-The selected design has equivalent behavior across core supported viewports and states.
+- concurrent reservation attempts;
+- duplicate checkout submit;
+- cart merge conflicts;
+- callback replay and conflicting hashes;
+- late payment and refund creation;
+- coupon capacity races;
+- shipment/payment transition guards;
+- notification outbox claim/retry/terminal failure;
+- media presign/complete/quarantine/delete;
+- audit and redaction boundaries.
 
----
+### 16.3 Browser tests
 
-# 102. Phase 7 — SEO and content production
+Cover real user-visible paths:
 
-Complete:
+- storefront discovery and product selection;
+- auth and auth error recovery;
+- guest/customer cart ownership and merge;
+- checkout quote/submit/recovery;
+- order and return states;
+- staff login and role boundaries;
+- admin catalog/inventory/order operations;
+- RTL keyboard/accessibility behavior;
+- clean SSR routes and noindex/private boundaries.
 
-- Production SSR/hybrid rendering.
-- Canonicals.
-- Sitemap.
-- Robots.
-- Redirects.
-- Structured data.
-- Editorial pages.
-- Trust pages.
-- Shipping policy.
-- Returns policy.
-- Size guide.
-- Search Console setup where operationally available.
-- Analytics baseline.
+### 16.4 Provider contract tests
 
-### Exit gate
+Every real adapter must have:
 
-Important pages are indexable and expose useful initial HTML.
+- request/response fixtures or sandbox tests;
+- signature verification tests;
+- timeout and retry tests;
+- amount/unit conversion tests;
+- duplicate/replay tests;
+- redaction tests;
+- explicit behavior when credentials are missing.
 
 ---
-
-# 103. Phase 8 — Iran production readiness
 
-Select and integrate real providers:
+## 17. Observability
 
-- Primary Iranian hosting.
-- Independent backup target.
-- Payment gateway.
-- SMS.
-- Shipping.
-- Object storage.
-- Monitoring.
+### 17.1 Structured logs
 
-Run:
+Logs include bounded event names, service, environment, request/correlation
+identifier, route/use case, duration, result, and sanitized error code. Logs do
+not contain secrets, OTPs, raw payment payloads, or unnecessary personal data.
 
-- Load test.
-- Restore drill.
-- Rollback drill.
-- Payment sandbox.
-- Provider timeout test.
-- Backup verification.
-- Multiple Iranian network checks.
+### 17.2 Metrics
 
-### Exit gate
+Minimum metrics:
 
-Rollback and restore have been executed successfully, not merely documented.
+- request count, latency, and error rate by route class;
+- database transaction duration and connection failures;
+- Redis availability and throttling failures;
+- checkout quote/submit outcomes;
+- reservation expiry and insufficient-stock rejection;
+- payment callback success/failure/replay/wrong-amount;
+- refund pending/failed/succeeded;
+- notification backlog, attempts, and terminal failure;
+- worker heartbeat and lease contention;
+- media upload/quarantine/derivative failures;
+- SSR 404/503/noindex and sitemap failures;
+- backup age, size, and last restore-test result.
 
----
-
-# 104. Phase 9 — controlled launch
+### 17.3 Traces
 
-Launch with:
+OpenTelemetry may trace API requests through database and provider boundaries.
+Trace attributes must be sanitized and must not contain payment credentials,
+OTP values, or full personal data. Browser instrumentation is optional and
+must not make the storefront dependent on a telemetry provider.
 
-- Limited product set.
-- Explicit inventory.
-- Working tracking.
-- Working support.
-- Core SEO pages.
-- One measured acquisition test.
-- One creator/affiliate test if ready.
-- Contribution-margin reporting.
+### 17.4 Operational alerts
 
-### Exit gate
+Alert on:
 
-The business can explain:
-
-```text
-where orders came from
-how much acquisition cost
-payment success rate
-refund/return rate
-contribution margin
-```
+- payment callback or refund failure spikes;
+- stuck/old notification jobs;
+- repeated reservation cleanup failure;
+- database/Redis/object-storage readiness failure;
+- backup age or restore-test failure;
+- provider latency/timeouts;
+- SSR noindex/503 spikes;
+- worker stopped or unable to lease jobs.
 
 ---
-
-# 105. Local engineering checks
-
-Root commands should eventually expose:
-
-```bash
-bun run typecheck
-bun run lint
-bun run test
-bun run test:integration
-bun run test:e2e
-bun run build
-```
 
-Database:
+## 18. MVP and Explicit Non-Goals
 
-```bash
-bunx prisma migrate deploy
-bun run db:seed
-```
-
-Infrastructure:
-
-```bash
-docker compose config
-docker compose up
-```
+### 18.1 V1 must support
 
----
-
-# 106. Required commerce tests
-
-At minimum:
-
-## Catalog
-
-- Draft cannot appear publicly.
-- Published product appears.
-- Archived product disappears without corrupting old orders.
-- SKU uniqueness.
-- Slug redirects.
-
-## Search
-
-- Persian normalization.
-- Arabic/Persian character variants.
-- Typo tolerance.
-- Filters.
-- Sort.
-- Pagination.
-- Empty result.
-
-## Cart
-
-- Add valid variant.
-- Reject unavailable variant.
-- Quantity update.
-- Server price change.
-- Stock conflict.
-- Guest/auth merge.
-- Duplicate mutation handling.
-
-## Inventory
-
-- Reservation create.
-- Reservation consume.
-- Reservation release.
-- Reservation expiry.
-- Final unit concurrent purchase.
-- No negative available-to-sell.
-
-## Checkout
-
-- Authoritative recalculation.
-- Invalid address.
-- Expired quote.
-- Duplicate request.
-- Same idempotency key.
-- Different idempotency key.
-
-## Payment
-
-- Success.
-- Failure.
-- Cancellation.
-- Timeout.
-- Duplicate callback.
-- Delayed callback.
-- Invalid signature.
-- Reconciliation.
-- Late payment after reservation expiry.
-- Refund success.
-- Refund failure.
-
-## Order
-
-- Immutable snapshots.
-- Valid transitions.
-- Invalid transitions rejected.
-- Unauthorized transition rejected.
-- Admin override audited.
-
-## Identity
-
-- OTP expiration.
-- OTP retry limit.
-- OTP resend invalidates old code.
-- Rate limiting.
-- Session rotation.
-- Session revocation.
-- Staff MFA.
-- Customer cannot access staff context.
-- CSRF rejection.
-- Authorization denied by default.
-
----
+Customer:
 
-# 107. Frontend QA
-
-Test:
-
-- RTL.
-- Mixed LTR values.
-- Keyboard navigation.
-- Screen-reader semantics.
-- 360 px.
-- 390 px.
-- 768 px.
-- Desktop.
-- Slow network.
-- Offline.
-- Loading.
-- Empty.
-- Request failure.
-- Payment recovery.
-- Stock conflict.
-- Long Persian strings.
-- Very large prices.
-- Disabled actions.
-- Reduced motion.
-- Focus restoration.
+- home, categories, search, filters, sorting, pagination;
+- product details, variants, sizes, media, stock, price, care, and returns;
+- guest cart, customer cart, and merge conflict handling;
+- phone OTP authentication;
+- address, shipping quote, payment redirect, recovery, and confirmation;
+- order history, tracking, cancellation, return request, and support entry.
 
----
+Staff:
 
-# 108. Production smoke checks
+- staff password/TOTP login;
+- catalog, variants, media, publication, inventory;
+- orders, fulfillment, payments, refunds, returns, and coupons;
+- customer support lookup;
+- content, SEO metadata, redirects, audit, and notification inspection.
 
-After each production release verify:
+Reliability:
 
-```text
-/health/live
-/health/ready
-```
+- inventory reservation concurrency;
+- idempotent checkout and callbacks;
+- late-payment/refund reconciliation;
+- retryable notifications;
+- backups and restore evidence;
+- health, logs, metrics, and alerts.
 
-Then test:
-
-- Home.
-- Category.
-- Search.
-- Product.
-- Cart.
-- Checkout.
-- Authentication.
-- Order lookup.
-- Admin login.
-- Object storage.
-- Queue.
-- Database.
-- Payment sandbox/safe production verification where appropriate.
-- Monitoring.
-- Backup age.
-
-A duplicate callback test must not create a duplicate order/payment.
+### 18.2 V1 explicitly excludes
 
----
+- marketplace/vendor settlement;
+- multi-warehouse routing;
+- multi-tenant commerce;
+- native Android/iOS applications;
+- loyalty tiers and points;
+- advanced recommendation/personalization engines;
+- social login, passkeys, or SSO;
+- dynamic staff permission editor;
+- generic promotion/workflow rule engines;
+- arbitrary partial refunds;
+- direct product exchanges as a separate fulfillment engine;
+- multiple payment gateways at launch;
+- cash on delivery;
+- live carrier-rate orchestration;
+- advanced experimentation infrastructure;
+- realtime presence, chat, or collaborative features.
 
-# 109. Blocking decisions
-
-These must be resolved before their affected implementation begins:
-
-- Domain money semantics.
-- Payment conversion boundary.
-- Customer/staff identity separation.
-- Session model.
-- OTP policy.
-- Variant model.
-- Inventory reservation rules.
-- Order state machine.
-- Payment state machine.
-- Refund state.
-- Checkout idempotency.
-- Search architecture.
-- Public SSR strategy.
-- Authorization roles.
+These remain possible only through clean boundaries and measured future need.
 
 ---
-
-# 110. Late-binding decisions
 
-These do not block unrelated domain implementation:
+## 19. Critical Implementation Path
 
-- Payment gateway vendor.
-- SMS vendor.
-- Shipping vendor.
-- Storage vendor.
-- Analytics sink.
-- Iranian infrastructure vendor.
-- Support integration.
+The architecture should be implemented in dependency order:
 
-They remain behind adapters until selected.
+1. Preserve and stabilize packages/config, packages/db, and API/client
+   contracts.
+2. Keep Prisma migrations, seed behavior, and database invariants aligned with
+   the domain rules in this document.
+3. Complete provider-neutral payment, SMS, shipping, and object-storage seams;
+   then certify the selected real providers in staging.
+4. Complete customer storefront routing with React Router, clean public routes,
+   hash compatibility, and SSR handoff.
+5. Complete catalog/product/cart/checkout flows using TanStack Query and the
+   bounded Zustand stores.
+6. Keep staff/admin screens in the independent `apps/admin` app and complete
+   them against the existing role/use-case boundaries.
+7. Complete worker cleanup/reconciliation and operational dashboards.
+8. Add production deployment, backup/restore, observability, and smoke gates.
+9. Run the full release gate, including browser, integration, provider, and
+   restore checks.
 
----
-
-# 111. Launch decisions
-
-These must be finalized before public launch but do not block foundation engineering:
-
-- Final brand name.
-- Logo.
-- Production domain.
-- Tone of voice.
-- Launch assortment.
-- Final hosting winner.
-- Final payment contract.
-- Final SMS contract.
-- Final shipping contract.
-- Privacy/legal policy.
-- Support process.
-- Launch budget.
-- Gross margin.
-- Allowable CAC.
-- Marketing partners.
+Do not start post-MVP features before the payment, inventory, fulfillment,
+refund, provider, and recovery gates are credible.
 
 ---
-
-# 112. Current open decisions
-
-## Brand
 
-- Final store name.
-- Domain.
-- Logo.
-- Tone.
+## 20. Upgrade Triggers
 
-## Providers
+### Search service
 
-- Payment gateway.
-- SMS.
-- Shipping.
-- Primary hosting.
-- Backup hosting.
-- Support channel.
+Upgrade when database profiling shows unacceptable search latency, catalog
+volume materially competes with checkout, or ranking/synonym/facet needs exceed
+PostgreSQL.
 
-## Infrastructure
+### Queue platform
 
-- Managed vs self-hosted PostgreSQL.
-- Backup ownership.
-- Monitoring provider.
+Upgrade when workers need independent concurrency, priority queues, delayed
+schedules, dead-letter handling, or high-volume media/search processing.
 
-## Product
+### Redis coordination
 
-- Exact launch assortment.
-- Size systems.
-- Shipping price policy.
-- Final return operational process.
+Expand Redis usage only when measured cache/fan-out/locking needs exist. Never
+move durable commerce truth out of PostgreSQL without a new consistency design.
 
-# Design strategy
+### Multi-warehouse
 
-NOVA intentionally maintains **three complete design directions** before selecting the production baseline.
+Add locations and allocation only when stock physically exists in more than one
+fulfillment location and routing affects customer promises or cost.
 
-The goal is not to quickly eliminate alternatives. The goal is to compare three genuinely complete ecommerce experiences under identical functional constraints and select the strongest direction based on evidence.
+### Multiple gateways
 
-Current candidates:
+Add a second gateway only when provider availability, payment success, or product
+requirements justify it. Keep the same PaymentGateway contract and callback
+reconciliation rules.
 
-```text
-AE  = Atelier Editorial
-NAE = NOVA Atelier Editorial
-QG  = Quiet Grid
-```
-
-All three directions are considered equal candidates until the final design review.
+### CDN and media processing
 
-No direction may receive a reduced feature set merely because another direction appears more promising.
+Add CDN, derivatives, and processing workers when image size, upload volume, or
+mobile performance measurements show a material problem.
 
----
+### Service decomposition
 
-# Visual design artifact workflow
-
-Every new non-trivial visual page, flow, component family, or direction must move through a design artifact before production code is written.
-
-```text
-define the exact page, states, content and target viewports
-→ inspect any user-supplied reference as the primary constraint
-→ create one concrete design image/mockup when no exact reference exists
-→ review the artifact in desktop and relevant mobile RTL compositions
-→ implement the same composition with the shared contracts and Tailwind primitives
-→ render at the target viewports
-→ compare the render with the design artifact and iterate
-```
+Split a module into a service only when independent deployment/scaling, failure
+isolation, ownership, or regulatory boundaries justify the distributed-system
+cost. First preserve the module contract and an anti-corruption boundary.
 
-The generated image is the design target for implementation; it is not a source of product truth, a replacement for real API data, or evidence that the runtime flow is complete. Generated concepts must preserve NOVA's functional, RTL, accessibility, performance and responsive constraints. Keep one primary artifact per design decision and attach its path/reference plus same-viewport comparison evidence to the task or PR. Do not generate visual artifacts for non-visual work or create speculative variants without a concrete design decision.
+### Kubernetes or multi-region deployment
 
-If an exact user reference is supplied, it remains authoritative for the requested fidelity and may be used directly as the artifact. If no reference is supplied, visual work should not wait for one: generate the artifact from the relevant product/architecture brief. Only block before visual implementation when the required design capability or a necessary product constraint is genuinely unavailable.
+Adopt only when multiple hosts, autonomous scaling, failure-domain strategy, or
+an operations team capable of maintaining the platform is actually required.
 
 ---
 
-# Why three complete directions
+## 21. Durable Rules for Future Changes
 
-A homepage-only or PDP-only comparison is not sufficient for NOVA.
+Before changing architecture, answer:
 
-A visual direction that looks strong on a marketing page may perform poorly when applied to:
+1. What measured problem exists?
+2. Which module owns the behavior today?
+3. Which contract or invariant changes?
+4. What users and consumers are affected?
+5. What migration and rollback path exists?
+6. What new operational complexity is introduced?
+7. What validation proves the change?
+8. What is the trigger for revisiting the decision?
 
-- Product comparison.
-- Dense filters.
-- Variant selection.
-- Checkout.
-- Account pages.
-- Order tracking.
-- Forms.
-- Error states.
-- Mobile navigation.
-- Admin tables.
-- Inventory operations.
-- RTL content.
-- Long Persian text.
+When a durable cross-module decision changes, add or update an ADR in
+docs/adr/. Update this document when the architecture itself changes.
 
-Therefore all three design candidates must demonstrate how their visual language behaves across the complete ecommerce system.
+Do not add a technology because a reference platform uses it. Adopt it only
+when NOVA's requirements and measured evidence justify the complexity.
 
-The selected production direction should win because it performs better as a **complete product system**, not merely because its homepage looks better.
-
 ---
-
-# Shared functional contract
-
-All three directions must support exactly the same product functionality.
-
-Differences between directions are limited primarily to:
-
-- Visual hierarchy.
-- Typography.
-- Spacing.
-- Density.
-- Image treatment.
-- Merchandising emphasis.
-- Navigation presentation.
-- Card styling.
-- Color system.
-- Surface treatment.
-- Motion.
-- Editorial expression.
-- Component composition.
-
-Functional behavior must remain equivalent.
-
-For example:
-
-```text
-AE cart behavior
-=
-NAE cart behavior
-=
-QG cart behavior
-```
-
-while the visual presentation may differ significantly.
-
----
-
-# Required customer screens
-
-Every direction must include:
-
-```text
-HOME
-
-CATEGORY_WOMEN
-CATEGORY_MEN
-CATEGORY_CHILDREN
-
-PLP_WOMEN
-PLP_MEN
-PLP_CHILDREN
-
-SEARCH
-
-PDP
-
-CART_DRAWER
-CART
-
-AUTH
-
-CHECKOUT_ADDRESS
-CHECKOUT_SHIPPING
-CHECKOUT_PAYMENT
-
-CONFIRMATION
-TRACKING
-
-ACCOUNT_DASHBOARD
-PROFILE
-ADDRESSES
-ORDERS
-ORDER_DETAIL
-
-SUPPORT
-SECURITY
-NOTIFICATIONS
-
-CAMPAIGN
-GUIDE
-ARTICLE
-LOOKBOOK
-
-ABOUT
-TRUST
-SHIPPING_POLICY
-RETURNS_POLICY
-SIZE_GUIDE
-CARE_GUIDE
-
-FAQ
-CONTACT
-PRIVACY
-TERMS
-
-NOT_FOUND
-OFFLINE
-MAINTENANCE
-```
-
-A direction is not considered complete if one of these required product surfaces is missing.
-
----
-
-# Required admin screens
-
-Every direction must also demonstrate the full admin surface:
-
-```text
-ADMIN_LOGIN
-
-ADMIN_DASHBOARD
-
-ADMIN_PRODUCTS
-ADMIN_PRODUCT_EDIT
-
-ADMIN_VARIANTS
-ADMIN_MEDIA
-ADMIN_CATEGORIES
-ADMIN_INVENTORY
-
-ADMIN_ORDERS
-ADMIN_ORDER_DETAIL
-
-ADMIN_PAYMENTS
-ADMIN_PROMOTIONS
-
-ADMIN_CUSTOMERS
-ADMIN_CUSTOMER_DETAIL
-
-ADMIN_CONTENT
-ADMIN_AUDIT
-ADMIN_OPERATIONS
-```
-
-The admin experience may have a different visual density from the storefront while still belonging to the same overall direction.
-
----
-
-# Required viewport coverage
-
-Each direction must be evaluated at:
-
-```text
-1440 desktop
-1280 desktop
-1024 compact desktop
-768 tablet
-390 mobile
-360 narrow mobile
-```
-
-Not every state needs a completely independent handcrafted frame at every width when responsive behavior can be deterministically derived.
-
-However, high-risk screens must have explicit frames.
-
-At minimum:
-
-```text
-HOME
-PLP
-PDP
-CART
-CHECKOUT
-ORDER_DETAIL
-ACCOUNT
-ADMIN_PRODUCTS
-ADMIN_PRODUCT_EDIT
-ADMIN_ORDERS
-ADMIN_ORDER_DETAIL
-```
-
-must receive explicit responsive review.
-
----
-
-# Required state coverage
-
-Each direction must support the same baseline state matrix.
-
-## Discovery
-
-Home, category, PLP, and search:
-
-```text
-default
-loading
-slow network
-slow image
-empty
-no results
-request error
-offline
-```
-
-## PDP
-
-```text
-default
-variant not selected
-color selected
-size selected
-size error
-low stock
-out of stock
-sale
-gallery loading
-gallery failure
-zoom
-add-to-cart success
-price changed
-stock changed
-request error
-offline
-```
-
-## Cart
-
-```text
-default
-empty
-quantity updating
-item removed
-stock conflict
-price change
-coupon success
-coupon error
-recalculating
-request error
-offline
-```
-
-## Checkout
-
-```text
-saved address
-new address
-validation error
-unsupported region
-
-shipping loading
-shipping unavailable
-quote expired
-
-payment ready
-processing
-redirecting
-pending verification
-failed
-cancelled
-timeout
-
-stock conflict
-price conflict
-offline
-```
-
-## Order and tracking
-
-```text
-paid
-pending
-confirmed
-preparing
-shipped
-delayed
-shipment exception
-delivered
-cancelled
-returned
-support handoff
-```
-
-## Account and content
-
-```text
-default
-loading
-empty
-validation error
-permission error
-request error
-offline
-maintenance
-success
-```
-
-## Admin
-
-```text
-login invalid
-login rate limited
-login locked
-MFA required
-MFA invalid
-
-table loading
-table empty
-table error
-
-draft
-invalid
-saving
-saved
-publish blocked
-
-media upload failure
-inventory discrepancy
-payment mismatch
-refund pending
-refund failed
-
-permission denied
-audit success
-```
-
----
-
-# Equal-scope comparison rule
-
-The three directions must be compared at equivalent scope.
-
-Do not compare:
-
-```text
-Direction A:
-complete desktop + mobile ecommerce
-
-against
-
-Direction B:
-homepage concept
-
-against
-
-Direction C:
-partial component system
-```
-
-Before final selection, all three candidates must reach the same defined design-completeness gate.
-
----
-
-# Shared customer terminology
-
-Customer-visible audience labels are fixed:
-
-```text
-زنانه
-مردانه
-بچگانه
-```
-
-Use these exact labels consistently in all directions.
-
-They should appear consistently in:
-
-- Navigation.
-- Category cards.
-- Breadcrumbs.
-- Filters.
-- Campaigns.
-- Search.
-- Fixtures.
-- Admin taxonomy.
-
-This prevents copy differences from distorting the visual comparison.
-
----
-
-# Shared data fixtures
-
-All three directions should use the same representative catalog fixtures whenever possible.
-
-For example:
-
-```text
-same product
-same image
-same title
-same price
-same sale
-same stock state
-same sizes
-same colors
-same delivery promise
-```
-
-This is important.
-
-If AE uses premium photography and QG uses poor placeholder assets, the comparison becomes meaningless.
-
-The same content should be placed into each visual system unless a direction specifically demonstrates an intentional merchandising treatment.
-
----
-
-# Shared interaction contract
-
-Functional interaction behavior is shared.
-
-Examples:
-
-## Product selection
-
-Add-to-cart remains unavailable until all required variant options are selected.
-
-## Stock conflicts
-
-A changed stock state keeps the customer in context and explains what changed.
-
-## Cart merge
-
-Guest and customer carts use the same backend merge behavior.
-
-## Checkout
-
-All directions use the same checkout ordering and validation behavior.
-
-## Payment
-
-All directions show distinct states for:
-
-```text
-processing
-pending verification
-failed
-cancelled
-timeout
-```
-
-## Dialog behavior
-
-All directions must:
-
-- Trap keyboard focus.
-- Support Escape when dismissible.
-- Restore focus to the trigger.
-- Provide an explicit close action.
-- Not depend solely on backdrop clicking.
-
----
-
-# Shared component behavior
-
-The three systems may style components differently, but should use the same behavioral component contracts.
-
-Examples:
-
-```text
-Button
-IconButton
-Field
-Select
-ProductCard
-MediaGallery
-SizeSelector
-CartItem
-OrderSummary
-Dialog
-Drawer
-Sheet
-DataTable
-StatusBadge
-Price
-QuantityControl
-Pagination
-Breadcrumb
-```
-
-The implementation should ideally expose one behavioral API while allowing direction-specific visual composition during design evaluation.
-
----
-
-# Design architecture
-
-The design candidates are **visual adapters over a shared product contract**.
-
-Conceptually:
-
-```text
-Shared behavior
-      |
-      +----------------+
-      |       |        |
-      v       v        v
-     AE      NAE       QG
-```
-
-Do not build three independent checkout implementations.
-
-Do not build three separate cart state systems.
-
-Do not build three separate authentication systems.
-
-Do not build three separate accessibility models.
-
-The design exploration can be broad while application behavior stays centralized.
-
----
-
-# Direction-specific freedom
-
-Each direction is allowed to strongly differ in:
-
-## AE — Atelier Editorial
-
-May prioritize:
-
-- Large editorial photography.
-- Story-led merchandising.
-- High-fashion visual rhythm.
-- Larger whitespace.
-- More expressive campaign composition.
-- Premium typography.
-- Reduced visible UI chrome.
-
-It must still remain practical for comparison, checkout, accessibility, and admin work.
-
----
-
-## NAE — NOVA Atelier Editorial
-
-May prioritize:
-
-- Editorial identity with stronger ecommerce practicality.
-- Clearer information density.
-- Stronger product comparison.
-- Balanced imagery and commerce information.
-- Calm premium styling.
-- More implementation-aligned component behavior.
-
----
-
-## QG — Quiet Grid
-
-May prioritize:
-
-- Systematic grid.
-- Strong information hierarchy.
-- High product-comparison efficiency.
-- Lower visual noise.
-- More consistent density.
-- Faster browsing.
-- Strong utilitarian admin compatibility.
-
-It should still feel branded rather than generic.
-
----
-
-# Figma construction contract
-
-Each design direction must maintain its own complete Figma section or page.
-
-Recommended Figma structure:
-
-```text
-00 — Foundations
-
-01 — Shared Content Fixtures
-
-10 — AE
-  10.1 Foundations
-  10.2 Components
-  10.3 Storefront
-  10.4 Checkout
-  10.5 Account
-  10.6 Content
-  10.7 Admin
-  10.8 States
-  10.9 Responsive QA
-
-20 — NAE
-  20.1 Foundations
-  20.2 Components
-  20.3 Storefront
-  20.4 Checkout
-  20.5 Account
-  20.6 Content
-  20.7 Admin
-  20.8 States
-  20.9 Responsive QA
-
-30 — QG
-  30.1 Foundations
-  30.2 Components
-  30.3 Storefront
-  30.4 Checkout
-  30.5 Account
-  30.6 Content
-  30.7 Admin
-  30.8 States
-  30.9 Responsive QA
-
-90 — Comparison
-
-99 — Approved Production Direction
-```
-
-This allows direct comparison without mixing component ownership.
-
----
-
-# Frame metadata
-
-Every approval frame should record:
-
-```text
-Screen ID
-Direction
-Viewport
-Scroll state
-Data state
-RTL mode
-Grid
-Component set
-Content fixture
-Asset fixture
-Review status
-```
-
-Example:
-
-```text
-Screen ID:
-PDP
-
-Direction:
-QG
-
-Viewport:
-390 × 844
-
-State:
-low-stock
-
-Content:
-PRODUCT_FIXTURE_004
-
-Review:
-pending
-```
-
----
-
-# Exact geometry and QA
-
-Exact x/y coordinates, screenshot scroll positions, and long-page capture geometry may remain deterministic for design QA.
-
-These values belong primarily in the corresponding design documentation:
-
-```text
-docs/designs/atelier-editorial.md
-docs/designs/nova-atelier-editorial.md
-docs/designs/quiet-grid.md
-```
-
-They are valid because NOVA intentionally wants detailed design comparison.
-
-However, implementation should translate those measurements into:
-
-- Grid rules.
-- Spacing tokens.
-- Responsive constraints.
-- Min/max sizing.
-- Sticky behavior.
-- Content limits.
-
-rather than blindly hardcoding long-page absolute coordinates into React components.
-
----
-
-# Design QA requirements
-
-Each direction must independently pass:
-
-## RTL
-
-- Persian navigation.
-- Breadcrumbs.
-- Carousels.
-- Pagination.
-- Timelines.
-- Tables.
-- Mixed SKU/reference values.
-- Mixed phone numbers.
-- Prices.
-
-## Accessibility
-
-Target:
-
-```text
-WCAG 2.2 Level AA
-```
-
-Check:
-
-- Contrast.
-- Keyboard navigation.
-- Focus.
-- Modal focus trap.
-- Focus return.
-- Touch targets.
-- Form labels.
-- Validation.
-- Reduced motion.
-- Screen-reader structure.
-
-## Responsive
-
-Check:
-
-```text
-1440
-1280
-1024
-768
-390
-360
-```
-
-At 360:
-
-- No horizontal clipping.
-- Persian labels remain readable.
-- Prices remain readable.
-- Product controls remain usable.
-- Primary CTA remains accessible.
-
-## Content stress tests
-
-Each direction should be tested with:
-
-- Very long Persian product names.
-- Long category names.
-- Sale pricing.
-- Expensive pricing.
-- Low stock.
-- No stock.
-- Multiple color swatches.
-- Many size options.
-- Long delivery text.
-- Long validation errors.
-- Missing images.
-
----
-
-# Three-direction visual regression
-
-Maintain independent screenshot baselines:
-
-```text
-visual/
-  ae/
-  nae/
-  qg/
-```
-
-Snapshots should cover representative:
-
-```text
-desktop
-tablet
-mobile
-narrow mobile
-```
-
-and important states.
-
-Visual regression should detect unintended changes inside a direction without forcing the three directions to visually match each other.
-
----
-
-# Design comparison scorecard
-
-When all three directions reach the completeness gate, evaluate them with the same scorecard.
-
-Recommended weighting:
-
-| Criterion                      | Weight |
-| ------------------------------ | -----: |
-| Product clarity                |    15% |
-| Mobile usability               |    15% |
-| Persian RTL quality            |    10% |
-| Brand distinctiveness          |    10% |
-| Product comparison             |    10% |
-| Checkout clarity               |    10% |
-| Accessibility                  |    10% |
-| Responsive robustness          |     5% |
-| Admin usability                |     5% |
-| Implementation maintainability |     5% |
-| Performance implications       |     5% |
-
-Total:
-
-```text
-100%
-```
-
-Do not select purely from subjective visual preference.
-
----
-
-# Product clarity review
-
-Evaluate:
-
-- Is price obvious?
-- Is sale state obvious?
-- Is selected variant obvious?
-- Is stock obvious?
-- Is delivery expectation visible?
-- Is return information easy to find?
-- Is the primary CTA dominant?
-- Can users compare products quickly?
-
----
-
-# Mobile review
-
-Evaluate:
-
-- One-hand usability.
-- Sticky purchase controls.
-- Bottom navigation.
-- Filters.
-- Size selection.
-- Cart access.
-- Checkout actions.
-- Persian text wrapping.
-- Keyboard/input behavior.
-
----
-
-# Brand review
-
-Ask:
-
-- Does it look distinctive?
-- Does it look appropriate for clothing?
-- Does it look trustworthy?
-- Does it feel modern without looking like a generic AI-generated template?
-- Can campaigns vary without breaking the system?
-- Can photography lead the experience where appropriate?
-
----
-
-# Admin review
-
-A beautiful storefront direction is not automatically the best system.
-
-Evaluate:
-
-- Product editing.
-- Variant editing.
-- Inventory scanning.
-- Order processing.
-- Payment problems.
-- Customer lookup.
-- Refund operations.
-- Dense table readability.
-
-The selected direction may use a more operational visual mode inside admin while retaining the same design language.
-
----
-
-# Performance review
-
-Design selection should account for technical cost.
-
-Review:
-
-- Number of large above-fold images.
-- Required font files.
-- Animation complexity.
-- Video usage.
-- Blur/backdrop effects.
-- Large DOM structures.
-- Mobile GPU cost.
-- Layout shift risk.
-
-A visually attractive direction that materially harms mobile commerce performance should lose points.
-
----
-
-# Implementation comparison
-
-Before final design selection, implement a representative coded slice of all three directions.
-
-At minimum:
-
-```text
-HOME
-PLP
-PDP
-```
-
-using shared production-grade React components and the same fixtures.
-
-This validates that the design is not only attractive in Figma but also practical in:
-
-- Real browser layout.
-- Real Persian typography.
-- Responsive behavior.
-- Image loading.
-- Accessibility.
-- Actual component architecture.
-
-The implementation experiment should not create three independent applications.
-
-Use one route or preview mechanism to switch visual direction.
-
-Conceptually:
-
-```text
-/design/ae
-/design/nae
-/design/qg
-```
-
-or an equivalent development-only preview system.
-
----
-
-# Final selection gate
-
-No direction wins until all three have:
-
-- Equivalent functional scope.
-- Equivalent representative content.
-- Required responsive coverage.
-- RTL review.
-- Accessibility review.
-- State coverage.
-- Admin review.
-- Performance review.
-- Representative coded preview.
-- Screenshot QA evidence.
-
-Then compare:
-
-```text
-AE
-vs
-NAE
-vs
-QG
-```
-
-using the shared scorecard.
-
----
-
-# After a winner is selected
-
-After final selection:
-
-1. Mark the winning direction as the production baseline.
-2. Preserve the other two as design research/history.
-3. Stop production expansion of the losing directions.
-4. Consolidate production tokens.
-5. Consolidate production components.
-6. Remove development-only direction switches.
-7. Continue QA only against the selected production baseline.
-
-The discarded directions should not remain active production themes unless the business later intentionally introduces multiple storefront themes.
-
----
-
-# Important rule
-
-NOVA is intentionally doing:
-
-```text
-three complete design explorations
-```
-
-but not:
-
-```text
-three independent product architectures
-```
-
-The correct structure is:
-
-```text
-ONE commerce architecture
-ONE behavioral contract
-ONE backend
-ONE application state model
-
-THREE complete visual/product design candidates
-```
-
-This gives NOVA meaningful design choice without tripling engineering complexity.
-
-## Commerce architecture references
-
-- Medusa
-  https://github.com/medusajs/medusa
-
-- Vendure
-  https://github.com/vendurehq/vendure
-
-## Frameworks
-
-- NestJS
-  https://docs.nestjs.com/
-
-- Prisma
-  https://www.prisma.io/docs/
-
-- Vite
-  https://vite.dev/
-
-- TanStack Query
-  https://tanstack.com/query/
-
-- TanStack Table
-  https://tanstack.com/table/
-
-- Zustand
-  https://zustand.docs.pmnd.rs/
-
-- shadcn/ui
-  https://ui.shadcn.com/
-
-- Tailwind CSS
-  https://tailwindcss.com/
-
-## SEO
-
-- Google Search ecommerce documentation
-  https://developers.google.com/search/docs/specialty/ecommerce
-
-- JavaScript SEO basics
-  https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics
-
-- Product structured data
-  https://developers.google.com/search/docs/appearance/structured-data/product
-
-- Sitemaps
-  https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview
-
-## Accessibility
-
-- WCAG 2.2
-  https://www.w3.org/TR/WCAG22/
-
-## Iran domain/infrastructure references
-
-- IANA `.ir` record
-  https://www.iana.org/domains/root/db/ir.html
-
-Provider-specific documentation must be rechecked at procurement time because pricing, policies, availability, and service guarantees can change.
-
----
-
-# 117. Final implementation rule
-
-NOVA should begin implementation after its **core domain invariants** are resolved.
-
-It should not wait for every provider, marketing, design, or commercial choice to become final.
-
-Build deep stable boundaries first:
-
-```text
-Identity
-Catalog
-Inventory
-Cart
-Checkout
-Orders
-Payments
-Shipping
-Returns
-```
 
-Keep external dependencies replaceable.
+## 22. Evidence and Related Decisions
 
-Keep server commerce state authoritative.
+Primary project evidence:
 
-Avoid speculative abstractions.
+- [search.md](search.md)
+- [README.md](README.md)
+- [docs/adr/0001-foundation.md](docs/adr/0001-foundation.md)
+- [docs/adr/0005-inventory-reservation-concurrency.md](docs/adr/0005-inventory-reservation-concurrency.md)
+- [docs/adr/0006-checkout-transaction-boundaries.md](docs/adr/0006-checkout-transaction-boundaries.md)
+- [docs/adr/0007-staff-authentication-and-sessions.md](docs/adr/0007-staff-authentication-and-sessions.md)
+- [docs/adr/0009-payment-callbacks-and-reconciliation.md](docs/adr/0009-payment-callbacks-and-reconciliation.md)
+- [docs/adr/0014-notification-outbox.md](docs/adr/0014-notification-outbox.md)
+- [docs/adr/0015-coupon-redemption-lifecycle.md](docs/adr/0015-coupon-redemption-lifecycle.md)
+- [docs/adr/0018-cart-merge-conflict-contract.md](docs/adr/0018-cart-merge-conflict-contract.md)
+- [docs/adr/0019-catalog-search-suggestions.md](docs/adr/0019-catalog-search-suggestions.md)
+- [docs/adr/0020-seo-metadata-and-redirects.md](docs/adr/0020-seo-metadata-and-redirects.md)
+- [docs/adr/0024-hybrid-rendering-indexability.md](docs/adr/0024-hybrid-rendering-indexability.md)
+- [packages/db/prisma/schema.prisma](packages/db/prisma/schema.prisma)
+- [infra/docker/compose.yml](infra/docker/compose.yml)
 
-Ship the smallest architecture that can safely process real customer money, inventory, orders, and refunds.
+External evidence informing the architecture:
 
-Then expand using real product evidence.
+- [Medusa architecture](https://docs.medusajs.com/learn/introduction/architecture)
+- [Saleor core](https://github.com/saleor/saleor)
+- [Vendure core and state-machine model](https://github.com/vendurehq/vendure)
+- [PostgreSQL pg_trgm](https://www.postgresql.org/docs/current/pgtrgm.html)
+- [AWS transactional outbox](https://docs.aws.amazon.com/prescriptive-guidance/latest/cloud-design-patterns/transactional-outbox.html)
+- [OWASP CSRF guidance](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
+- [Cloudflare R2 presigned URLs](https://developers.cloudflare.com/r2/api/s3/presigned-urls/)
+- [Docker Compose in production](https://docs.docker.com/compose/how-tos/production/)
+- [OpenTelemetry JavaScript](https://opentelemetry.io/docs/languages/js/)

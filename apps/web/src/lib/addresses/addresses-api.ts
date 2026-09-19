@@ -1,0 +1,14 @@
+export { customerAddressesPath } from './addresses-api-shared';
+export { customerAddressPath } from './addresses-api-functions/customer-address-path';
+export { customerAddressDefaultPath } from './addresses-api-functions/customer-address-default-path';
+export { fetchCustomerAddresses } from './addresses-api-functions/fetch-customer-addresses';
+export { createCustomerAddress } from './addresses-api-functions/create-customer-address';
+export { updateCustomerAddress } from './addresses-api-functions/update-customer-address';
+export { setCustomerAddressDefault } from './addresses-api-functions/set-customer-address-default';
+export { removeCustomerAddress } from './addresses-api-functions/remove-customer-address';
+export { invalidateCustomerAddresses } from './addresses-api-functions/invalidate-customer-addresses';
+export { useCustomerAddresses } from './addresses-api-functions/use-customer-addresses';
+export { useCreateCustomerAddress } from './addresses-api-functions/use-create-customer-address';
+export { useUpdateCustomerAddress } from './addresses-api-functions/use-update-customer-address';
+export { useSetCustomerAddressDefault } from './addresses-api-functions/use-set-customer-address-default';
+export { useRemoveCustomerAddress } from './addresses-api-functions/use-remove-customer-address';

@@ -1,0 +1,21 @@
+{
+  "name": "@nova/admin",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@nova/api-client": "workspace:*",
+    "@nova/ui": "workspace:*",
+    "@tanstack/react-query": "^5.62.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "5.4.21"
+  }
+}

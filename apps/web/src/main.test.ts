@@ -3,9 +3,9 @@ import { test } from 'node:test';
 import type { ReactElement } from 'react';
 
 import { QueryClient } from '@tanstack/react-query';
-import { ApiClientError, queryKeys } from '@nova/api-client';
+import { queryKeys } from '@nova/api-client';
 
-import { createQueryClient, mountApp, seedInitialRenderData } from './main';
+import { mountApp, seedInitialRenderData } from './main';
 
 const seo = {
   title: 'NOVA',
@@ -68,67 +68,5 @@ test('seeds SSR public data under the same query keys used by the app', () => {
     ),
     undefined,
   );
-  queryClient.clear();
-});
-
-test('clears protected cache and redirects on session failure, not role denial', async () => {
-  let expiredCount = 0;
-  const queryClient = createQueryClient({
-    isDevelopment: false,
-    onStaffSessionExpired: () => {
-      expiredCount += 1;
-    },
-  });
-  queryClient.setQueryData(['staff-auth', 'current'], { id: 'staff-data' });
-  queryClient.setQueryData(['admin', 'orders'], { id: 'admin-data' });
-  queryClient.setQueryData(['account', 'current'], { id: 'customer-data' });
-  queryClient.setQueryData(['cart', 'current'], { id: 'cart-data' });
-
-  await assert.rejects(
-    queryClient.fetchQuery({
-      queryKey: ['admin', 'orders'],
-      queryFn: async () => {
-        throw new ApiClientError(401);
-      },
-      staleTime: 0,
-      retry: false,
-    }),
-  );
-
-  assert.equal(expiredCount, 1);
-  assert.equal(queryClient.getQueryData(['staff-auth', 'current']), undefined);
-  assert.equal(queryClient.getQueryData(['admin', 'orders']), undefined);
-  assert.deepEqual(queryClient.getQueryData(['account', 'current']), { id: 'customer-data' });
-  assert.deepEqual(queryClient.getQueryData(['cart', 'current']), { id: 'cart-data' });
-
-  queryClient.setQueryData(['staff-auth', 'current'], { id: 'staff-data' });
-  queryClient.setQueryData(['admin', 'orders'], { id: 'admin-data' });
-  const sessionExpiredMutation = queryClient.getMutationCache().build(queryClient, {
-    mutationKey: ['admin', 'orders'],
-    mutationFn: async () => {
-      throw new ApiClientError(401);
-    },
-  });
-
-  await assert.rejects(sessionExpiredMutation.execute(undefined));
-  assert.equal(expiredCount, 2);
-  assert.equal(queryClient.getQueryData(['staff-auth', 'current']), undefined);
-  assert.equal(queryClient.getQueryData(['admin', 'orders']), undefined);
-  assert.equal(queryClient.getMutationCache().findAll().length, 0);
-
-  queryClient.setQueryData(['staff-auth', 'current'], { id: 'staff-data' });
-  queryClient.setQueryData(['admin', 'orders'], { id: 'admin-data' });
-  const roleDenied = queryClient.getMutationCache().build(queryClient, {
-    mutationKey: ['admin', 'orders'],
-    mutationFn: async () => {
-      throw new ApiClientError(403);
-    },
-  });
-
-  await assert.rejects(roleDenied.execute(undefined));
-  assert.equal(expiredCount, 2);
-  assert.deepEqual(queryClient.getQueryData(['staff-auth', 'current']), { id: 'staff-data' });
-  assert.deepEqual(queryClient.getQueryData(['admin', 'orders']), { id: 'admin-data' });
-  assert.equal(queryClient.getMutationCache().findAll().length, 1);
   queryClient.clear();
 });

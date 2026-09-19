@@ -29,11 +29,11 @@ import {
   type InitialRenderContext,
   type PublicRenderRoute,
   type SeoDocument,
-} from '../seo/metadata';
+} from '../lib/seo/metadata';
 import {
   getRenderableContentBlocks,
   type RenderableContentBlock,
-} from '../features/content/content-blocks';
+} from '../lib/content/content-blocks';
 
 export type Fetcher = (input: string, init?: RequestInit) => Promise<Response>;
 

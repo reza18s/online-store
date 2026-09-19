@@ -253,6 +253,39 @@ Required distinguishing signals:
 - Magazine-style captions, folio numbers, rules, and controlled negative space.
 - Transactional pages become quieter and more systematic, but keep the ivory/oxblood identity.
 
+## 1.3 Implementation boundary from the NOVA launch plan
+
+The visual system is implemented across two independently served frontend
+surfaces. This is an architectural design constraint, not a second visual
+direction:
+
+- `apps/web` owns the public storefront, customer account, cart, checkout,
+  order, and indexable editorial surfaces. It runs on `127.0.0.1:5173` in
+  local development and is the only surface that owns public SSR metadata and
+  crawler output.
+- `apps/admin` owns staff login, the permission-aware admin shell, catalog,
+  inventory, order, payment/refund, support, content, SEO, and audit surfaces.
+  It runs independently on `127.0.0.1:5174`, remains `noindex`, and must not be
+  represented as an admin route inside the public storefront bundle.
+- `packages/ui` is the shared primitive boundary. `packages/api-client` is the
+  shared typed transport boundary. Both frontends consume the shared NestJS
+  API on `127.0.0.1:4000`; neither frontend owns a duplicate business contract.
+- React Router is the canonical route owner. Clean public and admin paths are
+  the design and implementation reference; existing hash paths remain a
+  compatibility adapter only and must not change the frame hierarchy or
+  metadata contract.
+- TanStack Query owns server state in each frontend. Zustand is limited to
+  cart and UI intent. Loading, empty, error, offline, permission, stock,
+  payment, and return states are designed as first-class compositions rather
+  than preview-only placeholders.
+- Synthetic fixtures may support development and test review only. The design
+  must never imply that fixture data, fake credentials, or local payment
+  behavior is valid for staging or production.
+
+The route and component IDs in this document remain visual handoff IDs. Their
+runtime ownership follows the boundary above, and every admin frame is an
+`apps/admin` frame even when it reuses a primitive from `packages/ui`.
+
 ## 2. Audience and catalog
 
 Primary customer navigation:
@@ -752,7 +785,13 @@ Customer account components reuse shared primitives and commerce components such
 
 `Admin Sidebar`, `Admin Topbar`, `Stat Card`, `Admin Filter Bar`, `Data Table`, `Status Badge`, `Product Form Section`, `Media Uploader`, `Variant Matrix`, `Inventory Cell`, `Order Event`, `Internal Note`, `Customer PII Field`, `Content Block`, and `Audit Event`.
 
-Admin components may be denser than storefront components but consume the same typography, state, focus, spacing, and accessibility tokens unless this specification explicitly defines an admin-only override.
+These compositions are owned by `apps/admin`; shared primitives such as
+`Button`, `Input`, `Card`, `Sheet`, `Badge`, and `Table` are consumed from the
+shared UI boundary rather than copied into the storefront. Admin components
+may be denser than storefront components but consume the same typography,
+state, focus, spacing, and accessibility tokens unless this specification
+explicitly defines an admin-only override. No admin page, route composition,
+staff query cache, or staff-session boundary belongs in `apps/web`.
 
 ### 9.5 System and edge-state components
 
@@ -915,6 +954,13 @@ P1 frames belong in a separate section but use the same design system: wishlist,
 
 ## 12. Admin page specifications
 
+These screens belong to the independent `apps/admin` frontend and use the
+shared Atelier primitives without becoming part of the public storefront.
+Canonical admin paths are rooted at `/admin`; `#admin/...` links may remain as
+a compatibility adapter during migration. Admin is always `noindex`, uses a
+separate staff session and query client, and consumes the shared API rather
+than storefront fixtures in staging or production.
+
 Admin uses a `240 px` sidebar, `64 px` topbar, `32 px` content padding, `48 px` dense rows, and `56 px` comfortable rows.
 
 | Page | Required content |
@@ -975,6 +1021,11 @@ Admin prototypes:
 3. New order → paid → preparing → shipped.
 4. Payment mismatch → attempt detail → status verification.
 5. Edit seasonal campaign → preview → publish.
+
+These flows are reviewed in the admin frontend at the `/admin/...` route
+family. They must preserve role boundaries for SUPPORT, OPERATIONS, and ADMIN;
+the design must show forbidden, expired-session, loading, and API-error states
+without exposing protected customer or payment data.
 
 ## 15. Completion criteria
 
@@ -1143,30 +1194,35 @@ For every `AE/<Screen>/<Viewport>/<State>` frame, record the direct node URL, ow
 - loading, empty, offline, error, stock-conflict, payment-conflict, and success frames are linked;
 - no unresolved issue is hidden in a Figma comment instead of this handoff table.
 
-## 17. Coded preview delivery (2026-09-06)
+## 17. Coded preview and implementation alignment (revised 2026-09-19)
 
-This section records the browser preview delivered in `apps/web`. It is a
-dependency-free Bun implementation for reviewing the complete page family
-before production React, API, authentication, and persistence work begins.
-The preview follows the supplied warm-ivory clothing reference: a compact
-centered header, oxblood editorial hero, portrait editorial image blocks, Persian RTL
-copy, restrained type sizes, and direct paths to the customer and admin
-surfaces. It is an implementation preview, not a replacement for the
-editable Penpot frames or the production architecture.
+This section records how the Atelier design handoff maps to the current NOVA
+implementation plan. The coded review surface is split between two independent
+frontends; it is not a claim that the public web bundle serves the admin
+application. The preview follows the supplied warm-ivory clothing reference:
+a compact centered header, oxblood editorial hero, portrait editorial image
+blocks, Persian RTL copy, restrained type sizes, and direct paths to the
+customer and staff surfaces. It remains a visual and interaction handoff, not
+a replacement for the editable Penpot frames, API contracts, or release gates.
 
 ### 17.1 Delivered route map
 
-| Surface | Preview routes | Purpose |
+| Surface | Canonical route family | Compatibility / purpose |
 | --- | --- | --- |
-| Home | `#home` | Hero, audience rail, fresh arrivals, fabric story, trust, newsletter, and footer |
-| Category landing | `#category/women`, `#category/men`, `#category/children` | Category portrait, subcategories, featured products, and size-guide entry |
-| Product listing | `#products`, `#products/women`, `#products/men`, `#products/children`, `#products/new`, `#products/sale`, `#products/accessories` | Filtered catalog, sort control, filter rail, product cards, and empty-state contract |
-| Product detail | `#product/linen-overshirt` and the other product IDs | Gallery, size selection, price, stock, delivery promises, details, and related products |
-| Cart and checkout | `#cart`, `#checkout/address`, `#checkout/shipping`, `#checkout/payment`, `#checkout/confirmation` | Quantity controls, order summary, address, shipping, payment, and success state |
-| Account and orders | `#account`, `#account/profile`, `#account/addresses`, `#account/orders`, `#account/support`, `#account/security`, `#account/notifications`, `#order/NV-1405-2481` | Account shell, saved information, support, security, notifications, and tracking |
-| Editorial and utility | `#campaign`, `#guide`, `#article`, `#lookbook` | Collection story, size guide, NOVA approach, and lookbook reading pages |
-| Admin | `#admin`, `#admin/products`, `#admin/categories`, `#admin/inventory`, `#admin/orders`, `#admin/payments`, `#admin/promotions`, `#admin/customers`, `#admin/content`, `#admin/audit`, `#admin/operations` | Dashboard, operational tables, filters, status cells, and review queues |
-| Admin detail flows | `#admin/login`, `#admin/products/new`, `#admin/products/linen-overshirt/edit`, `#admin/products/linen-overshirt/variants`, `#admin/products/linen-overshirt/media`, `#admin/orders/NV-1405-2481` | Login shell, product editor variants/media, and order detail |
+| Public home | `/` | Hash `#home` is compatibility-only; hero, audience rail, fresh arrivals, trust, journal, and footer |
+| Category landing | `/category/women`, `/category/men`, `/category/children` | Hash category paths remain readable during migration; portrait, subcategories, featured products, and guide entry |
+| Product listing | `/products`, `/products/women`, `/products/men`, `/products/children`, `/products/new`, `/products/sale`, `/products/accessories` | Filtered catalog, sorting, pagination, suggestions, and explicit loading/empty/error states |
+| Product detail | `/product/linen-overshirt` and other product slugs | Gallery, variant selection, price, stock, delivery, details, and related products |
+| Cart and checkout | `/cart`, `/checkout/address`, `/checkout/shipping`, `/checkout/payment`, `/checkout/confirmation` | Customer-facing client routes; noindex; authoritative quote, reservation, payment, and recovery states |
+| Account and orders | `/account`, `/account/profile`, `/account/addresses`, `/account/orders`, `/order/NV-1405-2481` | Customer session, saved information, support, security, notifications, and tracking; noindex |
+| Editorial and utility | `/campaign`, `/guide`, `/article`, `/lookbook` | SSR/indexable published content and policy pages; compatibility hashes remain supported |
+| Admin shell (`apps/admin`) | `/admin/login`, `/admin`, `/admin/catalog/products`, `/admin/catalog/categories`, `/admin/inventory`, `/admin/orders`, `/admin/payments`, `/admin/customers`, `/admin/content`, `/admin/audit`, `/admin/operations` | Independent Vite frontend on `127.0.0.1:5174`; staff session, permission gates, operational tables, and review queues |
+| Admin detail flows (`apps/admin`) | `/admin/catalog/products/new`, `/admin/catalog/products/:id`, `/admin/inventory/:variantId`, `/admin/orders/:orderNumber`, `/admin/content/pages/:id` | Product editor, variants/media, inventory, order detail, content/SEO, and audit evidence; `#admin/...` is compatibility-only |
+
+Both frontends consume the shared NestJS API at `127.0.0.1:4000` through
+`packages/api-client`. The design may use local fixture content for isolated
+development/test review, but no fixture route may be presented as a staging or
+production data source.
 
 ### 17.2 Current coded-preview tokens
 
@@ -1190,7 +1246,8 @@ theme package:
 
 This ivory/oxblood translation is the canonical customer-facing system for the
 first design and is aligned with the attached reference. Admin may use the
-same tokens on a denser surface, but must not introduce a competing palette.
+same tokens on a denser named surface, but must not introduce a competing
+palette or silently alter the customer-facing aliases.
 
 ### 17.3 Reference image and asset set
 
@@ -1212,17 +1269,28 @@ lazy-loading policy, and a broken-image fallback.
 
 ### 17.4 Preview acceptance checklist
 
-- `bun run dev` serves the preview from `apps/web` on port `5173`.
-- Home, category, catalog, PDP, cart, checkout, account, editorial, and admin
-  routes render without a backend.
+- `bun run dev` serves only the public `apps/web` frontend on port `5173`.
+- `bun run dev:admin` serves only the independent `apps/admin` frontend on
+  port `5174`.
+- React Router owns the canonical clean paths in both frontends; hash paths are
+  exercised only as compatibility coverage.
+- Home, category, catalog, PDP, cart, checkout, account, and editorial routes
+  are reviewed in `apps/web`; admin routes are reviewed in `apps/admin`.
 - PDP add-to-cart requires a size selection and shows the Persian error state.
 - Search overlay returns local product results; quantity controls update the
   visible cart count; checkout advances through address, shipping, payment,
   and confirmation.
 - The admin dashboard, tables, product editor, variants/media paths, order
-  detail, and login shell are reachable from the hash routes.
+  detail, content/SEO editor, and login shell are reachable from the canonical
+  `/admin/...` route family, with role-aware forbidden and expired-session
+  states.
 - The primary viewport keeps the reference's compact commerce usefulness but translates it into Atelier's warm ivory, oxblood, restrained-radius editorial
   visual language; the stylesheet contains mobile transitions for the
   `390 px`, `360 px`, `768 px`, and desktop contracts listed above.
-- No backend mutation, payment request, real authentication, or persistent
-  data write is implied by the static preview.
+- The frontend boundaries remain explicit: no admin page or staff-session
+  cache is imported into `apps/web`; both frontends consume the shared API and
+  typed client contract.
+- Loading, empty, offline, permission, stock-conflict, payment-conflict, and
+  provider-failure states are visible in the design review. No backend
+  mutation, payment request, real authentication, or persistent data write is
+  implied by an isolated fixture preview.

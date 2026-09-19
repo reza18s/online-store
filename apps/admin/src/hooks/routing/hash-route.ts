@@ -1,0 +1,7 @@
+export function decodeHashSegment(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}

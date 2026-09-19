@@ -37,6 +37,7 @@ export { isOfflineError } from '../../components/admin/admin-content-seo-page-fu
 export { getAdminContentSeoState } from '../../components/admin/admin-content-seo-page-functions/get-admin-content-seo-state';
 export { isAdminContentSeoEditorInputDisabled } from '../../components/admin/admin-content-seo-page-functions/is-admin-content-seo-editor-input-disabled';
 export { isContentPublishActionDisabled } from '../../components/admin/admin-content-seo-page-functions/is-content-publish-action-disabled';
+export { shouldShowContentEditor } from '../../components/admin/admin-content-seo-page-functions/should-show-content-editor';
 export { formatDate } from '../../components/admin/admin-content-seo-page-functions/format-date';
 export { statusLabel } from '../../components/admin/admin-content-seo-page-functions/status-label';
 export { stateIcon } from '../../components/admin/admin-content-seo-page-functions/state-icon';

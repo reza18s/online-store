@@ -7,6 +7,7 @@ import {
   getPublishReadiness,
   isAdminContentSeoEditorInputDisabled,
   isContentPublishActionDisabled,
+  shouldShowContentEditor,
   isSafeSiteRelativePath,
   normalizeAdminContentSeoView,
   normalizeSiteRelativePath,
@@ -127,4 +128,10 @@ test('does not publish a content draft while its editor has unsaved changes', ()
   assert.equal(isContentPublishActionDisabled(true, false, false), false);
   assert.equal(isContentPublishActionDisabled(true, true, false), true);
   assert.equal(isContentPublishActionDisabled(false, false, false), true);
+});
+
+test('opens the real content editor after starting the first draft', () => {
+  assert.equal(shouldShowContentEditor({ itemCount: 0, selectedId: '', isCreating: false }), false);
+  assert.equal(shouldShowContentEditor({ itemCount: 0, selectedId: '', isCreating: true }), true);
+  assert.equal(shouldShowContentEditor({ itemCount: 1, selectedId: '', isCreating: false }), true);
 });

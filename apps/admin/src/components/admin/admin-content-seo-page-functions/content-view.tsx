@@ -21,10 +21,13 @@ import { adminContentSeoErrorMessage } from './admin-content-seo-error-message';
 
 import { isOfflineError } from './is-offline-error';
 
+import { shouldShowContentEditor } from './should-show-content-editor';
+
 export function ContentView({ canEdit, pageId }: { canEdit: boolean; pageId?: string }) {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<AdminContentStatus | ''>('');
   const [selectedId, setSelectedId] = useState(pageId ?? '');
+  const [isCreating, setIsCreating] = useState(false);
   const queryInput = useMemo(
     () => ({
       page: 1,
@@ -39,21 +42,26 @@ export function ContentView({ canEdit, pageId }: { canEdit: boolean; pageId?: st
   const [editorKey, setEditorKey] = useState(0);
   useEffect(() => {
     setSelectedId(pageId ?? '');
+    setIsCreating(false);
     setEditorKey((key) => key + 1);
   }, [pageId]);
   const select = (id: string) => {
     setSelectedId(id);
+    setIsCreating(false);
     setEditorKey((key) => key + 1);
   };
   const create = () => {
     setSelectedId('');
+    setIsCreating(true);
     setEditorKey((key) => key + 1);
   };
   const onSaved = (page: AdminContentPage) => {
     setSelectedId(page.id);
+    setIsCreating(false);
   };
   const onCreated = (page: AdminContentPage) => {
     setSelectedId(page.id);
+    setIsCreating(false);
     setEditorKey((key) => key + 1);
   };
   if (listQuery.isPending)
@@ -108,7 +116,7 @@ export function ContentView({ canEdit, pageId }: { canEdit: boolean; pageId?: st
           <option value="ARCHIVED">بایگانی شده</option>
         </Select>
       </div>
-      {!items.length && !selectedId ? (
+      {!shouldShowContentEditor({ itemCount: items.length, selectedId, isCreating }) ? (
         <StatePanel
           kind="empty"
           title="هنوز صفحه‌ای ندارید"

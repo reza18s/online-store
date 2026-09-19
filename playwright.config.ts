@@ -7,6 +7,25 @@ const webEndpoint = parseE2eEndpoint(
   process.env.NOVA_E2E_WEB_URL,
   'http://127.0.0.1:5173',
 );
+const adminEndpoint = parseE2eEndpoint(
+  'NOVA_E2E_ADMIN_URL',
+  process.env.NOVA_E2E_ADMIN_URL,
+  'http://127.0.0.1:5174',
+);
+const adminTestFiles = [
+  '**/admin-protected-routes.pw.ts',
+  '**/auth-role-boundaries.pw.ts',
+  '**/authenticated-admin-dashboard-accessibility-qa.pw.ts',
+  '**/authenticated-admin-dashboard-empty-qa.pw.ts',
+  '**/authenticated-admin-dashboard-layout-qa.pw.ts',
+  '**/authenticated-admin-dashboard-qa.pw.ts',
+  '**/authenticated-admin-dashboard-state-qa.pw.ts',
+  '**/authenticated-admin-operations-qa.pw.ts',
+  '**/authenticated-admin-qa.pw.ts',
+  '**/staff-login-api-error-states.pw.ts',
+  '**/staff-login-states.pw.ts',
+  '**/staff-login.pw.ts',
+] as const;
 const browserExecutablePath = process.env.NOVA_E2E_BROWSER_PATH;
 const browserChannel = process.env.NOVA_E2E_BROWSER_CHANNEL;
 
@@ -43,8 +62,14 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'chromium-web',
+      testIgnore: adminTestFiles,
+      use: { ...devices['Desktop Chrome'], baseURL: webEndpoint.safeOrigin },
+    },
+    {
+      name: 'chromium-admin',
+      testMatch: adminTestFiles,
+      use: { ...devices['Desktop Chrome'], baseURL: adminEndpoint.safeOrigin },
     },
   ],
 });

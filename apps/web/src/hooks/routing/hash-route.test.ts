@@ -105,6 +105,11 @@ test('resolves order, return, editorial, state, admin, and fallback routes', () 
     queryString: 'orderNumber=NV-1',
   });
   assertRoute('#return/status', { kind: 'return', status: true });
+  assertRoute('#return/status?orderNumber=NV-1', {
+    kind: 'return',
+    status: true,
+    queryString: 'orderNumber=NV-1',
+  });
   assertRoute('#support', { kind: 'editorial', page: 'support' });
   assertRoute('#state/offline', {
     kind: 'preview-state',

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import {
   ApiClientError,
   type CartView,
@@ -12,6 +12,7 @@ import {
 } from '../../../lib/addresses/addresses-api';
 
 import { useCheckoutQuote, useSubmitCheckout } from '../../../lib/checkout/checkout-api';
+import { trackAnalyticsEvent } from '../../../lib/analytics/analytics';
 import {
   buildCheckoutHref,
   checkoutFormStateFromRoute,
@@ -105,7 +106,32 @@ export function CheckoutPageContent({
     checkoutInput,
     currentStep !== 'address' && Boolean(selectedAddress) && addressesQuery.isSuccess,
   );
-  const quoteExpired = isQuoteExpired(quoteQuery.data);
+  const quoteExpiresAt = quoteQuery.data?.expiresAt;
+  const [quoteClock, setQuoteClock] = useState(() => Date.now());
+  const checkoutStarted = useRef(false);
+
+  useEffect(() => {
+    if (!quoteExpiresAt) return undefined;
+
+    const refreshQuoteClock = () => setQuoteClock(Date.now());
+    refreshQuoteClock();
+    const interval = window.setInterval(refreshQuoteClock, 1_000);
+    return () => window.clearInterval(interval);
+  }, [quoteExpiresAt]);
+
+  useEffect(() => {
+    if (!quoteQuery.data || checkoutStarted.current) return;
+    checkoutStarted.current = true;
+    trackAnalyticsEvent({ name: 'checkout_started', properties: { itemCount: cart.itemCount } });
+  }, [cart.itemCount, quoteQuery.data]);
+
+  const quoteExpired = isQuoteExpired(quoteQuery.data, quoteClock);
+  const quoteRemainingSeconds = quoteExpiresAt
+    ? Math.max(0, Math.ceil((Date.parse(quoteExpiresAt) - quoteClock) / 1_000))
+    : 0;
+  const quoteRemainingLabel = `${new Intl.NumberFormat('fa-IR').format(
+    Math.floor(quoteRemainingSeconds / 60),
+  )} دقیقه و ${new Intl.NumberFormat('fa-IR').format(quoteRemainingSeconds % 60)} ثانیه`;
   const quoteFailure = quoteExpired
     ? ({
         kind: 'quote-expired',
@@ -399,6 +425,12 @@ export function CheckoutPageContent({
               ) : null}
             </>
           )}
+          {quoteQuery.data && !quoteExpired && currentStep !== 'address' ? (
+            <div className="inline-message inline-message--info" role="status">
+              <Icon name="calendar" size={16} /> قیمت فعلی تا {quoteRemainingLabel} معتبر است؛ پس از
+              آن مبلغ و موجودی دوباره بررسی می‌شود.
+            </div>
+          ) : null}
           {activeFailure && failureSource !== 'address' ? (
             <FailurePanel
               failure={activeFailure}

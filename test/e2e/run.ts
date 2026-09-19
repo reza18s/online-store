@@ -55,6 +55,17 @@ export function probeMatches(
   return result.status === expectedStatus && result.body.includes(bodyMarker);
 }
 
+export function shellMatches(
+  result: Pick<ProbeResult, 'status' | 'body'>,
+  expectedStatus: number,
+  bodyMarkers: readonly string[],
+): boolean {
+  return (
+    result.status === expectedStatus &&
+    bodyMarkers.every((bodyMarker) => result.body.includes(bodyMarker))
+  );
+}
+
 async function probe(url: string): Promise<ProbeResult> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
@@ -168,16 +179,25 @@ async function checkUnauthenticatedApiBoundaries(apiEndpoint: E2eEndpoint): Prom
 async function checkStorefrontRootShell(webEndpoint: E2eEndpoint): Promise<string[]> {
   const failures: string[] = [];
   const result = await probe(endpointUrl(webEndpoint, '/'));
-  const hasRoot =
-    result.body.includes('id="root"') &&
-    result.body.includes('lang="fa"') &&
-    result.body.includes('dir="rtl"');
-  if (!result.ok || result.status !== 200 || !hasRoot) {
+  if (!result.ok || !shellMatches(result, 200, ['id="root"', 'lang="fa"', 'dir="rtl"'])) {
     failures.push(
       `storefront root-shell availability ${webEndpoint.safeOrigin} (${result.status ?? 'unreachable'})`,
     );
   } else {
     console.log(`[PASS] storefront root-shell availability: ${webEndpoint.safeOrigin}`);
+  }
+  return failures;
+}
+
+async function checkAdminRootShell(adminEndpoint: E2eEndpoint): Promise<string[]> {
+  const failures: string[] = [];
+  const result = await probe(endpointUrl(adminEndpoint, '/admin/login'));
+  if (!result.ok || !shellMatches(result, 200, ['id="root"', 'NOVA Admin'])) {
+    failures.push(
+      `admin root-shell availability ${adminEndpoint.safeOrigin} (${result.status ?? 'unreachable'})`,
+    );
+  } else {
+    console.log(`[PASS] admin root-shell availability: ${adminEndpoint.safeOrigin}`);
   }
   return failures;
 }
@@ -205,6 +225,11 @@ async function main(): Promise<void> {
     process.env.NOVA_E2E_WEB_URL,
     'http://127.0.0.1:5173',
   );
+  const adminEndpoint = parseE2eEndpoint(
+    'NOVA_E2E_ADMIN_URL',
+    process.env.NOVA_E2E_ADMIN_URL,
+    'http://127.0.0.1:5174',
+  );
   const storageEndpoint = parseE2eEndpoint(
     'NOVA_E2E_S3_URL',
     process.env.NOVA_E2E_S3_URL,
@@ -213,10 +238,11 @@ async function main(): Promise<void> {
 
   console.log('TEST-001 runtime E2E preflight and storefront shell smoke');
   console.log(`web origin: ${webEndpoint.safeOrigin}`);
+  console.log(`admin origin: ${adminEndpoint.safeOrigin}`);
   console.log(`api origin: ${apiEndpoint.safeOrigin}`);
   console.log(`object-storage origin: ${storageEndpoint.safeOrigin}`);
   console.log(
-    'scope: API health/readiness, public/unauthenticated boundary probes, object-storage liveness, and one HTML root-shell availability probe; no browser interaction is claimed',
+    'scope: API health/readiness, public/unauthenticated boundary probes, object-storage liveness, both frontend HTML root-shell availability probes, and no browser interaction',
   );
 
   const failures = [
@@ -224,12 +250,13 @@ async function main(): Promise<void> {
     ...(await checkUnauthenticatedApiBoundaries(apiEndpoint)),
     ...(await checkObjectStorageHealth(storageEndpoint)),
     ...(await checkStorefrontRootShell(webEndpoint)),
+    ...(await checkAdminRootShell(adminEndpoint)),
   ];
   if (failures.length) {
     console.error('\nBLOCKED: live E2E prerequisites or storefront shell are unavailable.');
     for (const failure of failures) console.error(`- ${failure}`);
     console.error(
-      'Required: running API with PostgreSQL readiness, reachable local object storage, and a running Vite/preview storefront. ' +
+      'Required: running API with PostgreSQL readiness, reachable local object storage, and running Vite/preview storefront and admin frontends. ' +
         'Do not interpret this as authenticated or Playwright coverage.',
     );
     process.exitCode = 2;

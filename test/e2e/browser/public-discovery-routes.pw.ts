@@ -34,6 +34,11 @@ async function installReadOnlyLocalNetworkGuard(
       return;
     }
 
+    if (request.method() === 'POST' && url.pathname === '/v1/analytics/events') {
+      await route.fulfill({ status: 202, contentType: 'application/json', body: '{}' });
+      return;
+    }
+
     if (!safeMethods.has(request.method())) {
       blockedRequests.push(`${request.method()} ${url.origin}${url.pathname}`);
       await route.abort();

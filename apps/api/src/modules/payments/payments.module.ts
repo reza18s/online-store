@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { AuditModule } from '../audit/audit.module';
+import { AnalyticsModule } from '../analytics/analytics.module';
 import { AuthModule } from '../auth/auth.module';
 import { DatabaseModule } from '../../database/database.module';
 import { CouponsModule } from '../coupons/coupons.module';
@@ -40,6 +41,7 @@ export function createPaymentGateway(
 @Module({
   imports: [
     AuditModule,
+    AnalyticsModule,
     AuthModule,
     CouponsModule,
     DatabaseModule,

@@ -48,6 +48,9 @@
     },
     {
       "name": "operations"
+    },
+    {
+      "name": "analytics"
     }
   ],
   "paths": {
@@ -441,6 +444,53 @@
           "cookieName": "nova_csrf",
           "headerName": "x-csrf-token",
           "cookieIssuedOnSafeRequest": true
+        }
+      }
+    },
+    "/v1/analytics/events": {
+      "post": {
+        "operationId": "analyticsRecord",
+        "tags": ["analytics"],
+        "x-nova-schema-status": "detailed",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyticsEventInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Analytics event accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiEnvelopeNull"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ApiError400"
+          },
+          "default": {
+            "$ref": "#/components/responses/ApiError500"
+          }
+        },
+        "security": [
+          {
+            "csrfToken": []
+          }
+        ],
+        "x-nova-csrf": {
+          "required": true,
+          "cookieName": "nova_csrf",
+          "headerName": "x-csrf-token",
+          "originHeader": "origin",
+          "originValidation": "configured web origin"
         }
       }
     },
@@ -11292,6 +11342,43 @@
           },
           "limit": {
             "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AnalyticsEventInput": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "product_view",
+              "search",
+              "add_to_cart",
+              "checkout_started",
+              "purchase",
+              "payment_failure",
+              "provider_failure"
+            ]
+          },
+          "anonymousId": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "sessionId": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                { "type": "string", "maxLength": 160 },
+                { "type": "integer" },
+                { "type": "boolean" }
+              ]
+            }
           }
         },
         "additionalProperties": false

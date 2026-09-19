@@ -1,7 +1,12 @@
 import { expect, test, type Route } from '@playwright/test';
-import type { ApiEnvelope, StaffUser } from '../../../packages/api-client/src/types';
+import type {
+  AdminCustomerPage,
+  ApiEnvelope,
+  StaffUser,
+} from '../../../packages/api-client/src/types';
 
 const staffSessionPath = '/v1/staff/auth/me';
+const customerListPath = '/v1/admin/customers';
 const syntheticMarker = 'BROWSER-LOCAL-STAFF-ROLE-DENIAL-001';
 const syntheticStaff: StaffUser = {
   id: `staff-${syntheticMarker}`,
@@ -88,6 +93,99 @@ test('keeps an authenticated support staff member out of the admin payments view
   await expect(main).not.toContainText('تلاش‌های پرداخت');
 
   expect(staffSessionRequests).toEqual(['GET /v1/staff/auth/me']);
+  expect(blockedExternalRequests).toEqual([]);
+  expect(stateChangingRequests).toEqual([]);
+  expect(unexpectedApiRequests).toEqual([]);
+});
+
+test('filters support staff navigation to the customer inspection boundary', async ({ page }) => {
+  page.setDefaultNavigationTimeout(15_000);
+
+  const staffSessionRequests: string[] = [];
+  const customerListRequests: string[] = [];
+  const blockedExternalRequests: string[] = [];
+  const stateChangingRequests: string[] = [];
+  const unexpectedApiRequests: string[] = [];
+  const emptyCustomerPage: AdminCustomerPage = {
+    items: [],
+    total: 0,
+    page: 1,
+    limit: 12,
+  };
+
+  await page.route('**/*', async (route: Route) => {
+    const request = route.request();
+    const url = new URL(request.url());
+
+    if (!isLoopbackHost(url.hostname)) {
+      if (url.origin === 'https://fonts.googleapis.com' && url.pathname === '/css2') {
+        await route.fulfill({ status: 200, contentType: 'text/css', body: '' });
+        return;
+      }
+
+      blockedExternalRequests.push(`${request.method()} ${url.origin}${url.pathname}`);
+      await route.abort();
+      return;
+    }
+
+    if (!['GET', 'HEAD'].includes(request.method())) {
+      stateChangingRequests.push(`${request.method()} ${url.pathname}`);
+      await route.abort();
+      return;
+    }
+
+    if (url.pathname === staffSessionPath) {
+      staffSessionRequests.push(`${request.method()} ${url.pathname}`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(envelope(syntheticStaff)),
+      });
+      return;
+    }
+
+    if (url.pathname === customerListPath) {
+      customerListRequests.push(`${request.method()} ${url.pathname}${url.search}`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(envelope(emptyCustomerPage)),
+      });
+      return;
+    }
+
+    if (url.pathname.startsWith('/v1/')) {
+      unexpectedApiRequests.push(`${request.method()} ${url.pathname}`);
+      await route.abort();
+      return;
+    }
+
+    await route.continue();
+  });
+
+  const response = await page.goto('/#admin/customers', { waitUntil: 'domcontentloaded' });
+
+  expect(response?.ok()).toBeTruthy();
+  const main = page.getByRole('main');
+  await expect(main.getByRole('heading', { name: 'مشتریان', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'جست‌وجوی مشتری', exact: true })).toBeVisible();
+
+  const inspectionNavigation = page.getByRole('navigation', {
+    name: 'بخش‌های پشتیبانی و مالی',
+  });
+  await expect(inspectionNavigation.getByRole('link')).toHaveCount(1);
+  await expect(
+    inspectionNavigation.getByRole('link', { name: 'مشتریان', exact: true }),
+  ).toHaveAttribute('href', '#admin/customers');
+  for (const forbiddenView of ['پرداخت‌ها', 'تحویل اعلان‌ها', 'گزارش فعالیت']) {
+    await expect(
+      inspectionNavigation.getByRole('link', { name: forbiddenView, exact: true }),
+    ).toHaveCount(0);
+  }
+
+  await expect(main.getByRole('status')).toContainText('مشتری پیدا نشد');
+  expect(staffSessionRequests).toEqual(['GET /v1/staff/auth/me']);
+  expect(customerListRequests).toEqual(['GET /v1/admin/customers?page=1&limit=12']);
   expect(blockedExternalRequests).toEqual([]);
   expect(stateChangingRequests).toEqual([]);
   expect(unexpectedApiRequests).toEqual([]);

@@ -290,7 +290,7 @@ textarea:focus-visible {
   }
 
   .site-header__menu {
-    display: none;
+    display: none !important;
   }
 
   .site-header .cart-button {
@@ -3436,7 +3436,7 @@ textarea:focus-visible {
     }
 
     .site-header__menu {
-      display: inline-flex;
+      display: inline-flex !important;
     }
 
     .site-nav {

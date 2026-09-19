@@ -106,7 +106,6 @@ export function ReturnPanel({
               <Button
                 disabled={
                   !canReview ||
-                  request.status === status ||
                   !canReviewReturnStatus(request.status, status)
                 }
                 key={status}
@@ -114,7 +113,9 @@ export function ReturnPanel({
                 size="sm"
                 variant={status === 'RECEIVED' ? 'primary' : 'outline'}
               >
-                {label}
+                {request.status === 'RECEIVED' && status === 'RECEIVED'
+                  ? 'تلاش دوباره بازپرداخت'
+                  : label}
               </Button>
             ))}
           </div>

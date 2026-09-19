@@ -1,7 +1,9 @@
 import { QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
 import { StrictMode, useEffect, useState } from 'react';
 
 import { App } from '../app';
+import { CleanNavigationBridge } from '../hooks/routing/hash-route';
 import { createQueryClient, seedInitialRenderData } from './query-client';
 
 const queryClient = createQueryClient();
@@ -10,9 +12,12 @@ seedInitialRenderData(queryClient);
 export function InteractiveApp() {
   return (
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <CleanNavigationBridge />
+          <App />
+        </QueryClientProvider>
+      </BrowserRouter>
     </StrictMode>
   );
 }

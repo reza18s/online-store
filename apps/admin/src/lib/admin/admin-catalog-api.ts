@@ -29,8 +29,10 @@ export { createAdminProductVariant } from './admin-catalog-api-functions/create-
 export { updateAdminProductVariant } from './admin-catalog-api-functions/update-admin-product-variant';
 export { fetchAdminProductMedia } from './admin-catalog-api-functions/fetch-admin-product-media';
 export { createAdminProductMedia } from './admin-catalog-api-functions/create-admin-product-media';
+export { completeAdminProductMedia } from './admin-catalog-api-functions/complete-admin-product-media';
 export { updateAdminProductMedia } from './admin-catalog-api-functions/update-admin-product-media';
 export { deleteAdminProductMedia } from './admin-catalog-api-functions/delete-admin-product-media';
+export { presignAdminProductMedia } from './admin-catalog-api-functions/presign-admin-product-media';
 export { invalidateAdminProductList } from './admin-catalog-api-functions/invalidate-admin-product-list';
 export { invalidateAdminProductResources } from './admin-catalog-api-functions/invalidate-admin-product-resources';
 export { useStaffUser } from './admin-catalog-api-functions/use-staff-user';
@@ -57,5 +59,6 @@ export { useUpdateAdminProductOptionValue } from './admin-catalog-api-functions/
 export { useCreateAdminProductVariant } from './admin-catalog-api-functions/use-create-admin-product-variant';
 export { useUpdateAdminProductVariant } from './admin-catalog-api-functions/use-update-admin-product-variant';
 export { useCreateAdminProductMedia } from './admin-catalog-api-functions/use-create-admin-product-media';
+export { useUploadAdminProductMedia } from './admin-catalog-api-functions/use-upload-admin-product-media';
 export { useUpdateAdminProductMedia } from './admin-catalog-api-functions/use-update-admin-product-media';
 export { useDeleteAdminProductMedia } from './admin-catalog-api-functions/use-delete-admin-product-media';

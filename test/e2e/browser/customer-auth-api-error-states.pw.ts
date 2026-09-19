@@ -78,6 +78,11 @@ async function installCustomerOtpErrorFixture(page: Page): Promise<{
       return;
     }
 
+    if (request.method() === 'POST' && url.pathname === '/v1/analytics/events') {
+      await route.fulfill({ status: 202, contentType: 'application/json', body: '{}' });
+      return;
+    }
+
     if (url.pathname === customerOtpVerifyPath) {
       if (request.method() !== 'POST') {
         blockedMutationRequests.push(`${request.method()} ${url.pathname}`);
@@ -133,7 +138,7 @@ test('renders a recoverable invalid customer OTP state without redirecting or wr
 
   await expect(page.getByRole('alert')).toContainText(syntheticErrorMessage);
   await expect(page.getByRole('button', { name: 'تأیید و ورود' })).toBeEnabled();
-  await expect(page).toHaveURL(new RegExp(`#auth/verify\\?challengeId=${syntheticChallengeId}$`));
+  await expect(page).toHaveURL(new RegExp(`/auth/verify\\?challengeId=${syntheticChallengeId}$`));
   expect(await page.evaluate(() => sessionStorage.length)).toBe(0);
   expect(network.verifyRequests).toEqual([`POST ${customerOtpVerifyPath}`]);
   expect(network.blockedExternalRequests).toEqual([]);

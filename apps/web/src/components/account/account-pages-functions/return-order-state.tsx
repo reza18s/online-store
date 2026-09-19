@@ -26,8 +26,8 @@ export function ReturnOrderState({
         <EmptyState
           title="درخواست بازگشت این سفارش ثبت شده است"
           description={`وضعیت فعلی درخواست: ${returnRequestStatusCopy[order.returnRequest.status]}`}
-          action="مشاهده سفارش"
-          href={`#order/${encodeURIComponent(order.orderNumber)}`}
+          action="پیگیری وضعیت بازگشت"
+          href={`#return/status?orderNumber=${encodeURIComponent(order.orderNumber)}`}
         />
       </PageFrame>
     );

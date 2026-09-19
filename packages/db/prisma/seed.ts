@@ -121,6 +121,902 @@ function hashLocalStaffRecoveryCode(code: string): string {
     .digest('hex');
 }
 
+const DEMO_SEED_NOW = new Date('2026-09-01T09:00:00.000Z');
+
+function demoSeedEnabled(): boolean {
+  const rawValue = process.env.DEMO_SEED?.trim().toLowerCase();
+  if (rawValue && rawValue !== 'true' && rawValue !== 'false') {
+    throw new Error('DEMO_SEED must be true or false.');
+  }
+
+  const nodeEnvironment = process.env.NODE_ENV?.trim().toLowerCase() || 'development';
+  if (!['development', 'test', 'staging', 'production'].includes(nodeEnvironment)) {
+    throw new Error('NODE_ENV must be development, test, staging, or production.');
+  }
+
+  if (nodeEnvironment === 'production') {
+    if (rawValue === 'true') {
+      throw new Error(
+        'DEMO_SEED=true is forbidden in production; refusing to seed synthetic demo data.',
+      );
+    }
+    return false;
+  }
+
+  return rawValue !== 'false';
+}
+
+function requireSeededId(values: Map<string, string>, key: string, label: string): string {
+  const value = values.get(key);
+  if (!value) throw new Error(`Missing seeded ${label}: ${key}`);
+  return value;
+}
+
+async function seedDemoContentAndSeo(): Promise<void> {
+  const contentPages = [
+    {
+      id: 'demo-content-page-about',
+      slug: 'about-nova',
+      title: 'درباره نوا',
+      body: 'نوا انتخابی آرام برای پوشیدن روزهای واقعی است؛ با تمرکز بر کیفیت، سادگی و ماندگاری.',
+      blocks: [
+        {
+          id: 'demo-content-block-about-heading',
+          kind: 'heading',
+          payload: { text: 'لباس‌هایی برای زندگی روزمره', level: 2 },
+          sortOrder: 0,
+        },
+        {
+          id: 'demo-content-block-about-text',
+          kind: 'rich-text',
+          payload: {
+            text: 'ما مجموعه‌ای کوچک و انتخاب‌شده از فرم‌های راحت، رنگ‌های آرام و پارچه‌های خوش‌دوخت را کنار هم آورده‌ایم.',
+          },
+          sortOrder: 1,
+        },
+        {
+          id: 'demo-content-block-about-link',
+          kind: 'link',
+          payload: { label: 'مشاهده مجموعه‌ها', href: '/products' },
+          sortOrder: 2,
+        },
+      ],
+    },
+    {
+      id: 'demo-content-page-shipping-policy',
+      slug: 'shipping-policy',
+      title: 'راهنمای ارسال و مرجوعی',
+      body: 'سفارش‌های نوا با بسته‌بندی ساده و قابل پیگیری به سراسر ایران ارسال می‌شوند.',
+      blocks: [
+        {
+          id: 'demo-content-block-shipping-heading',
+          kind: 'heading',
+          payload: { text: 'ارسال و پیگیری سفارش', level: 2 },
+          sortOrder: 0,
+        },
+        {
+          id: 'demo-content-block-shipping-text',
+          kind: 'paragraph',
+          payload: {
+            text: 'پس از آماده‌سازی، کد رهگیری در جزئیات سفارش نمایش داده می‌شود. برای تعویض یا مرجوعی، از حساب کاربری درخواست خود را ثبت کنید.',
+          },
+          sortOrder: 1,
+        },
+        {
+          id: 'demo-content-block-shipping-quote',
+          kind: 'quote',
+          payload: { text: 'سادگی، بخشی از کیفیت تجربه شماست.', cite: 'تیم نوا' },
+          sortOrder: 2,
+        },
+      ],
+    },
+  ];
+
+  for (const pageDefinition of contentPages) {
+    const page = await prisma.contentPage.upsert({
+      where: { slug: pageDefinition.slug },
+      update: {
+        title: pageDefinition.title,
+        body: pageDefinition.body,
+        status: 'PUBLISHED',
+        updatedAt: DEMO_SEED_NOW,
+      },
+      create: {
+        id: pageDefinition.id,
+        slug: pageDefinition.slug,
+        title: pageDefinition.title,
+        body: pageDefinition.body,
+        status: 'PUBLISHED',
+        createdAt: DEMO_SEED_NOW,
+        updatedAt: DEMO_SEED_NOW,
+      },
+      select: { id: true },
+    });
+
+    for (const block of pageDefinition.blocks) {
+      await prisma.contentBlock.upsert({
+        where: { id: block.id },
+        update: {
+          contentPageId: page.id,
+          kind: block.kind,
+          payload: block.payload,
+          sortOrder: block.sortOrder,
+        },
+        create: {
+          id: block.id,
+          contentPageId: page.id,
+          kind: block.kind,
+          payload: block.payload,
+          sortOrder: block.sortOrder,
+        },
+      });
+    }
+  }
+
+  const seoMetadata = [
+    {
+      path: '/content/about-nova',
+      title: 'درباره نوا | پوشاک آرام و ماندگار',
+      description: 'با رویکرد نوا به پوشاک روزمره، کیفیت پارچه و طراحی آرام آشنا شوید.',
+      canonicalUrl: 'https://nova.example/content/about-nova',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'AboutPage',
+        name: 'درباره نوا',
+        url: 'https://nova.example/content/about-nova',
+      },
+    },
+    {
+      path: '/content/shipping-policy',
+      title: 'راهنمای ارسال و مرجوعی | نوا',
+      description: 'راهنمای زمان ارسال، پیگیری سفارش و ثبت درخواست مرجوعی در فروشگاه نوا.',
+      canonicalUrl: 'https://nova.example/content/shipping-policy',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: 'راهنمای ارسال و مرجوعی',
+        url: 'https://nova.example/content/shipping-policy',
+      },
+    },
+    {
+      path: '/products',
+      title: 'مجموعه نوا | پوشاک روزمره',
+      description: 'مجموعه‌ای از لباس‌ها و اکسسوری‌های منتخب نوا برای استایل روزمره.',
+      canonicalUrl: 'https://nova.example/products',
+      structuredData: {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'مجموعه نوا',
+        url: 'https://nova.example/products',
+      },
+    },
+  ];
+
+  for (const metadata of seoMetadata) {
+    await prisma.seoMetadata.upsert({
+      where: { path: metadata.path },
+      update: {
+        title: metadata.title,
+        description: metadata.description,
+        canonicalUrl: metadata.canonicalUrl,
+        noIndex: false,
+        structuredData: metadata.structuredData,
+        updatedAt: DEMO_SEED_NOW,
+      },
+      create: {
+        path: metadata.path,
+        title: metadata.title,
+        description: metadata.description,
+        canonicalUrl: metadata.canonicalUrl,
+        noIndex: false,
+        structuredData: metadata.structuredData,
+        updatedAt: DEMO_SEED_NOW,
+      },
+    });
+  }
+
+  await prisma.redirect.upsert({
+    where: { fromPath: '/content/journal' },
+    update: { toPath: '/content/about-nova', statusCode: 301 },
+    create: {
+      id: 'demo-redirect-journal',
+      fromPath: '/content/journal',
+      toPath: '/content/about-nova',
+      statusCode: 301,
+      createdAt: DEMO_SEED_NOW,
+    },
+  });
+}
+
+async function seedDemoCustomerAndOrders(
+  productIdsBySlug: Map<string, string>,
+  variantIdsBySku: Map<string, string>,
+): Promise<void> {
+  const customer = await prisma.user.upsert({
+    where: { phone: '+989120000101' },
+    update: {
+      email: 'demo.customer@nova.local',
+      status: 'ACTIVE',
+      phoneVerifiedAt: new Date('2026-09-01T09:05:00.000Z'),
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-customer-2026',
+      phone: '+989120000101',
+      email: 'demo.customer@nova.local',
+      status: 'ACTIVE',
+      phoneVerifiedAt: new Date('2026-09-01T09:05:00.000Z'),
+      createdAt: DEMO_SEED_NOW,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    select: { id: true },
+  });
+
+  await prisma.address.upsert({
+    where: { id: 'demo-address-2026' },
+    update: {
+      userId: customer.id,
+      label: 'خانه',
+      recipientName: 'سارا نادری',
+      phone: '+989120000101',
+      province: 'تهران',
+      city: 'تهران',
+      addressLine: 'خیابان ولیعصر، کوچه نوا، پلاک ۲۴، واحد ۳',
+      postalCode: '1431898765',
+      isDefault: true,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-address-2026',
+      userId: customer.id,
+      label: 'خانه',
+      recipientName: 'سارا نادری',
+      phone: '+989120000101',
+      province: 'تهران',
+      city: 'تهران',
+      addressLine: 'خیابان ولیعصر، کوچه نوا، پلاک ۲۴، واحد ۳',
+      postalCode: '1431898765',
+      isDefault: true,
+      createdAt: DEMO_SEED_NOW,
+      updatedAt: DEMO_SEED_NOW,
+    },
+  });
+
+  const coupon = await prisma.coupon.upsert({
+    where: { code: 'NOVA-DEMO-10' },
+    update: {
+      type: 'PERCENTAGE',
+      amount: 10,
+      minimumOrderToman: 1_500_000,
+      activeFrom: new Date('2026-01-01T00:00:00.000Z'),
+      activeUntil: new Date('2030-12-31T23:59:59.000Z'),
+      maxRedemptions: 100,
+      perUserLimit: 1,
+      isActive: true,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-coupon-10-percent',
+      code: 'NOVA-DEMO-10',
+      type: 'PERCENTAGE',
+      amount: 10,
+      minimumOrderToman: 1_500_000,
+      activeFrom: new Date('2026-01-01T00:00:00.000Z'),
+      activeUntil: new Date('2030-12-31T23:59:59.000Z'),
+      maxRedemptions: 100,
+      perUserLimit: 1,
+      isActive: true,
+      createdAt: DEMO_SEED_NOW,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    select: { id: true },
+  });
+
+  const linenProductId = requireSeededId(productIdsBySlug, 'linen-overshirt', 'product');
+  const linenVariantId = requireSeededId(variantIdsBySku, 'NOVA-LINEN-001-M', 'variant');
+  const scarfProductId = requireSeededId(productIdsBySlug, 'textured-scarf', 'product');
+  const scarfVariantId = requireSeededId(variantIdsBySku, 'NOVA-SCARF-004-ONE', 'variant');
+  const kidsProductId = requireSeededId(productIdsBySlug, 'kids-knit-set', 'product');
+  const kidsVariantId = requireSeededId(variantIdsBySku, 'NOVA-KIDS-003-8', 'variant');
+
+  const orderOneCreatedAt = new Date('2026-09-03T10:30:00.000Z');
+  const orderOne = await prisma.order.upsert({
+    where: { orderNumber: 'DEMO-1001' },
+    update: {
+      userId: customer.id,
+      cartId: null,
+      status: 'DELIVERED',
+      paymentStatus: 'PAID',
+      moneyUnit: 'TOMAN',
+      subtotalToman: 3_380_000,
+      discountToman: 338_000,
+      shippingToman: 85_000,
+      taxToman: 0,
+      totalToman: 3_127_000,
+      idempotencyKey: 'demo-checkout-1001',
+      createdAt: orderOneCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-order-1001',
+      orderNumber: 'DEMO-1001',
+      userId: customer.id,
+      cartId: null,
+      status: 'DELIVERED',
+      paymentStatus: 'PAID',
+      moneyUnit: 'TOMAN',
+      subtotalToman: 3_380_000,
+      discountToman: 338_000,
+      shippingToman: 85_000,
+      taxToman: 0,
+      totalToman: 3_127_000,
+      idempotencyKey: 'demo-checkout-1001',
+      createdAt: orderOneCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    select: { id: true },
+  });
+
+  await prisma.orderItem.upsert({
+    where: { id: 'demo-order-item-1001-linen' },
+    update: {
+      orderId: orderOne.id,
+      productId: linenProductId,
+      variantId: linenVariantId,
+      productNameSnapshot: 'مانتوی لینن کمربندی آوا',
+      skuSnapshot: 'NOVA-LINEN-001-M',
+      variantSnapshot: {
+        title: 'کرم / M',
+        size: 'M',
+        color: 'کرم',
+        colorHex: '#d9c8ad',
+      },
+      quantity: 1,
+      unitPriceToman: 2_490_000,
+      compareAtPriceToman: 2_890_000,
+      discountToman: 249_000,
+      taxToman: 0,
+      totalToman: 2_241_000,
+    },
+    create: {
+      id: 'demo-order-item-1001-linen',
+      orderId: orderOne.id,
+      productId: linenProductId,
+      variantId: linenVariantId,
+      productNameSnapshot: 'مانتوی لینن کمربندی آوا',
+      skuSnapshot: 'NOVA-LINEN-001-M',
+      variantSnapshot: {
+        title: 'کرم / M',
+        size: 'M',
+        color: 'کرم',
+        colorHex: '#d9c8ad',
+      },
+      quantity: 1,
+      unitPriceToman: 2_490_000,
+      compareAtPriceToman: 2_890_000,
+      discountToman: 249_000,
+      taxToman: 0,
+      totalToman: 2_241_000,
+    },
+    select: { id: true },
+  });
+
+  await prisma.orderItem.upsert({
+    where: { id: 'demo-order-item-1001-scarf' },
+    update: {
+      orderId: orderOne.id,
+      productId: scarfProductId,
+      variantId: scarfVariantId,
+      productNameSnapshot: 'شال بافت برجسته',
+      skuSnapshot: 'NOVA-SCARF-004-ONE',
+      variantSnapshot: {
+        title: 'خاکی / تک‌سایز',
+        size: null,
+        color: 'خاکی',
+        colorHex: '#9b8b78',
+      },
+      quantity: 1,
+      unitPriceToman: 890_000,
+      compareAtPriceToman: null,
+      discountToman: 89_000,
+      taxToman: 0,
+      totalToman: 801_000,
+    },
+    create: {
+      id: 'demo-order-item-1001-scarf',
+      orderId: orderOne.id,
+      productId: scarfProductId,
+      variantId: scarfVariantId,
+      productNameSnapshot: 'شال بافت برجسته',
+      skuSnapshot: 'NOVA-SCARF-004-ONE',
+      variantSnapshot: {
+        title: 'خاکی / تک‌سایز',
+        size: null,
+        color: 'خاکی',
+        colorHex: '#9b8b78',
+      },
+      quantity: 1,
+      unitPriceToman: 890_000,
+      compareAtPriceToman: null,
+      discountToman: 89_000,
+      taxToman: 0,
+      totalToman: 801_000,
+    },
+  });
+
+  await prisma.orderAddressSnapshot.upsert({
+    where: { orderId: orderOne.id },
+    update: {
+      recipientName: 'سارا نادری',
+      phone: '+989120000101',
+      province: 'تهران',
+      city: 'تهران',
+      addressLine: 'خیابان ولیعصر، کوچه نوا، پلاک ۲۴، واحد ۳',
+      postalCode: '1431898765',
+    },
+    create: {
+      id: 'demo-order-address-1001',
+      orderId: orderOne.id,
+      recipientName: 'سارا نادری',
+      phone: '+989120000101',
+      province: 'تهران',
+      city: 'تهران',
+      addressLine: 'خیابان ولیعصر، کوچه نوا، پلاک ۲۴، واحد ۳',
+      postalCode: '1431898765',
+    },
+  });
+
+  await prisma.paymentAttempt.upsert({
+    where: {
+      orderId_idempotencyKey: {
+        orderId: orderOne.id,
+        idempotencyKey: 'demo-payment-1001',
+      },
+    },
+    update: {
+      provider: 'local',
+      providerTransactionId: 'local-demo-tx-1001',
+      providerEventId: 'local-demo-event-1001',
+      status: 'SUCCEEDED',
+      amountToman: 3_127_000,
+      redirectUrl: null,
+      rawPayloadHash: 'demo-payment-payload-hash-1001',
+      updatedAt: DEMO_SEED_NOW,
+      paidAt: new Date('2026-09-03T10:36:00.000Z'),
+    },
+    create: {
+      id: 'demo-payment-attempt-1001',
+      orderId: orderOne.id,
+      provider: 'local',
+      providerTransactionId: 'local-demo-tx-1001',
+      providerEventId: 'local-demo-event-1001',
+      status: 'SUCCEEDED',
+      amountToman: 3_127_000,
+      redirectUrl: null,
+      idempotencyKey: 'demo-payment-1001',
+      rawPayloadHash: 'demo-payment-payload-hash-1001',
+      createdAt: orderOneCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+      paidAt: new Date('2026-09-03T10:36:00.000Z'),
+    },
+    select: { id: true },
+  });
+
+  await prisma.shipment.upsert({
+    where: { orderId: orderOne.id },
+    update: {
+      provider: 'local',
+      method: 'STANDARD',
+      trackingReference: 'NOVA-DEMO-1001',
+      status: 'DELIVERED',
+      shippingToman: 85_000,
+      shippedAt: new Date('2026-09-04T08:00:00.000Z'),
+      deliveredAt: new Date('2026-09-06T14:00:00.000Z'),
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-shipment-1001',
+      orderId: orderOne.id,
+      provider: 'local',
+      method: 'STANDARD',
+      trackingReference: 'NOVA-DEMO-1001',
+      status: 'DELIVERED',
+      shippingToman: 85_000,
+      shippedAt: new Date('2026-09-04T08:00:00.000Z'),
+      deliveredAt: new Date('2026-09-06T14:00:00.000Z'),
+      createdAt: orderOneCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+    },
+  });
+
+  await prisma.promotionRedemption.upsert({
+    where: { orderId: orderOne.id },
+    update: {
+      promotionId: null,
+      couponId: coupon.id,
+      userId: customer.id,
+      status: 'COMMITTED',
+      reservedUntil: null,
+      committedAt: new Date('2026-09-03T10:36:00.000Z'),
+      releasedAt: null,
+      createdAt: orderOneCreatedAt,
+    },
+    create: {
+      id: 'demo-promotion-redemption-1001',
+      promotionId: null,
+      couponId: coupon.id,
+      userId: customer.id,
+      orderId: orderOne.id,
+      status: 'COMMITTED',
+      reservedUntil: null,
+      committedAt: new Date('2026-09-03T10:36:00.000Z'),
+      releasedAt: null,
+      createdAt: orderOneCreatedAt,
+    },
+  });
+
+  for (const event of [
+    {
+      id: 'demo-order-event-1001-confirmed',
+      fromStatus: 'PENDING_PAYMENT',
+      toStatus: 'CONFIRMED',
+      reason: 'پرداخت دمو با موفقیت تأیید شد.',
+      createdAt: new Date('2026-09-03T10:36:00.000Z'),
+    },
+    {
+      id: 'demo-order-event-1001-preparing',
+      fromStatus: 'CONFIRMED',
+      toStatus: 'PREPARING',
+      reason: 'سفارش برای بسته‌بندی آماده شد.',
+      createdAt: new Date('2026-09-03T15:00:00.000Z'),
+    },
+    {
+      id: 'demo-order-event-1001-shipped',
+      fromStatus: 'PREPARING',
+      toStatus: 'SHIPPED',
+      reason: 'بسته به ارسال‌کننده تحویل شد.',
+      createdAt: new Date('2026-09-04T08:00:00.000Z'),
+    },
+    {
+      id: 'demo-order-event-1001-delivered',
+      fromStatus: 'SHIPPED',
+      toStatus: 'DELIVERED',
+      reason: 'سفارش تحویل داده شد.',
+      createdAt: new Date('2026-09-06T14:00:00.000Z'),
+    },
+  ] as const) {
+    await prisma.orderEvent.upsert({
+      where: { id: event.id },
+      update: {
+        orderId: orderOne.id,
+        actorType: 'SYSTEM',
+        actorId: null,
+        fromStatus: event.fromStatus,
+        toStatus: event.toStatus,
+        reason: event.reason,
+        createdAt: event.createdAt,
+      },
+      create: {
+        id: event.id,
+        orderId: orderOne.id,
+        actorType: 'SYSTEM',
+        actorId: null,
+        fromStatus: event.fromStatus,
+        toStatus: event.toStatus,
+        reason: event.reason,
+        createdAt: event.createdAt,
+      },
+    });
+  }
+
+  const orderTwoCreatedAt = new Date('2026-09-08T11:15:00.000Z');
+  const orderTwo = await prisma.order.upsert({
+    where: { orderNumber: 'DEMO-1002' },
+    update: {
+      userId: customer.id,
+      cartId: null,
+      status: 'RETURNED',
+      paymentStatus: 'REFUNDED',
+      moneyUnit: 'TOMAN',
+      subtotalToman: 1_690_000,
+      discountToman: 0,
+      shippingToman: 85_000,
+      taxToman: 0,
+      totalToman: 1_775_000,
+      idempotencyKey: 'demo-checkout-1002',
+      createdAt: orderTwoCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-order-1002',
+      orderNumber: 'DEMO-1002',
+      userId: customer.id,
+      cartId: null,
+      status: 'RETURNED',
+      paymentStatus: 'REFUNDED',
+      moneyUnit: 'TOMAN',
+      subtotalToman: 1_690_000,
+      discountToman: 0,
+      shippingToman: 85_000,
+      taxToman: 0,
+      totalToman: 1_775_000,
+      idempotencyKey: 'demo-checkout-1002',
+      createdAt: orderTwoCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+    },
+    select: { id: true },
+  });
+
+  const orderTwoItem = await prisma.orderItem.upsert({
+    where: { id: 'demo-order-item-1002-kids' },
+    update: {
+      orderId: orderTwo.id,
+      productId: kidsProductId,
+      variantId: kidsVariantId,
+      productNameSnapshot: 'ست دورس و شلوار کودک',
+      skuSnapshot: 'NOVA-KIDS-003-8',
+      variantSnapshot: {
+        title: 'زیتونی / ۸ سال',
+        size: '8Y',
+        color: 'زیتونی',
+        colorHex: '#65705b',
+      },
+      quantity: 1,
+      unitPriceToman: 1_690_000,
+      compareAtPriceToman: null,
+      discountToman: 0,
+      taxToman: 0,
+      totalToman: 1_690_000,
+    },
+    create: {
+      id: 'demo-order-item-1002-kids',
+      orderId: orderTwo.id,
+      productId: kidsProductId,
+      variantId: kidsVariantId,
+      productNameSnapshot: 'ست دورس و شلوار کودک',
+      skuSnapshot: 'NOVA-KIDS-003-8',
+      variantSnapshot: {
+        title: 'زیتونی / ۸ سال',
+        size: '8Y',
+        color: 'زیتونی',
+        colorHex: '#65705b',
+      },
+      quantity: 1,
+      unitPriceToman: 1_690_000,
+      compareAtPriceToman: null,
+      discountToman: 0,
+      taxToman: 0,
+      totalToman: 1_690_000,
+    },
+    select: { id: true },
+  });
+
+  await prisma.orderAddressSnapshot.upsert({
+    where: { orderId: orderTwo.id },
+    update: {
+      recipientName: 'سارا نادری',
+      phone: '+989120000101',
+      province: 'تهران',
+      city: 'تهران',
+      addressLine: 'خیابان ولیعصر، کوچه نوا، پلاک ۲۴، واحد ۳',
+      postalCode: '1431898765',
+    },
+    create: {
+      id: 'demo-order-address-1002',
+      orderId: orderTwo.id,
+      recipientName: 'سارا نادری',
+      phone: '+989120000101',
+      province: 'تهران',
+      city: 'تهران',
+      addressLine: 'خیابان ولیعصر، کوچه نوا، پلاک ۲۴، واحد ۳',
+      postalCode: '1431898765',
+    },
+  });
+
+  const paymentTwo = await prisma.paymentAttempt.upsert({
+    where: {
+      orderId_idempotencyKey: {
+        orderId: orderTwo.id,
+        idempotencyKey: 'demo-payment-1002',
+      },
+    },
+    update: {
+      provider: 'local',
+      providerTransactionId: 'local-demo-tx-1002',
+      providerEventId: 'local-demo-event-1002',
+      status: 'SUCCEEDED',
+      amountToman: 1_775_000,
+      redirectUrl: null,
+      rawPayloadHash: 'demo-payment-payload-hash-1002',
+      updatedAt: DEMO_SEED_NOW,
+      paidAt: new Date('2026-09-08T11:22:00.000Z'),
+    },
+    create: {
+      id: 'demo-payment-attempt-1002',
+      orderId: orderTwo.id,
+      provider: 'local',
+      providerTransactionId: 'local-demo-tx-1002',
+      providerEventId: 'local-demo-event-1002',
+      status: 'SUCCEEDED',
+      amountToman: 1_775_000,
+      redirectUrl: null,
+      idempotencyKey: 'demo-payment-1002',
+      rawPayloadHash: 'demo-payment-payload-hash-1002',
+      createdAt: orderTwoCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+      paidAt: new Date('2026-09-08T11:22:00.000Z'),
+    },
+    select: { id: true },
+  });
+
+  await prisma.shipment.upsert({
+    where: { orderId: orderTwo.id },
+    update: {
+      provider: 'local',
+      method: 'STANDARD',
+      trackingReference: 'NOVA-DEMO-1002',
+      status: 'RETURNED',
+      shippingToman: 85_000,
+      shippedAt: new Date('2026-09-09T08:00:00.000Z'),
+      deliveredAt: new Date('2026-09-11T13:00:00.000Z'),
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-shipment-1002',
+      orderId: orderTwo.id,
+      provider: 'local',
+      method: 'STANDARD',
+      trackingReference: 'NOVA-DEMO-1002',
+      status: 'RETURNED',
+      shippingToman: 85_000,
+      shippedAt: new Date('2026-09-09T08:00:00.000Z'),
+      deliveredAt: new Date('2026-09-11T13:00:00.000Z'),
+      createdAt: orderTwoCreatedAt,
+      updatedAt: DEMO_SEED_NOW,
+    },
+  });
+
+  const returnRequest = await prisma.returnRequest.upsert({
+    where: { orderId: orderTwo.id },
+    update: {
+      userId: customer.id,
+      reason: 'SIZE_PREFERENCE',
+      note: 'سایز انتخابی برای کودک مناسب نبود.',
+      status: 'REFUNDED',
+      requestedAt: new Date('2026-09-12T09:00:00.000Z'),
+      reviewedAt: new Date('2026-09-12T12:00:00.000Z'),
+      reviewedByStaffId: null,
+      receivedAt: new Date('2026-09-15T15:30:00.000Z'),
+      updatedAt: DEMO_SEED_NOW,
+    },
+    create: {
+      id: 'demo-return-request-1002',
+      orderId: orderTwo.id,
+      userId: customer.id,
+      reason: 'SIZE_PREFERENCE',
+      note: 'سایز انتخابی برای کودک مناسب نبود.',
+      status: 'REFUNDED',
+      requestedAt: new Date('2026-09-12T09:00:00.000Z'),
+      reviewedAt: new Date('2026-09-12T12:00:00.000Z'),
+      reviewedByStaffId: null,
+      receivedAt: new Date('2026-09-15T15:30:00.000Z'),
+      createdAt: new Date('2026-09-12T09:00:00.000Z'),
+      updatedAt: DEMO_SEED_NOW,
+    },
+    select: { id: true },
+  });
+
+  await prisma.returnItem.upsert({
+    where: {
+      returnRequestId_orderItemId: {
+        returnRequestId: returnRequest.id,
+        orderItemId: orderTwoItem.id,
+      },
+    },
+    update: { quantity: 1 },
+    create: {
+      id: 'demo-return-item-1002-kids',
+      returnRequestId: returnRequest.id,
+      orderItemId: orderTwoItem.id,
+      quantity: 1,
+    },
+  });
+
+  await prisma.refund.upsert({
+    where: { idempotencyKey: 'demo-refund-1002' },
+    update: {
+      orderId: orderTwo.id,
+      paymentAttemptId: paymentTwo.id,
+      returnRequestId: returnRequest.id,
+      provider: 'local',
+      amountToman: 1_775_000,
+      status: 'SUCCEEDED',
+      providerRefundId: 'local-demo-refund-1002',
+      reason: 'مرجوعی تأییدشده به دلیل انتخاب سایز',
+      updatedAt: DEMO_SEED_NOW,
+      completedAt: new Date('2026-09-16T10:00:00.000Z'),
+    },
+    create: {
+      id: 'demo-refund-1002',
+      orderId: orderTwo.id,
+      paymentAttemptId: paymentTwo.id,
+      returnRequestId: returnRequest.id,
+      provider: 'local',
+      amountToman: 1_775_000,
+      status: 'SUCCEEDED',
+      providerRefundId: 'local-demo-refund-1002',
+      idempotencyKey: 'demo-refund-1002',
+      reason: 'مرجوعی تأییدشده به دلیل انتخاب سایز',
+      createdAt: new Date('2026-09-16T09:55:00.000Z'),
+      updatedAt: DEMO_SEED_NOW,
+      completedAt: new Date('2026-09-16T10:00:00.000Z'),
+    },
+  });
+
+  for (const event of [
+    {
+      id: 'demo-order-event-1002-confirmed',
+      fromStatus: 'PENDING_PAYMENT',
+      toStatus: 'CONFIRMED',
+      reason: 'پرداخت دمو با موفقیت تأیید شد.',
+      createdAt: new Date('2026-09-08T11:22:00.000Z'),
+    },
+    {
+      id: 'demo-order-event-1002-preparing',
+      fromStatus: 'CONFIRMED',
+      toStatus: 'PREPARING',
+      reason: 'سفارش برای بسته‌بندی آماده شد.',
+      createdAt: new Date('2026-09-08T16:00:00.000Z'),
+    },
+    {
+      id: 'demo-order-event-1002-shipped',
+      fromStatus: 'PREPARING',
+      toStatus: 'SHIPPED',
+      reason: 'بسته به ارسال‌کننده تحویل شد.',
+      createdAt: new Date('2026-09-09T08:00:00.000Z'),
+    },
+    {
+      id: 'demo-order-event-1002-delivered',
+      fromStatus: 'SHIPPED',
+      toStatus: 'DELIVERED',
+      reason: 'سفارش تحویل داده شد.',
+      createdAt: new Date('2026-09-11T13:00:00.000Z'),
+    },
+    {
+      id: 'demo-order-event-1002-returned',
+      fromStatus: 'DELIVERED',
+      toStatus: 'RETURNED',
+      reason: 'مرجوعی پس از دریافت کالا تأیید شد.',
+      createdAt: new Date('2026-09-15T15:30:00.000Z'),
+    },
+  ] as const) {
+    await prisma.orderEvent.upsert({
+      where: { id: event.id },
+      update: {
+        orderId: orderTwo.id,
+        actorType: 'SYSTEM',
+        actorId: null,
+        fromStatus: event.fromStatus,
+        toStatus: event.toStatus,
+        reason: event.reason,
+        createdAt: event.createdAt,
+      },
+      create: {
+        id: event.id,
+        orderId: orderTwo.id,
+        actorType: 'SYSTEM',
+        actorId: null,
+        fromStatus: event.fromStatus,
+        toStatus: event.toStatus,
+        reason: event.reason,
+        createdAt: event.createdAt,
+      },
+    });
+  }
+
+  console.log('Seeded demo coupon, content/SEO, customer, paid orders, and return/refund data.');
+}
+
 async function seedLocalStaffFixture(adminRoleId: string): Promise<void> {
   const fixture = localStaffFixture();
   const passwordHash = hashLocalStaffPassword(fixture.password);
@@ -206,7 +1102,13 @@ function normalizeSearchableText(value: string): string {
 }
 
 async function main(): Promise<void> {
+  const enableDemoSeed = demoSeedEnabled();
   const enableLocalStaffFixture = localTestModeEnabled();
+  if (!enableDemoSeed) {
+    console.log('DEMO_SEED is disabled; synthetic demo data was not seeded.');
+    return;
+  }
+
   const permissions = [
     ['catalog.read', 'Read catalog data'],
     ['catalog.write', 'Create and edit catalog data'],
@@ -487,6 +1389,9 @@ async function main(): Promise<void> {
     },
   ] as const;
 
+  const productIdsBySlug = new Map<string, string>();
+  const variantIdsBySku = new Map<string, string>();
+
   for (const definition of productDefinitions) {
     const categoryLabels = definition.categorySlugs.map(
       (categorySlug) => categoryBySlug.get(categorySlug)?.name ?? categorySlug,
@@ -518,7 +1423,7 @@ async function main(): Promise<void> {
         status: 'PUBLISHED',
         basePriceToman: definition.basePriceToman,
         compareAtPriceToman: definition.compareAtPriceToman,
-        publishedAt: new Date(),
+        publishedAt: DEMO_SEED_NOW,
         archivedAt: null,
       },
       create: {
@@ -530,9 +1435,10 @@ async function main(): Promise<void> {
         status: 'PUBLISHED',
         basePriceToman: definition.basePriceToman,
         compareAtPriceToman: definition.compareAtPriceToman,
-        publishedAt: new Date(),
+        publishedAt: DEMO_SEED_NOW,
       },
     });
+    productIdsBySlug.set(definition.slug, product.id);
 
     for (const categorySlug of definition.categorySlugs) {
       const category = categoryBySlug.get(categorySlug);
@@ -596,6 +1502,7 @@ async function main(): Promise<void> {
         },
       });
       variantIds.set(variantDefinition.sku, variant.id);
+      variantIdsBySku.set(variantDefinition.sku, variant.id);
 
       await prisma.inventoryItem.upsert({
         where: { variantId: variant.id },
@@ -619,7 +1526,7 @@ async function main(): Promise<void> {
           ...new Set(
             definition.variants
               .map((variant) => variant.color)
-              .filter((value): value is string => Boolean(value)),
+              .filter((value): value is Exclude<typeof value, null> => value !== null),
           ),
         ],
       },
@@ -630,7 +1537,7 @@ async function main(): Promise<void> {
           ...new Set(
             definition.variants
               .map((variant) => variant.size)
-              .filter((value): value is string => Boolean(value)),
+              .filter((value): value is Exclude<typeof value, null> => value !== null),
           ),
         ],
       },
@@ -683,8 +1590,9 @@ async function main(): Promise<void> {
         const variantId = variantIds.get(variantDefinition.sku);
         const optionValueKey =
           optionDefinition.key === 'color' ? variantDefinition.color : variantDefinition.size;
-        const optionValueId = optionValueKey ? valueIds.get(optionValueKey) : undefined;
-        if (!variantId || !optionValueId) continue;
+        if (!variantId || !optionValueKey) continue;
+        const optionValueId = valueIds.get(optionValueKey);
+        if (!optionValueId) continue;
 
         await prisma.productVariantOptionValue.upsert({
           where: {
@@ -707,6 +1615,9 @@ async function main(): Promise<void> {
       });
     }
   }
+
+  await seedDemoContentAndSeo();
+  await seedDemoCustomerAndOrders(productIdsBySlug, variantIdsBySku);
 
   console.log(`Seeded ${categories.length} categories and ${productDefinitions.length} products.`);
 }

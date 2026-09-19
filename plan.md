@@ -46,17 +46,25 @@
 - `packages/ui` و قراردادهای مشترک، مرز اشتراکی مجاز هستند؛ source code مربوط به public web و admin نباید به هم import شود.
 - هر frontend query client و route composition مستقل خود را دارد؛ auth و cache boundary مربوط به staff فقط در `apps/admin` قرار دارد.
 
-### وضعیت validation جداسازی frontendها
+### آخرین وضعیت اجرایی — 2026-09-19
 
-پس از استخراج admin از web، این بررسی‌های پایه موفق بوده‌اند:
+پس از روشن شدن Docker Desktop، هر دو frontend مستقل و runtime محلی قابل اجرا و
+قابل آزمون هستند:
 
-- `bun run typecheck`
-- `bun test` — 750 تست موفق، 2 skip موجود برای MinIO
-- `bun run build`
-- `bunx eslint apps/web/src apps/admin/src --max-warnings=0`
-- smoke check برای `http://127.0.0.1:5174/admin/login` با status `200` و title ادمین
+- `apps/web` روی `127.0.0.1:5173` و `apps/admin` روی `127.0.0.1:5174`
+- NestJS API روی `127.0.0.1:4000`
+- PostgreSQL، Redis و MinIO از Compose محلی
+- `bun run typecheck`، `bun run lint`، `bun run build` و `git diff --check` موفق
+- `bun run test` — **489 pass، 1 skip اختیاری MinIO**
+- `bun run test:integration` — **8/8 suite موفق**
+- `bun run test:e2e` — preflight زنده API، PostgreSQL، MinIO و هر دو shell موفق
+- `bun run test:e2e:browser` — **70/70 تست موفق** در پروژه‌های Chromium وب و ادمین
+- harnessهای live برای concurrency موجودی، notification retry و presigned media
+  با database/bucket موقت موفق و بدون residue
 
-هشدارهای باقی‌مانده مربوط به live provider، browser flow، staging و production است و با موفقیت build/typecheck محلی حل‌شده تلقی نمی‌شود.
+`bun run format:check` همچنان به‌دلیل drift قدیمی repository قرمز است و formatter
+سراسری برای جلوگیری از churn اجرا نشده است. Provider واقعی، staging، backup/restore
+و production deployment هنوز خارج از این validation محلی هستند.
 
 ## وضعیت فعلی و Featureهای محصول
 
@@ -227,6 +235,37 @@ Head agent مسئول integration، review و validation نهایی است.
 - local sender برای دمو deterministic باشد.
 - backlog و failure در operational read قابل مشاهده باشد.
 
+### گزارش تکمیل Wave 2 — 2026-09-19
+
+پیاده‌سازی Wave 2 تکمیل شد و هر stream با source audit و تست‌های مربوطه
+بازبینی شد:
+
+- `CUSTOMER-01`: مسیرهای واقعی home/category/search/product، queryهای catalog،
+  suggestion، filter/sort/pagination، variant/price/stock/media و stateهای
+  loading/empty/error/offline موجود و به API متصل هستند.
+- `CUSTOMER-02`: mutationهای واقعی cart، merge conflict، quote کامل، local
+  payment و recovery/order detail موجود هستند؛ اعتبار quote اکنون با timer در
+  checkout نمایش داده می‌شود و در لحظه‌ی انقضا ادامه‌ی checkout را می‌بندد.
+- `STAFF-01`: login password+TOTP، session و query boundary مستقل، role guard و
+  stateهای loading/error/forbidden/expired موجود هستند؛ navigation desktop و
+  mobile بر اساس `SUPPORT`/`OPERATIONS`/`ADMIN` فیلتر می‌شود.
+- `OPS-01`: order detail، payment attempt، shipment، event/audit timeline و
+  وضعیت `onHand`/`reserved`/`available` در پنل عملیاتی موجود هستند.
+- `WORKER-01`: callback پرداخت و outbox در transaction مشترک، dedupe، lease،
+  retry، terminal failure و local sender موجود هستند؛ completion/retry worker با
+  lease fencing در برابر worker قدیمی محافظت می‌شود.
+
+شواهد validation نهایی:
+
+- `bun run test`: **481 pass، 1 skip اختیاری MinIO**
+- `bun run typecheck`: موفق
+- `bun run lint`: موفق
+- `bun run build`: موفق؛ فقط warningهای معمول Vite و chunk size باقی است
+- `bun run test:e2e:browser -- --list`: **70 تست در 28 فایل**
+
+این baseline پیش از روشن شدن Docker ثبت شده بود؛ وضعیت نهایی و شواهد runtime در
+گزارش Wave 3 پایین‌تر ثبت شده است.
+
 ## Wave 3 — تکمیل breadth محصول
 
 ### CUSTOMER-03 — account و return
@@ -291,6 +330,56 @@ Head agent مسئول integration، review و validation نهایی است.
 - provider failure
 
 اطلاعات حساس، OTP، token و داده‌ی payment وارد event نشود.
+
+### گزارش تکمیل Wave 3 — 2026-09-19
+
+Wave 3 برای قراردادهای موجود پروژه تکمیل شد:
+
+- `CUSTOMER-03`: OTP/session logout، آدرس‌های ذخیره‌شده، order history/detail،
+  cancel eligibility هم‌راستا با API، return request و نمایش وضعیت return/refund
+  در مسیرهای account به API واقعی متصل هستند.
+- `ADMIN-02`: CRUD محصول/category/variant، lifecycle محصول، inventory adjustment و
+  reorder point، optimistic concurrency/audit و safeguard تصویر اصلی در UI و API
+  پوشش داده شده‌اند. پنل ادمین اکنون presign → PUT به original/derivative →
+  complete را با اعتبارسنجی نوع، حجم و ابعاد اجرا می‌کند؛ URL موجود قبلی نیز به‌عنوان
+  fallback حفظ شده است.
+- `ADMIN-03`: جست‌وجو و جزئیات سفارش، fulfillment/shipment، payment/refund، review
+  مرجوعی، retry idempotent refund، lookup مشتری و notification inspection با redaction
+  موجود و تست شده‌اند.
+- `CMS-01`: public published content، draft-first editor، optimistic concurrency،
+  SEO/redirect، resolver متادیتای SSR، sitemap/robots و clean/hash URL در قراردادهای
+  موجود کامل هستند.
+- `MEDIA-01`: lifecycle ذخیره‌سازی شامل presign، metadata validation، quarantine،
+  association محصول، حذف نرم و cleanup امن در API موجود است؛ Demo از MinIO و Production
+  از S3-compatible storage استفاده می‌کند. CMS در قرارداد فعلی به‌جای relation جداگانه‌ی
+  asset، media reference را داخل payload بلاک محتوای bounded نگه می‌دارد و asset-id جدیدی
+  خارج از این قرارداد اضافه نشده است.
+- `ANALYTICS-01`: endpoint privacy-safe برای `product_view`، `search`، `add_to_cart`،
+  `checkout_started`، `purchase`، `payment_failure` و `provider_failure` اضافه شد؛
+  propertyها allowlist و scalar هستند و هویت customer فقط از session سمت سرور می‌آید.
+
+شواهد validation نهایی Wave 3:
+
+- `bun run test`: **489 pass، 1 skip اختیاری MinIO**
+- `bun run typecheck`: موفق
+- `bun run lint`: موفق
+- `bun run build`: موفق؛ warningهای معمول Vite/CJS و chunk size باقی است
+- `bun run --cwd packages/api-client contract:check`: **17 pass**
+- `bun run test:e2e:browser -- --list`: **70 تست در 28 فایل**
+- `git diff --check`: موفق
+- `bun run test:e2e` — preflight زنده **13/13 check موفق**
+- `bun run test:integration` — **8/8 suite موفق**
+- `bun run test:e2e:browser` — **70/70 تست موفق**؛ admin tests روی origin مستقل
+  `127.0.0.1:5174` اجرا می‌شوند.
+- concurrency live — یک fulfillment و یک rejection برای موجودی واحد، سپس cleanup
+  کامل و بازگشت موجودی به baseline
+- notification live — claim/retry با `attempts=1`، وضعیت `PENDING` و cleanup کامل
+- media live — login/CSRF، presign، PUT original/derivative، complete، read و
+  quarantine/delete با cleanup کامل bucket و database
+
+بنابراین browser، database-backed و object-storage-backed local gates بسته شدند.
+Provider واقعی، staging، backup/restore و production deployment همچنان gateهای
+بعدی هستند.
 
 ## Wave 4 — Demo Release Gate
 

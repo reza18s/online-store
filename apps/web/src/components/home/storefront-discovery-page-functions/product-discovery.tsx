@@ -9,6 +9,7 @@ import {
   useCatalogProducts,
 } from '../../../lib/catalog/catalog-api';
 import { useAddCartItem } from '../../../lib/cart/cart-api';
+import { trackAnalyticsEvent } from '../../../lib/analytics/analytics';
 
 import type { StorefrontDiscoveryPageProps } from '../../../pages/catalog/storefront-discovery-page-shared';
 import { audienceCopy } from '../../../pages/catalog/storefront-discovery-page-shared';
@@ -62,6 +63,13 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     setMediaIndex(0);
     setFeedback(undefined);
   }, [productQuery.data?.id]);
+  useEffect(() => {
+    if (!productQuery.data) return;
+    trackAnalyticsEvent({
+      name: 'product_view',
+      properties: { productId: productQuery.data.id, slug: productQuery.data.slug },
+    });
+  }, [productQuery.data?.id, productQuery.data?.slug]);
   if (shouldShowProductLoading(slug, productQuery.isPending) && !productQuery.data)
     return (
       <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background py-6">

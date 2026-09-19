@@ -9,6 +9,8 @@ export {
 } from './content-contract';
 export { queryKeys } from './query-keys';
 export type {
+  AnalyticsEventInput,
+  AnalyticsEventName,
   ApiEnvelope,
   ApiErrorEnvelope,
   ApiErrorPayload,
@@ -26,8 +28,10 @@ export type {
   AdminCatalogProductListQuery,
   AdminCatalogProductListItem,
   AdminCatalogProductMedia,
+  AdminCatalogProductMediaCompleteInput,
   AdminCatalogProductMediaCreateInput,
   AdminCatalogProductMediaPreview,
+  AdminCatalogProductMediaPresignInput,
   AdminCatalogProductMediaKind,
   AdminCatalogProductMediaUpdateInput,
   AdminCatalogProductPage,
@@ -39,6 +43,8 @@ export type {
   AdminCatalogProductVariantCreateInput,
   AdminCatalogProductVariantInventory,
   AdminCatalogProductVariantUpdateInput,
+  CatalogMediaContentType,
+  CatalogMediaUploadPlan,
   AdminAuditActorType,
   AdminAuditEvent,
   AdminAuditListQuery,

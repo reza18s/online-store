@@ -11,6 +11,7 @@ export {
 } from './admin-catalog-inventory-page-shared';
 export { normalizeAdminCatalogInventoryView } from '../../components/admin/admin-catalog-inventory-page-functions/normalize-admin-catalog-inventory-view';
 export { adminProductEditorKey } from '../../components/admin/admin-catalog-inventory-page-functions/admin-product-editor-key';
+export { adminProductStatusAction } from '../../components/admin/admin-catalog-inventory-page-functions/admin-product-status-action';
 export { adminInventoryViewKey } from '../../components/admin/admin-catalog-inventory-page-functions/admin-inventory-view-key';
 export { pageCount } from '../../components/admin/admin-catalog-inventory-page-functions/page-count';
 export { hasAdminRole } from '../../components/admin/admin-catalog-inventory-page-functions/has-admin-role';
@@ -58,4 +59,6 @@ export { VariantsPanel } from '../../components/admin/admin-catalog-inventory-pa
 export { VariantItem } from '../../components/admin/admin-catalog-inventory-page-functions/variant-item';
 export { MediaPanel } from '../../components/admin/admin-catalog-inventory-page-functions/media-panel';
 export { MediaItem } from '../../components/admin/admin-catalog-inventory-page-functions/media-item';
+export { canDeleteAdminProductMedia } from '../../components/admin/admin-catalog-inventory-page-functions/can-delete-admin-product-media';
+export { buildAdminCatalogProductUpdateInput } from '../../components/admin/admin-catalog-inventory-page-functions/build-admin-catalog-product-update-input';
 export { AdminCatalogInventoryPage } from '../../components/admin/admin-catalog-inventory-page-functions/admin-catalog-inventory-page';

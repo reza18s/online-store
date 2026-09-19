@@ -20,12 +20,21 @@ function createDatabase(initial: FakeJob[]) {
   const jobs = initial.map((job) => ({ ...job }));
   const database = {
     notificationJob: {
-      findMany: async ({ take, select }: { take: number; select: unknown }) => {
+      findMany: async ({
+        where,
+        take,
+        select,
+      }: {
+        where: { OR: Array<{ availableAt: { lte: Date } }> };
+        take: number;
+        select: unknown;
+      }) => {
         void select;
+        const now = where.OR[0]?.availableAt.lte ?? NOW;
         return jobs
           .filter(
             (job) =>
-              (job.status === 'PENDING' || job.status === 'PROCESSING') && job.availableAt <= NOW,
+              (job.status === 'PENDING' || job.status === 'PROCESSING') && job.availableAt <= now,
           )
           .sort((left, right) => left.availableAt.getTime() - right.availableAt.getTime())
           .slice(0, take)
@@ -137,6 +146,44 @@ test('duplicate workers allow only one conditional claim', async () => {
     ],
   );
   assert.equal(fixture.jobs[0]?.status, 'SENT');
+});
+
+test('does not let a stale lease finalize a reclaimed job', async () => {
+  const fixture = createDatabase([job()]);
+  let releaseFirstDelivery!: () => void;
+  let firstDeliveryStarted!: () => void;
+  const firstDeliveryStartedPromise = new Promise<void>((resolve) => {
+    firstDeliveryStarted = resolve;
+  });
+  const firstDeliveryHeld = new Promise<void>((resolve) => {
+    releaseFirstDelivery = resolve;
+  });
+
+  const firstBatch = processNotificationBatch(
+    fixture.database,
+    {
+      send: async () => {
+        firstDeliveryStarted();
+        await firstDeliveryHeld;
+      },
+    },
+    NOW,
+  );
+  await firstDeliveryStartedPromise;
+
+  const secondBatch = await processNotificationBatch(
+    fixture.database,
+    { send: async () => {} },
+    new Date(NOW.getTime() + 5 * 60_000),
+  );
+
+  releaseFirstDelivery();
+  const firstResult = await firstBatch;
+
+  assert.deepEqual(secondBatch, { claimed: 1, sent: 1, retried: 0, failed: 0 });
+  assert.deepEqual(firstResult, { claimed: 1, sent: 0, retried: 0, failed: 0 });
+  assert.equal(fixture.jobs[0]?.status, 'SENT');
+  assert.equal(fixture.jobs[0]?.attempts, 2);
 });
 
 test('preserves capped retry scheduling after a provider failure', async () => {

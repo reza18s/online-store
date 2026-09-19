@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   type AdminCatalogProductCreateInput,
-  type AdminCatalogProductListItem,
+  type AdminCatalogProductDetail,
 } from '@nova/api-client';
 import { Button, Input as UiInput, Textarea as UiTextarea } from '@nova/ui';
 import {
@@ -43,6 +43,10 @@ import { VariantsPanel } from './variants-panel';
 
 import { adminCatalogInventoryErrorMessage } from './admin-catalog-inventory-error-message';
 
+import { adminProductStatusAction } from './admin-product-status-action';
+
+import { buildAdminCatalogProductUpdateInput } from './build-admin-catalog-product-update-input';
+
 import { formatDate } from './format-date';
 
 import { hasAdminRole } from './has-admin-role';
@@ -64,7 +68,7 @@ export function ProductEditor({
 }) {
   const canWrite = hasAdminRole(roles, ['admin']);
   const [localProductId, setLocalProductId] = useState(productId ?? '');
-  const [createdProduct, setCreatedProduct] = useState<AdminCatalogProductListItem | null>(null);
+  const [createdProduct, setCreatedProduct] = useState<AdminCatalogProductDetail | null>(null);
   const effectiveProductId = createdProduct?.id ?? localProductId;
   const productQuery = useAdminCatalogProduct(productId ?? '', Boolean(productId));
   const product = createdProduct ?? productQuery.data;
@@ -96,6 +100,9 @@ export function ProductEditor({
     isCreate ||
     !product ||
     draft.name.trim() !== product.name ||
+    draft.shortDescription.trim() !== (product.shortDescription ?? '') ||
+    draft.description.trim() !== (product.description ?? '') ||
+    draft.brand.trim() !== (product.brand ?? '') ||
     Number(draft.basePriceToman) !== product.basePriceToman ||
     draft.compareAtPriceToman.trim() !==
       (product.compareAtPriceToman === null ? '' : String(product.compareAtPriceToman));
@@ -115,9 +122,9 @@ export function ProductEditor({
     setDraft({
       slug: product.slug,
       name: product.name,
-      shortDescription: '',
-      description: '',
-      brand: '',
+      shortDescription: product.shortDescription ?? '',
+      description: product.description ?? '',
+      brand: product.brand ?? '',
       basePriceToman: String(product.basePriceToman),
       compareAtPriceToman:
         product.compareAtPriceToman === null ? '' : String(product.compareAtPriceToman),
@@ -150,38 +157,13 @@ export function ProductEditor({
             : null,
         };
         const created = await createProductMutation.mutateAsync(input);
-        setCreatedProduct({
-          ...created,
-          categories: [],
-          primaryMedia: null,
-          inventory: {
-            available: 0,
-            lowStockVariantCount: 0,
-            outOfStockVariantCount: 0,
-            status: 'OUT_OF_STOCK',
-          },
-          variantCount: 0,
-          mediaCount: 0,
-        });
+        setCreatedProduct(created);
         setLocalProductId(created.id);
       } else {
         if (!product) return;
         await updateProductMutation.mutateAsync({
           productId: product.id,
-          input: {
-            ...(draft.name.trim() !== product.name ? { name: draft.name.trim() } : {}),
-            ...(Number(draft.basePriceToman) !== product.basePriceToman
-              ? { basePriceToman: Number(draft.basePriceToman) }
-              : {}),
-            ...(draft.compareAtPriceToman.trim() !==
-            (product.compareAtPriceToman === null ? '' : String(product.compareAtPriceToman))
-              ? {
-                  compareAtPriceToman: draft.compareAtPriceToman.trim()
-                    ? Number(draft.compareAtPriceToman)
-                    : null,
-                }
-              : {}),
-          },
+          input: buildAdminCatalogProductUpdateInput(draft, product),
         });
       }
     } catch (mutationError) {
@@ -189,7 +171,8 @@ export function ProductEditor({
     }
   }
   async function setProductStatus(status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED') {
-    if (!product || publishBlockers.length) {
+    if (!product) return;
+    if (status === 'PUBLISHED' && publishBlockers.length) {
       setError('انتشار تا رفع خطاهای فرم مسدود است.');
       return;
     }
@@ -268,22 +251,27 @@ export function ProductEditor({
             {canWrite ? (
               <>
                 <Button
-                  disabled={statusMutation.isPending || publishBlockers.length > 0}
+                  disabled={
+                    statusMutation.isPending ||
+                    (product.status !== 'ARCHIVED' && publishBlockers.length > 0)
+                  }
                   loading={statusMutation.isPending}
                   onClick={() =>
-                    void setProductStatus(product.status === 'PUBLISHED' ? 'DRAFT' : 'PUBLISHED')
+                    void setProductStatus(adminProductStatusAction(product.status).targetStatus)
                   }
                   variant="outline"
                 >
-                  {product.status === 'PUBLISHED' ? 'بازگشت به پیش‌نویس' : 'انتشار'}
+                  {adminProductStatusAction(product.status).label}
                 </Button>
-                <Button
-                  disabled={statusMutation.isPending}
-                  onClick={() => void setProductStatus('ARCHIVED')}
-                  variant="ghost"
-                >
-                  آرشیو
-                </Button>
+                {product.status !== 'ARCHIVED' ? (
+                  <Button
+                    disabled={statusMutation.isPending}
+                    onClick={() => void setProductStatus('ARCHIVED')}
+                    variant="ghost"
+                  >
+                    آرشیو
+                  </Button>
+                ) : null}
               </>
             ) : null}
           </div>
@@ -362,43 +350,39 @@ export function ProductEditor({
               value={draft.compareAtPriceToman}
             />
           </label>
-          {isCreate ? (
-            <>
-              <label className="text-xs text-muted-foreground">
-                برند
-                <UiInput
-                  className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  disabled={!canWrite}
-                  onChange={(event) =>
-                    setDraft((current) => ({ ...current, brand: event.target.value }))
-                  }
-                  value={draft.brand}
-                />
-              </label>
-              <label className="text-xs text-muted-foreground md:col-span-2">
-                توضیح کوتاه
-                <UiTextarea
-                  className="mt-2 min-h-20 w-full border border-border bg-background px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  disabled={!canWrite}
-                  onChange={(event) =>
-                    setDraft((current) => ({ ...current, shortDescription: event.target.value }))
-                  }
-                  value={draft.shortDescription}
-                />
-              </label>
-              <label className="text-xs text-muted-foreground md:col-span-2">
-                توضیحات
-                <UiTextarea
-                  className="mt-2 min-h-28 w-full border border-border bg-background px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  disabled={!canWrite}
-                  onChange={(event) =>
-                    setDraft((current) => ({ ...current, description: event.target.value }))
-                  }
-                  value={draft.description}
-                />
-              </label>
-            </>
-          ) : null}
+          <label className="text-xs text-muted-foreground">
+            برند
+            <UiInput
+              className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              disabled={!canWrite}
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, brand: event.target.value }))
+              }
+              value={draft.brand}
+            />
+          </label>
+          <label className="text-xs text-muted-foreground md:col-span-2">
+            توضیح کوتاه
+            <UiTextarea
+              className="mt-2 min-h-20 w-full border border-border bg-background px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              disabled={!canWrite}
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, shortDescription: event.target.value }))
+              }
+              value={draft.shortDescription}
+            />
+          </label>
+          <label className="text-xs text-muted-foreground md:col-span-2">
+            توضیحات
+            <UiTextarea
+              className="mt-2 min-h-28 w-full border border-border bg-background px-3 py-2 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              disabled={!canWrite}
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, description: event.target.value }))
+              }
+              value={draft.description}
+            />
+          </label>
         </div>
         <div className="mt-5 flex flex-wrap items-center gap-3">
           {canWrite ? (
@@ -439,7 +423,12 @@ export function ProductEditor({
             options={optionsQuery.data ?? []}
             canWrite={canWrite}
           />
-          <MediaPanel productId={effectiveProductId} query={mediaQuery} canWrite={canWrite} />
+          <MediaPanel
+            productId={effectiveProductId}
+            productStatus={product?.status ?? 'DRAFT'}
+            query={mediaQuery}
+            canWrite={canWrite}
+          />
         </div>
       ) : null}
     </div>

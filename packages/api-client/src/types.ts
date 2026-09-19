@@ -3,6 +3,22 @@ export interface ApiMeta {
   timestamp: string;
 }
 
+export type AnalyticsEventName =
+  | 'product_view'
+  | 'search'
+  | 'add_to_cart'
+  | 'checkout_started'
+  | 'purchase'
+  | 'payment_failure'
+  | 'provider_failure';
+
+export interface AnalyticsEventInput {
+  name: AnalyticsEventName;
+  anonymousId?: string;
+  sessionId?: string;
+  properties?: Record<string, string | number | boolean>;
+}
+
 export interface ApiEnvelope<T> {
   data: T;
   meta: ApiMeta;
@@ -384,6 +400,39 @@ export interface AdminCatalogProductMedia {
   sortOrder: number;
   width: number | null;
   height: number | null;
+}
+
+export type CatalogMediaContentType =
+  'image/avif' | 'image/gif' | 'image/jpeg' | 'image/png' | 'image/webp';
+
+export interface CatalogMediaUploadPlan {
+  assetId: string;
+  original: {
+    key: string;
+    url: string;
+    headers: Record<string, string>;
+  };
+  derivative: {
+    key: string;
+    url: string;
+    headers: Record<string, string>;
+  };
+  expiresInSeconds: number;
+  multipartExpiresHours: number;
+}
+
+export interface AdminCatalogProductMediaPresignInput {
+  contentType: CatalogMediaContentType;
+  sizeBytes: number;
+  width: number;
+  height: number;
+}
+
+export interface AdminCatalogProductMediaCompleteInput extends AdminCatalogProductMediaPresignInput {
+  assetId: string;
+  altText: string;
+  kind?: AdminCatalogProductMediaKind;
+  sortOrder?: number;
 }
 
 export interface AdminCatalogProductVariantCreateInput {

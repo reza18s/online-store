@@ -39,6 +39,7 @@ test('allows only backend-valid return review transitions', () => {
   assert.equal(canReviewReturnStatus('REQUESTED', 'REJECTED'), true);
   assert.equal(canReviewReturnStatus('REQUESTED', 'RECEIVED'), false);
   assert.equal(canReviewReturnStatus('APPROVED', 'RECEIVED'), true);
+  assert.equal(canReviewReturnStatus('RECEIVED', 'RECEIVED'), true);
   assert.equal(canReviewReturnStatus('REJECTED', 'RECEIVED'), false);
   assert.equal(canReviewReturnStatus('REFUNDED', 'RECEIVED'), false);
 });

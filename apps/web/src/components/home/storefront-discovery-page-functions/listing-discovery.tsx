@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { Button, Checkbox, Input as UiInput, Select as UiSelect } from '@nova/ui';
 import { Icon } from '../../ui/icon';
@@ -36,6 +36,7 @@ import { preserveFacetSelection } from './preserve-facet-selection';
 import { routeTo } from './route-to';
 
 import { useProductAdder } from './use-product-adder';
+import { trackAnalyticsEvent } from '../../../lib/analytics/analytics';
 
 export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
   const state = useMemo(
@@ -51,6 +52,10 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
   const productsQuery = useCatalogProducts(discoveryFiltersFromQuery(state, props.audience));
   const facetsQuery = useCatalogFacets(discoveryFacetFiltersFromQuery(state, props.audience));
   const suggestionsQuery = useCatalogSuggestions(state.q, Boolean(state.q));
+  useEffect(() => {
+    if (!state.q) return;
+    trackAnalyticsEvent({ name: 'search', properties: { queryLength: state.q.length } });
+  }, [state.q]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const adder = useProductAdder();
   const update = (changes: Record<string, string | undefined>) =>

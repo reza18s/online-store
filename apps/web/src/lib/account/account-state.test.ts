@@ -13,6 +13,7 @@ import {
   canCancelCustomerOrder,
   getReturnEligibility,
   getReturnOrderState,
+  refundStatusCopy,
   shouldShowCustomerOrderLoading,
 } from './account-state';
 
@@ -49,10 +50,12 @@ function order(overrides: Partial<CustomerOrderDetail> = {}): CustomerOrderDetai
 }
 
 test('exposes cancellation only for server-supported customer order states', () => {
-  assert.equal(canCancelCustomerOrder({ status: 'PENDING_PAYMENT' }), true);
-  assert.equal(canCancelCustomerOrder({ status: 'CONFIRMED' }), true);
-  assert.equal(canCancelCustomerOrder({ status: 'PREPARING' }), false);
-  assert.equal(canCancelCustomerOrder({ status: 'DELIVERED' }), false);
+  assert.equal(canCancelCustomerOrder({ status: 'PENDING_PAYMENT', paymentStatus: 'PENDING' }), true);
+  assert.equal(canCancelCustomerOrder({ status: 'CONFIRMED', paymentStatus: 'PAID' }), true);
+  assert.equal(canCancelCustomerOrder({ status: 'PENDING_PAYMENT', paymentStatus: 'FAILED' }), false);
+  assert.equal(canCancelCustomerOrder({ status: 'CONFIRMED', paymentStatus: 'PENDING' }), false);
+  assert.equal(canCancelCustomerOrder({ status: 'PREPARING', paymentStatus: 'PAID' }), false);
+  assert.equal(canCancelCustomerOrder({ status: 'DELIVERED', paymentStatus: 'PAID' }), false);
 });
 
 test('keeps return eligibility aligned with payment, delivery, request and seven-day rules', () => {
@@ -95,6 +98,14 @@ test('keeps the return status route visible before a request exists', () => {
     ),
     'requested',
   );
+});
+
+test('localizes every server refund status exposed in customer order details', () => {
+  assert.deepEqual(refundStatusCopy, {
+    PENDING: 'در انتظار بازپرداخت',
+    SUCCEEDED: 'بازپرداخت انجام شده',
+    FAILED: 'بازپرداخت ناموفق',
+  });
 });
 
 test('requires every server-required address field before allowing a save', () => {

@@ -84,7 +84,7 @@ export async function processNotificationBatch(
     try {
       await sender.send(candidate);
       const completed = await database.notificationJob.updateMany({
-        where: { id: candidate.id, status: 'PROCESSING' },
+        where: { id: candidate.id, status: 'PROCESSING', availableAt: leaseUntil },
         data: {
           status: 'SENT',
           processedAt: now,
@@ -96,12 +96,10 @@ export async function processNotificationBatch(
     } catch {
       const terminal = attemptNumber >= NOTIFICATION_MAX_ATTEMPTS;
       const completed = await database.notificationJob.updateMany({
-        where: { id: candidate.id, status: 'PROCESSING' },
+        where: { id: candidate.id, status: 'PROCESSING', availableAt: leaseUntil },
         data: {
           status: terminal ? 'FAILED' : 'PENDING',
-          availableAt: terminal
-            ? now
-            : new Date(now.getTime() + retryDelayMs(attemptNumber)),
+          availableAt: terminal ? now : new Date(now.getTime() + retryDelayMs(attemptNumber)),
           ...(terminal ? { processedAt: now } : {}),
           lastError: deliveryErrorCode(),
         },

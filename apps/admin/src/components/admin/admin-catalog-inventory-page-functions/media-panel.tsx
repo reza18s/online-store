@@ -1,10 +1,12 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent } from 'react';
+import type { AdminCatalogProductStatus } from '@nova/api-client';
 
 import { Button, Input as UiInput, Select as UiSelect } from '@nova/ui';
 import type { useAdminProductMedia } from '../../../lib/admin/admin-catalog-api';
 import {
   useCreateAdminProductMedia,
   useDeleteAdminProductMedia,
+  useUploadAdminProductMedia,
   useUpdateAdminProductMedia,
 } from '../../../lib/admin/admin-catalog-api';
 
@@ -18,20 +20,31 @@ import { StatePanel } from './state-panel';
 
 import { adminCatalogInventoryErrorMessage } from './admin-catalog-inventory-error-message';
 
+import {
+  catalogMediaContentType,
+  readCatalogMediaDimensions,
+  validateCatalogMediaFile,
+} from './catalog-media-upload';
+
+import { canDeleteAdminProductMedia } from './can-delete-admin-product-media';
+
 import { isOfflineError } from './is-offline-error';
 
 import { validateMediaDraft } from './validate-media-draft';
 
 export function MediaPanel({
   productId,
+  productStatus,
   query,
   canWrite,
 }: {
   productId: string;
+  productStatus: AdminCatalogProductStatus;
   query: ReturnType<typeof useAdminProductMedia>;
   canWrite: boolean;
 }) {
   const createMedia = useCreateAdminProductMedia();
+  const uploadMedia = useUploadAdminProductMedia();
   const updateMedia = useUpdateAdminProductMedia();
   const deleteMedia = useDeleteAdminProductMedia();
   const [draft, setDraft] = useState({
@@ -40,6 +53,8 @@ export function MediaPanel({
     kind: 'PRODUCT' as 'PRODUCT' | 'DETAIL' | 'SWATCH',
   });
   const [error, setError] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileInputKey, setFileInputKey] = useState(0);
   async function addMedia(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const issues = validateMediaDraft(draft.url, draft.altText);
@@ -55,6 +70,47 @@ export function MediaPanel({
       setDraft({ url: '', altText: '', kind: 'PRODUCT' });
     } catch (mutationError) {
       setError(adminCatalogInventoryErrorMessage(mutationError, 'رسانه ثبت نشد.'));
+    }
+  }
+  function chooseFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+    const issues = validateCatalogMediaFile(file);
+    setError(issues.join(' '));
+    setSelectedFile(issues.length ? null : file);
+  }
+  async function uploadSelectedMedia(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const issues = validateCatalogMediaFile(selectedFile);
+    if (issues.length) {
+      setError(issues.join(' '));
+      return;
+    }
+    if (!selectedFile) return;
+    if (!draft.altText.trim()) {
+      setError('متن جایگزین رسانه را وارد کنید.');
+      return;
+    }
+    try {
+      const dimensions = await readCatalogMediaDimensions(selectedFile);
+      await uploadMedia.mutateAsync({
+        productId,
+        file: selectedFile,
+        input: {
+          contentType: catalogMediaContentType(selectedFile),
+          sizeBytes: selectedFile.size,
+          ...dimensions,
+        },
+        completeInput: {
+          altText: draft.altText.trim(),
+          kind: draft.kind,
+        },
+      });
+      setSelectedFile(null);
+      setFileInputKey((current) => current + 1);
+      setDraft((current) => ({ ...current, altText: '' }));
+      setError('');
+    } catch (mutationError) {
+      setError(adminCatalogInventoryErrorMessage(mutationError, 'بارگذاری رسانه انجام نشد.'));
     }
   }
   if (query.isPending && !query.data)
@@ -89,7 +145,8 @@ export function MediaPanel({
         <Icon name="layers" size={19} />
       </div>
       <p className="mt-2 text-[10px] leading-6 text-muted-foreground">
-        قرارداد فعلی نشانی رسانه را می‌پذیرد؛ بارگذاری مستقیم فایل در این slice وجود ندارد.
+        فایل تصویر ابتدا با لینک امن در فضای ذخیره‌سازی بارگذاری و سپس با کنترل نوع، اندازه و ابعاد
+        ثبت می‌شود.
       </p>
       {error ? (
         <p className="mt-3 text-xs text-destructive" role="alert">
@@ -97,45 +154,91 @@ export function MediaPanel({
         </p>
       ) : null}
       {canWrite ? (
-        <form className="mt-4 grid gap-2" onSubmit={addMedia}>
-          <UiInput
-            aria-label="نشانی رسانه"
-            className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            dir="ltr"
-            onChange={(event) => setDraft((current) => ({ ...current, url: event.target.value }))}
-            placeholder="https://..."
-            value={draft.url}
-          />
-          <div className="grid gap-2 sm:grid-cols-[1fr_130px_auto]">
+        <>
+          <form className="mt-4 grid gap-2" onSubmit={uploadSelectedMedia}>
             <UiInput
-              aria-label="متن جایگزین"
-              className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              onChange={(event) =>
-                setDraft((current) => ({ ...current, altText: event.target.value }))
-              }
-              placeholder="متن جایگزین"
-              value={draft.altText}
+              key={fileInputKey}
+              accept="image/avif,image/gif,image/jpeg,image/png,image/webp"
+              aria-label="فایل تصویر"
+              className="min-h-11 border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              onChange={chooseFile}
+              type="file"
             />
-            <UiSelect
-              aria-label="نوع رسانه"
-              className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              onChange={(event) =>
-                setDraft((current) => ({
-                  ...current,
-                  kind: event.target.value as typeof draft.kind,
-                }))
-              }
-              value={draft.kind}
-            >
-              <option value="PRODUCT">محصول</option>
-              <option value="DETAIL">جزئیات</option>
-              <option value="SWATCH">نمونه رنگ</option>
-            </UiSelect>
-            <Button loading={createMedia.isPending} type="submit">
-              <Icon name="plus" size={15} /> افزودن
-            </Button>
+            <div className="grid gap-2 sm:grid-cols-[1fr_130px_auto]">
+              <UiInput
+                aria-label="متن جایگزین"
+                className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                onChange={(event) =>
+                  setDraft((current) => ({ ...current, altText: event.target.value }))
+                }
+                placeholder="متن جایگزین"
+                value={draft.altText}
+              />
+              <UiSelect
+                aria-label="نوع رسانه"
+                className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                onChange={(event) =>
+                  setDraft((current) => ({
+                    ...current,
+                    kind: event.target.value as typeof draft.kind,
+                  }))
+                }
+                value={draft.kind}
+              >
+                <option value="PRODUCT">محصول</option>
+                <option value="DETAIL">جزئیات</option>
+                <option value="SWATCH">نمونه رنگ</option>
+              </UiSelect>
+              <Button loading={uploadMedia.isPending} type="submit">
+                <Icon name="package" size={15} /> بارگذاری فایل
+              </Button>
+            </div>
+          </form>
+          <div className="my-4 flex items-center gap-3 text-[10px] text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            یا افزودن نشانی موجود
+            <span className="h-px flex-1 bg-border" />
           </div>
-        </form>
+          <form className="grid gap-2" onSubmit={addMedia}>
+            <UiInput
+              aria-label="نشانی رسانه"
+              className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              dir="ltr"
+              onChange={(event) => setDraft((current) => ({ ...current, url: event.target.value }))}
+              placeholder="https://..."
+              value={draft.url}
+            />
+            <div className="grid gap-2 sm:grid-cols-[1fr_130px_auto]">
+              <UiInput
+                aria-label="متن جایگزین"
+                className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                onChange={(event) =>
+                  setDraft((current) => ({ ...current, altText: event.target.value }))
+                }
+                placeholder="متن جایگزین"
+                value={draft.altText}
+              />
+              <UiSelect
+                aria-label="نوع رسانه"
+                className="min-h-11 border border-border bg-background px-3 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                onChange={(event) =>
+                  setDraft((current) => ({
+                    ...current,
+                    kind: event.target.value as typeof draft.kind,
+                  }))
+                }
+                value={draft.kind}
+              >
+                <option value="PRODUCT">محصول</option>
+                <option value="DETAIL">جزئیات</option>
+                <option value="SWATCH">نمونه رنگ</option>
+              </UiSelect>
+              <Button loading={createMedia.isPending} type="submit">
+                <Icon name="plus" size={15} /> افزودن
+              </Button>
+            </div>
+          </form>
+        </>
       ) : null}
       <div className="mt-5 divide-y divide-border">
         {(query.data ?? []).length === 0 ? (
@@ -143,6 +246,7 @@ export function MediaPanel({
         ) : (
           (query.data ?? []).map((media) => (
             <MediaItem
+              canDelete={canDeleteAdminProductMedia(productStatus, media, query.data ?? [])}
               canWrite={canWrite}
               deleteMedia={deleteMedia}
               key={media.id}

@@ -238,6 +238,11 @@ async function installCheckoutFixtures(page: Page): Promise<CheckoutNetworkEvide
       return;
     }
 
+    if (request.method() === 'POST' && url.pathname === '/v1/analytics/events') {
+      await route.fulfill({ status: 202, contentType: 'application/json', body: '{}' });
+      return;
+    }
+
     const isQuoteRequest = request.method() === 'POST' && url.pathname === '/v1/checkout/quote';
     const isSubmitRequest = request.method() === 'POST' && url.pathname === '/v1/checkout';
 
@@ -362,7 +367,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
 
     await main.getByRole('button', { name: 'ادامه', exact: true }).click();
     await expect(page).toHaveURL(
-      new RegExp(`#checkout/shipping\\?addressId=${syntheticAddressId}&shipping=STANDARD$`),
+      new RegExp(`/checkout/shipping\\?addressId=${syntheticAddressId}&shipping=STANDARD$`),
     );
     await expectSettledCheckout(page);
     await expect(main.getByRole('heading', { name: 'روش ارسال', level: 1 })).toBeVisible();
@@ -382,7 +387,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
 
     await main.getByRole('button', { name: 'ادامه', exact: true }).click();
     await expect(page).toHaveURL(
-      new RegExp(`#checkout/payment\\?addressId=${syntheticAddressId}&shipping=EXPRESS$`),
+      new RegExp(`/checkout/payment\\?addressId=${syntheticAddressId}&shipping=EXPRESS$`),
     );
     await expect(main.getByRole('heading', { name: 'پرداخت امن', level: 1 })).toBeVisible();
     await expect(main).toContainText('پرداخت آنلاین');
@@ -425,7 +430,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
 
     await expect(page).toHaveURL(
       new RegExp(
-        `#checkout/payment-recovery\\?orderNumber=${syntheticOrderNumber}&paymentState=timeout$`,
+        `/checkout/payment-recovery\\?orderNumber=${syntheticOrderNumber}&paymentState=timeout$`,
       ),
     );
     await expectSettledCheckout(page);

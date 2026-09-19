@@ -6,8 +6,17 @@ import type {
   CustomerUser,
 } from '../../../packages/api-client/src/types';
 
+import { parseE2eEndpoint } from '../run';
+
+const adminEndpoint = parseE2eEndpoint(
+  'NOVA_E2E_ADMIN_URL',
+  process.env.NOVA_E2E_ADMIN_URL,
+  'http://127.0.0.1:5174',
+);
+
 const customerSessionPath = '/v1/auth/me';
 const customerOrdersPath = '/v1/account/orders';
+const catalogProductsPath = '/v1/catalog/products';
 const staffSessionPath = '/v1/staff/auth/me';
 const syntheticMarker = 'BROWSER-LOCAL-CUSTOMER-TO-STAFF-001';
 const syntheticTimestamp = '2026-01-01T00:00:00.000Z';
@@ -117,6 +126,22 @@ async function installCustomerToStaffBoundary(page: Page) {
       return;
     }
 
+    if (url.pathname === catalogProductsPath) {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(
+          envelope({
+            items: [],
+            total: 0,
+            page: 1,
+            limit: 8,
+          }),
+        ),
+      });
+      return;
+    }
+
     if (url.pathname === staffSessionPath) {
       staffSessionRequests.push(`${request.method()} ${url.pathname}`);
       await route.fulfill({
@@ -165,11 +190,11 @@ test('does not reuse an authenticated customer session for a staff-only route', 
   expect(customerSessionRequestsBeforeStaffNavigation).toBeGreaterThan(0);
   expect(network.customerOrdersRequests).toEqual(['GET /v1/account/orders?page=1&limit=10']);
 
-  await page.evaluate(() => {
-    window.location.hash = '#admin/catalog';
+  await page.goto(`${adminEndpoint.safeOrigin}/#admin/catalog`, {
+    waitUntil: 'domcontentloaded',
   });
 
-  await expect(page).toHaveURL(/#admin\/catalog$/);
+  await expect(page).toHaveURL(new RegExp(`${adminEndpoint.safeOrigin}/#admin\\/catalog$`));
   await expect(page.getByRole('heading', { name: 'ورود به فضای مدیریت' })).toBeVisible();
   await expect(page.getByLabel('ایمیل سازمانی')).toBeEmpty();
   await expect(page.getByLabel('رمز عبور')).toBeEmpty();

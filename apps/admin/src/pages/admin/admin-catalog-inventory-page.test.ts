@@ -3,7 +3,10 @@ import { describe, test } from 'node:test';
 
 import {
   adminInventoryViewKey,
+  adminProductStatusAction,
   adminProductEditorKey,
+  buildAdminCatalogProductUpdateInput,
+  canDeleteAdminProductMedia,
   hasAdminRole,
   isInventoryDiscrepancy,
   normalizeAdminCatalogInventoryView,
@@ -13,6 +16,7 @@ import {
   validateMediaDraft,
   validateProductDraft,
 } from './admin-catalog-inventory-page';
+import { validateCatalogMediaFile } from '../../components/admin/admin-catalog-inventory-page-functions/catalog-media-upload';
 
 const validProduct = {
   slug: 'linen-overshirt',
@@ -23,6 +27,26 @@ const validProduct = {
   basePriceToman: '240000',
   compareAtPriceToman: '280000',
 };
+
+const productDetail = {
+  name: 'پیراهن لینن',
+  shortDescription: 'توضیح قبلی',
+  description: 'جزئیات قبلی',
+  brand: 'Nova',
+  basePriceToman: 240000,
+  compareAtPriceToman: 280000,
+};
+
+const media = (kind: 'PRODUCT' | 'DETAIL') => ({
+  id: `${kind}-1`,
+  productId: 'product-1',
+  url: 'https://cdn.example/product.webp',
+  altText: 'تصویر محصول',
+  kind,
+  sortOrder: 0,
+  width: null,
+  height: null,
+});
 
 describe('admin catalog/inventory page helpers', () => {
   test('normalizes route views without inventing a route', () => {
@@ -64,15 +88,71 @@ describe('admin catalog/inventory page helpers', () => {
     );
   });
 
+  test('keeps API-supported product text fields in the edit payload', () => {
+    assert.deepEqual(
+      buildAdminCatalogProductUpdateInput(
+        {
+          slug: 'linen-overshirt',
+          name: 'پیراهن لینن جدید',
+          shortDescription: 'توضیح تازه',
+          description: 'جزئیات تازه',
+          brand: 'Nova Studio',
+          basePriceToman: '250000',
+          compareAtPriceToman: '',
+        },
+        productDetail,
+      ),
+      {
+        name: 'پیراهن لینن جدید',
+        shortDescription: 'توضیح تازه',
+        description: 'جزئیات تازه',
+        brand: 'Nova Studio',
+        basePriceToman: 250000,
+        compareAtPriceToman: null,
+      },
+    );
+  });
+
+  test('restores archived products to draft instead of attempting publish', () => {
+    assert.deepEqual(adminProductStatusAction('ARCHIVED'), {
+      label: 'بازیابی پیش‌نویس',
+      targetStatus: 'DRAFT',
+    });
+    assert.deepEqual(adminProductStatusAction('DRAFT'), {
+      label: 'انتشار',
+      targetStatus: 'PUBLISHED',
+    });
+  });
+
+  test('protects the last primary image for published products in the UI', () => {
+    assert.equal(
+      canDeleteAdminProductMedia('PUBLISHED', media('PRODUCT'), [media('PRODUCT')]),
+      false,
+    );
+    assert.equal(
+      canDeleteAdminProductMedia('PUBLISHED', media('PRODUCT'), [
+        media('PRODUCT'),
+        { ...media('PRODUCT'), id: 'PRODUCT-2' },
+      ]),
+      true,
+    );
+    assert.equal(
+      canDeleteAdminProductMedia('PUBLISHED', media('DETAIL'), [media('PRODUCT')]),
+      true,
+    );
+    assert.equal(canDeleteAdminProductMedia('DRAFT', media('PRODUCT'), [media('PRODUCT')]), true);
+  });
+
   test('requires a non-zero inventory delta and an auditable reason', () => {
     assert.deepEqual(validateInventoryAdjustment('3', 'رسید انبار'), []);
     assert.equal(validateInventoryAdjustment('0', '').length, 2);
     assert.ok(validateInventoryAdjustment('-2', '   ').includes('دلیل تغییر موجودی را وارد کنید.'));
   });
 
-  test('treats media URL and alt text as the supported upload boundary', () => {
+  test('retains URL fallback while validating direct image uploads', () => {
     assert.deepEqual(validateMediaDraft('https://cdn.example/product.webp', 'نمای روبه‌رو'), []);
     assert.equal(validateMediaDraft('', '').length, 2);
+    assert.deepEqual(validateCatalogMediaFile({ type: 'image/png', size: 100 } as File), []);
   });
 
   test('prioritizes saving, publish blockers, invalid, saved, and draft state decisions', () => {

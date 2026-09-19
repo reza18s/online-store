@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { endpointUrl, parseE2eEndpoint, probeMatches } from './run';
+import { endpointUrl, parseE2eEndpoint, probeMatches, shellMatches } from './run';
 
 test('keeps E2E endpoint logs at the safe origin boundary', () => {
   const endpoint = parseE2eEndpoint(
@@ -40,6 +40,24 @@ test('matches expected HTTP boundaries including intentional unauthenticated 401
   );
   assert.equal(probeMatches({ status: 200, body: '{"data":null}' }, 401, 'UNAUTHORIZED'), false);
   assert.equal(probeMatches({ status: null, body: '' }, 200, '"data":['), false);
+});
+
+test('requires every frontend shell marker before reporting availability', () => {
+  assert.equal(
+    shellMatches({ status: 200, body: '<html><div id="root">NOVA Admin</div></html>' }, 200, [
+      'id="root"',
+      'NOVA Admin',
+    ]),
+    true,
+  );
+  assert.equal(
+    shellMatches({ status: 200, body: '<html><div id="root"></div></html>' }, 200, [
+      'id="root"',
+      'NOVA Admin',
+    ]),
+    false,
+  );
+  assert.equal(shellMatches({ status: 503, body: 'NOVA Admin' }, 200, ['NOVA Admin']), false);
 });
 
 test('accepts a loopback object-storage endpoint without exposing credentials', () => {

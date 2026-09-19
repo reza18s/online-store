@@ -1,5 +1,13 @@
 import { expect, test } from '@playwright/test';
 
+import { parseE2eEndpoint } from '../run';
+
+const adminEndpoint = parseE2eEndpoint(
+  'NOVA_E2E_ADMIN_URL',
+  process.env.NOVA_E2E_ADMIN_URL,
+  'http://127.0.0.1:5174',
+);
+
 test.use({ viewport: { width: 1440, height: 900 } });
 
 test('renders the anonymous RTL storefront shell', async ({ page }) => {
@@ -105,7 +113,9 @@ test('keeps protected admin navigation on the staff login form without credentia
     if (new URL(request.url()).pathname === '/v1/staff/auth/login') loginRequests += 1;
   });
 
-  const response = await page.goto('/#admin/orders', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto(`${adminEndpoint.safeOrigin}/#admin/orders`, {
+    waitUntil: 'domcontentloaded',
+  });
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.getByRole('heading', { name: 'ورود به فضای مدیریت' })).toBeVisible();
@@ -124,7 +134,9 @@ test('validates an empty staff login client-side without sending credentials', a
     if (new URL(request.url()).pathname === '/v1/staff/auth/login') loginRequests += 1;
   });
 
-  const response = await page.goto('/#admin/login?expired=1', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto(`${adminEndpoint.safeOrigin}/#admin/login?expired=1`, {
+    waitUntil: 'domcontentloaded',
+  });
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.getByRole('status')).toContainText('نشست مدیریت منقضی شده است');

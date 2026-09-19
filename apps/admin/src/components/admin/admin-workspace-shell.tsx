@@ -7,38 +7,106 @@ import { Logo } from '../ui/site-shell';
 
 import { AdminLogoutButton } from './admin-logout-button';
 
+import type { AdminStaffRole } from '../../pages/admin/admin-orders-page-shared';
+
+import { hasAdminStaffRole } from './admin-orders-page-functions/has-admin-staff-role';
+
+type AdminNavigationItem = {
+  key: string;
+  label: string;
+  icon: IconName;
+  requiredRoles: AdminStaffRole[];
+};
+
+const ALL_STAFF_ROLES: AdminStaffRole[] = ['support', 'operations', 'admin'];
+const ADMIN_ONLY: AdminStaffRole[] = ['admin'];
+const OPERATIONS_OR_ADMIN: AdminStaffRole[] = ['operations', 'admin'];
+
+const ADMIN_NAVIGATION_DEFINITIONS: Array<[string, string, IconName, AdminStaffRole[]]> = [
+  ['admin', 'داشبورد', 'home', ADMIN_ONLY],
+  ['catalog', 'محصولات', 'bag', ALL_STAFF_ROLES],
+  ['catalog/categories', 'دسته‌بندی‌ها', 'layers', ALL_STAFF_ROLES],
+  ['orders', 'سفارش‌ها', 'package', ALL_STAFF_ROLES],
+  ['customers', 'مشتریان', 'users', ALL_STAFF_ROLES],
+  ['marketing', 'بازاریابی', 'send', ADMIN_ONLY],
+  ['content', 'محتوا', 'book', ADMIN_ONLY],
+  ['audit', 'گزارش‌ها', 'eye', ADMIN_ONLY],
+  ['promotions', 'تخفیف‌ها', 'tag', ADMIN_ONLY],
+  ['operations', 'تنظیمات', 'settings', OPERATIONS_OR_ADMIN],
+];
+
+const ADMIN_NAVIGATION: AdminNavigationItem[] = ADMIN_NAVIGATION_DEFINITIONS.map(
+  ([key, label, icon, requiredRoles]) => ({
+    key,
+    label,
+    icon,
+    requiredRoles,
+  }),
+);
+
+const ADMIN_MOBILE_NAVIGATION_DEFINITIONS: Array<[string, string, IconName, AdminStaffRole[]]> = [
+  ['admin', 'داشبورد', 'home', ADMIN_ONLY],
+  ['catalog', 'محصولات', 'bag', ALL_STAFF_ROLES],
+  ['orders', 'سفارش‌ها', 'package', ALL_STAFF_ROLES],
+  ['operations', 'بیشتر', 'menu', OPERATIONS_OR_ADMIN],
+];
+
+const ADMIN_MOBILE_NAVIGATION: AdminNavigationItem[] = ADMIN_MOBILE_NAVIGATION_DEFINITIONS.map(
+  ([key, label, icon, requiredRoles]) => ({
+    key,
+    label,
+    icon,
+    requiredRoles,
+  }),
+);
+
+function filterNavigation(
+  navigation: AdminNavigationItem[],
+  staffRoles: readonly string[] | undefined,
+  allowDevelopmentPreview: boolean,
+): AdminNavigationItem[] {
+  if (allowDevelopmentPreview) return navigation;
+  return navigation.filter((item) => hasAdminStaffRole(staffRoles, item.requiredRoles));
+}
+
+export function getAdminWorkspaceNavigation(
+  staffRoles: readonly string[] | undefined,
+  allowDevelopmentPreview: boolean,
+): AdminNavigationItem[] {
+  return filterNavigation(ADMIN_NAVIGATION, staffRoles, allowDevelopmentPreview);
+}
+
+export function getAdminMobileNavigation(
+  staffRoles: readonly string[] | undefined,
+  allowDevelopmentPreview: boolean,
+): AdminNavigationItem[] {
+  return filterNavigation(ADMIN_MOBILE_NAVIGATION, staffRoles, allowDevelopmentPreview);
+}
+
 export function AdminWorkspaceShell({
   page,
   allowDevelopmentPreview,
   adminDisplayName,
   adminAccountLabel,
+  staffRoles,
   children,
 }: {
   page: string;
   allowDevelopmentPreview: boolean;
   adminDisplayName: string;
   adminAccountLabel: string;
+  staffRoles?: readonly string[];
   children: ReactNode;
 }) {
-  const nav = [
-    ['admin', 'داشبورد', 'home'],
-    ['catalog', 'محصولات', 'bag'],
-    ['catalog/categories', 'دسته‌بندی‌ها', 'layers'],
-    ['orders', 'سفارش‌ها', 'package'],
-    ['customers', 'مشتریان', 'users'],
-    ['marketing', 'بازاریابی', 'send'],
-    ['content', 'محتوا', 'book'],
-    ['audit', 'گزارش‌ها', 'eye'],
-    ['promotions', 'تخفیف‌ها', 'tag'],
-    ['operations', 'تنظیمات', 'settings'],
-  ].map(([key, label, icon]) => ({ key, label, icon: icon as IconName }));
+  const nav = getAdminWorkspaceNavigation(staffRoles, allowDevelopmentPreview);
+  const mobileNav = getAdminMobileNavigation(staffRoles, allowDevelopmentPreview);
   const isNavActive = (key: string) =>
     page === key ||
     (key === 'catalog' && page.startsWith('catalog/products')) ||
     (key !== 'catalog' && page.startsWith(`${key}/`));
 
   return (
-    <main className="admin-shell min-h-svh bg-background text-foreground">
+    <div className="admin-shell min-h-svh bg-background text-foreground">
       <aside className="admin-sidebar flex-[0_0_194px] px-3 py-6">
         <Logo descriptor="ADMIN PANEL" />
         <span className="admin-sidebar__label">فضای مدیریت</span>
@@ -139,22 +207,17 @@ export function AdminWorkspaceShell({
         className="fixed inset-x-0 bottom-0 z-30 flex min-h-[66px] items-stretch justify-around border-t border-border bg-surface/95 px-2 pb-[max(7px,env(safe-area-inset-bottom))] pt-1 shadow-float backdrop-blur md:hidden"
         aria-label="ناوبری مدیریت موبایل"
       >
-        {[
-          ['admin', 'داشبورد', 'home'],
-          ['catalog', 'محصولات', 'bag'],
-          ['orders', 'سفارش‌ها', 'package'],
-          ['operations', 'بیشتر', 'menu'],
-        ].map(([key, label, icon]) => (
+        {mobileNav.map(({ key, label, icon }) => (
           <a
             className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-[10px] ${isNavActive(key ?? '') ? 'text-primary' : 'text-muted-foreground'}`}
             href={`#admin${key === 'admin' ? '' : `/${key}`}`}
             key={key}
           >
-            <Icon name={icon as IconName} size={19} />
+            <Icon name={icon} size={19} />
             <span>{label}</span>
           </a>
         ))}
       </nav>
-    </main>
+    </div>
   );
 }

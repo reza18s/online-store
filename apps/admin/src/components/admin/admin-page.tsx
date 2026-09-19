@@ -61,6 +61,7 @@ export function AdminPage({ page, queryString = '' }: { page: string; queryStrin
       allowDevelopmentPreview={allowDevelopmentPreview}
       adminDisplayName={adminDisplayName}
       adminAccountLabel={adminAccountLabel}
+      staffRoles={staffRoles}
     >
       {content}
     </AdminWorkspaceShell>

@@ -9,11 +9,13 @@ import {
   apiErrorMessage,
   formatPersianDate,
   formatPersianNumber,
+  formatToman,
   getReturnEligibility,
   isCustomerActive,
   isOfflineError,
   isUnauthorizedError,
   returnReasonCopy,
+  refundStatusCopy,
   returnRequestStatusCopy,
   useCustomerCacheBoundary,
   useOnlineStatus,
@@ -106,6 +108,41 @@ export function CustomerReturnPage({
           <p className="mt-2 text-sm text-muted-foreground">
             ثبت درخواست: {formatPersianDate(order.returnRequest.requestedAt)}
           </p>
+          <section
+            className="mt-6 border-t border-border pt-5"
+            aria-labelledby="refund-status-title"
+          >
+            <h2 id="refund-status-title" className="text-lg">
+              وضعیت بازپرداخت
+            </h2>
+            {order.refunds.length > 0 ? (
+              <div className="mt-3 grid gap-3">
+                {order.refunds.map((refund) => (
+                  <div
+                    className="flex flex-wrap items-start justify-between gap-3 border border-border bg-background px-4 py-3"
+                    key={refund.id}
+                  >
+                    <div>
+                      <strong>{refundStatusCopy[refund.status]}</strong>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        مبلغ: {formatToman(refund.amountToman)}
+                      </p>
+                    </div>
+                    <div className="text-left text-xs text-muted-foreground">
+                      <p>ثبت: {formatPersianDate(refund.createdAt)}</p>
+                      {refund.completedAt ? (
+                        <p className="mt-1">تکمیل: {formatPersianDate(refund.completedAt)}</p>
+                      ) : null}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="mt-3 text-sm leading-7 text-muted-foreground">
+                هنوز رکورد بازپرداختی برای این سفارش از سرور دریافت نشده است.
+              </p>
+            )}
+          </section>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button asChild>
               <a href={`#order/${encodeURIComponent(order.orderNumber)}`}>مشاهده سفارش</a>

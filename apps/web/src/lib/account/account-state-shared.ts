@@ -1,4 +1,4 @@
-import { type CustomerOrderDetail } from '@nova/api-client';
+import { type CustomerOrderDetail, type CustomerOrderRefund } from '@nova/api-client';
 
 export const CUSTOMER_RETURN_WINDOW_DAYS = 7;
 
@@ -32,6 +32,12 @@ export const returnRequestStatusCopy = {
   REFUNDED: 'بازپرداخت شده',
   CANCELLED: 'لغو شده',
 } as const;
+
+export const refundStatusCopy: Record<CustomerOrderRefund['status'], string> = {
+  PENDING: 'در انتظار بازپرداخت',
+  SUCCEEDED: 'بازپرداخت انجام شده',
+  FAILED: 'بازپرداخت ناموفق',
+};
 
 export type ReturnEligibilityReason =
   | 'eligible'

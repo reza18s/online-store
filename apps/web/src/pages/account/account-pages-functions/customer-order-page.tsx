@@ -201,7 +201,14 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
               لغو سفارش
             </Button>
           ) : null}
-          {eligibility.eligible ? (
+          {order.returnRequest ? (
+            <a
+              className="text-link"
+              href={`#return/status?orderNumber=${encodeURIComponent(order.orderNumber)}`}
+            >
+              مشاهده وضعیت بازگشت و بازپرداخت <Icon name="arrow-left" size={15} />
+            </a>
+          ) : eligibility.eligible ? (
             <a
               className="text-link"
               href={`#return/request?orderNumber=${encodeURIComponent(order.orderNumber)}`}

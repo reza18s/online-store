@@ -1,24 +1,43 @@
 # NOVA Store
 
-NOVA Store is an Iran-first, single-merchant clothing commerce platform for Persian-speaking customers. The product and engineering source of truth is [`arch.md`](arch.md); this README describes the runnable foundation currently in the repository.
+NOVA Store یک پلتفرم فروش تک‌فروشنده و Iran-first برای مشتریان فارسی‌زبان است. منبع حقیقت محصول و معماری arch.md است و برنامه‌ی اجرای مرحله‌ای در plan.md قرار دارد.
 
-## Foundation stack
+## ساختار workspace
 
-- Bun `1.3.4` workspace
-- React + Vite + TypeScript web application
-- NestJS HTTP API
-- Prisma + PostgreSQL persistence boundary
-- Redis-ready local infrastructure
-- TanStack Query for server state and Zustand for local cart/UI state
-- Tailwind CSS tokens and shadcn-style shared primitives in `packages/ui`
+- apps/web: storefront عمومی، حساب مشتری، cart، checkout و SSR صفحات قابل index
+- apps/admin: پنل مستقل staff/admin با Vite روی پورت 5174
+- apps/api: API مشترک NestJS روی پورت 4000
+- apps/worker: worker مستقل برای outbox، notification و retry
+- packages/api-client: قرارداد و client مشترک frontend/backend
+- packages/db: Prisma schema، migration، seed و database client
+- packages/config: environment validation و provider configuration
+- packages/ui: primitiveهای مشترک shadcn-style
 
-The current implementation includes the Phase 1 engineering foundation plus catalog/discovery, guest/customer-cart ownership, checkout-time inventory reservation, customer OTP/session security, staff password/TOTP sessions, address persistence, and the first authoritative checkout boundary. It provides a Persian RTL web shell, API liveness/readiness endpoints, typed client contracts, validated environment configuration, a Prisma schema and seed catalog, read-only catalog/search routes with filters, sorting, pagination, inventory-aware availability, Persian text normalization, full-text/trigram typo tolerance, and bounded category/product search suggestions, plus API-backed home, category, product-list, search, product-detail, and guest-cart views. The API now also has Redis-backed OTP state, opaque PostgreSQL customer/admin sessions, encrypted staff TOTP credentials, explicit role guards, exact-origin/double-submit CSRF protection, customer address CRUD, idempotent order-intent creation, order/address snapshots, live integer-toman quotes, default shipment creation, reservation cleanup, browser client support for CSRF mutation headers, explicit guest-cart merge conflicts for stale lifecycle/stock/quantity state, protected admin product list/create/edit operations, audited admin product lifecycle mutations with publish/archive/draft transitions, protected admin variant/media operations with inventory-row creation and primary-image safeguards, protected category/assignment/option administration with cycle, ownership, active-category, and variant-option integrity guards, a protected inventory read/adjustment/reorder-point API with signed stock movements, reserved-stock safeguards, optimistic concurrency, and transactional audit events, verified payment callbacks with replay protection and late-payment refund reconciliation, bounded fixed/percentage coupons with minimum-order checks, row-locked global/per-user redemption reservations, payment-aware commit/release transitions, and audited admin coupon management, transactional payment success/failure notification outbox jobs with idempotent dedupe keys and worker retry leasing, paid-order fulfillment/shipment state transitions with transactional order events and audit records, customer cancellation/return requests with support/admin review and observable idempotent refund retries, and admin-only paginated audit-event and payment-attempt/refund inspection reads. The browser now has page-agnostic customer-auth, customer-address, checkout quote/submit, staff-session, admin-catalog, admin-inventory, admin-order, admin-audit, admin-payment, admin-coupon, guest-cart merge, and catalog category/search-suggestion transport/query/mutation layers with cache-safe category/product/option/variant/media/inventory/order/coupon updates. Development/test use provider-free local adapters for OTP, payment, shipping and notification delivery; provider-backed staging/production boundaries remain intentionally fail-closed until real providers are selected. SSR/hybrid storefront rendering and the non-dashboard admin catalog, inventory, order, audit, payment, and coupon UI still await their supplied page references before visual implementation.
+کد public نباید از apps/admin import شود و کد admin نباید در apps/web قرار بگیرد. هر frontend query client، route composition و auth/cache boundary مستقل خود را دارد و هر دو فقط از API مشترک و packages/api-client استفاده می‌کنند.
 
-The API also exposes session-scoped customer order history/detail reads, customer cancellation and return-request actions, read-only staff order search/detail and support customer lookup reads, operations/admin-only fulfillment and shipment mutations, support/admin return review/refund actions, operations/admin-only redacted notification delivery inspection, and admin-only audit-event and payment-attempt/refund reads. Their page-agnostic browser transport lives in `apps/web/src/features/orders/orders-api.ts`, `apps/web/src/features/admin/admin-orders-api.ts`, `apps/web/src/features/admin/admin-customers-api.ts`, `apps/web/src/features/admin/admin-notifications-api.ts`, `apps/web/src/features/admin/admin-audit-api.ts`, and `apps/web/src/features/admin/admin-payments-api.ts`; visual wiring remains pending the supplied page references.
+## Stack
 
-The content domain now exposes `GET /v1/seo/resolve` for SSR/hybrid metadata and redirect lookup, `GET /v1/content/pages/:slug` for published editorial/trust content, and admin-only paginated SEO metadata, redirect, and content-page lifecycle management. Content pages are draft-first, publish only when they contain usable content, and use audited optimistic-concurrency mutations. The browser transport lives in `apps/web/src/features/content/content-api.ts`; the boundaries are documented in [`docs/adr/0020-seo-metadata-and-redirects.md`](docs/adr/0020-seo-metadata-and-redirects.md), [`docs/adr/0021-public-content-page-read.md`](docs/adr/0021-public-content-page-read.md), and [`docs/adr/0022-admin-content-page-lifecycle.md`](docs/adr/0022-admin-content-page-lifecycle.md). SSR, sitemap/robots generation, content-page rendering, and the admin content UI remain separate follow-up work and still require the relevant supplied page references before visual implementation.
+- Bun 1.3.4 workspace
+- React + Vite + TypeScript
+- React Router با حفظ hash compatibility
+- Tailwind CSS
+- shadcn/ui-style primitives
+- Animate UI/CSS motion بدون مالکیت business state
+- TanStack Query برای server state
+- Zustand فقط برای cart و UI intent
+- NestJS + Prisma + PostgreSQL
+- Redis برای state موقت و coordination
+- S3-compatible storage؛ MinIO در local
 
-## Getting started
+## آماده‌سازی اولیه
+
+پیش‌نیازها:
+
+- Bun 1.3.4
+- Node.js >=22
+- Docker Desktop با Linux engine فعال
+
+در اولین اجرا:
 
 ```powershell
 bun install
@@ -27,83 +46,123 @@ bun run db:generate
 bun run docker:config
 ```
 
-For the provider-free local flow, start the API and its local PostgreSQL/Redis/MinIO dependencies in one terminal, then start the web shell in a second terminal:
+فایل .env فقط برای local است و در Git ignore می‌شود. credentialهای آن synthetic هستند و نباید در staging یا production استفاده شوند.
+
+## اجرای local
+
+ابتدا API و dependencyهای local را اجرا کنید:
 
 ```powershell
-# Terminal 1
 bun run dev:api:local
-
-# Terminal 2
-bun run dev
 ```
 
-The web shell runs at `http://127.0.0.1:5173`. In development/test, OTP, payment, shipping and notification delivery use local adapters, so SMS.ir, ZarinPal and Iran Post credentials are not needed. `dev:api:local` also enables the explicit local fixture mode and seeds a synthetic admin account. To test the admin flow, open `http://127.0.0.1:5173/#admin/login` with:
+سپس در terminalهای جدا:
+
+```powershell
+bun run dev
+bun run dev:admin
+bun run dev:worker
+```
+
+آدرس‌ها:
+
+- Storefront: http://127.0.0.1:5173
+- Admin: http://127.0.0.1:5174/admin/login
+- API: http://127.0.0.1:4000
+- Liveness: http://127.0.0.1:4000/health/live
+- Readiness: http://127.0.0.1:4000/health/ready
+- MinIO API: http://127.0.0.1:59000
+- MinIO console: http://127.0.0.1:59001
+
+اگر API را بدون helper اجرا می‌کنید:
+
+```powershell
+docker compose --env-file .env -f infra/docker/compose.yml up -d postgres redis s3
+bun run db:migrate
+bun run db:seed
+bun run dev:api
+```
+
+`DEMO_SEED=true` در local به‌صورت پیش‌فرض داده synthetic قابل تکرار برای catalog، CMS، مشتری، سفارش و مرجوعی می‌سازد؛ برای database غیر‌دمو آن را `false` کنید. اجرای `DEMO_SEED=true` در production عمداً fail closed است.
+
+برای staff local:
 
 ```text
 email:    admin@nova.local
 password: nova-local-admin-password-2026
-factor:   the current code from `bun run local:staff-code`
+factor:   خروجی bun run local:staff-code
 ```
 
-The one-time recovery factor `NOVAADMIN1` is also reset by `bun run db:seed`, so it can be used once when a TOTP code is inconvenient. These credentials are synthetic local fixtures only. They are never accepted when `NODE_ENV` is `staging` or `production`, and `LOCAL_TEST_MODE=true` is rejected outside `development`/`test`.
-
-For the customer flow, open `http://127.0.0.1:5173/#auth`, enter any valid Iranian test mobile number, and use the six-digit `کد تست محلی` shown on the verification screen. No SMS is sent. Checkout uses the same-origin local payment callback, standard shipping uses the local Iran Post-labelled quote, and notifications use the local outbox sender; none of these paths requires a provider key.
-
-To run the API or worker independently:
-
 ```powershell
-bun run dev:api
-bun run dev:worker
+bun run local:staff-code
 ```
 
-Start local dependencies when database-backed API work is needed:
+این credentialها فقط در development/test معتبرند. برای customer OTP نیز local adapter استفاده می‌شود و SMS واقعی ارسال نمی‌شود.
+
+## Providerهای local و واقعی
+
+در development/test این adapterها استفاده می‌شوند:
+
+- local OTP delivery
+- local payment gateway
+- local shipping quote
+- local notification sender
+- MinIO برای object storage
+
+در staging/production providerهای واقعی پشت boundaryهای زیر قرار می‌گیرند و تا زمانی که credential و contract معتبر نداشته باشند fail closed هستند:
+
+- PaymentGateway
+- SmsProvider
+- ShippingProvider
+- ObjectStorage
+
+برای production فعلاً boundaryهای ZarinPal، Sms.ir و Iran Post در configuration وجود دارند؛ انتخاب نهایی endpoint، credential، domain، hosting و backup destination باید قبل از Production Release Gate تأیید شود.
+
+## Validation
+
+چک‌های اصلی:
 
 ```powershell
-docker compose --env-file .env.example -f infra/docker/compose.yml up -d postgres redis s3
-bun run db:migrate
-bun run db:seed
-```
-
-If the API is started manually rather than through `dev:api:local`, set the local fixture flag before seeding and starting it:
-
-```powershell
-$env:NODE_ENV = 'development'
-$env:LOCAL_TEST_MODE = 'true'
-bun run db:seed
-bun run dev:api
-```
-
-`bun run local:staff-code` prints only the current six-digit TOTP factor; it does not print the secret. Keep the local `.env` values local and never copy them into staging or production.
-
-To run the complete no-key provider/auth check in one command:
-
-```powershell
-bun run test:local-providers
-```
-
-This checks the local OTP, staff-auth, local payment, shipping, notification and
-configuration boundaries. It uses repository-owned deterministic adapters and
-does not call SMS.ir, ZarinPal or Iran Post.
-
-The local `s3` service is MinIO. The E2E runtime preflight also checks its loopback liveness endpoint, so start it with PostgreSQL and Redis whenever running database-backed API or browser verification.
-
-The API exposes `GET /health/live` without a database dependency and `GET /health/ready` once PostgreSQL is available. API routes use the `/v1` prefix after the health endpoints.
-
-## Verification
-
-```powershell
-bun run typecheck
+bun run format:check
 bun run lint
+bun run typecheck
 bun run test
+bun run test:local-providers
 bun run build
 bun run docker:config
 ```
 
-Validation is behavior- and risk-based, not file-based. Do not create a separate
-test for every changed file. Add or update focused tests when observable
-behavior, state transitions, public contracts, security or data integrity, or
-meaningful regression risk changes. Otherwise, use the narrowest applicable
-existing tests and static checks; broader suites belong at integration or
-release gates rather than on every file change.
+تست browser:
 
-Do not place production credentials in this repository. Copy `.env.example` to a local `.env` only for development. Development and test environments use provider-free local adapters for OTP, payment, shipping, and notification outbox delivery, so SMS.ir, ZarinPal, and Iran Post credentials are not required for the local app flow. Staging and production keep the real provider boundaries and fail closed until their credentials and sandbox/production decisions are configured. Resolve the provider, hosting, domain, brand, and compliance decisions listed in `arch.md` before production work.
+```powershell
+bun run test:e2e:browser
+```
+
+تست‌های live مانند PostgreSQL/Redis/MinIO، browser authenticated flow، provider sandbox و backup/restore فقط وقتی معتبرند که dependencyهای مربوطه واقعاً در حال اجرا باشند.
+
+## وضعیت baseline فعلی
+
+در baseline آماده‌شده:
+
+- bun run typecheck موفق است.
+- bun run lint موفق است.
+- bun run test موفق است؛ ۴۷۴ تست pass و یک تست اختیاری MinIO skip شده است.
+- bun run test:local-providers با 56/56 موفق است.
+- bun run build موفق است؛ اجرای build در محیط sandbox به مجوز خارج از sandbox برای esbuild نیاز داشت.
+- bun run docker:config موفق است.
+- bun run format:check هنوز به‌دلیل debt formatting موجود در چندین فایل fail می‌شود؛ برای جلوگیری از formatting churn گسترده، formatter سراسری اجرا نشده است.
+
+اگر Docker Desktop Linux engine در دسترس نباشد، تست‌های database-backed، worker runtime، authenticated browser و media live قابل اعتبارسنجی نیستند. ابتدا Docker را اجرا کنید و سپس bun run dev:api:local را دوباره اجرا کنید.
+
+## مسیر اجرای کار
+
+ترتیب کار از plan.md:
+
+1. تثبیت قراردادها و مالکیت فایل‌ها
+2. seed قابل reset و local environment
+3. vertical slice از catalog تا order و مشاهده در admin
+4. تکمیل account، return/refund، content و SEO
+5. Demo staging gate
+6. provider certification، backup/restore و Production gate
+
+قبل از تغییر schema، public contract، permission یا state machine، ابتدا arch.md و ADRهای مرتبط را بررسی کنید.

@@ -164,6 +164,11 @@ async function installAuthenticatedFixtureNetwork(
       return;
     }
 
+    if (request.method() === 'POST' && url.pathname === '/v1/analytics/events') {
+      await route.fulfill({ status: 202, contentType: 'application/json', body: '{}' });
+      return;
+    }
+
     if (!safeMethods.has(request.method())) {
       if (request.method() === 'POST' && url.pathname === '/v1/auth/logout') {
         authenticated = false;
@@ -266,7 +271,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await orderCard.click();
   await waitForSettledAccount(page);
 
-  await expect(page).toHaveURL(new RegExp(`#order/${syntheticOrderNumber}$`));
+  await expect(page).toHaveURL(new RegExp(`/order/${syntheticOrderNumber}$`));
   await expect(page.getByRole('heading', { name: 'پیگیری سفارش', level: 1 })).toBeVisible();
   await expect(page.getByRole('main')).toContainText(syntheticOrderNumber);
   await expect(page.getByRole('main')).toContainText(`${syntheticMarker} / مشتری آزمایشی`);
@@ -283,7 +288,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await page.getByRole('button', { name: 'خروج از حساب', exact: true }).click();
   expect((await logoutResponse).status()).toBe(200);
 
-  await expect(page).toHaveURL(/#home$/);
+  await expect(page).toHaveURL(/\/home$/);
   await expect(page.getByRole('main')).toBeVisible();
   await expect(page.locator('body')).not.toContainText(syntheticMarker);
   await expect(page.locator('body')).not.toContainText(syntheticCustomerEmail);

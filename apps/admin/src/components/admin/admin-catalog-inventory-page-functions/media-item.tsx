@@ -14,12 +14,14 @@ export function MediaItem({
   media,
   productId,
   canWrite,
+  canDelete,
   updateMedia,
   deleteMedia,
 }: {
   media: { id: string; url: string; altText: string; kind: string };
   productId: string;
   canWrite: boolean;
+  canDelete: boolean;
   updateMedia: ReturnType<typeof useUpdateAdminProductMedia>;
   deleteMedia: ReturnType<typeof useDeleteAdminProductMedia>;
 }) {
@@ -36,6 +38,11 @@ export function MediaItem({
           {media.url}
         </p>
         <p className="mt-1 text-[10px] text-muted-foreground">{statusLabel(media.kind)}</p>
+        {!canDelete ? (
+          <p className="mt-1 text-[10px] text-warning" role="note">
+            تصویر اصلی محصول منتشرشده قابل حذف نیست.
+          </p>
+        ) : null}
         <UiInput
           aria-label={`متن جایگزین ${media.url}`}
           className="mt-2 min-h-9 w-full border border-border bg-background px-2 text-xs outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -63,7 +70,7 @@ export function MediaItem({
           </Button>
           <Button
             aria-label="حذف رسانه"
-            disabled={deleteMedia.isPending}
+            disabled={deleteMedia.isPending || !canDelete}
             onClick={() => void deleteMedia.mutateAsync({ productId, mediaId: media.id })}
             size="icon"
             variant="ghost"

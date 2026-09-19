@@ -10,12 +10,14 @@ import {
 } from '@nestjs/common';
 import { Prisma } from '@nova/db';
 import type { PaymentStatus, RefundStatus } from '@nova/db';
+import type { AnalyticsEventInput } from '@nova/api-client';
 
 import { AuditService } from '../audit/audit.service';
 import { DatabaseService } from '../../database/database.service';
 import { InventoryService, type InventoryReservationLine } from '../inventory/inventory.service';
 import { CouponService } from '../coupons/coupon.service';
 import { NotificationService } from '../notifications/notification.service';
+import { AnalyticsService } from '../analytics/analytics.service';
 import {
   PAYMENT_GATEWAY,
   type PaymentCallbackResult,
@@ -120,7 +122,7 @@ interface PaymentAttemptSource {
       | 'SHIPPED'
       | 'DELIVERED'
       | 'CANCELLED'
-    | 'RETURNED';
+      | 'RETURNED';
     paymentStatus: PaymentStatus;
     addressSnapshot: { phone: string } | null;
     items: Array<{ variantId: string | null; quantity: number }>;
@@ -216,6 +218,7 @@ export class PaymentService {
     @Inject(PAYMENT_GATEWAY) private readonly gateway: PaymentGateway,
     @Optional() private readonly notifications?: NotificationService,
     @Optional() private readonly coupons?: CouponService,
+    @Optional() private readonly analytics?: AnalyticsService,
   ) {}
 
   public async handleCallback(input: PaymentCallbackInput): Promise<PaymentCallbackView> {
@@ -223,10 +226,19 @@ export class PaymentService {
       throw new NotFoundException('درگاه پرداخت پیدا نشد.');
     }
 
-    const callback = await this.gateway.verifyCallback({
-      payload: input.payload,
-      signature: input.signature,
-    });
+    let callback: PaymentCallbackResult;
+    try {
+      callback = await this.gateway.verifyCallback({
+        payload: input.payload,
+        signature: input.signature,
+      });
+    } catch (error) {
+      this.trackAnalytics({
+        name: 'provider_failure',
+        properties: { provider: input.provider, reasonCode: processingErrorCode(error) },
+      });
+      throw error;
+    }
     validateCallback(input.provider, callback);
 
     const registration = await this.registerWebhook(
@@ -247,6 +259,14 @@ export class PaymentService {
 
     try {
       const result = await this.applyCallback(input.provider, callback, payloadHash(input.payload));
+      if (result.outcome === 'PAID') {
+        this.trackAnalytics({ name: 'purchase', properties: { status: 'succeeded' } });
+      } else if (result.outcome === 'FAILED' || result.outcome === 'REFUND_FAILED') {
+        this.trackAnalytics({
+          name: 'payment_failure',
+          properties: { reasonCode: result.outcome },
+        });
+      }
       await this.database.prisma.webhookEvent.update({
         where: { id: registration.id },
         data: {
@@ -262,6 +282,10 @@ export class PaymentService {
       });
       throw error;
     }
+  }
+
+  private trackAnalytics(input: AnalyticsEventInput): void {
+    void this.analytics?.record(input).catch(() => undefined);
   }
 
   public async processRefund(input: ProcessRefundInput): Promise<ProcessRefundView> {
@@ -365,9 +389,7 @@ export class PaymentService {
         where: { id: refund.id },
         data: {
           status: 'SUCCEEDED',
-          ...(result.providerRefundId
-            ? { providerRefundId: result.providerRefundId }
-            : {}),
+          ...(result.providerRefundId ? { providerRefundId: result.providerRefundId } : {}),
           completedAt: new Date(),
         },
       });

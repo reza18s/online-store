@@ -174,6 +174,11 @@ async function installSyntheticCustomerNetwork(
       return;
     }
 
+    if (request.method() === 'POST' && url.pathname === '/v1/analytics/events') {
+      await route.fulfill({ status: 202, contentType: 'application/json', body: '{}' });
+      return;
+    }
+
     if (!safeMethods.has(request.method())) {
       network.unexpectedStateChangingRequests.push(`${request.method()} ${url.pathname}`);
       await route.abort();

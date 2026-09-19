@@ -114,6 +114,9 @@ export function canReviewReturnStatus(
   if (currentStatus === 'REQUESTED') {
     return targetStatus === 'APPROVED' || targetStatus === 'REJECTED';
   }
+  if (currentStatus === 'RECEIVED') {
+    return targetStatus === 'RECEIVED';
+  }
   return currentStatus === 'APPROVED' && targetStatus === 'RECEIVED';
 }
 

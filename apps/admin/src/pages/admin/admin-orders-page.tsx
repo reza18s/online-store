@@ -6,6 +6,7 @@ export type {
 } from './admin-orders-page-shared';
 export {
   FULFILLMENT_STATUS_OPTIONS,
+  canReviewReturnStatus,
   MODAL_FOCUSABLE_SELECTOR,
   ORDER_STATUS_LABELS,
   ORDER_STATUS_OPTIONS,

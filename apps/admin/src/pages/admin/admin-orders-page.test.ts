@@ -7,6 +7,7 @@ import {
   adminOrderStatusLabel,
   adminOrderStatusTone,
   adminPaymentAttemptStatusLabel,
+  canReviewReturnStatus,
   getModalFocusWrapIndex,
   hasAdminStaffRole,
   isSafeTrackingReference,
@@ -31,6 +32,15 @@ test('uses semantic tones for return and refund statuses', () => {
   assert.equal(adminOrderStatusTone('PENDING'), 'warning');
   assert.equal(adminOrderStatusTone('SUCCEEDED'), 'success');
   assert.equal(adminOrderStatusTone('FAILED'), 'danger');
+});
+
+test('allows only backend-valid return review transitions', () => {
+  assert.equal(canReviewReturnStatus('REQUESTED', 'APPROVED'), true);
+  assert.equal(canReviewReturnStatus('REQUESTED', 'REJECTED'), true);
+  assert.equal(canReviewReturnStatus('REQUESTED', 'RECEIVED'), false);
+  assert.equal(canReviewReturnStatus('APPROVED', 'RECEIVED'), true);
+  assert.equal(canReviewReturnStatus('REJECTED', 'RECEIVED'), false);
+  assert.equal(canReviewReturnStatus('REFUNDED', 'RECEIVED'), false);
 });
 
 test('localizes every payment attempt status shown in order details', () => {

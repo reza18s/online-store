@@ -2,6 +2,7 @@ import {
   type AdminOrderStatusInput,
   type AdminReturnReviewStatus,
   type AdminShipmentStatus,
+  type CustomerReturnRequestStatus,
   type CheckoutOrderStatus,
 } from '@nova/api-client';
 
@@ -105,6 +106,16 @@ export const RETURN_REVIEW_OPTIONS: Array<[AdminReturnReviewStatus, string]> = [
   ['REJECTED', 'رد درخواست'],
   ['RECEIVED', 'تأیید دریافت و بازپرداخت'],
 ];
+
+export function canReviewReturnStatus(
+  currentStatus: CustomerReturnRequestStatus,
+  targetStatus: AdminReturnReviewStatus,
+): boolean {
+  if (currentStatus === 'REQUESTED') {
+    return targetStatus === 'APPROVED' || targetStatus === 'REJECTED';
+  }
+  return currentStatus === 'APPROVED' && targetStatus === 'RECEIVED';
+}
 
 export const SAFE_TRACKING_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$/;
 

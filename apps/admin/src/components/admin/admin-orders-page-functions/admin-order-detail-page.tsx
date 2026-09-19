@@ -366,7 +366,12 @@ export function AdminOrderDetailPage({
             onStatus={openStatus}
             order={order}
           />
-          <ReturnPanel canReview={canReviewReturns} onReview={openReturn} request={returnRequest} />
+          <ReturnPanel
+            canReview={canReviewReturns}
+            onReview={openReturn}
+            orderItems={order.items}
+            request={returnRequest}
+          />
           <RefundPanel refunds={order.refunds} payment={order.payment} />
           <AddressPanel address={order.address} />
         </div>

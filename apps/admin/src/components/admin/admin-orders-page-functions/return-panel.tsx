@@ -4,6 +4,7 @@ import { Button } from '@nova/ui';
 import { Icon } from '../../ui/icon';
 
 import {
+  canReviewReturnStatus,
   RETURN_REVIEW_OPTIONS,
   RETURN_STATUS_LABELS,
 } from '../../../pages/admin/admin-orders-page-shared';
@@ -14,14 +15,18 @@ import { StatusChip } from './status-chip';
 
 import { formatDate } from './format-date';
 
+import { formatSnapshot } from './format-snapshot';
+
 export function ReturnPanel({
   request,
   canReview,
   onReview,
+  orderItems,
 }: {
   request: AdminOrderDetail['returnRequest'];
   canReview: boolean;
   onReview: (target: AdminReturnReviewStatus) => void;
+  orderItems: AdminOrderDetail['items'];
 }) {
   return (
     <section
@@ -47,14 +52,62 @@ export function ReturnPanel({
               <dt className="text-muted-foreground">درخواست در</dt>
               <dd>{formatDate(request.requestedAt)}</dd>
             </div>
+            {request.reviewedAt ? (
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted-foreground">بررسی در</dt>
+                <dd>{formatDate(request.reviewedAt)}</dd>
+              </div>
+            ) : null}
+            {request.receivedAt ? (
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted-foreground">دریافت در</dt>
+                <dd>{formatDate(request.receivedAt)}</dd>
+              </div>
+            ) : null}
           </dl>
+          {request.note ? (
+            <div className="border border-border bg-background p-3 text-xs leading-6">
+              <strong className="block text-[11px]">یادداشت مشتری</strong>
+              <p className="mt-1 text-muted-foreground">{request.note}</p>
+            </div>
+          ) : null}
+          <div>
+            <h3 className="text-xs font-medium">اقلام درخواست بازگشت</h3>
+            <ul className="mt-2 divide-y divide-border border border-border">
+              {request.items.map((returnItem) => {
+                const orderItem = orderItems.find((item) => item.id === returnItem.orderItemId);
+                return (
+                  <li className="space-y-1 p-3 text-xs" key={returnItem.orderItemId}>
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="font-medium">
+                        {orderItem?.productName ?? `قلم ${returnItem.orderItemId}`}
+                      </span>
+                      <span className="shrink-0 text-muted-foreground">
+                        تعداد: {new Intl.NumberFormat('fa-IR').format(returnItem.quantity)}
+                      </span>
+                    </div>
+                    {orderItem ? (
+                      <>
+                        <span className="block text-[10px] text-muted-foreground" dir="ltr">
+                          SKU: {orderItem.sku}
+                        </span>
+                        <span className="block text-[10px] text-primary">
+                          {formatSnapshot(orderItem.variantSnapshot)}
+                        </span>
+                      </>
+                    ) : null}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
           <div className="grid gap-2">
             {RETURN_REVIEW_OPTIONS.map(([status, label]) => (
               <Button
                 disabled={
                   !canReview ||
                   request.status === status ||
-                  (request.status !== 'REQUESTED' && status !== 'RECEIVED')
+                  !canReviewReturnStatus(request.status, status)
                 }
                 key={status}
                 onClick={() => onReview(status)}

@@ -19,8 +19,8 @@ export { adminOrderHref } from '../../components/admin/admin-support-finance-pag
 export { adminCustomerLookupHref } from '../../components/admin/admin-support-finance-page-functions/admin-customer-lookup-href';
 export { adminCustomerLookupQuery } from '../../components/admin/admin-support-finance-page-functions/admin-customer-lookup-query';
 export { safeAuditMetadataLabel } from '../../components/admin/admin-support-finance-page-functions/safe-audit-metadata-label';
-export { formatNumber } from '../../components/admin/admin-support-finance-page-functions/format-number';
-export { formatToman } from '../../components/admin/admin-support-finance-page-functions/format-toman';
+export { formatPersianNumber as formatNumber } from '../../utils/app/format-persian-number';
+export { formatToman } from '../../utils/app/format-toman';
 export { formatDate } from '../../components/admin/admin-support-finance-page-functions/format-date';
 export { ltr } from '../../components/admin/admin-support-finance-page-functions/ltr';
 export { statusLabel } from '../../components/admin/admin-support-finance-page-functions/status-label';

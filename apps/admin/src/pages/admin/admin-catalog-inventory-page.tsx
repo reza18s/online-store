@@ -22,8 +22,8 @@ export { resolveAdminMutationState } from '../../components/admin/admin-catalog-
 export { isInventoryDiscrepancy } from '../../components/admin/admin-catalog-inventory-page-functions/is-inventory-discrepancy';
 export { resolveInventoryDetailState } from '../../components/admin/admin-catalog-inventory-page-functions/resolve-inventory-detail-state';
 export { adminCatalogInventoryErrorMessage } from '../../components/admin/admin-catalog-inventory-page-functions/admin-catalog-inventory-error-message';
-export { formatNumber } from '../../components/admin/admin-catalog-inventory-page-functions/format-number';
-export { formatToman } from '../../components/admin/admin-catalog-inventory-page-functions/format-toman';
+export { formatPersianNumber as formatNumber } from '../../utils/app/format-persian-number';
+export { formatToman } from '../../utils/app/format-toman';
 export { formatDate } from '../../components/admin/admin-catalog-inventory-page-functions/format-date';
 export { ltr } from '../../components/admin/admin-catalog-inventory-page-functions/ltr';
 export { isOfflineError } from '../../components/admin/admin-catalog-inventory-page-functions/is-offline-error';

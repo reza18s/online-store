@@ -2,8 +2,8 @@ import { type AdminDashboardSummary } from '@nova/api-client';
 
 import { type IconName } from '../../components/ui/icon';
 
-import { formatPersianNumber } from '../../components/admin/admin-dashboard-page-functions/format-persian-number';
-import { formatToman } from '../../components/admin/admin-dashboard-page-functions/format-toman';
+import { formatPersianNumber } from '../../utils/app/format-persian-number';
+import { formatToman } from '../../utils/app/format-toman';
 
 export const PERIOD_OPTIONS = [
   { value: 7, label: '۷ روز گذشته' },

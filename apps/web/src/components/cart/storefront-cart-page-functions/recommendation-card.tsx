@@ -2,7 +2,7 @@ import { Button } from '@nova/ui';
 import { Icon } from '../../ui/icon';
 import { type StorefrontProduct } from '../../../lib/catalog/catalog-api';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function RecommendationCard({
   product,

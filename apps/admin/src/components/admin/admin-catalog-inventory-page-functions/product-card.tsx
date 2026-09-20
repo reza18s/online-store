@@ -4,7 +4,7 @@ import { MediaThumb } from './media-thumb';
 
 import { StatusBadge } from './status-badge';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function ProductCard({ product }: { product: AdminCatalogProductListItem }) {
   return (

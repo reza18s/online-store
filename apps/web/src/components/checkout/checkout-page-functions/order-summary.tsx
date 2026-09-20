@@ -1,8 +1,9 @@
 import { type CartView, type CheckoutQuote } from '@nova/api-client';
 
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function OrderSummary({
   cart,
@@ -17,7 +18,7 @@ export function OrderSummary({
   return (
     <aside className="summary-card checkout-summary" aria-label="خلاصه سفارش">
       <span className="section-heading__eyebrow">خلاصه سفارش</span>
-      <h2>{new Intl.NumberFormat('fa-IR').format(cart.itemCount)} کالا</h2>
+      <h2>{formatPersianNumber(cart.itemCount)} کالا</h2>
       <div>
         <span>مبلغ کالاها</span>
         <strong>{formatToman(subtotal)}</strong>

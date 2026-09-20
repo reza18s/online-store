@@ -22,7 +22,7 @@ import { ProductGrid } from './product-grid';
 
 import { ProductSkeleton } from './product-skeleton';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 import { productAddButtonLabel } from './product-add-button-label';
 

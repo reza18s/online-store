@@ -3,8 +3,8 @@ export {
   PERIOD_OPTIONS,
   SUMMARY_METRICS,
 } from './admin-dashboard-page-shared';
-export { formatPersianNumber } from '../../components/admin/admin-dashboard-page-functions/format-persian-number';
-export { formatToman } from '../../components/admin/admin-dashboard-page-functions/format-toman';
+export { formatPersianNumber } from '../../utils/app/format-persian-number';
+export { formatToman } from '../../utils/app/format-toman';
 export { hasAdminDashboardRole } from '../../components/admin/admin-dashboard-page-functions/has-admin-dashboard-role';
 export { adminDashboardErrorMessage } from '../../components/admin/admin-dashboard-page-functions/admin-dashboard-error-message';
 export { DashboardAccessDenied } from '../../components/admin/admin-dashboard-page-functions/dashboard-access-denied';

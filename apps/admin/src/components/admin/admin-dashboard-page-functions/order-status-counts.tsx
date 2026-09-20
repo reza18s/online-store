@@ -4,7 +4,7 @@ import { Icon } from '../../ui/icon';
 
 import { ORDER_STATUS_LABELS } from '../../../pages/admin/admin-dashboard-page-shared';
 
-import { formatPersianNumber } from './format-persian-number';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 export function OrderStatusCounts({ summary }: { summary: AdminDashboardSummary }) {
   const entries = Object.entries(summary.orderStatusCounts);

@@ -1,6 +1,6 @@
 export type { CheckoutPageProps } from './checkout-page-shared';
 export { emptyAddressDraft, steps } from './checkout-page-shared';
-export { formatToman } from '../../components/checkout/checkout-page-functions/format-toman';
+export { formatToman } from '../../utils/app/format-toman';
 export { errorFailure } from '../../components/checkout/checkout-page-functions/error-failure';
 export { navigate } from '../../components/checkout/checkout-page-functions/navigate';
 export { failureHref } from '../../components/checkout/checkout-page-functions/failure-href';

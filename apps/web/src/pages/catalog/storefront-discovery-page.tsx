@@ -4,7 +4,7 @@ export type {
   StorefrontDiscoveryView,
 } from './storefront-discovery-page-shared';
 export { audienceCopy, sortValues } from './storefront-discovery-page-shared';
-export { formatToman } from '../../components/home/storefront-discovery-page-functions/format-toman';
+export { formatToman } from '../../utils/app/format-toman';
 export { optionalNumber } from '../../components/home/storefront-discovery-page-functions/optional-number';
 export { positivePage } from '../../components/home/storefront-discovery-page-functions/positive-page';
 export { parseDiscoveryQuery } from '../../components/home/storefront-discovery-page-functions/parse-discovery-query';

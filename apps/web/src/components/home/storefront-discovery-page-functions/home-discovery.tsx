@@ -8,7 +8,7 @@ import { AddToCartFeedback } from './add-to-cart-feedback';
 
 import { CatalogQueryState } from './catalog-query-state';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 import { useProductAdder } from './use-product-adder';
 

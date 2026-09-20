@@ -4,7 +4,7 @@ import { type StorefrontProduct } from '../../../lib/catalog/catalog-api';
 
 import { availabilityLabel } from './availability-label';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 import { validCompareAt } from './valid-compare-at';
 

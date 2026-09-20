@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Button, Checkbox, Input as UiInput, Select as UiSelect } from '@nova/ui';
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 import {
   toStorefrontProduct,
   useCatalogCategories,
@@ -144,7 +145,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
           <p className="mt-2 text-sm text-muted-foreground">
             {productsQuery.isPending
               ? 'در حال بارگذاری...'
-              : `${new Intl.NumberFormat('fa-IR').format(productsQuery.data?.total ?? 0)} مدل برای انتخاب شما`}
+              : `${formatPersianNumber(productsQuery.data?.total ?? 0)} مدل برای انتخاب شما`}
           </p>
         </div>
         <label className="flex min-h-11 items-center gap-2 border border-border bg-surface px-3 text-xs">

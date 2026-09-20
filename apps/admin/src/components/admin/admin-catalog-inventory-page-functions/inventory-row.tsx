@@ -5,7 +5,7 @@ import { Icon } from '../../ui/icon';
 
 import { StatusBadge } from './status-badge';
 
-import { formatNumber } from './format-number';
+import { formatPersianNumber as formatNumber } from '../../../utils/app/format-persian-number';
 
 export function InventoryRow({
   item,

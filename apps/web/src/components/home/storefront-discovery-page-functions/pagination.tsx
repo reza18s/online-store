@@ -1,3 +1,5 @@
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
+
 export function Pagination({
   page,
   limit,
@@ -39,7 +41,7 @@ export function Pagination({
             href={hrefForPage(value)}
             aria-current={value === page ? 'page' : undefined}
           >
-            {new Intl.NumberFormat('fa-IR').format(value)}
+            {formatPersianNumber(value)}
           </a>
         </span>
       ))}

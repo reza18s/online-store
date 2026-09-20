@@ -22,7 +22,7 @@ import { TextFilter } from './text-filter';
 
 import { formatDate } from './format-date';
 
-import { formatNumber } from './format-number';
+import { formatPersianNumber as formatNumber } from '../../../utils/app/format-persian-number';
 
 import { ltr } from './ltr';
 

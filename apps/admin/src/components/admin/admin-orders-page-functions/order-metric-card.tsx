@@ -1,6 +1,7 @@
 import { Card } from '@nova/ui';
 
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 export function OrderMetricCard({
   label,
@@ -23,7 +24,7 @@ export function OrderMetricCard({
           <span className="text-right text-xs text-muted-foreground">{label}</span>
         </div>
         <strong className="mt-5 block text-right font-display text-2xl leading-none tabular-nums">
-          {new Intl.NumberFormat('fa-IR').format(value)}
+          {formatPersianNumber(value)}
         </strong>
       </article>
     </Card>

@@ -1,10 +1,11 @@
 import { type CartLine } from '@nova/api-client';
 import { Button } from '@nova/ui';
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 import { cartLineAvailability } from './cart-line-availability';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function CartLineView({
   line,
@@ -64,7 +65,7 @@ export function CartLineView({
               −
             </Button>
             <span className="min-w-8 text-center text-xs" aria-live="polite">
-              {new Intl.NumberFormat('fa-IR').format(line.quantity)}
+              {formatPersianNumber(line.quantity)}
             </span>
             <Button
               className="min-h-11 min-w-11 text-lg text-muted-foreground hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"

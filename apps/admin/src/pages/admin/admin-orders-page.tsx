@@ -28,7 +28,7 @@ export { hasAdminStaffRole } from '../../components/admin/admin-orders-page-func
 export { normalizeTrackingReference } from '../../components/admin/admin-orders-page-functions/normalize-tracking-reference';
 export { isSafeTrackingReference } from '../../components/admin/admin-orders-page-functions/is-safe-tracking-reference';
 export { adminOrderErrorMessage } from '../../components/admin/admin-orders-page-functions/admin-order-error-message';
-export { formatToman } from '../../components/admin/admin-orders-page-functions/format-toman';
+export { formatToman } from '../../utils/app/format-toman';
 export { formatDate } from '../../components/admin/admin-orders-page-functions/format-date';
 export { formatSnapshot } from '../../components/admin/admin-orders-page-functions/format-snapshot';
 export { statusBadgeVariant } from '../../components/admin/admin-orders-page-functions/status-badge-variant';

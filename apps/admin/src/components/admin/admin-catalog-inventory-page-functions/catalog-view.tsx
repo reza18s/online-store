@@ -25,7 +25,7 @@ import { QueryState } from './query-state';
 
 import { StatePanel } from './state-panel';
 
-import { formatNumber } from './format-number';
+import { formatPersianNumber as formatNumber } from '../../../utils/app/format-persian-number';
 
 import { hasAdminRole } from './has-admin-role';
 

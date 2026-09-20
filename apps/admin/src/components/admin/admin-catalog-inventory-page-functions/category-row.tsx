@@ -8,7 +8,7 @@ import { StatusBadge } from './status-badge';
 
 import { formatDate } from './format-date';
 
-import { formatNumber } from './format-number';
+import { formatPersianNumber as formatNumber } from '../../../utils/app/format-persian-number';
 
 export function CategoryRow({
   category,

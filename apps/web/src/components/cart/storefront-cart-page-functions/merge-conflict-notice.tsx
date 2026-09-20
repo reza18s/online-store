@@ -1,6 +1,7 @@
 import { type CartMergeConflict } from '@nova/api-client';
 import { Button } from '@nova/ui';
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 import { conflictQuantity } from './conflict-quantity';
 
@@ -58,7 +59,7 @@ export function MergeConflictNotice({
               >
                 {nextQuantity === null
                   ? 'حذف کالا از سبد مهمان'
-                  : `نگه‌داشتن ${new Intl.NumberFormat('fa-IR').format(nextQuantity)} عدد`}
+                  : `نگه‌داشتن ${formatPersianNumber(nextQuantity)} عدد`}
               </Button>
             </li>
           );

@@ -5,7 +5,7 @@ import { Icon } from '../../ui/icon';
 
 import { LoadingState } from './loading-state';
 
-import { formatNumber } from './format-number';
+import { formatPersianNumber as formatNumber } from '../../../utils/app/format-persian-number';
 
 export function LowStockCard({
   items,

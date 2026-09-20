@@ -11,8 +11,8 @@ export {
   returnRequestStatusCopy,
   refundStatusCopy,
 } from './account-state-shared';
-export { formatToman } from './account-state-functions/format-toman';
-export { formatPersianNumber } from './account-state-functions/format-persian-number';
+export { formatToman } from '../../utils/app/format-toman';
+export { formatPersianNumber } from '../../utils/app/format-persian-number';
 export { formatPersianDate } from './account-state-functions/format-persian-date';
 export { isCustomerActive } from './account-state-functions/is-customer-active';
 export { shouldShowCustomerOrderLoading } from './account-state-functions/should-show-customer-order-loading';

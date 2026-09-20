@@ -3,7 +3,7 @@ import { Button } from '@nova/ui';
 
 import { Icon } from '../../ui/icon';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function ConfirmationBody({ order }: { order: CustomerOrderDetail }) {
   return (

@@ -3,6 +3,7 @@ import { type AdminOrderListQuery } from '@nova/api-client';
 import { Button } from '@nova/ui';
 import { useAdminOrders } from '../../../lib/admin/admin-orders-api';
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 import { SHIPMENT_STATUS_LABELS } from '../../../pages/admin/admin-orders-page-shared';
 
@@ -24,7 +25,7 @@ import { adminOrderErrorMessage } from './admin-order-error-message';
 
 import { formatDate } from './format-date';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 import { hasAdminStaffRole } from './has-admin-staff-role';
 
@@ -87,7 +88,7 @@ export function AdminOrdersPage({
           <span>
             مجموع سفارش‌ها:{' '}
             <strong className="text-foreground">
-              {new Intl.NumberFormat('fa-IR').format(data?.total ?? 0)}
+              {formatPersianNumber(data?.total ?? 0)}
             </strong>
           </span>
         </div>
@@ -138,7 +139,7 @@ export function AdminOrdersPage({
               فهرست سفارش‌ها
             </h2>
             <span className="text-xs text-muted-foreground">
-              {new Intl.NumberFormat('fa-IR').format(orders.length)} مورد در این صفحه
+              {formatPersianNumber(orders.length)} مورد در این صفحه
             </span>
           </div>
           <div className="overflow-x-auto">

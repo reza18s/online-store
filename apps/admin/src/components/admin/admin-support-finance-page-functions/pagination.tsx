@@ -2,7 +2,7 @@ import { Button } from '@nova/ui';
 
 import { Icon } from '../../ui/icon';
 
-import { formatNumber } from './format-number';
+import { formatPersianNumber as formatNumber } from '../../../utils/app/format-persian-number';
 
 import { pageCount } from './page-count';
 

@@ -2,6 +2,7 @@ import { type AdminOrderDetail, type AdminReturnReviewStatus } from '@nova/api-c
 import { Button } from '@nova/ui';
 
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 import {
   canReviewReturnStatus,
@@ -83,7 +84,7 @@ export function ReturnPanel({
                         {orderItem?.productName ?? `قلم ${returnItem.orderItemId}`}
                       </span>
                       <span className="shrink-0 text-muted-foreground">
-                        تعداد: {new Intl.NumberFormat('fa-IR').format(returnItem.quantity)}
+                        تعداد: {formatPersianNumber(returnItem.quantity)}
                       </span>
                     </div>
                     {orderItem ? (

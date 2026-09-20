@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '@nova/ui';
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 import {
   toStorefrontProduct,
   useCatalogProducts,
@@ -36,7 +37,7 @@ import { cartActionErrorMessage } from './cart-action-error-message';
 
 import { cartLineTotal } from './cart-line-total';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function StorefrontCartPage(props: StorefrontCartPageProps) {
   const controlled =
@@ -219,7 +220,7 @@ export function StorefrontCartPage(props: StorefrontCartPageProps) {
         <span className="text-xs text-primary">NOVA / CART</span>
         <h1 className="text-2xl md:text-3xl">سبد خرید</h1>
         <p className="text-sm text-muted-foreground">
-          {new Intl.NumberFormat('fa-IR').format(cart.itemCount)} کالا در سبد شماست.
+          {formatPersianNumber(cart.itemCount)} کالا در سبد شماست.
         </p>
       </header>
       {mergeConflicts.length ? (

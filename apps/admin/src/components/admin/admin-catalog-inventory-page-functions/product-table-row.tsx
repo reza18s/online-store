@@ -6,9 +6,9 @@ import { MediaThumb } from './media-thumb';
 
 import { StatusBadge } from './status-badge';
 
-import { formatNumber } from './format-number';
+import { formatPersianNumber as formatNumber } from '../../../utils/app/format-persian-number';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function ProductTableRow({ product }: { product: AdminCatalogProductListItem }) {
   return (

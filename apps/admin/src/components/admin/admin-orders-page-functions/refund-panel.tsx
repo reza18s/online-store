@@ -10,7 +10,7 @@ import { adminPaymentAttemptStatusLabel } from './admin-payment-attempt-status-l
 
 import { formatDate } from './format-date';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function RefundPanel({
   refunds,

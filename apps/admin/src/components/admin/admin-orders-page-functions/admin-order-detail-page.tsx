@@ -8,6 +8,7 @@ import {
   useUpdateAdminOrderStatus,
 } from '../../../lib/admin/admin-orders-api';
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 import type {
   AdminFulfillmentOrderStatus,
@@ -51,7 +52,7 @@ import { formatDate } from './format-date';
 
 import { formatSnapshot } from './format-snapshot';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 import { hasAdminStaffRole } from './has-admin-staff-role';
 
@@ -319,7 +320,7 @@ export function AdminOrderDetailPage({
                     </span>
                   </div>
                   <span className="text-xs text-muted-foreground">
-                    تعداد: {new Intl.NumberFormat('fa-IR').format(item.quantity)}
+                    تعداد: {formatPersianNumber(item.quantity)}
                   </span>
                   <strong className="text-sm whitespace-nowrap">
                     {formatToman(item.totalToman)}

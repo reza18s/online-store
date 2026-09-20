@@ -14,7 +14,7 @@ import { adminOrderHref } from './admin-order-href';
 
 import { formatDate } from './format-date';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 import { ltr } from './ltr';
 

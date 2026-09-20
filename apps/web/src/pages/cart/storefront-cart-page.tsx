@@ -3,7 +3,7 @@ export { cartLineTotal } from '../../components/cart/storefront-cart-page-functi
 export { cartLineAvailability } from '../../components/cart/storefront-cart-page-functions/cart-line-availability';
 export { conflictQuantity } from '../../components/cart/storefront-cart-page-functions/conflict-quantity';
 export { cartActionErrorMessage } from '../../components/cart/storefront-cart-page-functions/cart-action-error-message';
-export { formatToman } from '../../components/cart/storefront-cart-page-functions/format-toman';
+export { formatToman } from '../../utils/app/format-toman';
 export { MessageCard } from '../../components/cart/storefront-cart-page-functions/message-card';
 export { CartRefreshNotice } from '../../components/cart/storefront-cart-page-functions/cart-refresh-notice';
 export { CartSkeleton } from '../../components/cart/storefront-cart-page-functions/cart-skeleton';

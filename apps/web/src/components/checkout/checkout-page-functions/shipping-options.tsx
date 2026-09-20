@@ -1,7 +1,7 @@
 import { type CheckoutQuote, type CheckoutShippingMethod } from '@nova/api-client';
 import { Radio } from '@nova/ui';
 
-import { formatToman } from './format-toman';
+import { formatToman } from '../../../utils/app/format-toman';
 
 export function ShippingOptions({
   value,

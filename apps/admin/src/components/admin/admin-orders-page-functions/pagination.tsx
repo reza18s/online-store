@@ -1,6 +1,7 @@
 import { Button } from '@nova/ui';
 
 import { Icon } from '../../ui/icon';
+import { formatPersianNumber } from '../../../utils/app/format-persian-number';
 
 export function Pagination({
   page,
@@ -21,8 +22,7 @@ export function Pagination({
       className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4"
     >
       <span className="text-xs text-muted-foreground">
-        صفحه {new Intl.NumberFormat('fa-IR').format(page)} از{' '}
-        {new Intl.NumberFormat('fa-IR').format(pageCount)}
+        صفحه {formatPersianNumber(page)} از {formatPersianNumber(pageCount)}
       </span>
       <div className="flex items-center gap-2" dir="ltr">
         <Button

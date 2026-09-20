@@ -1,0 +1,14 @@
+export { customerAddressesPath } from '@/features/account/api/addresses-api-shared';
+export { customerAddressPath } from '@/features/account/api/customer-address-path';
+export { customerAddressDefaultPath } from '@/features/account/api/customer-address-default-path';
+export { fetchCustomerAddresses } from '@/features/account/api/fetch-customer-addresses';
+export { createCustomerAddress } from '@/features/account/api/create-customer-address';
+export { updateCustomerAddress } from '@/features/account/api/update-customer-address';
+export { setCustomerAddressDefault } from '@/features/account/api/set-customer-address-default';
+export { removeCustomerAddress } from '@/features/account/api/remove-customer-address';
+export { invalidateCustomerAddresses } from '@/features/account/api/invalidate-customer-addresses';
+export { useCustomerAddresses } from '@/features/account/api/use-customer-addresses';
+export { useCreateCustomerAddress } from '@/features/account/api/use-create-customer-address';
+export { useUpdateCustomerAddress } from '@/features/account/api/use-update-customer-address';
+export { useSetCustomerAddressDefault } from '@/features/account/api/use-set-customer-address-default';
+export { useRemoveCustomerAddress } from '@/features/account/api/use-remove-customer-address';

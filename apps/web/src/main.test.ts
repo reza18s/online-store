@@ -5,7 +5,7 @@ import type { ReactElement } from 'react';
 import { QueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@nova/api-client';
 
-import { mountApp, seedInitialRenderData } from './main';
+import { mountApp, seedInitialRenderData } from '@/app/entry';
 
 const seo = {
   title: 'NOVA',

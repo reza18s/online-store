@@ -6,8 +6,8 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { queryKeys } from '@nova/api-client';
 
-import { createSeoDocument } from './lib/seo/metadata';
-import { RouteView, resolveSeoDocumentForRoute } from './app';
+import { createSeoDocument } from '@/features/seo/api/metadata';
+import { RouteView, resolveSeoDocumentForRoute } from '@/app';
 
 test('uses client SEO metadata after navigating from another public data route', () => {
   const seo = resolveSeoDocumentForRoute(

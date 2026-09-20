@@ -1,6 +1,6 @@
 declare module '*.css';
 
-import type { InitialRenderContext } from './lib/seo/metadata';
+import type { InitialRenderContext } from '@/features/seo/api/metadata';
 
 declare global {
   interface ImportMetaEnv {

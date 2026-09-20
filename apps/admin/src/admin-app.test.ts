@@ -6,12 +6,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ApiClientError, queryKeys } from '@nova/api-client';
 
-import { AdminPage } from './components/admin/admin-page';
-import { createQueryClient } from './providers/query-client';
-import { AdminLegacyPage } from './components/admin/admin-legacy-page';
-import { AdminRouteUnavailablePage } from './components/admin/admin-route-unavailable-page';
-import { shouldShowAdminDashboardPreview } from './utils/app/should-show-admin-dashboard-preview';
-import { validateStaffLoginInput } from './utils/app/validate-staff-login-input';
+import { AdminRouter } from '@/app/routes/AdminRouter';
+import { createQueryClient } from '@/app/providers/query-client';
+import { AdminLegacyPage } from '@/app/routes/AdminLegacyPage';
+import { AdminRouteUnavailablePage } from '@/app/routes/AdminRouteUnavailablePage';
+import { shouldShowAdminDashboardPreview } from '@/shared/utils/should-show-admin-dashboard-preview';
+import { validateStaffLoginInput } from '@/shared/utils/validate-staff-login-input';
 
 test('validates staff login fields with localized, field-specific errors', () => {
   assert.deepEqual(validateStaffLoginInput('', '', ''), {
@@ -59,7 +59,7 @@ test('renders the session-expired staff login state from the safe route marker',
     createElement(
       QueryClientProvider,
       { client: queryClient },
-      createElement(AdminPage, { page: 'login', queryString: 'expired=1' }),
+      createElement(AdminRouter, { page: 'login', queryString: 'expired=1' }),
     ),
   );
 
@@ -156,7 +156,7 @@ test('keeps the static admin preview development-only and renders the live admin
     createElement(
       QueryClientProvider,
       { client: queryClient },
-      createElement(AdminPage, { page: 'admin' }),
+      createElement(AdminRouter, { page: 'admin' }),
     ),
   );
 
@@ -180,7 +180,7 @@ test('denies a signed-in non-admin before the live dashboard query is used', () 
     createElement(
       QueryClientProvider,
       { client: queryClient },
-      createElement(AdminPage, { page: 'admin' }),
+      createElement(AdminRouter, { page: 'admin' }),
     ),
   );
 
@@ -213,7 +213,7 @@ test('passes encoded admin customer lookup queries into the customer filter', ()
     createElement(
       QueryClientProvider,
       { client: queryClient },
-      createElement(AdminPage, {
+      createElement(AdminRouter, {
         page: 'customers',
         queryString: 'q=person%2Bsupport%40example.test',
       }),
@@ -240,7 +240,7 @@ test('routes canonical and legacy new-product paths into the create editor', () 
       createElement(
         QueryClientProvider,
         { client: queryClient },
-        createElement(AdminPage, { page }),
+        createElement(AdminRouter, { page }),
       ),
     );
 

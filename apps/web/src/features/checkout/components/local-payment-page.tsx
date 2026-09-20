@@ -4,6 +4,8 @@ import { Button } from '@nova/ui';
 
 import { completeLocalPayment } from '@/features/checkout/api/checkout-api';
 
+import { navigateToRoute } from '@/app/routing/route';
+
 import { Icon } from '@/shared/ui/icon';
 
 import { CheckoutShell } from '@/features/checkout/components/checkout-shell';
@@ -34,7 +36,7 @@ export function LocalPaymentPage({ queryString = '' }: { queryString?: string })
       .then((result) => {
         if (!active) return;
         if (result.outcome === 'PAID' || result.outcome === 'DUPLICATE') {
-          window.location.hash = `#checkout/confirmation?orderNumber=${encodeURIComponent(orderNumber)}`;
+          navigateToRoute(`/checkout/confirmation?orderNumber=${encodeURIComponent(orderNumber)}`);
           return;
         }
         setError('پرداخت محلی تأیید نشد؛ وضعیت سفارش خود را بررسی کنید.');
@@ -61,7 +63,7 @@ export function LocalPaymentPage({ queryString = '' }: { queryString?: string })
         </p>
         {error ? (
           <Button className="mt-5" asChild variant="outline">
-            <a href={`#checkout/payment-recovery?orderNumber=${encodeURIComponent(orderNumber)}`}>
+            <a href={`/checkout/payment-recovery?orderNumber=${encodeURIComponent(orderNumber)}`}>
               بررسی وضعیت سفارش
             </a>
           </Button>

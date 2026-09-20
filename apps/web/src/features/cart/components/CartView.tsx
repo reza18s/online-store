@@ -200,7 +200,7 @@ export function CartView(props: StorefrontCartPageProps) {
             از میان انتخاب‌های آتلیه، قطعه‌ای برای روزهای پیش رو پیدا کنید.
           </p>
           <Button className="mt-5" asChild>
-            <a href="#products/new">مشاهده تازه‌ها</a>
+            <a href="/products/new">مشاهده تازه‌ها</a>
           </Button>
         </section>
       </main>
@@ -209,7 +209,7 @@ export function CartView(props: StorefrontCartPageProps) {
   return (
     <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-7 bg-background py-6 md:space-y-10 md:py-10">
       <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <a href="#home" className="hover:text-primary">
+        <a href="/" className="hover:text-primary">
           خانه
         </a>
         <span aria-hidden="true">/</span>
@@ -287,11 +287,11 @@ export function CartView(props: StorefrontCartPageProps) {
               می‌شود.
             </p>
             <Button className="mt-4 w-full" asChild size="lg">
-              <a href="#checkout/address">
+              <a href="/checkout/address">
                 ادامه فرایند خرید <Icon name="arrow-left" size={17} />
               </a>
             </Button>
-            <a className="mt-4 block text-center text-sm text-primary underline" href="#products">
+            <a className="mt-4 block text-center text-sm text-primary underline" href="/products">
               ادامه خرید
             </a>
           </div>

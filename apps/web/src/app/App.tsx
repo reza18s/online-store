@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { useCurrentCustomer } from '@/features/auth';
 
-import { useHashRoute, useScrollToTop } from '@/app/routing/hash-route';
+import { useRoute, useScrollToTop } from '@/app/routing/route';
 import { Header, MenuDrawer, MobileBottomNav, SearchDialog } from '@/shared/ui/site-shell';
 import { applySeoDocument, readInitialRenderContext } from '@/features/seo';
 
@@ -13,7 +13,7 @@ import { PublicApp } from '@/app/PublicApp';
 import { resolveSeoDocumentForRoute } from '@/features/seo';
 
 export function App() {
-  const route = useHashRoute();
+  const route = useRoute();
   useScrollToTop(route);
   const cartQuery = useCart(true);
   const customerQuery = useCurrentCustomer(true);
@@ -34,7 +34,7 @@ export function App() {
   }, [route]);
 
   useEffect(() => {
-    if (route === '#search') setSearchOpen(true);
+    if (route === '/search') setSearchOpen(true);
   }, [route]);
 
   const toggleWishlist = (slug: string) => {

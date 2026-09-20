@@ -79,7 +79,7 @@ test('keeps an authenticated support staff member out of the admin payments view
     await route.continue();
   });
 
-  const response = await page.goto('/#admin/payments', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin/payments', { waitUntil: 'domcontentloaded' });
 
   expect(response?.ok()).toBeTruthy();
   const main = page.getByRole('main');
@@ -163,7 +163,7 @@ test('filters support staff navigation to the customer inspection boundary', asy
     await route.continue();
   });
 
-  const response = await page.goto('/#admin/customers', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin/customers', { waitUntil: 'domcontentloaded' });
 
   expect(response?.ok()).toBeTruthy();
   const main = page.getByRole('main');
@@ -176,7 +176,7 @@ test('filters support staff navigation to the customer inspection boundary', asy
   await expect(inspectionNavigation.getByRole('link')).toHaveCount(1);
   await expect(
     inspectionNavigation.getByRole('link', { name: 'مشتریان', exact: true }),
-  ).toHaveAttribute('href', '#admin/customers');
+  ).toHaveAttribute('href', '/admin/customers');
   for (const forbiddenView of ['پرداخت‌ها', 'تحویل اعلان‌ها', 'گزارش فعالیت']) {
     await expect(
       inspectionNavigation.getByRole('link', { name: forbiddenView, exact: true }),

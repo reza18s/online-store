@@ -39,7 +39,7 @@ export function AdminSessionState({
         {kind !== 'loading' && kind !== 'denied' ? (
           <a
             className="mt-6 inline-flex min-h-11 items-center justify-center rounded-control bg-primary px-5 text-xs text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            href="#admin/login"
+            href="/admin/login"
           >
             ورود به پنل
           </a>

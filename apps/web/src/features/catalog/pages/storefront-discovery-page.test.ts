@@ -43,12 +43,12 @@ test('parses shareable discovery state and keeps invalid sort/page values safe',
 
 test('builds URL state without losing stale selections and resets page for filter changes', () => {
   assert.equal(
-    buildDiscoveryHref('#products/women', '?size=XL&page=4', { color: 'کرم' }),
-    '#products/women?size=XL&color=%DA%A9%D8%B1%D9%85',
+    buildDiscoveryHref('/products/women', '?size=XL&page=4', { color: 'کرم' }),
+    '/products/women?size=XL&color=%DA%A9%D8%B1%D9%85',
   );
   assert.equal(
-    buildDiscoveryHref('#products/women', '?size=XL&page=4', { page: '5' }),
-    '#products/women?size=XL&page=5',
+    buildDiscoveryHref('/products/women', '?size=XL&page=4', { page: '5' }),
+    '/products/women?size=XL&page=5',
   );
 });
 

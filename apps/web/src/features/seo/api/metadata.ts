@@ -21,6 +21,6 @@ export { seoDocumentFromMetadata } from '@/features/seo/api/seo-document-from-me
 export { upsertMeta } from '@/features/seo/api/upsert-meta';
 export { removeMeta } from '@/features/seo/api/remove-meta';
 export { applySeoDocument } from '@/features/seo/api/apply-seo-document';
-export { clientSeoForHashRoute } from '@/features/seo/api/client-seo-for-hash-route';
+export { clientSeoForRoute } from '@/features/seo/api/client-seo-for-route';
 export { readInitialRenderContext } from '@/features/seo/api/read-initial-render-context';
 export { isInitialRenderData } from '@/features/seo/api/is-initial-render-data';

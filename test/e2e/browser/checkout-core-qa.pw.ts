@@ -354,7 +354,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
     page.setDefaultTimeout(15_000);
     const evidence = await installCheckoutFixtures(page);
 
-    const response = await page.goto('/#checkout/address', { waitUntil: 'domcontentloaded' });
+    const response = await page.goto('/checkout/address', { waitUntil: 'domcontentloaded' });
     expect(response?.ok()).toBeTruthy();
     await expectSettledCheckout(page);
 
@@ -410,7 +410,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
     const evidence = await installCheckoutFixtures(page);
 
     const response = await page.goto(
-      `/#checkout/payment?addressId=${syntheticAddressId}&shipping=STANDARD`,
+      `/checkout/payment?addressId=${syntheticAddressId}&shipping=STANDARD`,
       { waitUntil: 'domcontentloaded' },
     );
     expect(response?.ok()).toBeTruthy();
@@ -443,7 +443,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
     await expect(page.getByRole('main')).toContainText(syntheticOrderNumber);
     await expect(
       page.getByRole('link', { name: 'مشاهده وضعیت سفارش', exact: true }).first(),
-    ).toHaveAttribute('href', `#order/${syntheticOrderNumber}`);
+    ).toHaveAttribute('href', `/order/${syntheticOrderNumber}`);
 
     expect(evidence.quoteRequests.length).toBeGreaterThanOrEqual(1);
     expect(

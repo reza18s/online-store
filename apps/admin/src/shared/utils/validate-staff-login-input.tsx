@@ -1,4 +1,4 @@
-import type { StaffLoginValidation } from '@/shared/fixtures/app-shared';
+import type { StaffLoginValidation } from '@/features/auth/types';
 
 export function validateStaffLoginInput(
   email: string,

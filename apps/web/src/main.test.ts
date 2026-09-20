@@ -50,7 +50,7 @@ test('seeds SSR public data under the same query keys used by the app', () => {
 
   seedInitialRenderData(queryClient, {
     path: '/category/women',
-    hashRoute: '#category/women',
+    route: '/category/women',
     seo,
     initialData: { kind: 'category', audience: 'women', categories, products },
   });

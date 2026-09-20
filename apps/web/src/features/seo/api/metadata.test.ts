@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
-  clientSeoForHashRoute,
+  clientSeoForRoute,
   createSeoDocument,
   parsePublicRenderPath,
   seoDocumentFromMetadata,
@@ -115,52 +115,52 @@ test('falls back from unsafe resolver canonicals to the recognized route canonic
 });
 
 test('client public content stays indexable while catalog compatibility routes are noindex', () => {
-  const category = clientSeoForHashRoute('#category/women', 'https://nova.example');
+  const category = clientSeoForRoute('/category/women', 'https://nova.example');
   assert.equal(category.title, 'NOVA | زنانه');
   assert.equal(category.canonicalUrl, 'https://nova.example/category/women');
 
-  const product = clientSeoForHashRoute('#product/linen-overshirt', 'https://nova.example');
+  const product = clientSeoForRoute('/product/linen-overshirt', 'https://nova.example');
   assert.equal(product.robots, 'index, follow');
   assert.equal(product.canonicalUrl, 'https://nova.example/product/linen-overshirt');
 
-  const invalidProduct = clientSeoForHashRoute('#product/bad%2Fslug', 'https://nova.example');
+  const invalidProduct = clientSeoForRoute('/product/bad%2Fslug', 'https://nova.example');
   assert.equal(invalidProduct.robots, 'noindex, nofollow');
   assert.equal(invalidProduct.canonicalUrl, null);
 
   for (const route of [
-    '#products',
-    '#products/women?sort=newest&color=red',
-    '#search?sort=newest',
+    '/products',
+    '/products/women?sort=newest&color=red',
+    '/search?sort=newest',
   ]) {
-    assert.equal(clientSeoForHashRoute(route, 'https://nova.example').robots, 'noindex, nofollow');
+    assert.equal(clientSeoForRoute(route, 'https://nova.example').robots, 'noindex, nofollow');
   }
 
-  const content = clientSeoForHashRoute('#content/size-guide', 'https://nova.example');
+  const content = clientSeoForRoute('/content/size-guide', 'https://nova.example');
   assert.equal(content.robots, 'index, follow');
   assert.equal(content.canonicalUrl, 'https://nova.example/content/size-guide');
 
-  const invalidContent = clientSeoForHashRoute('#content/bad%2Fslug', 'https://nova.example');
+  const invalidContent = clientSeoForRoute('/content/bad%2Fslug', 'https://nova.example');
   assert.equal(invalidContent.robots, 'noindex, nofollow');
   assert.equal(invalidContent.canonicalUrl, null);
 
-  const editorial = clientSeoForHashRoute('#campaign', 'https://nova.example');
+  const editorial = clientSeoForRoute('/campaign', 'https://nova.example');
   assert.equal(editorial.robots, 'index, follow');
 
-  const unknown = clientSeoForHashRoute('#unrecognized', 'https://nova.example');
+  const unknown = clientSeoForRoute('/unrecognized', 'https://nova.example');
   assert.equal(unknown.robots, 'noindex, nofollow');
   assert.equal(unknown.canonicalUrl, null);
 
-  const invalidCategory = clientSeoForHashRoute('#category/unknown', 'https://nova.example');
+  const invalidCategory = clientSeoForRoute('/category/unknown', 'https://nova.example');
   assert.equal(invalidCategory.robots, 'noindex, nofollow');
   assert.equal(invalidCategory.canonicalUrl, null);
 
-  const account = clientSeoForHashRoute('#account/orders', 'https://nova.example');
+  const account = clientSeoForRoute('/account/orders', 'https://nova.example');
   assert.equal(account.robots, 'noindex, nofollow');
   assert.equal(account.canonicalUrl, null);
 
-  const temporaryState = clientSeoForHashRoute('#state/offline', 'https://nova.example');
+  const temporaryState = clientSeoForRoute('/state/offline', 'https://nova.example');
   assert.equal(temporaryState.robots, 'noindex, nofollow');
 
-  const notFound = clientSeoForHashRoute('#not-found', 'https://nova.example');
+  const notFound = clientSeoForRoute('/not-found', 'https://nova.example');
   assert.equal(notFound.robots, 'noindex, nofollow');
 });

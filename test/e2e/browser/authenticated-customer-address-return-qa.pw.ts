@@ -242,9 +242,9 @@ async function installSyntheticCustomerNetwork(
   return network;
 }
 
-async function gotoHash(page: Page, hash: string): Promise<void> {
+async function gotoPath(page: Page, path: string): Promise<void> {
   page.setDefaultNavigationTimeout(15_000);
-  const response = await page.goto(`/${hash}`, { waitUntil: 'domcontentloaded' });
+  const response = await page.goto(path, { waitUntil: 'domcontentloaded' });
   if (response) expect(response.ok()).toBeTruthy();
   await expect(page.getByRole('main')).toBeVisible();
   await expect(page.locator('[role="status"][aria-label*="در حال"]')).toHaveCount(0);
@@ -263,7 +263,7 @@ test.describe('authenticated customer address and return presentation', () => {
   }) => {
     const network = await installSyntheticCustomerNetwork(page, { addresses: [syntheticAddress] });
 
-    await gotoHash(page, '#account/addresses');
+    await gotoPath(page, '/account/addresses');
 
     const main = page.getByRole('main');
     await expect(main.getByRole('heading', { name: 'آدرس‌های من', level: 1 })).toBeVisible();
@@ -272,7 +272,7 @@ test.describe('authenticated customer address and return presentation', () => {
     await expect(main.locator('article')).toContainText('آدرس اصلی');
     await expect(main.getByRole('link', { name: 'ویرایش' })).toHaveAttribute(
       'href',
-      '#account/addresses/edit/QA-SYNTHETIC-ADDRESS-001',
+      '/account/addresses/edit/QA-SYNTHETIC-ADDRESS-001',
     );
 
     expect(network.addressRequests).toEqual(['GET /v1/account/addresses']);
@@ -282,7 +282,7 @@ test.describe('authenticated customer address and return presentation', () => {
   test('renders the authenticated empty address state and its create route', async ({ page }) => {
     const network = await installSyntheticCustomerNetwork(page, { addresses: [] });
 
-    await gotoHash(page, '#account/addresses');
+    await gotoPath(page, '/account/addresses');
 
     const main = page.getByRole('main');
     await expect(
@@ -291,7 +291,7 @@ test.describe('authenticated customer address and return presentation', () => {
     await expect(main).toContainText('برای تحویل سریع‌تر سفارش، اولین آدرس خود را اضافه کنید.');
     await expect(main.getByRole('link', { name: 'افزودن آدرس جدید' })).toHaveAttribute(
       'href',
-      '#account/addresses/create',
+      '/account/addresses/create',
     );
     await expect(main.locator('article')).toHaveCount(0);
 
@@ -308,7 +308,7 @@ test.describe('authenticated customer address and return presentation', () => {
       orders: { [orderNumber]: order },
     });
 
-    await gotoHash(page, `#return/request?orderNumber=${encodeURIComponent(orderNumber)}`);
+    await gotoPath(page, `/return/request?orderNumber=${encodeURIComponent(orderNumber)}`);
 
     const main = page.getByRole('main');
     await expect(
@@ -319,7 +319,7 @@ test.describe('authenticated customer address and return presentation', () => {
     await expect(main.locator('form')).toBeVisible();
     await expect(main.getByRole('link', { name: 'انصراف' })).toHaveAttribute(
       'href',
-      `#order/${orderNumber}`,
+      `/order/${orderNumber}`,
     );
 
     expect(network.orderDetailRequests).toEqual([`GET /v1/account/orders/${orderNumber}`]);
@@ -335,7 +335,7 @@ test.describe('authenticated customer address and return presentation', () => {
       orders: { [orderNumber]: order },
     });
 
-    await gotoHash(page, `#return/request?orderNumber=${encodeURIComponent(orderNumber)}`);
+    await gotoPath(page, `/return/request?orderNumber=${encodeURIComponent(orderNumber)}`);
 
     const main = page.getByRole('main');
     await expect(
@@ -344,7 +344,7 @@ test.describe('authenticated customer address and return presentation', () => {
     await expect(main).toContainText('مهلت بازگشت این سفارش ۷ روز پس از تحویل است.');
     await expect(main.getByRole('link', { name: 'مشاهده سفارش' })).toHaveAttribute(
       'href',
-      `#order/${orderNumber}`,
+      `/order/${orderNumber}`,
     );
     await expect(main.locator('form')).toHaveCount(0);
 
@@ -369,7 +369,7 @@ test.describe('authenticated customer address and return presentation', () => {
       orders: { [orderNumber]: order },
     });
 
-    await gotoHash(page, `#return/status?orderNumber=${encodeURIComponent(orderNumber)}`);
+    await gotoPath(page, `/return/status?orderNumber=${encodeURIComponent(orderNumber)}`);
 
     const main = page.getByRole('main');
     await expect(
@@ -379,11 +379,11 @@ test.describe('authenticated customer address and return presentation', () => {
     await expect(main).toContainText('بازپرداخت شده');
     await expect(main.getByRole('link', { name: 'مشاهده سفارش' })).toHaveAttribute(
       'href',
-      `#order/${orderNumber}`,
+      `/order/${orderNumber}`,
     );
     await expect(main.getByRole('link', { name: 'تماس با پشتیبانی' })).toHaveAttribute(
       'href',
-      '#support',
+      '/support',
     );
     await expect(main.getByRole('button', { name: 'ثبت درخواست بازگشت' })).toHaveCount(0);
 

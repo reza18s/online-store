@@ -19,7 +19,7 @@ export function RecommendationCard({
     <article className="min-w-0">
       <a
         className="block aspect-square overflow-hidden rounded-editorial bg-secondary"
-        href={`#product/${encodeURIComponent(product.slug)}`}
+        href={`/product/${encodeURIComponent(product.slug)}`}
         aria-label={`مشاهده ${product.name}`}
       >
         {product.image ? (
@@ -38,7 +38,7 @@ export function RecommendationCard({
       <div className="pt-2">
         <a
           className="block text-sm font-semibold leading-6 hover:text-primary"
-          href={`#product/${encodeURIComponent(product.slug)}`}
+          href={`/product/${encodeURIComponent(product.slug)}`}
         >
           {product.name}
         </a>

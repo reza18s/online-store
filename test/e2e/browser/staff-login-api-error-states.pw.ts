@@ -92,7 +92,7 @@ async function installControlledLoginError(page: Page, status: 401 | 429) {
 
 async function submitStaffLogin(page: Page): Promise<void> {
   page.setDefaultNavigationTimeout(15_000);
-  const response = await page.goto('/#admin/login', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin/login', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
   await expect(page.getByRole('heading', { name: 'ورود به فضای مدیریت' })).toBeVisible();
 

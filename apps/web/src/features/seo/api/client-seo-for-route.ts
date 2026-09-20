@@ -1,19 +1,17 @@
-import { parseHashRoute } from '@/app/routing/hash-route';
+import { parseRoute } from '@/app/routing/route';
 
 import type { SeoDocument } from '@/features/seo/api/metadata-shared';
 import { categoryCopy, siteDescription } from '@/features/seo/api/metadata-shared';
 
 import { createSeoDocument } from '@/features/seo/api/create-seo-document';
-
 import { decodePathSegment } from '@/features/seo/api/decode-path-segment';
-
 import { isIndexablePublicRenderPath } from '@/features/seo/api/is-indexable-public-render-path';
 
-export function clientSeoForHashRoute(route: string, origin: string): SeoDocument {
-  const path = route.split('?')[0] ?? '#home';
-  const audience = path.match(/^#category\/(women|men|children)$/)?.[1];
+export function clientSeoForRoute(route: string, origin: string): SeoDocument {
+  const path = route.split('?')[0] ?? '/';
+  const audience = path.match(/^\/category\/(women|men|children)$/)?.[1];
   const audienceCopy = audience ? categoryCopy[audience] : undefined;
-  const privateRoute = /^(#(?:auth|cart|checkout|account|order|return|admin|state))(?:\/|$)/.test(
+  const privateRoute = /^(\/(?:auth|cart|checkout|account|order|return|admin|state))(?:\/|$)/.test(
     path,
   );
 
@@ -25,8 +23,8 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
       canonicalPath: `/category/${audience}`,
     });
   }
-  if (path.startsWith('#product/')) {
-    const slug = decodePathSegment(path.slice('#product/'.length));
+  if (path.startsWith('/product/')) {
+    const slug = decodePathSegment(path.slice('/product/'.length));
     return createSeoDocument({
       origin,
       title: 'NOVA | محصول',
@@ -35,7 +33,7 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
       noIndex: !slug,
     });
   }
-  if (path === '#home' || path === '#') {
+  if (path === '/') {
     return createSeoDocument({
       origin,
       title: 'NOVA | Atelier Editorial',
@@ -46,12 +44,12 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
   if (privateRoute) {
     return createSeoDocument({
       origin,
-      title: path.startsWith('#admin') ? 'NOVA Admin' : 'NOVA',
-      description: path.startsWith('#admin') ? 'پنل مدیریت فروشگاه نوا.' : siteDescription,
+      title: path.startsWith('/admin') ? 'NOVA Admin' : 'NOVA',
+      description: path.startsWith('/admin') ? 'پنل مدیریت فروشگاه نوا.' : siteDescription,
       noIndex: true,
     });
   }
-  if (path.startsWith('#products') || path === '#search') {
+  if (path.startsWith('/products') || path === '/search') {
     return createSeoDocument({
       origin,
       title: 'NOVA | فروشگاه پوشاک',
@@ -59,7 +57,7 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
       noIndex: true,
     });
   }
-  if (path === '#not-found') {
+  if (path === '/not-found') {
     return createSeoDocument({
       origin,
       title: 'NOVA | صفحه پیدا نشد',
@@ -68,7 +66,7 @@ export function clientSeoForHashRoute(route: string, origin: string): SeoDocumen
     });
   }
 
-  const parsed = parseHashRoute(path);
+  const parsed = parseRoute(path);
   if (parsed.kind === 'editorial') {
     return createSeoDocument({
       origin,

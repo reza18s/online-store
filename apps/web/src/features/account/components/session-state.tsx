@@ -67,7 +67,7 @@ export function SessionState({
                     )
           }
           action={expired ? 'ورود دوباره' : 'تلاش دوباره'}
-          href={expired ? '#auth' : '#account'}
+          href={expired ? '/auth' : '/account'}
           onAction={expired || permission ? undefined : () => void customerQuery.refetch()}
           icon={expired || permission ? 'user' : offline ? 'refresh' : 'warning'}
         />
@@ -85,7 +85,7 @@ export function SessionState({
               : description
           }
           action={customerQuery.data ? 'تماس با پشتیبانی' : 'ورود به حساب'}
-          href={customerQuery.data ? '#support' : '#auth'}
+          href={customerQuery.data ? '/support' : '/auth'}
           icon="user"
         />
       </PageFrame>

@@ -21,7 +21,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
   return (
     <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-8 bg-background py-6 md:py-10">
       <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <a href="#home" className="hover:text-primary">
+        <a href="/" className="hover:text-primary">
           خانه
         </a>
         <span aria-hidden="true">/</span>
@@ -39,7 +39,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
           <p className="text-sm leading-7 text-muted-foreground">{copy.description}</p>
           <a
             className="inline-flex min-h-11 w-max items-center gap-2 rounded-pill bg-primary px-4 text-sm font-semibold text-primary-foreground"
-            href={`#products/${audience}`}
+            href={`/products/${audience}`}
           >
             مشاهده محصولات <Icon name="arrow-left" size={16} />
           </a>
@@ -50,7 +50,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
           <h2 className="text-xl" id="category-products-title">
             انتخاب‌های محبوب {copy.label}
           </h2>
-          <a className="text-sm text-primary underline" href={`#products/${audience}`}>
+          <a className="text-sm text-primary underline" href={`/products/${audience}`}>
             مشاهده همه
           </a>
         </div>
@@ -75,7 +75,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
             برای هر مدل، اندازه‌گیری و پیشنهاد فیت را کنار مشخصات محصول گذاشته‌ایم.
           </p>
         </div>
-        <a className="text-sm text-primary underline" href="#size-guide">
+        <a className="text-sm text-primary underline" href="/size-guide">
           مشاهده راهنمای اندازه
         </a>
       </section>

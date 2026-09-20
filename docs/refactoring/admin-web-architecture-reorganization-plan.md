@@ -128,3 +128,48 @@ apps/web/src/
 - build وب شامل client و SSR موفق شد؛ build ادمین نیز موفق شد.
 - `git diff --check` بدون خطای whitespace موفق شد.
 - یک اصلاح ضروری در fixture تست SSR انجام شد: مسیر `apps/web/src/app/ssr/server.test.ts` بعد از انتقال فایل به `../../../public` تنظیم شد.
+
+## پیگیری: حذف Hash Route از Web Demo
+
+وضعیت: تکمیل شد
+
+هدف این batch، استفاده‌ی مستقیم و کامل از routeهای clean در `App`، `PublicApp`، SEO، SSR و تمام لینک‌های داخلی Web است تا Demo هیچ مسیر `#...` تولید نکند.
+
+1. تبدیل قرارداد داخلی route از `HashRoute`/`parseHashRoute` به routeهای clean و نام‌گذاری خنثی.
+2. انتقال navigationهای داخل Web از `window.location.hash` به history/browser route.
+3. حذف adapterها و فایل‌های route قدیمی که فقط برای hash استفاده می‌شدند.
+4. به‌روزرسانی SEO، SSR handoff، تست route و تست‌های UI بدون تغییر قرارداد API یا مسیرهای clean.
+5. اجرای typecheck، تست کامل Web، lint، build client/SSR و مرور referenceهای hash در Web.
+
+### شواهد اجرای پیگیری
+
+- قرارداد داخلی `App`، `PublicApp`، SEO و SSR اکنون فقط از مسیرهای clean استفاده می‌کند.
+- navigationهای لینک‌ها، جست‌وجو، auth، checkout، account و catalog با history/browser route انجام می‌شوند؛ `window.location.hash` و فایل‌های route قدیمی Web حذف شدند.
+- تست Web: `116 pass`.
+- Web typecheck، lint، build client و build SSR موفق شدند.
+- smoke test مرورگر روی مسیرهای اصلی و click داخلی، بدون وجود `#` در URL، موفق شد.
+- API محلی در زمان smoke test روی `127.0.0.1:4000` اجرا نبود؛ پاسخ‌های 500 فقط مربوط به proxy درخواست‌های `/v1/*` بودند و خطای JavaScript یا routing مشاهده نشد.
+
+## پیگیری: حذف Legacy Runtime از Admin
+
+وضعیت: تکمیل شد
+
+هدف این batch، حذف مسیرهای hash و fallbackهای Demo قدیمی از Admin و انتقال تمام navigationهای Admin به مسیرهای clean زیر `/admin/...` است.
+
+1. حذف `AdminLegacyPage`، شاخه‌ی fallback قدیمی و داشبورد preview با داده‌ی ساختگی از Admin.
+2. تبدیل `AdminApp` و navigation داخلی Admin از `window.location.hash` به pathname/history.
+3. rename کردن decoder گمراه‌کننده‌ی `hash-route.ts` به قرارداد خنثی و اضافه‌کردن navigation bridge محدود به `/admin`.
+4. تبدیل لینک‌های Admin، auth، catalog، orders، content، dashboard و تست‌های E2E به مسیرهای clean.
+5. حذف product-list قدیمی، fixtureهای fake storefront و API عمومی content بدون مصرف از Admin.
+6. اجرای validation نهایی برای typecheck، تست، lint، E2E typecheck و build.
+
+### شواهد اجرای پیگیری
+
+- `AdminLegacyPage`، `AdminProductsPage`، product-list قدیمی، داشبورد DEV preview و زنجیره‌ی fixtureهای fake storefront از Admin حذف شدند؛ `/admin` فقط پس از staff session معتبر به `DashboardView` API-backed می‌رسد.
+- `AdminApp` فقط `popstate` و pathname را مصرف می‌کند؛ `hashchange`، `window.location.hash` و route moduleهای hash در Admin/Web باقی نمانده‌اند.
+- لینک‌ها و helperهای تست E2E به مسیرهای clean منتقل شدند؛ `bun run typecheck:test` موفق شد.
+- Admin typecheck موفق شد؛ تست‌های Admin: `80 pass`؛ تست‌های Web: `116 pass`.
+- `bunx eslint apps/admin/src apps/web/src --max-warnings=0` موفق شد.
+- build production Admin موفق شد؛ build client/SSR Web در پیگیری قبلی موفق شده بود.
+- `git diff --check` بدون خطای whitespace موفق شد.
+- اجرای مستقیم تست‌ها از cwd هر اپ معیار معتبر است؛ اجرای خام `bun test` از ریشه به‌دلیل resolve نکردن aliasهای `@/*` در Bun، تست‌های source را load نکرد و به‌عنوان محدودیت ابزار ثبت شد.

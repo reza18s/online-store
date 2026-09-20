@@ -95,7 +95,7 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
   return (
     <PageFrame className="order-page">
       <div className="breadcrumb">
-        <a href="#account/orders">سفارش‌ها</a>
+        <a href="/account/orders">سفارش‌ها</a>
         <span>/</span>
         <span dir="ltr">{order.orderNumber}</span>
       </div>
@@ -204,14 +204,14 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
           {order.returnRequest ? (
             <a
               className="text-link"
-              href={`#return/status?orderNumber=${encodeURIComponent(order.orderNumber)}`}
+              href={`/return/status?orderNumber=${encodeURIComponent(order.orderNumber)}`}
             >
               مشاهده وضعیت بازگشت و بازپرداخت <Icon name="arrow-left" size={15} />
             </a>
           ) : eligibility.eligible ? (
             <a
               className="text-link"
-              href={`#return/request?orderNumber=${encodeURIComponent(order.orderNumber)}`}
+              href={`/return/request?orderNumber=${encodeURIComponent(order.orderNumber)}`}
             >
               درخواست بازگشت کالا <Icon name="arrow-left" size={15} />
             </a>

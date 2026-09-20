@@ -137,13 +137,13 @@ async function installPublicContentFixtures(
 test.describe('SEO-001 public content route', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
-  test('renders the published size-guide hash route with client SEO metadata', async ({ page }) => {
+  test('renders the published content route with client SEO metadata', async ({ page }) => {
     page.setDefaultNavigationTimeout(15_000);
     page.setDefaultTimeout(15_000);
     const { blockedExternalRequests, blockedMutationRequests, contentRequests } =
       await installPublicContentFixtures(page);
 
-    const response = await page.goto('/#content/size-guide', { waitUntil: 'domcontentloaded' });
+    const response = await page.goto('/content/size-guide', { waitUntil: 'domcontentloaded' });
 
     expect(response?.ok()).toBeTruthy();
     await expect(page.getByRole('heading', { name: 'راهنمای اندازه', level: 1 })).toBeVisible();
@@ -187,7 +187,7 @@ test.describe('SEO-001 public content route', () => {
       });
 
     for (const slug of ['missing-page', 'draft-page']) {
-      const response = await page.goto(`/#content/${slug}`, { waitUntil: 'domcontentloaded' });
+      const response = await page.goto(`/content/${slug}`, { waitUntil: 'domcontentloaded' });
 
       if (response) expect(response.ok()).toBeTruthy();
       await expect(page.getByRole('heading', { name: 'این صفحه پیدا نشد', level: 1 })).toBeVisible({
@@ -198,7 +198,7 @@ test.describe('SEO-001 public content route', () => {
       );
       await expect(page.getByRole('link', { name: 'بازگشت به خانه', exact: true })).toHaveAttribute(
         'href',
-        '#home',
+        '/',
       );
       await expect(page.getByRole('article', { name: 'محتوای منتشرشده' })).toHaveCount(0);
     }

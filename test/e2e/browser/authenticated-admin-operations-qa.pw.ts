@@ -344,19 +344,19 @@ test('renders fixture-backed authenticated admin operations without real auth or
 
   const network = await installAdminOperationsFixtureGuard(page);
 
-  await page.goto('/#admin/orders', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin/orders', { waitUntil: 'domcontentloaded' });
   const ordersMain = page.getByRole('main');
   await expect(ordersMain.getByRole('heading', { name: 'سفارش‌ها', exact: true })).toBeVisible();
   await expect(ordersMain).toContainText(qaMarker);
   await expect(ordersMain).toContainText(orderNumber);
   await expect(ordersMain).toContainText('تأیید شده');
 
-  await page.goto(`/#admin/orders/${orderNumber}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`/admin/orders/${orderNumber}`, { waitUntil: 'domcontentloaded' });
   await expect(page.getByRole('heading', { name: orderNumber, exact: true })).toBeVisible();
   await expect(page.getByRole('main')).toContainText(`محصول عملیات مدیریت ${qaMarker}`);
   await expect(page.getByRole('main')).toContainText('اقلام سفارش');
 
-  await page.goto('/#admin/payments', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin/payments', { waitUntil: 'domcontentloaded' });
   const paymentsMain = page.getByRole('main');
   await expect(paymentsMain.getByRole('heading', { name: 'پرداخت‌ها', exact: true })).toBeVisible();
   await expect(
@@ -368,7 +368,7 @@ test('renders fixture-backed authenticated admin operations without real auth or
     paymentsMain.getByRole('heading', { name: 'جزئیات تلاش پرداخت', exact: true }),
   ).toBeVisible();
 
-  await page.goto(`/#admin/customers?q=${encodeURIComponent(qaMarker)}`, {
+  await page.goto(`/admin/customers?q=${encodeURIComponent(qaMarker)}`, {
     waitUntil: 'domcontentloaded',
   });
   const customersMain = page.getByRole('main');
@@ -378,14 +378,14 @@ test('renders fixture-backed authenticated admin operations without real auth or
   ).toBeVisible();
   await expect(customersMain).toContainText(qaMarker);
 
-  await page.goto('/#admin/notifications', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin/notifications', { waitUntil: 'domcontentloaded' });
   const notificationsMain = page.getByRole('main');
   await expect(
     notificationsMain.getByRole('heading', { name: 'تحویل اعلان‌ها', exact: true }).first(),
   ).toBeVisible();
   await expect(notificationsMain).toContainText(`QA_NOTIFICATION_${qaMarker}`);
 
-  await page.goto('/#admin/audit', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin/audit', { waitUntil: 'domcontentloaded' });
   const auditMain = page.getByRole('main');
   await expect(auditMain.getByRole('heading', { name: 'گزارش فعالیت', exact: true })).toBeVisible();
   await expect(
@@ -393,7 +393,7 @@ test('renders fixture-backed authenticated admin operations without real auth or
   ).toBeVisible();
   await expect(auditMain).toContainText(`admin.read.${qaMarker}`);
 
-  await page.goto(`/#admin/content/pages/${contentPageId}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`/admin/content/pages/${contentPageId}`, { waitUntil: 'domcontentloaded' });
   const contentMain = page.getByRole('main');
   await expect(
     contentMain.getByRole('heading', { name: 'محتوا و دیده‌شدن', exact: true }),
@@ -401,12 +401,12 @@ test('renders fixture-backed authenticated admin operations without real auth or
   await expect(contentMain).toContainText(`صفحه محتوای مدیریت ${qaMarker}`);
   await expect(contentMain.getByLabel('متن صفحه')).toHaveValue(`بدنه مصنوعی ${qaMarker}`);
 
-  await page.goto('/#admin/content/seo', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin/content/seo', { waitUntil: 'domcontentloaded' });
   const seoMain = page.getByRole('main');
   await expect(seoMain.getByRole('heading', { name: 'متادیتای SEO', exact: true })).toBeVisible();
   await expect(seoMain).toContainText(`SEO مدیریت ${qaMarker}`);
 
-  await page.goto('/#admin/content/redirects', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin/content/redirects', { waitUntil: 'domcontentloaded' });
   const redirectsMain = page.getByRole('main');
   await expect(
     redirectsMain.getByRole('heading', { name: 'redirectها', exact: true }),

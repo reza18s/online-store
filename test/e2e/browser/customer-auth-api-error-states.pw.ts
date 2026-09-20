@@ -125,7 +125,7 @@ test('renders a recoverable invalid customer OTP state without redirecting or wr
   page.setDefaultTimeout(15_000);
   const network = await installCustomerOtpErrorFixture(page);
 
-  const response = await page.goto(`/#auth/verify?challengeId=${syntheticChallengeId}`, {
+  const response = await page.goto(`/auth/verify?challengeId=${syntheticChallengeId}`, {
     waitUntil: 'domcontentloaded',
   });
 

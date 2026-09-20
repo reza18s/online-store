@@ -21,7 +21,7 @@ export function CheckoutConfirmationPage({ queryString = '' }: { queryString?: s
   return (
     <CheckoutShell>
       <div className="breadcrumb">
-        <a href="#account/orders">سفارش‌ها</a>
+        <a href="/account/orders">سفارش‌ها</a>
         <span>/</span>
         <span>تأیید سفارش</span>
       </div>

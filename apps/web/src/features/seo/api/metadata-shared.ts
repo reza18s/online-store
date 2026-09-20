@@ -33,7 +33,7 @@ export type InitialRenderData =
 
 export interface InitialRenderContext {
   path: string;
-  hashRoute: string;
+  route: string;
   seo: SeoDocument;
   initialData?: InitialRenderData;
 }

@@ -1,4 +1,4 @@
-import { parseHashRoute, decodeHashSegment } from '@/app/routing/hash-route';
+import { decodeRouteSegment, parseRoute } from '@/app/routing/route';
 
 import { StorefrontDiscoveryPage } from '@/features/catalog';
 import { StorefrontCartPage } from '@/features/cart';
@@ -34,7 +34,7 @@ export function PublicApp({
   isWishlisted,
   onToggleWishlist,
 }: RouteViewProps) {
-  const resolved = parseHashRoute(route);
+  const resolved = parseRoute(route);
 
   switch (resolved.kind) {
     case 'home':
@@ -77,7 +77,7 @@ export function PublicApp({
       return (
         <StorefrontDiscoveryPage
           view="product"
-          slug={decodeHashSegment(resolved.slug)}
+          slug={decodeRouteSegment(resolved.slug)}
           isWishlisted={isWishlisted}
           onToggleWishlist={onToggleWishlist}
         />

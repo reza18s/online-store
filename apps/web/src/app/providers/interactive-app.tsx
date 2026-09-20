@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { StrictMode, useEffect, useState } from 'react';
 
 import { App } from '@/app';
-import { CleanNavigationBridge } from '@/app/routing/hash-route';
+import { NavigationBridge } from '@/app/routing/route';
 import { createQueryClient, seedInitialRenderData } from '@/app/providers/query-client';
 
 const queryClient = createQueryClient();
@@ -14,7 +14,7 @@ export function InteractiveApp() {
     <StrictMode>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <CleanNavigationBridge />
+          <NavigationBridge />
           <App />
         </QueryClientProvider>
       </BrowserRouter>

@@ -53,7 +53,7 @@ export function LowStockCard({
           {items.map((item) => (
             <a
               className="flex min-h-[76px] items-center gap-3 px-4 py-3 transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
-              href={`#admin/inventory/${encodeURIComponent(item.variantId)}`}
+              href={`/admin/inventory/${encodeURIComponent(item.variantId)}`}
               key={item.id}
             >
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-control bg-warning-soft text-warning">
@@ -72,7 +72,7 @@ export function LowStockCard({
       )}
       <a
         className="flex min-h-11 items-center justify-center gap-2 border-t border-border text-xs text-primary hover:bg-background focus-visible:outline-2 focus-visible:outline-primary"
-        href="#admin/inventory"
+        href="/admin/inventory"
       >
         مشاهده همه <Icon name="arrow-left" size={15} />
       </a>

@@ -18,7 +18,7 @@ export function ProfilePanel({
         <span className="section-heading__eyebrow">وضعیت حساب</span>
         <h2>{customer.status === 'ACTIVE' ? 'حساب فعال' : 'حساب محدود'}</h2>
         <p>برای تغییر اطلاعات ورود یا کمک درباره حساب، با پشتیبانی نوا در تماس باشید.</p>
-        <a className="text-link" href="#support">
+        <a className="text-link" href="/support">
           ارتباط با پشتیبانی <Icon name="arrow-left" size={15} />
         </a>
       </div>

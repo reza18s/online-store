@@ -956,8 +956,8 @@ P1 frames belong in a separate section but use the same design system: wishlist,
 
 These screens belong to the independent `apps/admin` frontend and use the
 shared Atelier primitives without becoming part of the public storefront.
-Canonical admin paths are rooted at `/admin`; `#admin/...` links may remain as
-a compatibility adapter during migration. Admin is always `noindex`, uses a
+Canonical admin paths are rooted at `/admin`; hash links are not supported by
+the runtime. Admin is always `noindex`, uses a
 separate staff session and query client, and consumes the shared API rather
 than storefront fixtures in staging or production.
 
@@ -1209,15 +1209,15 @@ a replacement for the editable Penpot frames, API contracts, or release gates.
 
 | Surface | Canonical route family | Compatibility / purpose |
 | --- | --- | --- |
-| Public home | `/` | Hash `#home` is compatibility-only; hero, audience rail, fresh arrivals, trust, journal, and footer |
-| Category landing | `/category/women`, `/category/men`, `/category/children` | Hash category paths remain readable during migration; portrait, subcategories, featured products, and guide entry |
+| Public home | `/` | Hero, audience rail, fresh arrivals, trust, journal, and footer |
+| Category landing | `/category/women`, `/category/men`, `/category/children` | Portrait, subcategories, featured products, and guide entry |
 | Product listing | `/products`, `/products/women`, `/products/men`, `/products/children`, `/products/new`, `/products/sale`, `/products/accessories` | Filtered catalog, sorting, pagination, suggestions, and explicit loading/empty/error states |
 | Product detail | `/product/linen-overshirt` and other product slugs | Gallery, variant selection, price, stock, delivery, details, and related products |
 | Cart and checkout | `/cart`, `/checkout/address`, `/checkout/shipping`, `/checkout/payment`, `/checkout/confirmation` | Customer-facing client routes; noindex; authoritative quote, reservation, payment, and recovery states |
 | Account and orders | `/account`, `/account/profile`, `/account/addresses`, `/account/orders`, `/order/NV-1405-2481` | Customer session, saved information, support, security, notifications, and tracking; noindex |
-| Editorial and utility | `/campaign`, `/guide`, `/article`, `/lookbook` | SSR/indexable published content and policy pages; compatibility hashes remain supported |
+| Editorial and utility | `/campaign`, `/guide`, `/article`, `/lookbook` | SSR/indexable published content and policy pages |
 | Admin shell (`apps/admin`) | `/admin/login`, `/admin`, `/admin/catalog/products`, `/admin/catalog/categories`, `/admin/inventory`, `/admin/orders`, `/admin/payments`, `/admin/customers`, `/admin/content`, `/admin/audit`, `/admin/operations` | Independent Vite frontend on `127.0.0.1:5174`; staff session, permission gates, operational tables, and review queues |
-| Admin detail flows (`apps/admin`) | `/admin/catalog/products/new`, `/admin/catalog/products/:id`, `/admin/inventory/:variantId`, `/admin/orders/:orderNumber`, `/admin/content/pages/:id` | Product editor, variants/media, inventory, order detail, content/SEO, and audit evidence; `#admin/...` is compatibility-only |
+| Admin detail flows (`apps/admin`) | `/admin/catalog/products/new`, `/admin/catalog/products/:id`, `/admin/inventory/:variantId`, `/admin/orders/:orderNumber`, `/admin/content/pages/:id` | Product editor, variants/media, inventory, order detail, content/SEO, and audit evidence |
 
 Both frontends consume the shared NestJS API at `127.0.0.1:4000` through
 `packages/api-client`. The design may use local fixture content for isolated

@@ -1,5 +1,5 @@
 export function buildDiscoveryHref(
-  baseHash: string,
+  baseRoute: string,
   queryString: string,
   changes: Record<string, string | undefined>,
 ): string {
@@ -14,5 +14,5 @@ export function buildDiscoveryHref(
   }
   if (resetPage) params.delete('page');
   const query = params.toString();
-  return `${baseHash}${query ? `?${query}` : ''}`;
+  return `${baseRoute}${query ? `?${query}` : ''}`;
 }

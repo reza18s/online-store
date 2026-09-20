@@ -44,11 +44,11 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     () => parseDiscoveryQuery(props.queryString, props.mode),
     [props.mode, props.queryString],
   );
-  const baseHash = props.audience
-    ? `#products/${props.audience}`
+  const baseRoute = props.audience
+    ? `/products/${props.audience}`
     : props.mode
-      ? `#products/${props.mode}`
-      : '#products';
+      ? `/products/${props.mode}`
+      : '/products';
   const categoryQuery = useCatalogCategories();
   const productsQuery = useCatalogProducts(discoveryFiltersFromQuery(state, props.audience));
   const facetsQuery = useCatalogFacets(discoveryFacetFiltersFromQuery(state, props.audience));
@@ -60,7 +60,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const adder = useProductAdder();
   const update = (changes: Record<string, string | undefined>) =>
-    routeTo(buildDiscoveryHref(baseHash, props.queryString ?? '', changes));
+    routeTo(buildDiscoveryHref(baseRoute, props.queryString ?? '', changes));
   const selectedCategory = state.category;
   const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
     value: category.slug,
@@ -124,7 +124,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
         />{' '}
         پیشنهاد ویژه
       </label>
-      <a className="text-xs text-primary underline" href={baseHash}>
+      <a className="text-xs text-primary underline" href={baseRoute}>
         حذف همه فیلترها
       </a>
     </div>
@@ -132,7 +132,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
   return (
     <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-6 bg-background py-6 md:space-y-8 md:py-10">
       <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <a href="#home" className="hover:text-primary">
+        <a href="/" className="hover:text-primary">
           خانه
         </a>
         <span aria-hidden="true">/</span>
@@ -183,8 +183,8 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
                   className="min-h-11 border border-border px-3 py-2 text-xs hover:border-primary hover:text-primary"
                   href={
                     suggestion.type === 'CATEGORY'
-                      ? `#products?category=${encodeURIComponent(suggestion.slug)}`
-                      : `#product/${encodeURIComponent(suggestion.slug)}`
+                      ? `/products?category=${encodeURIComponent(suggestion.slug)}`
+                      : `/product/${encodeURIComponent(suggestion.slug)}`
                   }
                   key={`${suggestion.type}:${suggestion.id}`}
                 >
@@ -237,7 +237,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
               limit={productsQuery.data.limit}
               total={productsQuery.data.total}
               hrefForPage={(page) =>
-                buildDiscoveryHref(baseHash, props.queryString ?? '', { page: String(page) })
+                buildDiscoveryHref(baseRoute, props.queryString ?? '', { page: String(page) })
               }
             />
           ) : null}

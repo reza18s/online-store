@@ -28,7 +28,7 @@ export function ProductCard({
     <article className="min-w-0">
       <div className="relative aspect-square overflow-hidden rounded-editorial bg-secondary">
         <a
-          href={`#product/${encodeURIComponent(product.slug)}`}
+          href={`/product/${encodeURIComponent(product.slug)}`}
           aria-label={`مشاهده ${product.name}`}
         >
           {product.image ? (
@@ -72,7 +72,7 @@ export function ProductCard({
         </div>
         <a
           className="block text-sm font-semibold leading-6 hover:text-primary focus-visible:text-primary"
-          href={`#product/${encodeURIComponent(product.slug)}`}
+          href={`/product/${encodeURIComponent(product.slug)}`}
         >
           {product.name}
         </a>

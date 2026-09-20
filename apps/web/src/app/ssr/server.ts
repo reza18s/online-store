@@ -493,29 +493,29 @@ function isNonPublicPath(path: string): boolean {
   );
 }
 
-function routeHash(route: PublicRenderRoute): string {
+function routePath(route: PublicRenderRoute): string {
   switch (route.kind) {
     case 'home':
-      return '#home';
+      return '/';
     case 'category':
-      return `#category/${route.slug}`;
+      return `/category/${route.slug}`;
     case 'product':
-      return `#product/${route.slug}`;
+      return `/product/${route.slug}`;
     case 'content':
-      return `#content/${route.slug}`;
+      return `/content/${route.slug}`;
     case 'client':
-      return route.path === '/' ? '#home' : `#${route.path.slice(1)}`;
+      return route.path;
     case 'private':
-      if (route.path.startsWith('/auth')) return '#auth';
-      if (route.path.startsWith('/account')) return '#account';
-      if (route.path.startsWith('/admin')) return '#admin';
-      if (route.path.startsWith('/cart')) return '#cart';
-      if (route.path.startsWith('/checkout')) return '#checkout/address';
-      if (route.path.startsWith('/order/')) return `#order/${route.path.slice('/order/'.length)}`;
-      if (route.path.startsWith('/return')) return '#return';
-      return '#home';
+      if (route.path.startsWith('/auth')) return '/auth';
+      if (route.path.startsWith('/account')) return '/account';
+      if (route.path.startsWith('/admin')) return '/admin';
+      if (route.path.startsWith('/cart')) return '/cart';
+      if (route.path.startsWith('/checkout')) return '/checkout/address';
+      if (route.path.startsWith('/order/')) return `/order/${route.path.slice('/order/'.length)}`;
+      if (route.path.startsWith('/return')) return '/return';
+      return '/';
     case 'unknown':
-      return '#not-found';
+      return '/not-found';
   }
 }
 
@@ -784,7 +784,7 @@ function notFoundContext(origin: string, route: PublicRenderRoute): RenderContex
   });
   return {
     path: route.path,
-    hashRoute: routeHash(route),
+    route: routePath(route),
     seo,
     status: 404,
     bodyHtml: initialBody(seo.title, seo.description),
@@ -801,7 +801,7 @@ function serviceUnavailableContext(origin: string, route: PublicRenderRoute): Re
   });
   return {
     path: route.path,
-    hashRoute: routeHash(route),
+    route: routePath(route),
     seo,
     status: 503,
     bodyHtml: initialBody(seo.title, seo.description),
@@ -815,7 +815,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
   if (route.kind === 'private' || route.kind === 'client') {
     return {
       path: route.path,
-      hashRoute: routeHash(route),
+      route: routePath(route),
       seo: createSeoDocument({ origin, ...metadataFallback(origin, route) }),
       status: 200,
       bodyHtml: initialBody('NOVA', defaultSiteDescription),
@@ -847,7 +847,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
       if (!location) return serviceUnavailableContext(origin, route);
       return {
         path: route.path,
-        hashRoute: routeHash(route),
+        route: routePath(route),
         seo: createSeoDocument({ origin, ...metadataFallback(origin, route), noIndex: true }),
         status: 200,
         redirect: { location, status: resolution.redirect.statusCode },
@@ -866,7 +866,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         const seo = seoDocumentFromMetadata(origin, fallback, resolution.metadata);
         return {
           path: route.path,
-          hashRoute: routeHash(route),
+          route: routePath(route),
           seo,
           status: 200,
           initialData: { kind: 'home', products },
@@ -900,7 +900,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         );
         return {
           path: route.path,
-          hashRoute: routeHash(route),
+          route: routePath(route),
           seo: {
             ...seo,
             jsonLd:
@@ -940,7 +940,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
         );
         return {
           path: route.path,
-          hashRoute: routeHash(route),
+          route: routePath(route),
           seo: {
             ...seo,
             jsonLd: seo.robots === 'index, follow' ? productJsonLd(origin, product) : null,
@@ -968,7 +968,7 @@ export async function renderRoute(path: string, options: RenderOptions): Promise
       );
       return {
         path: route.path,
-        hashRoute: routeHash(route),
+        route: routePath(route),
         seo,
         status: 200,
         initialData: { kind: 'content', page },
@@ -1025,7 +1025,7 @@ export function renderDocument(template: string, context: RenderContext): string
   const root = `<div id="root" data-nova-ssr="true"><div data-nova-ssr-shell="true">${context.bodyHtml}</div></div>`;
   const contextScript = `<script>globalThis.__NOVA_RENDER_CONTEXT__=${safeJson({
     path: context.path,
-    hashRoute: context.hashRoute,
+    route: context.route,
     seo: context.seo,
     ...(context.initialData ? { initialData: context.initialData } : {}),
   })};</script>`;

@@ -26,7 +26,7 @@ test('normalizes view and site-relative paths without changing public slug links
   assert.equal(normalizeSiteRelativePath(' /shipping/// '), '/shipping');
   assert.equal(isSafeSiteRelativePath('/category/زنانه'), true);
   assert.equal(isSafeSiteRelativePath('https://evil.example'), false);
-  assert.equal(safeContentHref(' Shipping-Policy '), '#content/shipping-policy');
+  assert.equal(safeContentHref(' Shipping-Policy '), '/content/shipping-policy');
 });
 
 test('allows only the admin role to mutate content operations', () => {

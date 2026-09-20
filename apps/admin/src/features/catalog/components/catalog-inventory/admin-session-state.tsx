@@ -41,7 +41,7 @@ export function AdminSessionState({
         action={
           kind !== 'loading' && kind !== 'denied' ? (
             <Button asChild>
-              <a href="#admin/login">ورود به پنل</a>
+              <a href="/admin/login">ورود به پنل</a>
             </Button>
           ) : undefined
         }

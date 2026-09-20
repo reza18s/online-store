@@ -29,7 +29,7 @@ export function AccountLayout({
   return (
     <PageFrame className="account-page">
       <div className="breadcrumb">
-        <a href="#home">خانه</a>
+        <a href="/">خانه</a>
         <span>/</span>
         <span>حساب کاربری</span>
       </div>
@@ -45,7 +45,7 @@ export function AccountLayout({
           {accountNavigation.map((item) => (
             <a
               className={section === item.key ? 'is-active' : ''}
-              href={`#account${item.key === 'dashboard' ? '' : `/${item.key}`}`}
+              href={`/account${item.key === 'dashboard' ? '' : `/${item.key}`}`}
               key={item.key}
               aria-current={section === item.key ? 'page' : undefined}
             >
@@ -72,7 +72,7 @@ export function AccountLayout({
             <div>
               <span>NOVA / ATELIER</span>
               <strong>به دنیای نوا بپیوندید</strong>
-              <a href="#campaign">مشاهده کالکشن</a>
+              <a href="/campaign">مشاهده کالکشن</a>
             </div>
           </div>
         </aside>

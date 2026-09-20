@@ -1,3 +1,5 @@
-export function routeTo(hash: string): void {
-  if (typeof window !== 'undefined') window.location.hash = hash.replace(/^#/, '');
+import { navigateToRoute } from '@/app/routing/route';
+
+export function routeTo(href: string): void {
+  navigateToRoute(href);
 }

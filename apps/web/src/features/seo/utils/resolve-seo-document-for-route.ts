@@ -1,4 +1,4 @@
-import { clientSeoForHashRoute, type InitialRenderContext } from '@/features/seo/api/metadata';
+import { clientSeoForRoute, type InitialRenderContext } from '@/features/seo/api/metadata';
 
 import { normalizeSeoPath } from '@/features/seo/utils/normalize-seo-path';
 
@@ -10,8 +10,8 @@ export function resolveSeoDocumentForRoute(
 ) {
   const initialMatches =
     initial &&
-    initial.hashRoute === route &&
+    initial.route === route &&
     normalizeSeoPath(initial.path) === normalizeSeoPath(pathname);
 
-  return initialMatches ? initial.seo : clientSeoForHashRoute(route, origin);
+  return initialMatches ? initial.seo : clientSeoForRoute(route, origin);
 }

@@ -202,7 +202,7 @@ export function useCheckoutPageController({
     }
     switch (order.payment.status) {
       case 'SUCCEEDED':
-        navigate(`#checkout/confirmation?orderNumber=${encodeURIComponent(order.orderNumber)}`);
+        navigate(`/checkout/confirmation?orderNumber=${encodeURIComponent(order.orderNumber)}`);
         return;
       case 'FAILED':
         navigate(recoveryHref('failed', order.orderNumber));

@@ -40,12 +40,12 @@ export function Header({
           <Button className="icon-button" type="button" onClick={onSearch} aria-label="جست‌وجو">
             <Icon name="search" />
           </Button>
-          <a className="icon-button site-header__account" href="#account" aria-label="حساب کاربری">
+          <a className="icon-button site-header__account" href="/account" aria-label="حساب کاربری">
             <Icon name="user" />
           </a>
           <a
             className="cart-button inline-flex min-h-10 items-center gap-2 rounded-editorial bg-primary px-3 text-primary-foreground transition-transform duration-150 hover:-translate-y-px hover:bg-primary-hover"
-            href="#cart"
+            href="/cart"
             aria-label={`سبد خرید، ${cartCount} کالا`}
           >
             <Icon name="bag" size={18} />

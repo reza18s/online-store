@@ -83,7 +83,7 @@ export function CustomerReturnPage({
           title="یک سفارش را انتخاب کنید"
           description="درخواست بازگشت را از صفحه جزئیات همان سفارش شروع کنید تا اطلاعات واقعی سفارش بررسی شود."
           action="مشاهده سفارش‌ها"
-          href="#account/orders"
+          href="/account/orders"
         />
       </PageFrame>
     );
@@ -145,10 +145,10 @@ export function CustomerReturnPage({
           </section>
           <div className="mt-6 flex flex-wrap gap-3">
             <Button asChild>
-              <a href={`#order/${encodeURIComponent(order.orderNumber)}`}>مشاهده سفارش</a>
+              <a href={`/order/${encodeURIComponent(order.orderNumber)}`}>مشاهده سفارش</a>
             </Button>
             <Button asChild variant="outline">
-              <a href="#support">تماس با پشتیبانی</a>
+              <a href="/support">تماس با پشتیبانی</a>
             </Button>
           </div>
         </section>
@@ -198,7 +198,7 @@ export function CustomerReturnPage({
   return (
     <PageFrame>
       <div className="breadcrumb">
-        <a href="#account/orders">سفارش‌ها</a>
+        <a href="/account/orders">سفارش‌ها</a>
         <span>/</span>
         <span>درخواست بازگشت</span>
       </div>
@@ -315,7 +315,7 @@ export function CustomerReturnPage({
             {returnMutation.isPending ? 'در حال ثبت...' : 'ثبت درخواست بازگشت'}
           </Button>
           <Button asChild size="lg" variant="outline">
-            <a href={`#order/${encodeURIComponent(order.orderNumber)}`}>انصراف</a>
+            <a href={`/order/${encodeURIComponent(order.orderNumber)}`}>انصراف</a>
           </Button>
         </div>
       </form>

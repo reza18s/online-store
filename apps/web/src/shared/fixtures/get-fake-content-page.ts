@@ -26,7 +26,7 @@ export function getFakeContentPage(slug: string): ContentPage {
       {
         kind: 'link',
         sortOrder: 3,
-        payload: { label: 'مشاهده انتخاب‌های تازه', href: '/#products/new' },
+        payload: { label: 'مشاهده انتخاب‌های تازه', href: '/products/new' },
       },
     ],
   };

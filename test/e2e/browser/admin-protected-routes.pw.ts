@@ -3,32 +3,30 @@ import { expect, test } from '@playwright/test';
 const privateRouteMarker = 'ADMIN-PRIVATE-DATA-001';
 
 const anonymousAdminRoutes = [
-  '#admin/catalog',
-  '#admin/catalog/categories',
-  `#admin/catalog/products/${privateRouteMarker}`,
-  '#admin/products',
-  '#admin/inventory',
-  `#admin/inventory/${privateRouteMarker}`,
-  '#admin/content/pages',
-  `#admin/content/pages/${privateRouteMarker}`,
-  '#admin/content/seo',
-  '#admin/content/redirects',
-  '#admin/payments',
-  '#admin/customers',
-  '#admin/notifications',
-  '#admin/audit',
-  '#admin/promotions',
-  '#admin/operations',
-  '#admin/marketing',
-  `#admin/orders/${privateRouteMarker}`,
+  '/admin/catalog',
+  '/admin/catalog/categories',
+  `/admin/catalog/products/${privateRouteMarker}`,
+  '/admin/inventory',
+  `/admin/inventory/${privateRouteMarker}`,
+  '/admin/content/pages',
+  `/admin/content/pages/${privateRouteMarker}`,
+  '/admin/content/seo',
+  '/admin/content/redirects',
+  '/admin/payments',
+  '/admin/customers',
+  '/admin/notifications',
+  '/admin/audit',
+  '/admin/promotions',
+  '/admin/operations',
+  '/admin/marketing',
+  `/admin/orders/${privateRouteMarker}`,
 ] as const;
 
 const privateAdminDataMarkers = [
   privateRouteMarker,
-  'مدیر نمونه',
-  'حساب نمایشی',
-  'سفارش‌های اخیر',
-  'درآمد کل',
+  'NOVA / ADMIN DASHBOARD · DEV PREVIEW',
+  'پیش‌نمایش توسعه',
+  'داده نمایشی',
 ] as const;
 
 function isLoopbackHost(hostname: string): boolean {
@@ -81,7 +79,7 @@ test('keeps anonymous admin child routes behind the staff login boundary', async
   });
 
   for (const route of anonymousAdminRoutes) {
-    const response = await page.goto(`/${route}`, { waitUntil: 'domcontentloaded' });
+    const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
 
     if (response) expect(response.ok()).toBeTruthy();
     await expect(page).toHaveURL(new RegExp(`${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));

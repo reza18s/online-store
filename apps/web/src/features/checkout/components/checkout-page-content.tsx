@@ -39,7 +39,7 @@ export function CheckoutPageContent({
               : controller.addressFailure?.message}
           </p>
           <Button className="mt-5" asChild variant="outline">
-            <a href={controller.needsLogin ? '#auth' : '#checkout/address'}>
+            <a href={controller.needsLogin ? '/auth' : '/checkout/address'}>
               {controller.needsLogin ? 'ورود به حساب' : 'تلاش دوباره'}
             </a>
           </Button>
@@ -87,7 +87,7 @@ export function CheckoutPageContent({
             یک آدرس معتبر از حساب خود انتخاب کنید.
           </p>
           <Button className="mt-5" asChild variant="outline">
-            <a href="#checkout/address">انتخاب آدرس</a>
+            <a href="/checkout/address">انتخاب آدرس</a>
           </Button>
         </section>
       </CheckoutShell>
@@ -97,7 +97,7 @@ export function CheckoutPageContent({
   return (
     <CheckoutShell>
       <div className="breadcrumb">
-        <a href="#cart">سبد خرید</a>
+        <a href="/cart">سبد خرید</a>
         <span>/</span>
         <span>تکمیل سفارش</span>
       </div>

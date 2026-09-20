@@ -69,38 +69,17 @@ test('clears stale protected data for a session failure but preserves it for a r
   queryClient.setQueryData(['staff-auth', 'current'], { id: 'staff-data' });
 
   assert.equal(
-    handleStaffSessionFailure(queryClient, new ApiClientError(403), {
-      hasStaffSession: true,
-      isDevelopment: false,
-    }),
+    handleStaffSessionFailure(queryClient, new ApiClientError(403)),
     false,
   );
   assert.deepEqual(queryClient.getQueryData(['admin', 'orders', 'list']), { id: 'admin-data' });
   assert.deepEqual(queryClient.getQueryData(['staff-auth', 'current']), { id: 'staff-data' });
 
   assert.equal(
-    handleStaffSessionFailure(queryClient, new ApiClientError(401), {
-      hasStaffSession: true,
-      isDevelopment: false,
-    }),
+    handleStaffSessionFailure(queryClient, new ApiClientError(401)),
     true,
   );
   assert.equal(queryClient.getQueryData(['admin', 'orders', 'list']), undefined);
   assert.equal(queryClient.getQueryData(['staff-auth', 'current']), undefined);
-  queryClient.clear();
-});
-
-test('keeps the local admin preview available for an initial development auth failure', () => {
-  const queryClient = new QueryClient();
-  queryClient.setQueryData(['admin', 'preview'], { id: 'preview-data' });
-
-  assert.equal(
-    handleStaffSessionFailure(queryClient, new ApiClientError(401), {
-      hasStaffSession: false,
-      isDevelopment: true,
-    }),
-    false,
-  );
-  assert.deepEqual(queryClient.getQueryData(['admin', 'preview']), { id: 'preview-data' });
   queryClient.clear();
 });

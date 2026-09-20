@@ -27,7 +27,7 @@ export function OrderRecoveryState({
   const authoritativeCopy = paymentRecoveryCopy(authoritativeState);
   const authoritativeActionHref =
     authoritativeState === 'timeout'
-      ? `#order/${encodeURIComponent(order.orderNumber)}`
+      ? `/order/${encodeURIComponent(order.orderNumber)}`
       : buildCheckoutHref('payment', { addressId: '', shippingMethod: 'STANDARD' });
   return (
     <section className="confirmation-card" aria-labelledby="payment-recovery-title">
@@ -51,7 +51,7 @@ export function OrderRecoveryState({
           </Button>
         )}
         <Button asChild variant="outline" size="lg">
-          <a href={`#order/${encodeURIComponent(order.orderNumber)}`}>مشاهده وضعیت سفارش</a>
+          <a href={`/order/${encodeURIComponent(order.orderNumber)}`}>مشاهده وضعیت سفارش</a>
         </Button>
       </div>
     </section>

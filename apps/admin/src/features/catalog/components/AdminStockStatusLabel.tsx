@@ -1,4 +1,4 @@
-import type { AdminProductStockStatus } from '@/shared/fixtures/app-shared';
+import type { AdminProductStockStatus } from '@/features/catalog/types';
 
 export function adminStockStatusLabel(status: AdminProductStockStatus): string {
   const labels: Record<AdminProductStockStatus, string> = {

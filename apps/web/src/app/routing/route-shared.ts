@@ -9,7 +9,7 @@ export type PreviewState =
   | 'error'
   | 'maintenance';
 
-export type HashRoute =
+export type Route =
   | { kind: 'home'; path: string; queryString: string }
   | { kind: 'auth-request'; path: string; queryString: string }
   | { kind: 'auth-verify'; path: string; queryString: string }
@@ -38,22 +38,22 @@ export type HashRoute =
   | { kind: 'admin'; path: string; queryString: string; page: string }
   | { kind: 'not-found'; path: string; queryString: string };
 
-export const audiencePattern = /^#(?:category|products)\/(women|men|children)$/;
+export const audiencePattern = /^\/(?:category|products)\/(women|men|children)$/;
 
 export const editorialRoutes = new Set([
-  '#campaign',
-  '#guide',
-  '#article',
-  '#lookbook',
-  '#about',
-  '#trust',
-  '#size-guide',
-  '#shipping-policy',
-  '#returns-policy',
-  '#care-guide',
-  '#faq',
-  '#contact',
-  '#privacy',
-  '#terms',
-  '#support',
+  '/campaign',
+  '/guide',
+  '/article',
+  '/lookbook',
+  '/about',
+  '/trust',
+  '/size-guide',
+  '/shipping-policy',
+  '/returns-policy',
+  '/care-guide',
+  '/faq',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/support',
 ]);

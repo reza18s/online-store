@@ -11,10 +11,10 @@ import { RouteView, resolveSeoDocumentForRoute } from '@/app';
 
 test('uses client SEO metadata after navigating from another public data route', () => {
   const seo = resolveSeoDocumentForRoute(
-    '#product/linen-overshirt',
+    '/product/linen-overshirt',
     {
       path: '/category/women',
-      hashRoute: '#category/women',
+      route: '/category/women',
       seo: createSeoDocument({
         origin: 'https://nova.example',
         title: 'NOVA | زنانه',
@@ -34,7 +34,7 @@ test('uses client SEO metadata after navigating from another public data route',
 test('does not expose a fabricated order number from the payment preview state', () => {
   const markup = renderToStaticMarkup(
     createElement(RouteView, {
-      route: '#checkout/payment-pending',
+      route: '/checkout/payment-pending',
       cart: undefined,
       cartLoading: false,
       cartError: false,
@@ -45,7 +45,7 @@ test('does not expose a fabricated order number from the payment preview state',
   );
 
   assert.doesNotMatch(markup, /NV-1405-2481/);
-  assert.match(markup, /href="#account\/orders"/);
+  assert.match(markup, /href="\/account\/orders"/);
 });
 
 test('routes legacy editorial aliases through the published content renderer', () => {
@@ -62,7 +62,7 @@ test('routes legacy editorial aliases through the published content renderer', (
       QueryClientProvider,
       { client: queryClient },
       createElement(RouteView, {
-        route: '#article',
+        route: '/article',
         cart: undefined,
         cartLoading: false,
         cartError: false,

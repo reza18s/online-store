@@ -4,6 +4,8 @@ import { useStaffLogout } from '@/features/auth/api/use-staff-logout';
 
 import { Icon } from '@/shared/ui/icon';
 
+import { navigateToRoute } from '@/app/routing/navigate-to-route';
+
 export function AdminLogoutButton({
   className = '',
   compact = false,
@@ -18,7 +20,7 @@ export function AdminLogoutButton({
   const handleLogout = () => {
     logoutMutation.mutate(undefined, {
       onSettled: () => {
-        window.location.hash = '#admin/login';
+        navigateToRoute('/admin/login');
       },
     });
   };

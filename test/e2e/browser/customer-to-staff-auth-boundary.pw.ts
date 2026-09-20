@@ -180,7 +180,7 @@ test('does not reuse an authenticated customer session for a staff-only route', 
   page.setDefaultTimeout(15_000);
   const network = await installCustomerToStaffBoundary(page);
 
-  const customerResponse = await page.goto('/#account/orders', { waitUntil: 'domcontentloaded' });
+  const customerResponse = await page.goto('/account/orders', { waitUntil: 'domcontentloaded' });
   expect(customerResponse?.ok()).toBeTruthy();
 
   const customerMain = page.getByRole('main');
@@ -190,11 +190,11 @@ test('does not reuse an authenticated customer session for a staff-only route', 
   expect(customerSessionRequestsBeforeStaffNavigation).toBeGreaterThan(0);
   expect(network.customerOrdersRequests).toEqual(['GET /v1/account/orders?page=1&limit=10']);
 
-  await page.goto(`${adminEndpoint.safeOrigin}/#admin/catalog`, {
+  await page.goto(`${adminEndpoint.safeOrigin}/admin/catalog`, {
     waitUntil: 'domcontentloaded',
   });
 
-  await expect(page).toHaveURL(new RegExp(`${adminEndpoint.safeOrigin}/#admin\\/catalog$`));
+  await expect(page).toHaveURL(new RegExp(`${adminEndpoint.safeOrigin}/admin\\/catalog$`));
   await expect(page.getByRole('heading', { name: 'ورود به فضای مدیریت' })).toBeVisible();
   await expect(page.getByLabel('ایمیل سازمانی')).toBeEmpty();
   await expect(page.getByLabel('رمز عبور')).toBeEmpty();

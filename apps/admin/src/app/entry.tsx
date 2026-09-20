@@ -5,13 +5,14 @@ import '@nova/ui/styles.css';
 import '@/styles.css';
 
 import { AdminApp } from '@/app/AdminApp';
+import { decodeRouteSegment } from '@/app/routing/decode-route-segment';
 import { createQueryClient } from '@/app/providers/query-client';
 
 const root = document.getElementById('root');
 
 if (!root) throw new Error('The application root was not found.');
 
-const page = decodeURIComponent(
+const page = decodeRouteSegment(
   window.location.pathname.replace(/^\/admin\/?/, '').replace(/^\/+/, '') || 'admin',
 );
 const queryString = window.location.search.slice(1);

@@ -36,7 +36,7 @@ export function FailurePanel({
               </Button>
             ) : null}
             {failure.action !== 'cart' && failure.action !== 'login' ? (
-              <a className="text-link" href="#cart">
+              <a className="text-link" href="/cart">
                 بازگشت به سبد
               </a>
             ) : null}

@@ -6,7 +6,7 @@ export function EmptyState({
   title,
   description,
   action,
-  href = '#home',
+  href = '/',
   onAction,
   icon = 'layers',
 }: {

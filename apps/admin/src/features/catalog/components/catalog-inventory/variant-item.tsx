@@ -37,7 +37,7 @@ export function VariantItem({
         </div>
         <a
           className="inline-flex min-h-10 items-center gap-1 text-[11px] text-primary focus-visible:outline-2 focus-visible:outline-primary"
-          href={`#admin/inventory/${encodeURIComponent(variant.id)}`}
+          href={`/admin/inventory/${encodeURIComponent(variant.id)}`}
         >
           موجودی <Icon name="arrow-left" size={13} />
         </a>

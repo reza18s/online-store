@@ -454,13 +454,13 @@ behavior.
 
 ### 7.2 Route ownership
 
-React Router is the primary in-app route owner. The legacy hash-router behavior
-remains supported for existing links and compatibility, but hash URLs are not
-canonical for crawler-facing pages.
+The clean browser path is the sole in-app route contract. Public and staff
+navigation use pathname/history routes; hash URLs are not supported by the
+runtime and are not canonical for crawler-facing pages.
 
 | Route class       | Examples                              | Rendering              | Indexing                    |
 | ----------------- | ------------------------------------- | ---------------------- | --------------------------- |
-| Public home       | /, legacy #home                       | SSR + client hydration | index/follow                |
+| Public home       | /                                     | SSR + client hydration | index/follow                |
 | Public category   | /category/:slug                       | SSR + client hydration | index/follow when canonical |
 | Public product    | /product/:slug                        | SSR + client hydration | index/follow when published |
 | Public content    | /content/:slug                        | SSR + client hydration | index/follow when published |

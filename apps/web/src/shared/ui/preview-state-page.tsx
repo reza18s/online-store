@@ -1,7 +1,7 @@
 import { Button } from '@nova/ui';
 
 import { Icon } from '@/shared/ui/icon';
-import { type PreviewState } from '@/app/routing/hash-route';
+import { type PreviewState } from '@/app/routing/route';
 
 import { previewStateCopy } from '@/app/app-shared';
 

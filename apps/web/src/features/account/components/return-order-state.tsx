@@ -27,7 +27,7 @@ export function ReturnOrderState({
           title="درخواست بازگشت این سفارش ثبت شده است"
           description={`وضعیت فعلی درخواست: ${returnRequestStatusCopy[order.returnRequest.status]}`}
           action="پیگیری وضعیت بازگشت"
-          href={`#return/status?orderNumber=${encodeURIComponent(order.orderNumber)}`}
+          href={`/return/status?orderNumber=${encodeURIComponent(order.orderNumber)}`}
         />
       </PageFrame>
     );
@@ -52,7 +52,7 @@ export function ReturnOrderState({
                   : `مهلت بازگشت این سفارش ${formatPersianNumber(7)} روز پس از تحویل است.`
           }
           action="مشاهده سفارش"
-          href={`#order/${encodeURIComponent(orderNumber)}`}
+          href={`/order/${encodeURIComponent(orderNumber)}`}
         />
       </PageFrame>
     );
@@ -62,7 +62,7 @@ export function ReturnOrderState({
         title="هنوز درخواست بازگشتی ثبت نشده است"
         description="این سفارش شرایط بازگشت را دارد. برای شروع، درخواست بازگشت کالا را ثبت کنید."
         action="ثبت درخواست بازگشت"
-        href={`#return/request?orderNumber=${encodeURIComponent(orderNumber)}`}
+        href={`/return/request?orderNumber=${encodeURIComponent(orderNumber)}`}
         icon="package"
       />
     </PageFrame>

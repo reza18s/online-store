@@ -166,7 +166,7 @@ test('renders the live fixture-backed authenticated admin dashboard and changes 
   page.setDefaultNavigationTimeout(15_000);
   const network = await installDashboardFixtureGuard(page, adminStaff);
 
-  const response = await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
 
   const main = page.getByRole('main');
@@ -214,7 +214,7 @@ test('denies an authenticated support staff member without requesting dashboard 
   page.setDefaultNavigationTimeout(15_000);
   const network = await installDashboardFixtureGuard(page, supportStaff);
 
-  const response = await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
 
   const main = page.getByRole('main');

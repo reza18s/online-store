@@ -4,6 +4,7 @@ import type { CatalogSearchSuggestion } from '@nova/api-client';
 import { Button, Input as UiInput } from '@nova/ui';
 
 import { useCatalogSuggestions } from '@/features/catalog/api/catalog-api';
+import { navigateToRoute } from '@/app/routing/route';
 import { Icon } from '@/shared/ui/icon';
 import { useDialogFocus } from '@/shared/ui/use-dialog-focus';
 
@@ -51,7 +52,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
     const normalized = term.trim();
     if (!normalized) return;
     rememberSearch(normalized);
-    window.location.hash = `products?q=${encodeURIComponent(normalized)}`;
+    navigateToRoute(`/products?q=${encodeURIComponent(normalized)}`);
     onClose();
   };
 
@@ -59,9 +60,9 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
     rememberSearch(normalizedQuery);
     const destination =
       suggestion.type === 'CATEGORY'
-        ? `products?category=${encodeURIComponent(suggestion.slug)}`
-        : `product/${encodeURIComponent(suggestion.slug)}`;
-    window.location.hash = destination;
+        ? `/products?category=${encodeURIComponent(suggestion.slug)}`
+        : `/product/${encodeURIComponent(suggestion.slug)}`;
+    navigateToRoute(destination);
     onClose();
   };
 
@@ -142,8 +143,8 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
               <a
                 href={
                   suggestion.type === 'CATEGORY'
-                    ? `#products?category=${encodeURIComponent(suggestion.slug)}`
-                    : `#product/${encodeURIComponent(suggestion.slug)}`
+                    ? `/products?category=${encodeURIComponent(suggestion.slug)}`
+                    : `/product/${encodeURIComponent(suggestion.slug)}`
                 }
                 key={`${suggestion.type}:${suggestion.id}`}
                 onClick={() => openSuggestion(suggestion)}

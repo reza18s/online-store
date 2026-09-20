@@ -17,7 +17,7 @@ export function ProductCard({ product }: { product: AdminCatalogProductListItem 
         <div className="min-w-0 flex-1">
           <a
             className="font-semibold focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
-            href={`#admin/catalog/products/${encodeURIComponent(product.id)}`}
+            href={`/admin/catalog/products/${encodeURIComponent(product.id)}`}
           >
             {product.name}
           </a>

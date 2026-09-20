@@ -172,11 +172,11 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
   return (
     <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-8 bg-background py-6 md:py-10">
       <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <a href="#home" className="hover:text-primary">
+        <a href="/" className="hover:text-primary">
           خانه
         </a>
         <span aria-hidden="true">/</span>
-        <a href={`#products/${product.audience}`} className="hover:text-primary">
+        <a href={`/products/${product.audience}`} className="hover:text-primary">
           {audienceCopy[product.audience].label}
         </a>
         <span aria-hidden="true">/</span>

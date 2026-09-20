@@ -28,7 +28,7 @@ export function EmptyState({
         </Button>
       ) : (
         <Button asChild>
-          <a href={href ?? '#home'}>{action}</a>
+          <a href={href ?? '/'}>{action}</a>
         </Button>
       )}
     </section>

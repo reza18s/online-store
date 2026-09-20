@@ -61,43 +61,35 @@ const ADMIN_MOBILE_NAVIGATION: AdminNavigationItem[] = ADMIN_MOBILE_NAVIGATION_D
 function filterNavigation(
   navigation: AdminNavigationItem[],
   staffRoles: readonly string[] | undefined,
-  allowDevelopmentPreview: boolean,
 ): AdminNavigationItem[] {
-  if (allowDevelopmentPreview) return navigation;
   return navigation.filter((item) => hasAdminStaffRole(staffRoles, item.requiredRoles));
 }
 
 export function getAdminWorkspaceNavigation(
   staffRoles: readonly string[] | undefined,
-  allowDevelopmentPreview: boolean,
 ): AdminNavigationItem[] {
-  return filterNavigation(ADMIN_NAVIGATION, staffRoles, allowDevelopmentPreview);
+  return filterNavigation(ADMIN_NAVIGATION, staffRoles);
 }
 
 export function getAdminMobileNavigation(
   staffRoles: readonly string[] | undefined,
-  allowDevelopmentPreview: boolean,
 ): AdminNavigationItem[] {
-  return filterNavigation(ADMIN_MOBILE_NAVIGATION, staffRoles, allowDevelopmentPreview);
+  return filterNavigation(ADMIN_MOBILE_NAVIGATION, staffRoles);
 }
 
 export function AdminWorkspaceLayout({
   page,
-  allowDevelopmentPreview,
   adminDisplayName,
-  adminAccountLabel,
   staffRoles,
   children,
 }: {
   page: string;
-  allowDevelopmentPreview: boolean;
   adminDisplayName: string;
-  adminAccountLabel: string;
   staffRoles?: readonly string[];
   children: ReactNode;
 }) {
-  const nav = getAdminWorkspaceNavigation(staffRoles, allowDevelopmentPreview);
-  const mobileNav = getAdminMobileNavigation(staffRoles, allowDevelopmentPreview);
+  const nav = getAdminWorkspaceNavigation(staffRoles);
+  const mobileNav = getAdminMobileNavigation(staffRoles);
   const isNavActive = (key: string) =>
     page === key ||
     (key === 'catalog' && page.startsWith('catalog/products')) ||
@@ -112,7 +104,7 @@ export function AdminWorkspaceLayout({
           {nav.map((item) => (
             <a
               className={`flex min-h-11 items-center gap-3 rounded-md px-3 text-xs transition-colors ${isNavActive(item.key ?? '') ? 'is-active' : ''}`}
-              href={`#admin${item.key === 'admin' ? '' : `/${item.key}`}`}
+              href={`/admin${item.key === 'admin' ? '' : `/${item.key}`}`}
               key={item.key}
             >
               <Icon name={item.icon} size={18} />
@@ -125,11 +117,11 @@ export function AdminWorkspaceLayout({
             <img
               className="h-10 w-10 rounded-full object-cover"
               src="/assets/nova-hero-men.webp"
-              alt={allowDevelopmentPreview ? '' : `پروفایل ${adminDisplayName}`}
+              alt={`پروفایل ${adminDisplayName}`}
             />
             <div className="min-w-0 text-right">
               <strong className="block truncate text-xs">{adminDisplayName}</strong>
-              <small className="mt-1 block text-[9px] opacity-70">{adminAccountLabel}</small>
+              <small className="mt-1 block text-[9px] opacity-70">نشست فعال</small>
             </div>
           </div>
           <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-[10px] opacity-75 transition-colors hover:opacity-100 disabled:opacity-50" />
@@ -146,11 +138,11 @@ export function AdminWorkspaceLayout({
               label="خروج"
               className="icon-button border-0 disabled:opacity-50"
             />
-            <a className="icon-button" href="#admin" aria-label="داشبورد">
+            <a className="icon-button" href="/admin" aria-label="داشبورد">
               <Icon name="menu" size={20} />
             </a>
             <Logo descriptor="ADMIN PANEL" />
-            <a className="icon-button" href="#admin" aria-label="اعلان‌ها">
+            <a className="icon-button" href="/admin" aria-label="اعلان‌ها">
               <Icon name="bell" size={19} />
             </a>
           </div>
@@ -176,11 +168,6 @@ export function AdminWorkspaceLayout({
               aria-label="اعلان‌ها"
             >
               <Icon name="bell" size={19} />
-              {allowDevelopmentPreview ? (
-                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary text-[8px] text-primary-foreground">
-                  ۱
-                </span>
-              ) : null}
             </Button>
             <img
               className="h-9 w-9 rounded-full bg-secondary object-cover"
@@ -188,7 +175,7 @@ export function AdminWorkspaceLayout({
               alt={`پروفایل ${adminDisplayName}`}
             />
             <span className="hidden text-xs text-muted-foreground lg:inline">
-              {allowDevelopmentPreview ? 'تاریخ نمایشی' : 'نشست فعال'}
+              نشست فعال
             </span>
             <Button
               className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors hover:bg-accent-soft"
@@ -208,7 +195,7 @@ export function AdminWorkspaceLayout({
         {mobileNav.map(({ key, label, icon }) => (
           <a
             className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-[10px] ${isNavActive(key ?? '') ? 'text-primary' : 'text-muted-foreground'}`}
-            href={`#admin${key === 'admin' ? '' : `/${key}`}`}
+            href={`/admin${key === 'admin' ? '' : `/${key}`}`}
             key={key}
           >
             <Icon name={icon} size={19} />

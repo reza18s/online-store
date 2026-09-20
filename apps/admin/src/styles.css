@@ -2638,7 +2638,7 @@ textarea:focus-visible {
     margin-block-end: 2px;
   }
 
-  /* Admin preview */
+  /* Admin shell */
   .app-root--admin {
     background: var(--page);
   }

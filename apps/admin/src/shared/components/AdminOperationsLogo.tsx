@@ -2,7 +2,7 @@ export function AdminOperationsLogo({ mobile = false }: { mobile?: boolean } = {
   return (
     <a
       className={`flex w-max flex-col leading-none ${mobile ? 'items-end' : 'items-center'}`}
-      href="#admin"
+      href="/admin"
       aria-label="نوا، فضای مدیریت"
     >
       <span className={`${mobile ? 'text-xl' : 'text-[30px]'} font-display tracking-[0.16em]`}>

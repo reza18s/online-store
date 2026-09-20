@@ -85,7 +85,7 @@ export function CustomerAddressBookPage({
                   : apiErrorMessage(addressesQuery.error, 'دریافت آدرس‌ها ممکن نشد.')
           }
           action={isUnauthorizedError(addressesQuery.error) ? 'ورود دوباره' : 'تلاش دوباره'}
-          href={isUnauthorizedError(addressesQuery.error) ? '#auth' : '#account/addresses'}
+          href={isUnauthorizedError(addressesQuery.error) ? '/auth' : '/account/addresses'}
           onAction={
             isUnauthorizedError(addressesQuery.error)
               ? undefined
@@ -122,14 +122,14 @@ export function CustomerAddressBookPage({
           title="آدرس پیدا نشد"
           description="این آدرس دیگر در حساب شما وجود ندارد یا به این حساب تعلق ندارد."
           action="بازگشت به آدرس‌ها"
-          href="#account/addresses"
+          href="/account/addresses"
         />
       </PageFrame>
     );
   return (
     <PageFrame>
       <div className="breadcrumb">
-        <a href="#account">حساب کاربری</a>
+        <a href="/account">حساب کاربری</a>
         <span>/</span>
         <span>آدرس‌ها</span>
       </div>
@@ -155,7 +155,7 @@ export function CustomerAddressBookPage({
           title="هنوز آدرسی ثبت نکرده‌اید"
           description="برای تحویل سریع‌تر سفارش، اولین آدرس خود را اضافه کنید."
           action="افزودن آدرس جدید"
-          href="#account/addresses/create"
+          href="/account/addresses/create"
         />
       ) : (
         <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
@@ -192,7 +192,7 @@ export function CustomerAddressBookPage({
               <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
                 <a
                   className="text-link"
-                  href={`#account/addresses/edit/${encodeURIComponent(address.id)}`}
+                  href={`/account/addresses/edit/${encodeURIComponent(address.id)}`}
                 >
                   ویرایش <Icon name="edit" size={15} />
                 </a>
@@ -221,7 +221,7 @@ export function CustomerAddressBookPage({
           ))}
           <a
             className="flex min-h-48 flex-col items-center justify-center gap-3 border border-dashed border-border bg-surface text-center text-primary transition-colors hover:border-primary hover:bg-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            href="#account/addresses/create"
+            href="/account/addresses/create"
           >
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
               <Icon name="plus" size={21} />

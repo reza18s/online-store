@@ -54,21 +54,21 @@ test.describe('WEB-004 checkout recovery browser coverage', () => {
 
     const routes = [
       {
-        hash: '#checkout/payment-pending',
+        path: '/checkout/payment-pending',
         heading: 'در حال بررسی پرداخت',
         primaryAction: 'پیگیری سفارش',
-        primaryHref: '#account/orders',
+        primaryHref: '/account/orders',
       },
       {
-        hash: '#checkout/payment-failed',
+        path: '/checkout/payment-failed',
         heading: 'پرداخت انجام نشد',
         primaryAction: 'تلاش دوباره',
-        primaryHref: '#checkout/payment',
+        primaryHref: '/checkout/payment',
       },
     ] as const;
 
     for (const route of routes) {
-      const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
+      const response = await page.goto(route.path, { waitUntil: 'domcontentloaded' });
 
       if (response) expect(response.ok()).toBeTruthy();
       await expect(page.getByRole('heading', { name: route.heading, level: 1 })).toBeVisible();
@@ -89,19 +89,19 @@ test.describe('WEB-004 checkout recovery browser coverage', () => {
 
     const routes = [
       {
-        hash: '#checkout/payment-recovery?orderNumber',
+        path: '/checkout/payment-recovery?orderNumber',
         heading: 'ادامه سفارش ممکن نشد',
         message: 'شماره سفارش در لینک پرداخت وجود ندارد.',
       },
       {
-        hash: '#checkout/confirmation?orderNumber=%20%09',
+        path: '/checkout/confirmation?orderNumber=%20%09',
         heading: 'ادامه سفارش ممکن نشد',
         message: 'شماره سفارش معتبر نیست.',
       },
     ] as const;
 
     for (const route of routes) {
-      const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
+      const response = await page.goto(route.path, { waitUntil: 'domcontentloaded' });
 
       if (response) expect(response.ok()).toBeTruthy();
       await expect(page.getByRole('heading', { name: route.heading, level: 1 })).toBeVisible();

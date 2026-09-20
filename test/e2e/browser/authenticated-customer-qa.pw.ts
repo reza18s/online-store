@@ -256,7 +256,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
   page.setDefaultNavigationTimeout(15_000);
   const network = await installAuthenticatedFixtureNetwork(page);
 
-  const initialResponse = await page.goto('/#account/orders', { waitUntil: 'domcontentloaded' });
+  const initialResponse = await page.goto('/account/orders', { waitUntil: 'domcontentloaded' });
   if (initialResponse) expect(initialResponse.ok()).toBeTruthy();
   await waitForSettledAccount(page);
 
@@ -267,7 +267,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
 
   const orderCard = main.locator('a.order-card').filter({ hasText: syntheticOrderNumber });
   await expect(orderCard).toBeVisible();
-  await expect(orderCard).toHaveAttribute('href', `#order/${syntheticOrderNumber}`);
+  await expect(orderCard).toHaveAttribute('href', `/order/${syntheticOrderNumber}`);
   await orderCard.click();
   await waitForSettledAccount(page);
 
@@ -294,7 +294,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await expect(page.locator('body')).not.toContainText(syntheticCustomerEmail);
   await expect(page.locator('body')).not.toContainText(syntheticOrderNumber);
 
-  await page.goto('/#account/orders', { waitUntil: 'domcontentloaded' });
+  await page.goto('/account/orders', { waitUntil: 'domcontentloaded' });
   await waitForSettledAccount(page);
   await expect(
     page.getByRole('heading', { name: 'برای دیدن حساب کاربری وارد شوید', level: 1 }),
@@ -325,7 +325,7 @@ test('renders an authenticated empty customer order state without order cards', 
     orders: { items: [], total: 0, page: 1, limit: 10 },
   });
 
-  const response = await page.goto('/#account/orders', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/account/orders', { waitUntil: 'domcontentloaded' });
   if (response) expect(response.ok()).toBeTruthy();
   await waitForSettledAccount(page);
 

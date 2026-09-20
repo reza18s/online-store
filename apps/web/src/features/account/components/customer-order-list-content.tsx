@@ -71,7 +71,7 @@ export function CustomerOrderListContent({
           title="هنوز سفارشی ثبت نکرده‌اید"
           description="وقتی اولین خرید خود را انجام دهید، وضعیت آن را همین‌جا دنبال می‌کنید."
           action="مشاهده فروشگاه"
-          href="#products"
+          href="/products"
           icon="package"
         />
       ) : null}
@@ -80,7 +80,7 @@ export function CustomerOrderListContent({
           {orders.map((order) => (
             <a
               className="order-card"
-              href={`#order/${encodeURIComponent(order.orderNumber)}`}
+              href={`/order/${encodeURIComponent(order.orderNumber)}`}
               key={order.orderId}
             >
               <div>

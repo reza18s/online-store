@@ -8,20 +8,20 @@ function keys(items: Array<{ key: string }>): string[] {
 }
 
 test('filters global staff navigation by support, operations, and admin permissions', () => {
-  assert.deepEqual(keys(getAdminWorkspaceNavigation(['support'], false)), [
+  assert.deepEqual(keys(getAdminWorkspaceNavigation(['support'])), [
     'catalog',
     'catalog/categories',
     'orders',
     'customers',
   ]);
-  assert.deepEqual(keys(getAdminWorkspaceNavigation(['operations'], false)), [
+  assert.deepEqual(keys(getAdminWorkspaceNavigation(['operations'])), [
     'catalog',
     'catalog/categories',
     'orders',
     'customers',
     'operations',
   ]);
-  assert.deepEqual(keys(getAdminWorkspaceNavigation(['ADMIN'], false)), [
+  assert.deepEqual(keys(getAdminWorkspaceNavigation(['ADMIN'])), [
     'admin',
     'catalog',
     'catalog/categories',
@@ -35,23 +35,12 @@ test('filters global staff navigation by support, operations, and admin permissi
   ]);
 });
 
-test('applies the same permission filter to mobile navigation and keeps the dev preview usable', () => {
-  assert.deepEqual(keys(getAdminMobileNavigation(['support'], false)), ['catalog', 'orders']);
-  assert.deepEqual(keys(getAdminMobileNavigation(['operations'], false)), [
+test('applies the same permission filter to mobile navigation', () => {
+  assert.deepEqual(keys(getAdminMobileNavigation(['support'])), ['catalog', 'orders']);
+  assert.deepEqual(keys(getAdminMobileNavigation(['operations'])), [
     'catalog',
     'orders',
     'operations',
   ]);
-  assert.deepEqual(keys(getAdminWorkspaceNavigation(undefined, true)), [
-    'admin',
-    'catalog',
-    'catalog/categories',
-    'orders',
-    'customers',
-    'marketing',
-    'content',
-    'audit',
-    'promotions',
-    'operations',
-  ]);
+  assert.deepEqual(keys(getAdminWorkspaceNavigation(undefined)), []);
 });

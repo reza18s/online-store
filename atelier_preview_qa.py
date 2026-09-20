@@ -18,7 +18,7 @@ with sync_playwright() as playwright:
     browser = playwright.chromium.launch(headless=True)
     page = browser.new_page(viewport={"width": 1440, "height": 1000}, device_scale_factor=1)
 
-    page.goto(f"{BASE_URL}/#home")
+    page.goto(f"{BASE_URL}/")
     page.wait_for_load_state("networkidle")
     expect(page.locator("html")).to_have_attribute("dir", "rtl")
     expect(page.locator("#hero-title")).to_contain_text("جزئیات آرام")
@@ -54,7 +54,7 @@ with sync_playwright() as playwright:
     expect(page.locator("h1")).to_contain_text("روش ارسال")
 
     page.set_viewport_size({"width": 390, "height": 844})
-    page.goto(f"{BASE_URL}/#home")
+    page.goto(f"{BASE_URL}/")
     page.wait_for_load_state("networkidle")
     assert_no_horizontal_overflow(page)
     page.screenshot(path=str(SCREENSHOT_DIR / "atelier-home-390.png"), full_page=True)
@@ -65,12 +65,12 @@ with sync_playwright() as playwright:
 
     for width in (360, 768, 1024):
         page.set_viewport_size({"width": width, "height": 900})
-        page.goto(f"{BASE_URL}/#products")
+        page.goto(f"{BASE_URL}/products")
         page.wait_for_load_state("networkidle")
         assert_no_horizontal_overflow(page)
 
     page.set_viewport_size({"width": 390, "height": 844})
-    page.goto(f"{BASE_URL}/#admin")
+    page.goto(f"{BASE_URL}/admin")
     page.wait_for_load_state("networkidle")
     expect(page.locator(".admin-shell")).to_be_visible()
     expect(page.locator(".mobile-bottom-nav")).to_have_count(0)

@@ -13,7 +13,7 @@ import {
   getRenderableContentBlocks,
   isPublishedContentPage,
   normalizePublicContentSlug,
-  publicContentHashHref,
+  publicContentHref,
   publicContentPath,
   PublicContentSystemPage,
   safeSiteRelativeHref,
@@ -47,13 +47,13 @@ function renderPage(
   );
 }
 
-test('normalizes published slugs and keeps canonical/hash links encoded', () => {
+test('normalizes published slugs and keeps canonical/content links encoded', () => {
   assert.equal(normalizePublicContentSlug(' Shipping-Policy '), 'shipping-policy');
   assert.equal(normalizePublicContentSlug('%20Shipping-Policy%20'), 'shipping-policy');
   assert.equal(normalizePublicContentSlug('shipping%2Dpolicy'), 'shipping-policy');
   assert.equal(normalizePublicContentSlug('@/pages/admin'), null);
   assert.equal(publicContentPath(' Shipping-Policy '), '/content/shipping-policy');
-  assert.equal(publicContentHashHref(' Shipping-Policy '), '#content/shipping-policy');
+  assert.equal(publicContentHref(' Shipping-Policy '), '/content/shipping-policy');
   assert.equal(publicContentPath('@/pages/admin'), null);
 });
 
@@ -135,7 +135,7 @@ test('renders loading, offline, missing, and published states with safe next act
   const loadingClient = new QueryClient();
   const loading = renderPage(loadingClient, { slug: 'shipping-policy' });
   assert.match(loading, /در حال بارگذاری محتوا/);
-  assert.match(loading, /href="#home"/);
+  assert.match(loading, new RegExp('href="/"'));
 
   const offlineClient = new QueryClient();
   const offline = renderPage(offlineClient, { slug: 'shipping-policy', systemState: 'offline' });

@@ -2,7 +2,7 @@ export function Logo({ descriptor = 'ATELIER EDITORIAL' }: { descriptor?: string
   return (
     <a
       className="brand-lockup inline-flex w-max flex-col items-center leading-none"
-      href="#admin"
+      href="/admin"
       aria-label="NOVA، داشبورد مدیریت"
     >
       <span className="brand-lockup__name">NOVA</span>

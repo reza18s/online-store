@@ -17,7 +17,7 @@ for (const viewport of targetViewports) {
         if (new URL(request.url()).pathname === '/v1/staff/auth/login') loginRequests += 1;
       });
 
-      const response = await page.goto('/#admin/login?expired=1', {
+      const response = await page.goto('/admin/login?expired=1', {
         waitUntil: 'domcontentloaded',
       });
 
@@ -45,7 +45,7 @@ for (const viewport of targetViewports) {
 
     test('preserves the staff form keyboard order and reverse traversal', async ({ page }) => {
       page.setDefaultNavigationTimeout(15_000);
-      const response = await page.goto('/#admin/login', { waitUntil: 'domcontentloaded' });
+      const response = await page.goto('/admin/login', { waitUntil: 'domcontentloaded' });
 
       expect(response?.ok()).toBeTruthy();
       const email = page.locator('#staff-email');

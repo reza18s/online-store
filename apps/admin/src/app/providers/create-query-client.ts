@@ -1,5 +1,4 @@
 import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
-import { queryKeys } from '@nova/api-client';
 
 import {
   handleStaffSessionFailure,
@@ -8,14 +7,10 @@ import {
 } from '@/features/auth';
 import { redirectToStaffLogin } from '@/app/providers/redirect-to-staff-login';
 
-export function createQueryClient(
-  options: { isDevelopment?: boolean; onStaffSessionExpired?: () => void } = {},
-): QueryClient {
-  const isDevelopment = options.isDevelopment ?? import.meta.env.DEV;
+export function createQueryClient(options: { onStaffSessionExpired?: () => void } = {}): QueryClient {
   const onStaffSessionExpired = options.onStaffSessionExpired ?? redirectToStaffLogin;
   const clearStaffSessionAfterFailure = (error: unknown): boolean => {
-    const hasStaffSession = Boolean(queryClient.getQueryData(queryKeys.staffAuth.current()));
-    return handleStaffSessionFailure(queryClient, error, { hasStaffSession, isDevelopment });
+    return handleStaffSessionFailure(queryClient, error);
   };
   const queryCache = new QueryCache({
     onError: (error, query) => {

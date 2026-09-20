@@ -181,7 +181,7 @@ test('renders a fixture-backed authenticated admin catalog within the staff boun
 
   const { stateChangingRequests, unexpectedApiRequests } = await installAdminFixtureGuard(page);
 
-  const response = await page.goto('/#admin/catalog', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin/catalog', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
 
   const main = page.getByRole('main');
@@ -199,8 +199,8 @@ test('renders a fixture-backed authenticated admin catalog within the staff boun
   await expect(main).not.toContainText('حساب نمایشی');
   await expect(main).not.toContainText('NV-DEMO-001');
 
-  for (const createRoute of ['#admin/catalog/products/new', '#admin/products/new']) {
-    await page.goto(`/${createRoute}`, { waitUntil: 'domcontentloaded' });
+  for (const createRoute of ['/admin/catalog/products/new']) {
+    await page.goto(createRoute, { waitUntil: 'domcontentloaded' });
     const editor = page.getByRole('main');
     await expect(editor.getByRole('heading', { name: 'محصول جدید', exact: true })).toBeVisible();
     await expect(editor.getByLabel('شناسه محصول')).toBeEnabled();

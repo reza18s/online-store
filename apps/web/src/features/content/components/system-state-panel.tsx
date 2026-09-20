@@ -40,7 +40,7 @@ export function SystemStatePanel({
           ) : null}
           <a
             className="inline-flex min-h-11 items-center justify-center rounded-editorial border border-border bg-surface px-5 text-sm font-semibold text-foreground transition-colors duration-150 hover:border-primary hover:text-primary focus-visible:outline-none motion-reduce:transition-none"
-            href="#home"
+            href="/"
           >
             بازگشت به خانه
           </a>

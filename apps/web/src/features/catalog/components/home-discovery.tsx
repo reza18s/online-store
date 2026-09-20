@@ -23,25 +23,25 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
       title: 'شهر در پاییز',
       description: 'لایه‌هایی گرم برای قدم‌زدن‌های ماندگار',
       image: '/assets/nova-women-lifestyle.webp',
-      href: '#campaign',
+      href: '/campaign',
     },
     {
       title: 'مینیمال، همیشه زیباست',
       description: 'فرم‌های ساده برای جزئیات روزمره',
       image: '/assets/nova-hero-editorial-v2.png',
-      href: '#category/women',
+      href: '/category/women',
     },
     {
       title: 'تعادل در هر فصل',
       description: 'استایلی برای تمام لحظه‌ها',
       image: '/assets/nova-hero-men.webp',
-      href: '#category/men',
+      href: '/category/men',
     },
     {
       title: 'شب‌های تهران',
       description: 'وقتی استایل، داستان می‌گوید',
       image: '/assets/nova-materials.webp',
-      href: '#article',
+      href: '/article',
     },
   ];
   return (
@@ -57,7 +57,7 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
             <span>NOVA LOOKBOOK</span>
             <h1 id="storefront-home-title">استایل‌هایی برای زندگی واقعی</h1>
             <p>ترکیبی از ظرافت، شخصیت و لحظه‌های خاص؛ الهام بگیرید، سبک خود را پیدا کنید.</p>
-            <a className="lookbook-button" href="#campaign">
+            <a className="lookbook-button" href="/campaign">
               مشاهده لوک‌بوک <Icon name="arrow-left" size={16} />
             </a>
             <small>REAL PEOPLE · BEAUTIFUL STORIES</small>
@@ -82,7 +82,7 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
               <span>NOVA / EDITORIAL STORIES</span>
               <h2 id="lookbook-stories-title">مجموعه استایل‌ها</h2>
             </div>
-            <a href="#campaign">
+            <a href="/campaign">
               مشاهده همه <Icon name="arrow-left" size={14} />
             </a>
           </div>
@@ -118,11 +118,11 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
               هر استایل، بخشی از یک روایت است؛ از صبح‌های آرام تا شب‌های فراموش‌نشدنی. لوک‌بوک نوا،
               الهام‌گرفته از زنان واقعی و زندگی‌های زیباست.
             </p>
-            <a href="#article">
+            <a href="/article">
               کاوش در لوک‌بوک <Icon name="arrow-left" size={14} />
             </a>
           </div>
-          <a className="lookbook-manifesto__aside" href="#campaign">
+          <a className="lookbook-manifesto__aside" href="/campaign">
             <img
               src="/assets/nova-materials.webp"
               alt="جزئیات معماری و بافت‌های الهام‌بخش نوا"
@@ -138,7 +138,7 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
               <span>SHOP THE LOOK</span>
               <h2 id="new-arrivals-title">آیتم‌های این استایل</h2>
             </div>
-            <a href="#products/new">
+            <a href="/products/new">
               مشاهده همه <Icon name="arrow-left" size={14} />
             </a>
           </div>
@@ -148,7 +148,7 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
                 <article className="lookbook-product" key={product.slug}>
                   <div className="lookbook-product__media">
                     <a
-                      href={`#product/${encodeURIComponent(product.slug)}`}
+                      href={`/product/${encodeURIComponent(product.slug)}`}
                       aria-label={`مشاهده ${product.name}`}
                     >
                       {product.image ? (
@@ -173,7 +173,7 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
                   </div>
                   <a
                     className="lookbook-product__name"
-                    href={`#product/${encodeURIComponent(product.slug)}`}
+                    href={`/product/${encodeURIComponent(product.slug)}`}
                   >
                     {product.name}
                   </a>
@@ -187,7 +187,7 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
                   </button>
                 </article>
               ))}
-              <a className="lookbook-shop-card" href="#products/new">
+              <a className="lookbook-shop-card" href="/products/new">
                 <span>استایل کامل این لوک</span>
                 <strong>خرید مجموعه</strong>
                 <Icon name="arrow-left" size={17} />

@@ -33,6 +33,8 @@ import { ProfilePanel } from '@/features/account/components/profile-panel';
 
 import { SessionState } from '@/features/account/components/session-state';
 
+import { navigateToRoute } from '@/app/routing/route';
+
 export function CustomerAccountPage({ section = 'dashboard' }: { section?: string }) {
   const customerQuery = useCurrentCustomer();
   const customer = customerQuery.data;
@@ -71,7 +73,7 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
                 : apiErrorMessage(customerQuery.error, 'دریافت اطلاعات حساب ممکن نشد.')
           }
           action={expired ? 'ورود دوباره' : 'تلاش دوباره'}
-          href={expired ? '#auth' : '#account'}
+          href={expired ? '/auth' : '/account'}
           onAction={expired ? undefined : () => void customerQuery.refetch()}
           icon={expired ? 'user' : offline ? 'refresh' : 'warning'}
         />
@@ -91,7 +93,7 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
     setLogoutError('');
     try {
       await logoutMutation.mutateAsync();
-      window.location.hash = '#home';
+      navigateToRoute('/');
     } catch (error) {
       setLogoutError(apiErrorMessage(error, 'خروج از حساب انجام نشد؛ دوباره تلاش کنید.'));
     }
@@ -117,7 +119,7 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
             <span className="section-heading__eyebrow">NOVA / ATELIER</span>
             <h2 id="account-welcome-title">خوش آمدید به دنیای نوا</h2>
             <p>انتخاب‌های شما، سفارش‌ها و پیشنهادهای شخصی‌سازی‌شده در یک نگاه.</p>
-            <a href="#products/new">
+            <a href="/products/new">
               دیدن انتخاب‌های تازه <Icon name="arrow-left" size={15} />
             </a>
           </div>
@@ -150,7 +152,7 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
                 </p>
                 <a
                   className="text-link"
-                  href={`#order/${encodeURIComponent(latestOrder.orderNumber)}`}
+                  href={`/order/${encodeURIComponent(latestOrder.orderNumber)}`}
                 >
                   مشاهده جزئیات <Icon name="arrow-left" size={15} />
                 </a>
@@ -159,7 +161,7 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
               <>
                 <h2>هنوز سفارشی ندارید</h2>
                 <p>اولین انتخاب خود را از مجموعه نوا شروع کنید.</p>
-                <a className="text-link" href="#products">
+                <a className="text-link" href="/products">
                   مشاهده فروشگاه <Icon name="arrow-left" size={15} />
                 </a>
               </>
@@ -173,13 +175,13 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
           </div>
           <div className="account-panel">
             <span className="section-heading__eyebrow">دسترسی سریع</span>
-            <a href="#account/addresses">
+            <a href="/account/addresses">
               مدیریت آدرس‌ها <Icon name="arrow-left" size={15} />
             </a>
-            <a href="#account/orders">
+            <a href="/account/orders">
               همه سفارش‌ها <Icon name="arrow-left" size={15} />
             </a>
-            <a href="#support">
+            <a href="/support">
               پرسش‌های متداول <Icon name="arrow-left" size={15} />
             </a>
           </div>

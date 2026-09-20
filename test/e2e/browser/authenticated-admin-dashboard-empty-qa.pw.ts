@@ -120,7 +120,7 @@ test('renders the authenticated admin dashboard localized empty state from a nul
   page.setDefaultNavigationTimeout(15_000);
   const network = await installDashboardEmptyFixture(page);
 
-  const response = await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
 
   const main = page.getByRole('main');

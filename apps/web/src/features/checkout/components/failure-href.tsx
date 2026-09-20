@@ -14,11 +14,11 @@ export function failureHref(
     case 'payment':
       return buildCheckoutHref('payment', input);
     case 'cart':
-      return '#cart';
+      return '/cart';
     case 'login':
-      return '#auth';
+      return '/auth';
     case 'orders':
-      return '#account/orders';
+      return '/account/orders';
     default:
       return undefined;
   }

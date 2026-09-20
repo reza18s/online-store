@@ -14,9 +14,9 @@ export function AdminOperationsShell({
   children: ReactNode;
 }) {
   const navigation: Array<[AdminCatalogInventoryView, string, IconName, string]> = [
-    ['catalog', 'محصولات', 'bag', '#admin/catalog'],
-    ['categories', 'دسته‌بندی‌ها', 'layers', '#admin/catalog/categories'],
-    ['inventory', 'موجودی کم', 'warning', '#admin/inventory'],
+    ['catalog', 'محصولات', 'bag', '/admin/catalog'],
+    ['categories', 'دسته‌بندی‌ها', 'layers', '/admin/catalog/categories'],
+    ['inventory', 'موجودی کم', 'warning', '/admin/inventory'],
   ];
   return (
     <main

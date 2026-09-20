@@ -16,7 +16,7 @@ export function ProductTableRow({ product }: { product: AdminCatalogProductListI
       <td className="px-4 py-4 align-top">
         <a
           className="flex min-h-11 items-center gap-3 rounded-control focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
-          href={`#admin/catalog/products/${encodeURIComponent(product.id)}`}
+          href={`/admin/catalog/products/${encodeURIComponent(product.id)}`}
         >
           <MediaThumb
             src={product.primaryMedia?.url}
@@ -51,7 +51,7 @@ export function ProductTableRow({ product }: { product: AdminCatalogProductListI
         <a
           aria-label={`ویرایش ${product.name}`}
           className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-primary hover:bg-accent-soft focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
-          href={`#admin/catalog/products/${encodeURIComponent(product.id)}`}
+          href={`/admin/catalog/products/${encodeURIComponent(product.id)}`}
         >
           <Icon name="edit" size={17} />
         </a>

@@ -179,7 +179,7 @@ export function CustomerAddressForm({
           {saving ? 'در حال ذخیره...' : 'ذخیره آدرس'}
         </Button>
         <Button asChild variant="outline">
-          <a href="#account/addresses">بازگشت به آدرس‌ها</a>
+          <a href="/account/addresses">بازگشت به آدرس‌ها</a>
         </Button>
         {dirty ? (
           <span className="text-xs text-muted-foreground" role="status">

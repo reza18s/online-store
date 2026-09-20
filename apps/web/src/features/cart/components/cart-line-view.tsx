@@ -23,7 +23,7 @@ export function CartLineView({
     <article className="grid grid-cols-[80px_minmax(0,1fr)_44px] gap-3 border-b border-border pb-4 md:grid-cols-[104px_minmax(0,1fr)_44px] md:gap-4">
       <a
         className="aspect-[4/5] overflow-hidden rounded-control bg-secondary"
-        href={`#product/${encodeURIComponent(line.productSlug)}`}
+        href={`/product/${encodeURIComponent(line.productSlug)}`}
         aria-label={`مشاهده ${line.productName}`}
       >
         {line.imageUrl ? (
@@ -44,7 +44,7 @@ export function CartLineView({
         </span>
         <a
           className="block text-sm font-semibold leading-6 hover:text-primary"
-          href={`#product/${encodeURIComponent(line.productSlug)}`}
+          href={`/product/${encodeURIComponent(line.productSlug)}`}
         >
           {line.productName}
         </a>

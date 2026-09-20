@@ -81,8 +81,8 @@ async function installReadOnlyLocalNetworkGuard(
   return blockedRequests;
 }
 
-async function openRoute(page: Page, hash: string): Promise<void> {
-  const response = await page.goto(`/${hash}`, { waitUntil: 'domcontentloaded' });
+async function openRoute(page: Page, path: string): Promise<void> {
+  const response = await page.goto(path, { waitUntil: 'domcontentloaded' });
 
   if (response) expect(response.ok()).toBeTruthy();
   await expect(page.getByRole('main')).toHaveCount(1);
@@ -98,27 +98,27 @@ test('renders the uncovered public category and listing routes', async ({ page }
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
 
   const categoryRoutes = [
-    { hash: '#category/women', heading: 'لباس‌هایی برای روزهای روشن' },
-    { hash: '#category/children', heading: 'برای بازی‌های تمام‌نشدنی' },
+    { path: '/category/women', heading: 'لباس‌هایی برای روزهای روشن' },
+    { path: '/category/children', heading: 'برای بازی‌های تمام‌نشدنی' },
   ] as const;
 
   for (const route of categoryRoutes) {
-    await openRoute(page, route.hash);
+    await openRoute(page, route.path);
     await expect(page.getByRole('heading', { name: route.heading, level: 1 })).toBeVisible();
     await expectSettledDiscovery(page);
   }
 
   const listingRoutes = [
-    { hash: '#products', heading: 'همه محصولات' },
-    { hash: '#products/women', heading: 'محصولات زنانه' },
-    { hash: '#products/men', heading: 'محصولات مردانه' },
-    { hash: '#products/children', heading: 'محصولات بچگانه' },
-    { hash: '#products/sale', heading: 'تخفیف‌های منتخب' },
-    { hash: '#products/accessories', heading: 'همه محصولات' },
+    { path: '/products', heading: 'همه محصولات' },
+    { path: '/products/women', heading: 'محصولات زنانه' },
+    { path: '/products/men', heading: 'محصولات مردانه' },
+    { path: '/products/children', heading: 'محصولات بچگانه' },
+    { path: '/products/sale', heading: 'تخفیف‌های منتخب' },
+    { path: '/products/accessories', heading: 'همه محصولات' },
   ] as const;
 
   for (const route of listingRoutes) {
-    await openRoute(page, route.hash);
+    await openRoute(page, route.path);
     await expect(page.getByRole('heading', { name: route.heading, level: 1 })).toBeVisible();
     await expectSettledDiscovery(page);
   }
@@ -166,7 +166,7 @@ test('settles an empty public search without a skeleton or mutation', async ({ p
     });
   });
 
-  await openRoute(page, `#products?q=${encodeURIComponent(searchTerm)}`);
+  await openRoute(page, `/products?q=${encodeURIComponent(searchTerm)}`);
 
   const main = page.getByRole('main');
   await expect(
@@ -206,7 +206,7 @@ test('settles public discovery and product API errors without loading forever', 
     return false;
   });
 
-  await openRoute(page, '#products/sale');
+  await openRoute(page, '/products/sale');
   await expect(page.getByRole('heading', { name: 'تخفیف‌های منتخب', level: 1 })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'بارگذاری محصولات ممکن نشد' })).toBeVisible({
     timeout: 15_000,
@@ -216,7 +216,7 @@ test('settles public discovery and product API errors without loading forever', 
   });
   await expectSettledDiscovery(page);
 
-  await openRoute(page, '#product/__browser_missing_product__');
+  await openRoute(page, '/product/__browser_missing_product__');
   await expect(page.getByRole('heading', { name: 'بارگذاری محصول ممکن نشد' })).toBeVisible({
     timeout: 15_000,
   });

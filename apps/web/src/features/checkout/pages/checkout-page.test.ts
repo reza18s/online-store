@@ -46,8 +46,8 @@ test('sends timed-out recovery to the authoritative order status', () => {
   const markup = renderRecoveryPage(orderWithPayment('EXPIRED'), 'timeout');
 
   assert.match(markup, /زمان پاسخ پرداخت تمام شد/);
-  assert.match(markup, /href="#order\/NV-1"[^>]*>مشاهده وضعیت سفارش/);
-  assert.doesNotMatch(markup, /href="#checkout\/payment"/);
+  assert.match(markup, /href="\/order\/NV-1"[^>]*>مشاهده وضعیت سفارش/);
+  assert.doesNotMatch(markup, /href="\/checkout\/payment"/);
 });
 
 test('shows confirmation when a stale recovery URL points to a paid order', () => {

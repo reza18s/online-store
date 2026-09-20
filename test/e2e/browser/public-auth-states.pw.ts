@@ -93,7 +93,7 @@ test.describe('public customer authentication states', () => {
     const { blockedExternalRequests, blockedMutationRequests } =
       await installPublicAuthFixtures(page);
 
-    const response = await page.goto('/#auth', { waitUntil: 'domcontentloaded' });
+    const response = await page.goto('/auth', { waitUntil: 'domcontentloaded' });
 
     expect(response?.ok()).toBeTruthy();
     await expect(page.getByRole('heading', { name: 'به نوا خوش آمدید', level: 1 })).toBeVisible();
@@ -122,7 +122,7 @@ test.describe('public customer authentication states', () => {
     const { blockedExternalRequests, blockedMutationRequests } =
       await installPublicAuthFixtures(page);
 
-    const response = await page.goto('/#auth/verify', { waitUntil: 'domcontentloaded' });
+    const response = await page.goto('/auth/verify', { waitUntil: 'domcontentloaded' });
 
     expect(response?.ok()).toBeTruthy();
     await expect(
@@ -136,7 +136,7 @@ test.describe('public customer authentication states', () => {
       'one-time-code',
     );
     await expect(page.getByRole('button', { name: 'تأیید و ورود' })).toBeDisabled();
-    await expect(page.getByRole('link', { name: 'تغییر شماره' })).toHaveAttribute('href', '#auth');
+    await expect(page.getByRole('link', { name: 'تغییر شماره' })).toHaveAttribute('href', '/auth');
 
     expect(blockedExternalRequests).toEqual([]);
     expect(blockedMutationRequests).toEqual([]);

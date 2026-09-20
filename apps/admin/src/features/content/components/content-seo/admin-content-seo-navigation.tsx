@@ -14,7 +14,7 @@ export function AdminContentSeoNavigation({ activeView }: { activeView: AdminCon
         {items.map(([view, label, icon]) => (
           <a
             key={view}
-            href={`#admin/${view === 'content' ? 'content' : `content/${view}`}`}
+            href={`/admin/${view === 'content' ? 'content' : `content/${view}`}`}
             aria-current={activeView === view ? 'page' : undefined}
             className={`inline-flex min-h-11 items-center gap-2 rounded-control border px-4 text-xs transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20 ${activeView === view ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-surface text-foreground hover:border-primary hover:text-primary'}`}
           >

@@ -226,7 +226,7 @@ export function ProductEditor({
         <div>
           <a
             className="inline-flex min-h-11 items-center gap-2 text-xs text-primary focus-visible:outline-2 focus-visible:outline-primary"
-            href="#admin/catalog"
+            href="/admin/catalog"
           >
             <Icon name="arrow-right" size={16} /> بازگشت به محصولات
           </a>

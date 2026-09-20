@@ -143,7 +143,7 @@ test('renders the synthetic read-only admin dashboard error and retry state', as
   page.setDefaultNavigationTimeout(15_000);
   const network = await installDashboardStateFixture(page);
 
-  const response = await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
 
   const main = page.getByRole('main');

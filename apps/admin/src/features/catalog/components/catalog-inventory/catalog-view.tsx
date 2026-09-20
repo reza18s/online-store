@@ -71,7 +71,7 @@ export function CatalogView({ roles }: { roles: readonly string[] }) {
         </div>
         {canWrite ? (
           <Button asChild>
-            <a href="#admin/catalog/products/new">
+            <a href="/admin/catalog/products/new">
               <Icon name="plus" size={17} /> محصول جدید
             </a>
           </Button>

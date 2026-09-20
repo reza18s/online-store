@@ -5,8 +5,6 @@ import {
   adminRedirectsRequestPath,
   adminContentPagesRequestPath,
   adminSeoMetadataRequestPath,
-  contentPagePath,
-  contentPageRequestPath,
   seoResolvePath,
   seoResolveRequestPath,
 } from '@/features/content/api/content/content-api';
@@ -17,11 +15,6 @@ test('uses the versioned public SEO resolver and preserves RTL paths', () => {
     seoResolveRequestPath('/category/زنانه/'),
     '/v1/seo/resolve?path=%2Fcategory%2F%D8%B2%D9%86%D8%A7%D9%86%D9%87',
   );
-});
-
-test('keeps published content pages on a versioned, encoded transport path', () => {
-  assert.equal(contentPagePath, '/v1/content/pages');
-  assert.equal(contentPageRequestPath(' Shipping-Policy '), '/v1/content/pages/shipping-policy');
 });
 
 test('keeps admin content listing transport bounded and queryable', () => {

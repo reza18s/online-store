@@ -42,7 +42,7 @@ export function OrderSummary({
           {quote.shippingLabel} · {quote.shippingEstimate}
         </p>
       ) : null}
-      <a className="text-link" href="#cart">
+      <a className="text-link" href="/cart">
         ویرایش سبد <Icon name="arrow-left" size={15} />
       </a>
     </aside>

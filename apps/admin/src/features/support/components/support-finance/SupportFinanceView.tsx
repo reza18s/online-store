@@ -70,7 +70,7 @@ export function SupportFinanceView({
               return (
                 <a
                   className={`inline-flex min-h-11 items-center gap-2 rounded-control border px-4 text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${selected ? 'border-primary bg-primary text-primary-foreground' : 'border-border bg-surface text-foreground hover:border-primary hover:text-primary'}`}
-                  href={`#admin/${candidate}`}
+                  href={`/admin/${candidate}`}
                   aria-current={selected ? 'page' : undefined}
                   key={candidate}
                 >

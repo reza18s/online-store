@@ -47,10 +47,10 @@ test('keeps pagination bounded and always exposes a valid page count', () => {
 });
 
 test('encodes operational cross-links instead of interpolating identifiers', () => {
-  assert.equal(adminOrderHref('NV/1405 2481'), '#admin/orders/NV%2F1405%202481');
+  assert.equal(adminOrderHref('NV/1405 2481'), '/admin/orders/NV%2F1405%202481');
   assert.equal(
     adminCustomerLookupHref('person+support@example.test'),
-    '#admin/customers?q=person%2Bsupport%40example.test',
+    '/admin/customers?q=person%2Bsupport%40example.test',
   );
 });
 

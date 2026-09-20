@@ -31,7 +31,7 @@ import { hasAdminStaffRole } from '@/features/orders/components/order-management
 
 export function OrdersView({
   staffRoles,
-  detailHref = (orderNumber) => `#admin/orders/${encodeURIComponent(orderNumber)}`,
+  detailHref = (orderNumber) => `/admin/orders/${encodeURIComponent(orderNumber)}`,
 }: {
   staffRoles?: readonly string[];
   detailHref?: (orderNumber: string) => string;

@@ -20,7 +20,7 @@ export { boundedText } from '@/features/content/components/bounded-text';
 export { decodeSlug } from '@/features/content/components/decode-slug';
 export { normalizePublicContentSlug } from '@/features/content/components/normalize-public-content-slug';
 export { publicContentPath } from '@/features/content/components/public-content-path';
-export { publicContentHashHref } from '@/features/content/components/public-content-hash-href';
+export { publicContentHref } from '@/features/content/components/public-content-href';
 export { classifyContentError } from '@/features/content/components/classify-content-error';
 export { isPublishedContentPage } from '@/features/content/components/is-published-content-page';
 export { getPublicContentState } from '@/features/content/components/get-public-content-state';

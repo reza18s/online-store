@@ -657,7 +657,7 @@ test('resolves unknown public paths before a final noindex 404', async () => {
   });
   const context = await renderRoute('/legacy-product', { ...optionsBase, fetcher });
   assert.equal(context.status, 404);
-  assert.equal(context.hashRoute, '#not-found');
+  assert.equal(context.route, '/not-found');
   assert.equal(context.seo.robots, 'noindex, nofollow');
   assert.deepEqual(calls, ['/v1/seo/resolve?path=%2Flegacy-product']);
 });
@@ -702,7 +702,7 @@ test('returns a safe noindex 404 for missing published products', async () => {
 test('keeps private clean paths on their existing client routes while excluding them from indexing', async () => {
   const context = await renderRoute('/account/orders', optionsBase);
   assert.equal(context.status, 200);
-  assert.equal(context.hashRoute, '#account');
+  assert.equal(context.route, '/account');
   assert.equal(context.seo.robots, 'noindex, nofollow');
   assert.equal(context.seo.canonicalUrl, null);
 });
@@ -787,7 +787,7 @@ test('returns controlled asset headers for GET and HEAD requests', async () => {
 test('renders one managed head set and safely serializes the initial context', () => {
   const context: RenderContext = {
     path: '/product/linen-overshirt',
-    hashRoute: '#product/linen-overshirt',
+    route: '/product/linen-overshirt',
     seo: {
       title: 'Title <safe>',
       description: 'Description & safe',

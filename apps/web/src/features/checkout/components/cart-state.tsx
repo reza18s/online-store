@@ -40,7 +40,7 @@ export function CartState({
             برای تکمیل سفارش، ابتدا یک محصول به سبد خرید اضافه کنید.
           </p>
           <Button className="mt-5" asChild size="lg">
-            <a href="#products">مشاهده فروشگاه</a>
+            <a href="/products">مشاهده فروشگاه</a>
           </Button>
         </section>
       </CheckoutShell>

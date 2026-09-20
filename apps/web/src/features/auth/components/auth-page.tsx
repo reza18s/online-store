@@ -12,6 +12,8 @@ import { readAuthPhone } from '@/features/auth/state/read-auth-phone';
 
 import { writeAuthPhone } from '@/features/auth/state/write-auth-phone';
 
+import { navigateToRoute } from '@/app/routing/route';
+
 export function AuthPage({
   mode,
   queryString = '',
@@ -48,7 +50,7 @@ export function AuthPage({
       try {
         await verifyOtpMutation.mutateAsync({ challengeId, code: code.trim() });
         clearAuthPhone();
-        window.location.hash = '#account';
+        navigateToRoute('/account');
       } catch (error) {
         setFormError(authErrorMessage(error));
       }
@@ -65,7 +67,7 @@ export function AuthPage({
       writeAuthPhone(phone.trim());
       const nextParams = new URLSearchParams({ challengeId: result.challengeId });
       if (result.localCode) nextParams.set('localCode', result.localCode);
-      window.location.hash = `#auth/verify?${nextParams.toString()}`;
+      navigateToRoute(`/auth/verify?${nextParams.toString()}`);
     } catch (error) {
       setFormError(authErrorMessage(error));
     }
@@ -86,7 +88,7 @@ export function AuthPage({
       setSuccessMessage('کد جدید ارسال شد.');
       const nextParams = new URLSearchParams({ challengeId: result.challengeId });
       if (result.localCode) nextParams.set('localCode', result.localCode);
-      window.location.hash = `#auth/verify?${nextParams.toString()}`;
+      navigateToRoute(`/auth/verify?${nextParams.toString()}`);
     } catch (error) {
       setFormError(authErrorMessage(error));
     }
@@ -166,7 +168,7 @@ export function AuthPage({
           )}
         </form>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
-          <a className="text-link" href={isVerify ? '#auth' : '#home'}>
+          <a className="text-link" href={isVerify ? '/auth' : '/'}>
             {isVerify ? 'تغییر شماره' : 'بازگشت به فروشگاه'} <Icon name="arrow-left" size={14} />
           </a>
           {isVerify ? (

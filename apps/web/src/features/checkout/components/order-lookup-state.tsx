@@ -15,7 +15,7 @@ export function OrderLookupState({ error, retry }: { error: unknown; retry: () =
       <p>{needsLogin ? 'سفارش فقط برای حساب صاحب آن قابل مشاهده است.' : failure.message}</p>
       <div className="confirmation-card__actions">
         <Button asChild size="lg">
-          <a href={needsLogin ? '#auth' : '#account/orders'}>
+          <a href={needsLogin ? '/auth' : '/account/orders'}>
             {needsLogin ? 'ورود به حساب' : 'مشاهده سفارش‌ها'}
           </a>
         </Button>

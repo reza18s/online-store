@@ -29,9 +29,9 @@ export function ConfirmationBody({ order }: { order: CustomerOrderDetail }) {
       </div>
       <div className="confirmation-card__actions">
         <Button asChild size="lg">
-          <a href={`#order/${encodeURIComponent(order.orderNumber)}`}>پیگیری سفارش</a>
+          <a href={`/order/${encodeURIComponent(order.orderNumber)}`}>پیگیری سفارش</a>
         </Button>
-        <a className="text-link" href="#home">
+        <a className="text-link" href="/">
           بازگشت به خانه <Icon name="arrow-left" size={16} />
         </a>
       </div>

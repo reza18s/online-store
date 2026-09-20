@@ -237,7 +237,7 @@ export function OrderDetailView({
         <div>
           <a
             className="inline-flex min-h-11 items-center gap-2 text-xs text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/20"
-            href="#admin/orders"
+            href="/admin/orders"
           >
             <Icon name="arrow-right" size={17} />
             بازگشت به سفارش‌ها

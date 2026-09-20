@@ -180,7 +180,7 @@ test('keeps the authenticated admin dashboard semantic and keyboard-operable', a
   page.setDefaultNavigationTimeout(15_000);
   const network = await installDashboardFixtureGuard(page);
 
-  const response = await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
 
   const main = page.getByRole('main');
@@ -219,7 +219,7 @@ test('makes reduced motion observable on the authenticated admin dashboard', asy
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const network = await installDashboardFixtureGuard(page);
 
-  const response = await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
   await expect(
     page.getByRole('main').getByRole('heading', { name: 'نمای کلی مدیریت', exact: true }),

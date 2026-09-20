@@ -4,17 +4,17 @@ const privateRouteMarker = 'WEB-003-PRIVATE-DATA';
 
 const anonymousProtectedRoutes = [
   {
-    hash: `#account/orders?customer=${privateRouteMarker}`,
+    path: `/account/orders?customer=${privateRouteMarker}`,
     heading: 'برای دیدن حساب کاربری وارد شوید',
     copy: 'اطلاعات خصوصی شما فقط پس از ورود به حساب نمایش داده می‌شود.',
   },
   {
-    hash: `#order/${privateRouteMarker}-ORDER`,
+    path: `/order/${privateRouteMarker}-ORDER`,
     heading: 'برای دیدن جزئیات سفارش وارد شوید',
     copy: 'برای مشاهده جزئیات سفارش ابتدا وارد حساب شوید.',
   },
   {
-    hash: `#return/status?orderNumber=${privateRouteMarker}-RETURN`,
+    path: `/return/status?orderNumber=${privateRouteMarker}-RETURN`,
     heading: 'برای دیدن بازگشت کالا وارد شوید',
     copy: 'برای پیگیری یا ثبت درخواست بازگشت ابتدا وارد حساب شوید.',
   },
@@ -47,7 +47,7 @@ test('keeps anonymous account, order, and return routes private and settled', as
   });
 
   for (const route of anonymousProtectedRoutes) {
-    const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
+    const response = await page.goto(route.path, { waitUntil: 'domcontentloaded' });
 
     if (response) expect(response.ok()).toBeTruthy();
 
@@ -58,7 +58,7 @@ test('keeps anonymous account, order, and return routes private and settled', as
 
     const loginLink = main.getByRole('link', { name: 'ورود به حساب' });
     await expect(loginLink).toBeVisible();
-    await expect(loginLink).toHaveAttribute('href', '#auth');
+    await expect(loginLink).toHaveAttribute('href', '/auth');
 
     await expect(main.locator('[role="status"][aria-label*="در حال"]')).toHaveCount(0);
     await expect(main).not.toContainText(privateRouteMarker);

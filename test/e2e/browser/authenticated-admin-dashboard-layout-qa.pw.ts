@@ -120,7 +120,7 @@ async function installDashboardFixtureGuard(page: Page) {
 }
 
 async function assertDashboardLayout(page: Page) {
-  const response = await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
   await page.waitForLoadState('networkidle');
 

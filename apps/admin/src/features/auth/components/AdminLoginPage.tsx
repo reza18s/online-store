@@ -7,11 +7,13 @@ import { Icon } from '@/shared/ui/icon';
 
 import { Logo } from '@/shared/ui/site-shell';
 
-import type { StaffLoginValidation } from '@/shared/fixtures/app-shared';
+import type { StaffLoginValidation } from '@/features/auth/types';
 
 import { staffLoginErrorMessage } from '@/features/auth/components/staff-login-error-message';
 
 import { validateStaffLoginInput } from '@/shared/utils/validate-staff-login-input';
+
+import { navigateToRoute } from '@/app/routing/navigate-to-route';
 
 export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }) {
   const loginMutation = useStaffLogin();
@@ -35,7 +37,7 @@ export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: bo
       { email, password, factor },
       {
         onSuccess: () => {
-          window.location.hash = '#admin';
+          navigateToRoute('/admin');
         },
         onError: (error) => setFormError(staffLoginErrorMessage(error)),
       },
@@ -217,7 +219,7 @@ export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: bo
           </div>
           <a
             className="mt-6 flex items-center justify-center gap-2 border-t border-border pt-5 text-sm text-muted-foreground transition-colors hover:text-primary"
-            href="#home"
+            href="/"
           >
             بازگشت به فروشگاه <Icon name="arrow-right" size={15} />
           </a>

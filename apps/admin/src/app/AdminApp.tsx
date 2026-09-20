@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import { AdminNavigationBridge } from '@/app/routing/navigation-bridge';
+import { decodeRouteSegment } from '@/app/routing/decode-route-segment';
 import { AdminRouter } from '@/app/routes/AdminRouter';
 
 type AdminLocation = {
@@ -7,29 +9,32 @@ type AdminLocation = {
   queryString: string;
 };
 
-function readAdminLocation(fallbackPage: string, fallbackQueryString: string): AdminLocation {
-  const hash = window.location.hash;
-  if (hash.startsWith('#admin')) {
-    const [path = '', queryString = ''] = hash.slice('#admin'.length).split('?');
-    return { page: path.replace(/^\//, '') || 'admin', queryString };
-  }
-  return { page: fallbackPage || 'admin', queryString: fallbackQueryString };
+function readAdminLocation(): AdminLocation {
+  const path = window.location.pathname.replace(/^\/admin\/?/, '').replace(/^\/+/, '');
+  return {
+    page: decodeRouteSegment(path) || 'admin',
+    queryString: window.location.search.slice(1),
+  };
 }
 
 export function AdminApp({ page, queryString = '' }: AdminLocation) {
-  const [location, setLocation] = useState<AdminLocation>(() =>
-    readAdminLocation(page, queryString),
-  );
+  const [location, setLocation] = useState<AdminLocation>({
+    page: page || 'admin',
+    queryString,
+  });
 
   useEffect(() => {
-    const updateLocation = () => setLocation(readAdminLocation(page, queryString));
-    window.addEventListener('hashchange', updateLocation);
+    const updateLocation = () => setLocation(readAdminLocation());
     window.addEventListener('popstate', updateLocation);
     return () => {
-      window.removeEventListener('hashchange', updateLocation);
       window.removeEventListener('popstate', updateLocation);
     };
-  }, [page, queryString]);
+  }, []);
 
-  return <AdminRouter page={location.page} queryString={location.queryString} />;
+  return (
+    <>
+      <AdminNavigationBridge />
+      <AdminRouter page={location.page} queryString={location.queryString} />
+    </>
+  );
 }

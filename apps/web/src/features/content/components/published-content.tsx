@@ -27,7 +27,7 @@ export function PublishedContent({
   slug: string;
   state: 'published' | 'empty' | 'unsupported';
 }) {
-  const canonicalPath = publicContentPath(slug) ?? '#home';
+  const canonicalPath = publicContentPath(slug) ?? '/';
   const body = boundedText(page.body, MAX_TEXT_LENGTH);
   const rendered = getRenderableContentBlocks(page.blocks);
   const pageTitle = boundedText(page.title, 200) ?? 'محتوای نوا';
@@ -37,7 +37,7 @@ export function PublishedContent({
   return (
     <PageShell labelledBy="public-content-title">
       <nav className="breadcrumb" aria-label="مسیر صفحه">
-        <a href="#home">خانه</a>
+        <a href="/">خانه</a>
         <span aria-hidden="true">/</span>
         <span aria-current="page">{pageTitle}</span>
       </nav>
@@ -82,7 +82,7 @@ export function PublishedContent({
           {state === 'empty' || state === 'unsupported' ? (
             <a
               className="mt-5 inline-flex min-h-11 items-center gap-2 rounded-editorial border border-border bg-surface px-5 text-sm font-semibold text-foreground hover:border-primary hover:text-primary focus-visible:outline-none"
-              href="#home"
+              href="/"
             >
               بازگشت به خانه
               <Icon name="arrow-left" size={16} aria-hidden="true" />
@@ -97,7 +97,7 @@ export function PublishedContent({
               روایت‌ها و راهنماهای نوا برای انتخابی آگاهانه‌تر؛ با حوصله بخوانید و جزئیات را نزدیک
               ببینید.
             </p>
-            <a href="#support">
+            <a href="/support">
               پرسشی دارید؟ <Icon name="arrow-left" size={15} aria-hidden="true" />
             </a>
           </div>

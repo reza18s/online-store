@@ -9,7 +9,7 @@ export function readInitialRenderContext(): InitialRenderContext | undefined {
   const context = value as Partial<InitialRenderContext>;
   if (
     typeof context.path !== 'string' ||
-    typeof context.hashRoute !== 'string' ||
+    typeof context.route !== 'string' ||
     !context.seo ||
     typeof context.seo !== 'object'
   ) {

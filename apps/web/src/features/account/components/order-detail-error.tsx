@@ -32,7 +32,7 @@ export function OrderDetailError({ error, onRetry }: { error: unknown; onRetry: 
               : apiErrorMessage(error, 'این سفارش پیدا نشد یا دیگر در حساب شما قابل مشاهده نیست.')
         }
         action={needsLogin ? 'ورود دوباره' : 'تلاش دوباره'}
-        href={needsLogin ? '#auth' : '#account/orders'}
+        href={needsLogin ? '/auth' : '/account/orders'}
         onAction={needsLogin || isPermissionError(error) ? undefined : onRetry}
         icon={offline ? 'refresh' : needsLogin ? 'user' : 'warning'}
       />

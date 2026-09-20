@@ -51,7 +51,7 @@ test('keeps checkout route state normalized and preserves only safe step input',
       shippingMethod: 'EXPRESS',
       couponCode: ' SAVE10 ',
     }),
-    '#checkout/payment?addressId=addr%2F1&shipping=EXPRESS&coupon=SAVE10',
+    '/checkout/payment?addressId=addr%2F1&shipping=EXPRESS&coupon=SAVE10',
   );
 });
 

@@ -13,5 +13,5 @@ export function buildCheckoutHref(
     params.set('coupon', input.couponCode.trim());
   }
   const query = params.toString();
-  return `#checkout/${step}${query ? `?${query}` : ''}`;
+  return `/checkout/${step}${query ? `?${query}` : ''}`;
 }

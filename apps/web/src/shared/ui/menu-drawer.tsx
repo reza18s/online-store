@@ -56,8 +56,8 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
           ))}
         </nav>
         <div className="menu-drawer__footer">
-          <a href="#account">ورود به حساب کاربری</a>
-          <a href="#support">پشتیبانی و تماس</a>
+          <a href="/account">ورود به حساب کاربری</a>
+          <a href="/support">پشتیبانی و تماس</a>
         </div>
       </aside>
     </div>

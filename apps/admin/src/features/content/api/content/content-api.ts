@@ -2,15 +2,12 @@ export {
   adminContentPagesPath,
   adminRedirectsPath,
   adminSeoMetadataPath,
-  contentPagePath,
   seoResolvePath,
 } from '@/features/content/api/content/content-api-shared';
 export { encodeId } from '@/features/content/api/content/encode-id';
 export { normalizedPath } from '@/features/content/api/content/normalized-path';
 export { queryString } from '@/features/content/api/content/query-string';
 export { seoResolveRequestPath } from '@/features/content/api/content/seo-resolve-request-path';
-export { contentPageRequestPath } from '@/features/content/api/content-pages/content-page-request-path';
-export { fetchContentPage } from '@/features/content/api/content-pages/fetch-content-page';
 export { adminSeoMetadataRequestPath } from '@/features/content/api/content/admin-seo-metadata-request-path';
 export { adminContentPagesRequestPath } from '@/features/content/api/content-pages/admin-content-pages-request-path';
 export { adminRedirectsRequestPath } from '@/features/content/api/content/admin-redirects-request-path';
@@ -29,7 +26,6 @@ export { createAdminRedirect } from '@/features/content/api/content/create-admin
 export { updateAdminRedirect } from '@/features/content/api/content/update-admin-redirect';
 export { deleteAdminRedirect } from '@/features/content/api/content/delete-admin-redirect';
 export { useSeoResolution } from '@/features/content/api/content/use-seo-resolution';
-export { useContentPage } from '@/features/content/api/content-pages/use-content-page';
 export { useAdminSeoMetadata } from '@/features/content/api/content/use-admin-seo-metadata';
 export { useAdminContentPages } from '@/features/content/api/content-pages/use-admin-content-pages';
 export { useAdminContentPage } from '@/features/content/api/content-pages/use-admin-content-page';

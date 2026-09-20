@@ -26,18 +26,18 @@ test('renders public category, listing, and product routes', async ({ page }) =>
   page.setDefaultNavigationTimeout(15_000);
 
   const routes = [
-    { hash: '#category/men', heading: 'فرم‌های ساده، حضور ماندگار' },
-    { hash: '#products/new', heading: 'تازه‌های آتلیه' },
+    { path: '/category/men', heading: 'فرم‌های ساده، حضور ماندگار' },
+    { path: '/products/new', heading: 'تازه‌های آتلیه' },
   ] as const;
 
   for (const route of routes) {
-    const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
+    const response = await page.goto(route.path, { waitUntil: 'domcontentloaded' });
 
     if (response) expect(response.ok()).toBeTruthy();
     await expect(page.locator('main h1')).toContainText(route.heading);
   }
 
-  const productResponse = await page.goto('/#product/linen-overshirt', {
+  const productResponse = await page.goto('/product/linen-overshirt', {
     waitUntil: 'domcontentloaded',
   });
 
@@ -48,7 +48,7 @@ test('renders public category, listing, and product routes', async ({ page }) =>
 
 test('renders the empty anonymous cart shell', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
-  const response = await page.goto('/#cart', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/cart', { waitUntil: 'domcontentloaded' });
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.locator('main h1')).toHaveText('سبد خرید');
@@ -88,7 +88,7 @@ test('recovers the cart shell through the visible retry action after a controlle
     });
   });
 
-  const response = await page.goto('/#cart', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/cart', { waitUntil: 'domcontentloaded' });
 
   expect(response?.ok()).toBeTruthy();
   await expect(page.getByRole('heading', { name: 'سبد خرید بارگذاری نشد' })).toBeVisible({
@@ -113,7 +113,7 @@ test('keeps protected admin navigation on the staff login form without credentia
     if (new URL(request.url()).pathname === '/v1/staff/auth/login') loginRequests += 1;
   });
 
-  const response = await page.goto(`${adminEndpoint.safeOrigin}/#admin/orders`, {
+  const response = await page.goto(`${adminEndpoint.safeOrigin}/admin/orders`, {
     waitUntil: 'domcontentloaded',
   });
 
@@ -134,7 +134,7 @@ test('validates an empty staff login client-side without sending credentials', a
     if (new URL(request.url()).pathname === '/v1/staff/auth/login') loginRequests += 1;
   });
 
-  const response = await page.goto(`${adminEndpoint.safeOrigin}/#admin/login?expired=1`, {
+  const response = await page.goto(`${adminEndpoint.safeOrigin}/admin/login?expired=1`, {
     waitUntil: 'domcontentloaded',
   });
 
@@ -158,13 +158,13 @@ test('settles unauthenticated account and recovery routes without permanent load
   page.setDefaultNavigationTimeout(15_000);
 
   const sessionRoutes = [
-    { hash: '#account/addresses', heading: 'برای دیدن آدرس‌های من وارد شوید' },
-    { hash: '#order/NOPE', heading: 'برای دیدن جزئیات سفارش وارد شوید' },
-    { hash: '#return/request?orderNumber=NOPE', heading: 'برای دیدن بازگشت کالا وارد شوید' },
+    { path: '/account/addresses', heading: 'برای دیدن آدرس‌های من وارد شوید' },
+    { path: '/order/NOPE', heading: 'برای دیدن جزئیات سفارش وارد شوید' },
+    { path: '/return/request?orderNumber=NOPE', heading: 'برای دیدن بازگشت کالا وارد شوید' },
   ] as const;
 
   for (const route of sessionRoutes) {
-    const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
+    const response = await page.goto(route.path, { waitUntil: 'domcontentloaded' });
 
     if (response) expect(response.ok()).toBeTruthy();
     await expect(page.getByRole('heading', { name: route.heading })).toBeVisible();
@@ -172,12 +172,12 @@ test('settles unauthenticated account and recovery routes without permanent load
   }
 
   const recoveryRoutes = [
-    { hash: '#checkout/payment-recovery', copy: 'شماره سفارش در لینک پرداخت وجود ندارد.' },
-    { hash: '#checkout/confirmation', copy: 'شماره سفارش معتبر نیست.' },
+    { path: '/checkout/payment-recovery', copy: 'شماره سفارش در لینک پرداخت وجود ندارد.' },
+    { path: '/checkout/confirmation', copy: 'شماره سفارش معتبر نیست.' },
   ] as const;
 
   for (const route of recoveryRoutes) {
-    const response = await page.goto(`/${route.hash}`, { waitUntil: 'domcontentloaded' });
+    const response = await page.goto(route.path, { waitUntil: 'domcontentloaded' });
 
     if (response) expect(response.ok()).toBeTruthy();
     await expect(page.getByRole('alert')).toContainText(route.copy);

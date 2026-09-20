@@ -1,7 +1,7 @@
 import type { CartView } from '@nova/api-client';
 
 import { type IconName } from '@/shared/ui/icon';
-import { type PreviewState } from '@/app/routing/hash-route';
+import { type PreviewState } from '@/app/routing/route';
 
 import type { StorefrontProduct } from '@/features/catalog';
 
@@ -104,9 +104,9 @@ export const previewStateCopy: Record<
       'موجودی یا قیمت یکی از کالاها تغییر کرده است. سبد را دوباره بررسی کنید تا مبلغ نهایی دقیق نمایش داده شود.',
     icon: 'warning',
     primary: 'بررسی سبد خرید',
-    primaryHref: '#cart',
+    primaryHref: '/cart',
     secondary: 'ادامه خرید',
-    secondaryHref: '#products',
+    secondaryHref: '/products',
   },
   'payment-pending': {
     eyebrow: 'PAYMENT / PENDING',
@@ -115,9 +115,9 @@ export const previewStateCopy: Record<
       'پرداخت شما هنوز توسط درگاه تأیید نشده است. این صفحه را نبندید؛ وضعیت سفارش به‌صورت امن بررسی می‌شود.',
     icon: 'refresh',
     primary: 'پیگیری سفارش',
-    primaryHref: '#account/orders',
+    primaryHref: '/account/orders',
     secondary: 'بازگشت به خانه',
-    secondaryHref: '#home',
+    secondaryHref: '/',
   },
   'payment-failed': {
     eyebrow: 'PAYMENT / FAILED',
@@ -126,9 +126,9 @@ export const previewStateCopy: Record<
       'پرداخت تأیید نشد اما سبد شما حفظ شده است. می‌توانید دوباره تلاش کنید یا روش پرداخت دیگری انتخاب کنید.',
     icon: 'close',
     primary: 'تلاش دوباره',
-    primaryHref: '#checkout/payment',
+    primaryHref: '/checkout/payment',
     secondary: 'بازگشت به سبد',
-    secondaryHref: '#cart',
+    secondaryHref: '/cart',
   },
   'payment-recovery': {
     eyebrow: 'PAYMENT / RECOVERY',
@@ -137,9 +137,9 @@ export const previewStateCopy: Record<
       'برای تکمیل سفارش، پرداخت را از همان سبد و مبلغ معتبر ادامه دهید. وضعیت نهایی فقط توسط سرور تأیید می‌شود.',
     icon: 'refresh',
     primary: 'ادامه پرداخت',
-    primaryHref: '#checkout/payment',
+    primaryHref: '/checkout/payment',
     secondary: 'مشاهده سفارش',
-    secondaryHref: '#account/orders',
+    secondaryHref: '/account/orders',
   },
   offline: {
     eyebrow: 'NOVA / OFFLINE',
@@ -148,9 +148,9 @@ export const previewStateCopy: Record<
       'اتصال اینترنت را بررسی کنید و دوباره تلاش کنید. اطلاعات فرم سفارش تا جای ممکن در همین صفحه حفظ می‌شود.',
     icon: 'refresh',
     primary: 'تلاش دوباره',
-    primaryHref: '#home',
+    primaryHref: '/',
     secondary: 'راهنمای پشتیبانی',
-    secondaryHref: '#support',
+    secondaryHref: '/support',
   },
   error: {
     eyebrow: 'NOVA / ERROR',
@@ -159,9 +159,9 @@ export const previewStateCopy: Record<
       'این پیش‌نمایش نتوانست صفحه را کامل آماده کند. اگر مشکل ادامه داشت، با پشتیبانی نوا در تماس باشید.',
     icon: 'warning',
     primary: 'بازگشت به خانه',
-    primaryHref: '#home',
+    primaryHref: '/',
     secondary: 'تماس با پشتیبانی',
-    secondaryHref: '#support',
+    secondaryHref: '/support',
   },
   maintenance: {
     eyebrow: 'NOVA / MAINTENANCE',
@@ -169,7 +169,7 @@ export const previewStateCopy: Record<
     description: 'فروشگاه به‌زودی دوباره در دسترس خواهد بود. از شکیبایی شما ممنونیم.',
     icon: 'settings',
     primary: 'تلاش دوباره',
-    primaryHref: '#home',
+    primaryHref: '/',
   },
 };
 

@@ -51,4 +51,4 @@ The component-library boards were compared with the shared storefront and admin 
 
 ## Git integration
 
-Implementation is on `codex/category-reference-fidelity`. The existing category-reference commit is already on the branch. The new sitewide changes still need a scoped commit and push. The existing pull request’s required check was previously reported failing on the untouched `scripts/script.js`; do not merge while that required check remains red. The local deletion/change state of the `scripts/script.js` / `scripts/script.ts` pair is user-owned and was preserved.
+The sitewide changes are committed and pushed to `codex/category-reference-fidelity`; a post-push fetch confirmed the remote branch at the pushed revision. This updates the existing PR #6. The PR status query could not be refreshed after this push because the configured proxy refused the GitHub GraphQL connection. Its last available status showed a required check failing on the untouched `scripts/script.js`, so the PR remains open pending current green checks. The local deletion/change state of the `scripts/script.js` / `scripts/script.ts` pair is user-owned and was preserved.

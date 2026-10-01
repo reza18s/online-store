@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from '@playwright/test';
+import { captureUiAudit } from './ui-audit-screenshot';
 
 const customerAuthMePath = '/v1/auth/me';
 const customerCartPath = '/v1/cart';
@@ -138,6 +139,7 @@ test('renders a recoverable invalid customer OTP state without redirecting or wr
 
   await expect(page.getByRole('alert')).toContainText(syntheticErrorMessage);
   await expect(page.getByRole('button', { name: 'تأیید و ورود' })).toBeEnabled();
+  await captureUiAudit(page, 'auth/invalid-code');
   await expect(page).toHaveURL(new RegExp(`/auth/verify\\?challengeId=${syntheticChallengeId}$`));
   expect(await page.evaluate(() => sessionStorage.length)).toBe(0);
   expect(network.verifyRequests).toEqual([`POST ${customerOtpVerifyPath}`]);

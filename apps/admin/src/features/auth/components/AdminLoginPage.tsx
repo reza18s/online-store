@@ -15,6 +15,8 @@ import { validateStaffLoginInput } from '@/shared/utils/validate-staff-login-inp
 
 import { navigateToRoute } from '@/app/routing/navigate-to-route';
 
+import '@/styles/admin-reference.css';
+
 export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: boolean }) {
   const loginMutation = useStaffLogin();
   const [email, setEmail] = useState('');
@@ -45,7 +47,7 @@ export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: bo
   };
 
   return (
-    <main className="admin-login-page bg-background px-4 py-6 md:px-8 md:py-10" dir="rtl">
+    <main className="admin-login-page admin-reference-login bg-background px-4 py-6 md:px-8 md:py-10" dir="rtl">
       <div className="admin-login-shell">
         <aside className="admin-login-visual" aria-label="روایت برند نوا">
           <img src="/assets/nova-women-lifestyle.webp" alt="" />

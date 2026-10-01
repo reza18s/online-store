@@ -19,6 +19,8 @@ export function Header({
         <div className="site-header__nav-wrap flex items-center gap-3.5">
           <Button
             className="icon-button site-header__menu"
+            variant="ghost"
+            size="icon"
             type="button"
             onClick={onMenu}
             aria-label="باز کردن منو"
@@ -37,7 +39,7 @@ export function Header({
         <Logo />
 
         <div className="site-header__actions flex items-center gap-0.5">
-          <Button className="icon-button" type="button" onClick={onSearch} aria-label="جست‌وجو">
+          <Button className="icon-button" variant="ghost" size="icon" type="button" onClick={onSearch} aria-label="جست‌وجو">
             <Icon name="search" />
           </Button>
           <a className="icon-button site-header__account" href="/account" aria-label="حساب کاربری">

@@ -18,6 +18,9 @@ import { boundedText } from '@/features/content/components/bounded-text';
 
 import { publicContentPath } from '@/features/content/components/public-content-path';
 
+import { AboutContentPage } from '@/features/content/components/about-content-page';
+import { EditorialReferencePage } from '@/features/content/components/editorial-reference-page';
+
 export function PublishedContent({
   page,
   slug,
@@ -34,6 +37,16 @@ export function PublishedContent({
   const hasUnsupported = rendered.unsupportedCount > 0;
   const heroAsset = editorialHeroAssets[slug] ?? defaultEditorialHeroAsset;
 
+  if (slug === 'about') {
+    return <AboutContentPage page={page} state={state} heroAsset={heroAsset} />;
+  }
+
+  if (['campaign', 'care-guide', 'lookbook', 'privacy', 'returns-policy'].includes(slug)) {
+    return (
+      <EditorialReferencePage page={page} slug={slug} state={state} heroAsset={heroAsset} />
+    );
+  }
+
   return (
     <PageShell labelledBy="public-content-title">
       <nav className="breadcrumb" aria-label="مسیر صفحه">
@@ -43,7 +56,7 @@ export function PublishedContent({
       </nav>
 
       <section
-        className="editorial-hero overflow-hidden rounded-editorial border border-border"
+        className="editorial-hero nova-generic-editorial-hero"
         aria-labelledby="public-content-title"
       >
         <div>
@@ -56,7 +69,7 @@ export function PublishedContent({
         <img className="editorial-hero__image" src={heroAsset.src} alt={heroAsset.alt} />
       </section>
 
-      <div className="editorial-reading-layout">
+      <div className="editorial-reading-layout nova-generic-editorial-layout">
         <article className="reading-column" aria-label="محتوای منتشرشده">
           {body ? <p>{body}</p> : null}
           {rendered.blocks.map((block) => (

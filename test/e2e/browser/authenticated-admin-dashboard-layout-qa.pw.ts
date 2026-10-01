@@ -127,7 +127,7 @@ async function assertDashboardLayout(page: Page) {
   const main = page.getByRole('main');
   await expect(main).toHaveCount(1);
 
-  const heading = main.getByRole('heading', { name: 'نمای کلی مدیریت', exact: true });
+  const heading = main.getByRole('heading', { name: 'صبح بخیر 👋', exact: true });
   await expect(heading).toBeVisible();
 
   const dashboardContent = heading.locator('xpath=ancestor::div[@dir="rtl"][1]');

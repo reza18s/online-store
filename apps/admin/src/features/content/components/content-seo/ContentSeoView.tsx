@@ -33,7 +33,7 @@ export function ContentSeoView({
   if (hasExternalStaffState && staffQuery.isPending)
     return (
       <main dir="rtl" className="min-h-svh bg-background px-4 py-6 md:px-8 md:py-10">
-        <div className="mx-auto max-w-[1180px]">
+        <div className="admin-reference-module__inner mx-auto max-w-[1180px]">
           <StatePanel
             kind="loading"
             title="در حال بررسی نشست مدیریت"
@@ -94,10 +94,10 @@ export function ContentSeoView({
   return (
     <main
       dir="rtl"
-      className="min-h-svh bg-[#f6f3ed] px-4 py-5 text-foreground md:px-6 md:py-8 lg:px-8"
+      className="admin-reference-module admin-reference-content-seo min-h-0 bg-transparent px-0 py-0 text-foreground"
     >
-      <div className="mx-auto max-w-[1180px]">
-        <header className="mb-5 flex flex-col gap-4 border-b border-border pb-5 md:flex-row md:items-end md:justify-between">
+      <div className="admin-reference-module__inner mx-auto max-w-[1180px]">
+        <header className="admin-reference-module__header mb-5 flex flex-col gap-4 border-b border-border pb-5 md:flex-row md:items-end md:justify-between">
           <div className="text-right">
             <span className="section-heading__eyebrow">ATELIER EDITORIAL / ADMIN</span>
             <h1 className="mt-1 text-2xl leading-relaxed md:text-3xl">محتوا و دیده‌شدن</h1>

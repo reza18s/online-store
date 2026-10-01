@@ -11,13 +11,13 @@ import { SearchBar } from '@/features/content/components/content-seo/search-bar'
 
 import { SeoEditor } from '@/features/content/components/content-seo/seo-editor';
 
-import { SeoList } from '@/features/content/components/content-seo/seo-list';
-
 import { StatePanel } from '@/features/content/components/content-seo/state-panel';
 
 import { adminContentSeoErrorMessage } from '@/features/content/components/content-seo/admin-content-seo-error-message';
 
 import { isOfflineError } from '@/features/content/components/content-seo/is-offline-error';
+
+import { formatDate } from '@/features/content/components/content-seo/format-date';
 
 export function SeoView({ canEdit }: { canEdit: boolean }) {
   const [search, setSearch] = useState('');
@@ -29,9 +29,7 @@ export function SeoView({ canEdit }: { canEdit: boolean }) {
   );
   const query = useAdminSeoMetadata(queryInput, canEdit);
   const items = query.data?.items ?? [];
-  const selected = creating
-    ? null
-    : (items.find((item) => item.id === selectedId) ?? items[0] ?? null);
+  const selected = creating ? null : (items.find((item) => item.id === selectedId) ?? null);
   const save = (item: AdminSeoMetadata) => {
     setCreating(false);
     setSelectedId(item.id);
@@ -60,14 +58,27 @@ export function SeoView({ canEdit }: { canEdit: boolean }) {
       />
     );
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 rounded-editorial border border-border bg-surface p-3 md:flex-row">
+    <div className="admin-reference-seo">
+      <div className="admin-reference-seo__toolbar">
         <SearchBar
           value={search}
           onChange={setSearch}
-          placeholder="جست‌وجو بر اساس مسیر یا عنوان…"
+          placeholder="جست‌وجوی صفحات..."
         />
+        <div className="admin-reference-seo__filters" aria-label="فیلترهای سریع">
+          <button className="is-active" type="button">همه</button>
+          <button type="button">برگه‌ها</button>
+          <button type="button">محصولات</button>
+          <button type="button">دسته‌ها</button>
+        </div>
+        {canEdit ? (
+          <Button className="admin-reference-seo__add" onClick={() => setCreating(true)}>
+            <Icon name="plus" size={17} />
+            افزودن دستی
+          </Button>
+        ) : null}
       </div>
+
       {!items.length && !creating ? (
         <StatePanel
           kind="empty"
@@ -83,24 +94,89 @@ export function SeoView({ canEdit }: { canEdit: boolean }) {
           }
         />
       ) : (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.35fr)]">
-          <SeoList
-            items={items}
-            selectedId={selected?.id ?? null}
-            onSelect={(id) => {
-              setCreating(false);
-              setSelectedId(id);
-            }}
-            onCreate={() => setCreating(true)}
-            canEdit={canEdit}
-          />
-          <SeoEditor
-            key={creating ? 'new' : (selected?.id ?? 'empty')}
-            item={selected}
-            canEdit={canEdit}
-            onSaved={save}
-          />
-        </div>
+        <>
+          {items.length ? (
+            <section className="admin-reference-seo-table" aria-label="فهرست متادیتای SEO">
+              <div className="admin-reference-seo-table__head" aria-hidden="true">
+                <span>صفحه</span>
+                <span>عنوان SEO</span>
+                <span>توضیحات متا</span>
+                <span>Canonical</span>
+                <span>وضعیت</span>
+                <span>آخرین بروزرسانی</span>
+                <span />
+              </div>
+
+              <div className="admin-reference-seo-table__rows">
+                {items.map((item) => (
+                  <button
+                    className={`admin-reference-seo-row ${selectedId === item.id ? 'is-selected' : ''}`}
+                    key={item.id}
+                    type="button"
+                    onClick={() => {
+                      setCreating(false);
+                      setSelectedId(item.id);
+                    }}
+                  >
+                    <span className="admin-reference-seo-row__page">
+                      <span className="admin-reference-seo-row__thumb">
+                        <Icon name="book" size={18} />
+                      </span>
+                      <span>
+                        <strong>{item.path === '/' ? 'صفحه اصلی' : item.path}</strong>
+                        <small dir="ltr">{item.path}</small>
+                      </span>
+                    </span>
+                    <span>{item.title}</span>
+                    <span>{item.description}</span>
+                    <span dir="ltr">{item.canonicalUrl ?? '—'}</span>
+                    <span>
+                      <em className={item.noIndex ? 'is-warning' : 'is-good'}>
+                        {item.noIndex ? 'نیاز به بررسی' : 'بهینه'}
+                      </em>
+                    </span>
+                    <span dir="ltr">{formatDate(item.updatedAt)}</span>
+                    <span className="admin-reference-more"><Icon name="more-vertical" size={17} /></span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="admin-reference-seo-mobile">
+                {items.map((item) => (
+                  <button
+                    type="button"
+                    key={item.id}
+                    onClick={() => {
+                      setCreating(false);
+                      setSelectedId(item.id);
+                    }}
+                  >
+                    <span className="admin-reference-seo-row__thumb"><Icon name="book" size={17} /></span>
+                    <span>
+                      <strong>{item.path === '/' ? 'صفحه اصلی' : item.path}</strong>
+                      <small>{item.title}</small>
+                      <em className={item.noIndex ? 'is-warning' : 'is-good'}>
+                        {item.noIndex ? 'نیاز به بررسی' : 'بهینه'}
+                      </em>
+                    </span>
+                    <Icon name="more-vertical" size={17} />
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {creating || selected ? (
+            <div className="admin-reference-seo-editor">
+              <SeoEditor
+                key={creating ? 'new' : (selected?.id ?? 'empty')}
+                item={selected}
+                canEdit={canEdit}
+                onSaved={save}
+              />
+            </div>
+          ) : null}
+        </>
       )}
     </div>
   );

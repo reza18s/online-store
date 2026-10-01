@@ -70,8 +70,8 @@ export function OrdersView({
   const data = ordersQuery.data;
   const orders = data?.items ?? [];
   return (
-    <main className="space-y-5" aria-labelledby="admin-orders-title">
-      <header className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+    <main className="admin-reference-orders space-y-5" aria-labelledby="admin-orders-title">
+      <header className="admin-reference-orders__header flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-[10px] font-semibold tracking-[0.18em] text-primary">
             فضای مدیریت / عملیات
@@ -94,7 +94,7 @@ export function OrdersView({
         </div>
       </header>
 
-      <section className="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-label="شاخص‌های سفارش‌ها">
+      <section className="admin-reference-orders__metrics grid grid-cols-2 gap-3 xl:grid-cols-4" aria-label="شاخص‌های سفارش‌ها">
         <OrderMetricCard
           icon="bag"
           label="کل سفارش‌ها"

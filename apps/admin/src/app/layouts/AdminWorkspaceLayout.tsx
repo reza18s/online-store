@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { Button, Input as UiInput } from '@nova/ui';
+import { Input as UiInput } from '@nova/ui';
 
 import { Icon, type IconName } from '@/shared/ui/icon';
 
@@ -8,6 +8,8 @@ import { Logo } from '@/shared/ui/site-shell';
 import { AdminLogoutButton } from '@/features/auth';
 
 import { hasAdminStaffRole, type AdminStaffRole } from '@/features/orders';
+
+import '@/styles/admin-reference.css';
 
 type AdminNavigationItem = {
   key: string;
@@ -26,11 +28,11 @@ const ADMIN_NAVIGATION_DEFINITIONS: Array<[string, string, IconName, AdminStaffR
   ['catalog/categories', 'دسته‌بندی‌ها', 'layers', ALL_STAFF_ROLES],
   ['orders', 'سفارش‌ها', 'package', ALL_STAFF_ROLES],
   ['customers', 'مشتریان', 'users', ALL_STAFF_ROLES],
-  ['marketing', 'بازاریابی', 'send', ADMIN_ONLY],
+  ['payments', 'پرداخت‌ها', 'bag', ADMIN_ONLY],
   ['content', 'محتوا', 'book', ADMIN_ONLY],
   ['audit', 'گزارش‌ها', 'eye', ADMIN_ONLY],
-  ['promotions', 'تخفیف‌ها', 'tag', ADMIN_ONLY],
-  ['operations', 'تنظیمات', 'settings', OPERATIONS_OR_ADMIN],
+  ['notifications', 'اعلان‌ها', 'bell', OPERATIONS_OR_ADMIN],
+  ['inventory', 'موجودی', 'warehouse', OPERATIONS_OR_ADMIN],
 ];
 
 const ADMIN_NAVIGATION: AdminNavigationItem[] = ADMIN_NAVIGATION_DEFINITIONS.map(
@@ -44,9 +46,10 @@ const ADMIN_NAVIGATION: AdminNavigationItem[] = ADMIN_NAVIGATION_DEFINITIONS.map
 
 const ADMIN_MOBILE_NAVIGATION_DEFINITIONS: Array<[string, string, IconName, AdminStaffRole[]]> = [
   ['admin', 'داشبورد', 'home', ADMIN_ONLY],
-  ['catalog', 'محصولات', 'bag', ALL_STAFF_ROLES],
   ['orders', 'سفارش‌ها', 'package', ALL_STAFF_ROLES],
-  ['operations', 'بیشتر', 'menu', OPERATIONS_OR_ADMIN],
+  ['catalog', 'محصولات', 'bag', ALL_STAFF_ROLES],
+  ['content', 'محتوا', 'book', ADMIN_ONLY],
+  ['inventory', 'موجودی', 'warehouse', OPERATIONS_OR_ADMIN],
 ];
 
 const ADMIN_MOBILE_NAVIGATION: AdminNavigationItem[] = ADMIN_MOBILE_NAVIGATION_DEFINITIONS.map(
@@ -90,14 +93,15 @@ export function AdminWorkspaceLayout({
 }) {
   const nav = getAdminWorkspaceNavigation(staffRoles);
   const mobileNav = getAdminMobileNavigation(staffRoles);
+  const canViewNotifications = hasAdminStaffRole(staffRoles, OPERATIONS_OR_ADMIN);
   const isNavActive = (key: string) =>
     page === key ||
     (key === 'catalog' && page.startsWith('catalog/products')) ||
     (key !== 'catalog' && page.startsWith(`${key}/`));
 
   return (
-    <div className="admin-shell min-h-svh bg-background text-foreground">
-      <aside className="admin-sidebar flex-[0_0_194px] px-3 py-6">
+    <div className="admin-shell admin-reference-shell min-h-svh bg-background text-foreground">
+      <aside className="admin-sidebar admin-reference-sidebar flex-[0_0_194px] px-3 py-6">
         <Logo descriptor="ADMIN PANEL" />
         <span className="admin-sidebar__label">فضای مدیریت</span>
         <nav className="flex flex-col gap-1" aria-label="ناوبری مدیریت">
@@ -121,54 +125,57 @@ export function AdminWorkspaceLayout({
             />
             <div className="min-w-0 text-right">
               <strong className="block truncate text-xs">{adminDisplayName}</strong>
-              <small className="mt-1 block text-[9px] opacity-70">نشست فعال</small>
+              <small className="mt-1 block text-xs opacity-70">نشست فعال</small>
             </div>
           </div>
-          <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-[10px] opacity-75 transition-colors hover:opacity-100 disabled:opacity-50" />
+          <AdminLogoutButton className="mt-4 flex min-h-10 w-full items-center gap-2 border-0 bg-transparent px-2 text-right text-xs opacity-75 transition-colors hover:opacity-100 disabled:opacity-50" />
         </div>
       </aside>
-      <section className="admin-content min-h-svh w-full">
+      <section className="admin-content admin-reference-content min-h-svh w-full">
         <header
-          className="admin-topbar !flex-row min-h-[68px] gap-3 bg-surface px-4 py-3 md:px-6"
+          className="admin-topbar admin-reference-topbar !flex-row min-h-[68px] gap-3 bg-surface px-4 py-3 md:px-6"
           dir="ltr"
         >
-          <div className="!flex !flex-row w-full items-center justify-between md:!hidden" dir="ltr">
-            <AdminLogoutButton
-              compact
-              label="خروج"
-              className="icon-button border-0 disabled:opacity-50"
-            />
-            <a className="icon-button" href="/admin" aria-label="داشبورد">
-              <Icon name="menu" size={20} />
+          <div className="admin-reference-mobile-head w-full items-center justify-between" dir="ltr">
+            <a className="icon-button" href="/admin" aria-label="داشبورد مدیریت">
+              <Icon name="home" size={20} />
             </a>
-            <Logo descriptor="ADMIN PANEL" />
-            <a className="icon-button" href="/admin" aria-label="اعلان‌ها">
-              <Icon name="bell" size={19} />
-            </a>
+            <Logo descriptor="ATELIER EDITORIAL" />
+            <div className="flex items-center gap-2">
+              {canViewNotifications ? (
+                <a className="icon-button" href="/admin/notifications" aria-label="اعلان‌ها">
+                  <Icon name="bell" size={19} />
+                </a>
+              ) : null}
+              <img
+                className="h-9 w-9 rounded-full bg-secondary object-cover"
+                src="/assets/nova-hero-men.webp"
+                alt={`پروفایل ${adminDisplayName}`}
+              />
+            </div>
           </div>
           <form
             className="hidden w-full max-w-[375px] items-center gap-2 rounded-control border border-border bg-background px-3 md:flex"
             dir="rtl"
-            onSubmit={(event) => event.preventDefault()}
+            action="/admin/catalog"
+            method="get"
           >
             <Icon name="search" size={18} className="text-muted-foreground" />
             <UiInput
               className="min-h-9 min-w-0 flex-1 bg-transparent text-xs outline-none"
               aria-label="جست‌وجو در پنل مدیریت"
-              placeholder="جست‌وجو در محصولات، سفارش‌ها، مشتریان ..."
+              name="q"
+              placeholder="جست‌وجو در محصولات ..."
             />
-            <kbd className="hidden rounded bg-secondary px-2 py-1 text-[9px] text-muted-foreground lg:inline-block">
-              Ctrl K
-            </kbd>
           </form>
-          <div className="ml-auto hidden !flex-row items-center gap-4 md:flex" dir="rtl">
-            <Button
+          <div className="admin-reference-desktop-head ml-auto items-center gap-4" dir="rtl">
+            {canViewNotifications ? <a
               className="relative flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:bg-secondary"
-              type="button"
+              href="/admin/notifications"
               aria-label="اعلان‌ها"
             >
               <Icon name="bell" size={19} />
-            </Button>
+            </a> : null}
             <img
               className="h-9 w-9 rounded-full bg-secondary object-cover"
               src="/assets/nova-hero-men.webp"
@@ -177,24 +184,17 @@ export function AdminWorkspaceLayout({
             <span className="hidden text-xs text-muted-foreground lg:inline">
               نشست فعال
             </span>
-            <Button
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-primary transition-colors hover:bg-accent-soft"
-              type="button"
-              aria-label="تغییر پوسته"
-            >
-              <Icon name="sparkles" size={19} />
-            </Button>
           </div>
         </header>
-        <div className="admin-page bg-background p-4 pb-24 md:p-6 md:pb-8 lg:p-8">{children}</div>
+        <div className="admin-page admin-reference-page bg-background p-4 pb-24 md:p-6 md:pb-8 lg:p-8">{children}</div>
       </section>
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 flex min-h-[66px] items-stretch justify-around border-t border-border bg-surface/95 px-2 pb-[max(7px,env(safe-area-inset-bottom))] pt-1 shadow-float backdrop-blur md:hidden"
+        className="admin-reference-bottom-nav fixed inset-x-0 bottom-0 z-30 flex min-h-[66px] items-stretch justify-around border-t border-border bg-surface/95 px-2 pb-[max(7px,env(safe-area-inset-bottom))] pt-1 shadow-float backdrop-blur md:hidden"
         aria-label="ناوبری مدیریت موبایل"
       >
         {mobileNav.map(({ key, label, icon }) => (
           <a
-            className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-[10px] ${isNavActive(key ?? '') ? 'text-primary' : 'text-muted-foreground'}`}
+            className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 text-xs ${isNavActive(key ?? '') ? 'text-primary' : 'text-muted-foreground'}`}
             href={`/admin${key === 'admin' ? '' : `/${key}`}`}
             key={key}
           >

@@ -166,7 +166,7 @@ test('renders the synthetic read-only admin dashboard error and retry state', as
   await main.getByRole('button', { name: 'تلاش دوباره', exact: true }).click();
   await retryRequest;
 
-  await expect(main.getByRole('heading', { name: 'نمای کلی مدیریت', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'صبح بخیر 👋', exact: true })).toBeVisible();
   await expect(main.getByRole('region', { name: 'شاخص‌های خلاصه داشبورد' })).toContainText('۴۲');
 
   expect(network.staffSessionRequests).toEqual(['GET /v1/staff/auth/me']);

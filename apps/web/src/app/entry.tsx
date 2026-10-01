@@ -3,6 +3,7 @@ import { mountApp } from '@/app/providers/mount-app';
 import '@nova/ui/styles.css';
 
 import '@/styles.css';
+import '@/styles/storefront-reference.css';
 
 export { createQueryClient, seedInitialRenderData } from '@/app/providers/query-client';
 export { mountApp } from '@/app/providers/mount-app';

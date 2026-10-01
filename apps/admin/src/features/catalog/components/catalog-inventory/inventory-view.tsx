@@ -129,32 +129,56 @@ export function InventoryView({
         {null}
       </QueryState>
     );
+  const totalOnHand = items.reduce((sum, item) => sum + item.onHand, 0);
+  const totalReserved = items.reduce((sum, item) => sum + item.reserved, 0);
+  const lowStockCount = items.filter((item) => item.stockStatus === 'LOW_STOCK').length;
+  const outOfStockCount = items.filter((item) => item.stockStatus === 'OUT_OF_STOCK').length;
+
   return (
-    <div className="space-y-5">
-      <header>
-        <p className="text-[10px] font-semibold tracking-[0.16em] text-warning">
-          INVENTORY / CONTROL ROOM
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold">موجودی</h2>
-        <p className="mt-1 text-xs leading-7 text-muted-foreground">
-          موجودی فیزیکی، رزروشده، قابل فروش و نقطه سفارش مجدد را از سرویس مدیریت بررسی کنید.
-        </p>
+    <div className="admin-reference-inventory">
+      <header className="admin-reference-inventory__header">
+        <div>
+          <span className="section-heading__eyebrow">NOVA / INVENTORY</span>
+          <h2>موجودی</h2>
+          <p>نمای کلی موجودی محصولات و مدیریت انبار بر اساس داده‌های واقعی سرویس مدیریت.</p>
+        </div>
+        {canOperate ? (
+          <a className="admin-reference-inventory__add" href="/admin/catalog/products/new">
+            <Icon name="plus" size={17} /> محصول جدید
+          </a>
+        ) : null}
       </header>
-      <form
-        className="grid gap-3 border border-border bg-surface p-4 shadow-card md:grid-cols-2 xl:grid-cols-[minmax(0,1.5fr)_repeat(2,minmax(150px,.7fr))_auto]"
-        onSubmit={submitFilters}
-      >
+
+      <section className="admin-reference-inventory-metrics" aria-label="خلاصه موجودی">
+        <article>
+          <span className="is-green"><Icon name="warehouse" size={21} /></span>
+          <div><strong>{formatNumber(totalOnHand)}</strong><small>مجموع موجودی این صفحه</small></div>
+        </article>
+        <article>
+          <span className="is-amber"><Icon name="warning" size={21} /></span>
+          <div><strong>{formatNumber(lowStockCount)}</strong><small>موجودی کم</small></div>
+        </article>
+        <article>
+          <span className="is-red"><Icon name="close" size={21} /></span>
+          <div><strong>{formatNumber(outOfStockCount)}</strong><small>ناموجود</small></div>
+        </article>
+        <article>
+          <span className="is-gold"><Icon name="package" size={21} /></span>
+          <div><strong>{formatNumber(totalReserved)}</strong><small>رزرو شده</small></div>
+        </article>
+      </section>
+
+      <form className="admin-reference-inventory-filters" onSubmit={submitFilters}>
         <FilterInput
-          label="جست‌وجوی کالا یا SKU"
+          label="جست‌وجو"
           onChange={setSearch}
-          placeholder="نام محصول یا SKU..."
+          placeholder="جست‌وجوی محصول یا SKU..."
           value={search}
         />
-        <label className="block text-xs text-muted-foreground">
-          وضعیت تنوع
+        <label>
+          <span>وضعیت تنوع</span>
           <UiSelect
             aria-label="فیلتر وضعیت تنوع"
-            className="mt-2 min-h-12 w-full border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             onChange={(event) =>
               setFilters((current) => ({
                 ...current,
@@ -169,7 +193,7 @@ export function InventoryView({
             <option value="INACTIVE">غیرفعال</option>
           </UiSelect>
         </label>
-        <label className="flex min-h-12 items-center gap-3 border border-border bg-background px-3 text-xs">
+        <label className="admin-reference-inventory-filters__check">
           <Checkbox
             checked={filters.lowStock === true}
             onChange={(event) =>
@@ -179,82 +203,80 @@ export function InventoryView({
                 lowStock: event.target.checked || undefined,
               }))
             }
-          />{' '}
+          />
           فقط موجودی کم
         </label>
-        <Button type="submit">
-          <Icon name="search" size={16} /> اعمال فیلتر
+        <Button type="submit" variant="outline">
+          <Icon name="filter" size={16} /> فیلترها
         </Button>
       </form>
-      {error ? (
-        <p
-          className="border border-destructive/30 bg-error-soft px-4 py-3 text-xs text-destructive"
-          role="alert"
-        >
-          {error}
-        </p>
-      ) : null}
-      {success ? (
-        <p
-          className="border border-success/30 bg-success-soft px-4 py-3 text-xs text-success"
-          role="status"
-        >
-          {success}
-        </p>
-      ) : null}
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <section className="border border-border bg-surface shadow-card">
-          <div className="flex items-center justify-between border-b border-border px-4 py-4">
-            <h3 className="font-semibold">فهرست موجودی</h3>
-            <span className="text-xs text-muted-foreground">
-              {formatNumber(query.data?.total ?? 0)} تنوع
-            </span>
-          </div>
-          {items.length === 0 ? (
-            <div className="p-5">
-              <StatePanel
-                icon="warehouse"
-                title="موجودی‌ای با این فیلتر پیدا نشد"
-                description="فیلتر موجودی کم یا عبارت جست‌وجو را تغییر دهید."
-              />
-            </div>
-          ) : (
-            <div className="divide-y divide-border">
-              {items.map((item) => (
-                <InventoryRow
-                  item={item}
-                  selected={item.variantId === selectedVariantId}
-                  onSelect={setSelectedVariantId}
-                  key={item.id}
-                />
-              ))}
-            </div>
-          )}
-          <div className="p-4 md:p-5">
-            <Pagination
-              limit={query.data?.limit ?? 8}
-              page={query.data?.page ?? 1}
-              total={query.data?.total ?? 0}
-              onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
+
+      {error ? <p className="admin-reference-message is-error" role="alert">{error}</p> : null}
+      {success ? <p className="admin-reference-message is-success" role="status">{success}</p> : null}
+
+      <section className="admin-reference-inventory-table">
+        <div className="admin-reference-inventory-table__head" aria-hidden="true">
+          <span>محصول</span>
+          <span>SKU</span>
+          <span>قابل فروش</span>
+          <span>رزرو</span>
+          <span>فیزیکی</span>
+          <span>حد سفارش</span>
+          <span>وضعیت</span>
+          <span />
+        </div>
+
+        {items.length === 0 ? (
+          <div className="admin-reference-inventory-table__empty">
+            <StatePanel
+              icon="warehouse"
+              title="موجودی‌ای با این فیلتر پیدا نشد"
+              description="فیلتر موجودی کم یا عبارت جست‌وجو را تغییر دهید."
             />
           </div>
-        </section>
-        <InventoryDetail
-          detailQuery={detailQuery}
-          enabled={Boolean(selectedVariantId)}
-          canOperate={canOperate}
-          delta={delta}
-          reason={reason}
-          reorderPoint={reorderPoint}
-          setDelta={setDelta}
-          setReason={setReason}
-          setReorderPoint={setReorderPoint}
-          onAdjust={adjust}
-          onReorder={saveReorder}
-          adjusting={adjustMutation.isPending}
-          reordering={reorderMutation.isPending}
-        />
-      </div>
+        ) : (
+          <div className="admin-reference-inventory-table__rows">
+            {items.map((item) => (
+              <InventoryRow
+                item={item}
+                selected={item.variantId === selectedVariantId}
+                onSelect={setSelectedVariantId}
+                key={item.id}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="admin-reference-inventory-table__footer">
+          <span>{formatNumber(query.data?.total ?? 0)} تنوع</span>
+          <Pagination
+            limit={query.data?.limit ?? 8}
+            page={query.data?.page ?? 1}
+            total={query.data?.total ?? 0}
+            onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
+          />
+        </div>
+      </section>
+
+      {selectedVariantId ? (
+        <div className="admin-reference-inventory-detail">
+          <InventoryDetail
+            detailQuery={detailQuery}
+            enabled={Boolean(selectedVariantId)}
+            canOperate={canOperate}
+            delta={delta}
+            reason={reason}
+            reorderPoint={reorderPoint}
+            setDelta={setDelta}
+            setReason={setReason}
+            setReorderPoint={setReorderPoint}
+            onAdjust={adjust}
+            onReorder={saveReorder}
+            adjusting={adjustMutation.isPending}
+            reordering={reorderMutation.isPending}
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from '@playwright/test';
+import { captureUiAudit } from './ui-audit-screenshot';
 import type {
   ApiEnvelope,
   CartView,
@@ -347,6 +348,29 @@ function assertSafeCheckoutNetwork(evidence: CheckoutNetworkEvidence): void {
 }
 
 test.describe('WEB-005 checkout core browser coverage', () => {
+  test('renders authoritative confirmation and incomplete local payment safely', async ({ page }) => {
+    const evidence = await installCheckoutFixtures(page);
+    await page.route(`**/v1/account/orders/${syntheticOrderNumber}`, async (route) => {
+      await route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify(envelope({
+          ...syntheticTimeoutOrderDetail, status: 'CONFIRMED', paymentStatus: 'PAID',
+          payment: { ...syntheticTimeoutOrderDetail.payment, status: 'PAID', paidAt: syntheticTimestamp },
+        })),
+      });
+    });
+    await page.goto(`/checkout/confirmation?orderNumber=${syntheticOrderNumber}`);
+    await expect(page.getByRole('heading', { name: 'سفارش شما با موفقیت تأیید شد' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'پیگیری سفارش', exact: true })).toHaveAttribute('href', `/order/${syntheticOrderNumber}`);
+    await captureUiAudit(page, 'checkout/confirmation');
+    await page.goto('/checkout/local-payment');
+    await expect(page.getByRole('heading', { name: 'پرداخت انجام نشد' })).toBeVisible();
+    await expect(page.getByRole('alert')).toContainText('سفارش شما تغییر نکرده است');
+    await captureUiAudit(page, 'checkout/local-payment-invalid');
+    expect(evidence.submitRequests).toEqual([]);
+    assertSafeCheckoutNetwork(evidence);
+  });
+
   test('presents the synthetic address, shipping methods, and authoritative quote', async ({
     page,
   }) => {
@@ -364,6 +388,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
     await expect(main).toContainText(syntheticCustomerPhone);
     await expect(main.locator('input[name="checkout-address"]')).toBeChecked();
     await expect(main).toContainText('پس از تأیید آدرس');
+    await captureUiAudit(page, 'checkout/address');
 
     await main.getByRole('button', { name: 'ادامه', exact: true }).click();
     await expect(page).toHaveURL(
@@ -376,6 +401,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
     await expect(main).toContainText('۲ تا ۴ روز کاری');
     await expect(main).toContainText('۴۵٬۰۰۰ تومان');
     await expect(main).toContainText('۲٬۳۴۵٬۰۰۰ تومان');
+    await captureUiAudit(page, 'checkout/shipping');
 
     await main.getByRole('radio').nth(1).check();
     await expect.poll(() => evidence.quoteRequests.length).toBe(2);
@@ -393,6 +419,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
     await expect(main).toContainText('پرداخت آنلاین');
     await expect(main).toContainText('وضعیت پرداخت پس از بازگشت');
     await expect(main).toContainText('ارسال سریع · ۱ تا ۲ روز کاری');
+    await captureUiAudit(page, 'checkout/payment');
 
     expect(evidence.quoteRequests).toEqual([
       { addressId: syntheticAddressId, shippingMethod: 'STANDARD' },
@@ -441,6 +468,7 @@ test.describe('WEB-005 checkout core browser coverage', () => {
       'نتیجه قطعی دریافت نشد. برای جلوگیری از پرداخت تکراری، ابتدا وضعیت سفارش را بررسی کنید.',
     );
     await expect(page.getByRole('main')).toContainText(syntheticOrderNumber);
+    await captureUiAudit(page, 'checkout/payment-timeout');
     await expect(
       page.getByRole('link', { name: 'مشاهده وضعیت سفارش', exact: true }).first(),
     ).toHaveAttribute('href', `/order/${syntheticOrderNumber}`);

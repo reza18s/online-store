@@ -136,7 +136,7 @@ test('passes encoded admin customer lookup queries into the customer filter', ()
     ),
   );
 
-  assert.match(markup, /for="customer-query">ایمیل، تلفن یا شناسه مشتری/);
+  assert.match(markup, /for="customer-query">جست‌وجو/);
   assert.match(markup, /id="customer-query"/);
   assert.match(markup, /value="person\+support@example\.test"/);
   queryClient.clear();

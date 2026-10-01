@@ -13,10 +13,10 @@ export function FilterSelect({
   onChange: (value: string) => void;
 }) {
   return (
-    <label className="flex min-h-11 flex-col gap-1 text-xs font-semibold">
+    <label className="filter-select">
       <span>{label}</span>
       <UiSelect
-        className="min-h-11 border border-border bg-surface px-3 outline-none focus:border-primary"
+        className="filter-select__control"
         value={value}
         onChange={(event) => onChange(event.target.value)}
       >

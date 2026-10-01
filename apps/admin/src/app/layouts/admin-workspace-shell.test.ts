@@ -19,7 +19,8 @@ test('filters global staff navigation by support, operations, and admin permissi
     'catalog/categories',
     'orders',
     'customers',
-    'operations',
+    'notifications',
+    'inventory',
   ]);
   assert.deepEqual(keys(getAdminWorkspaceNavigation(['ADMIN'])), [
     'admin',
@@ -27,20 +28,20 @@ test('filters global staff navigation by support, operations, and admin permissi
     'catalog/categories',
     'orders',
     'customers',
-    'marketing',
+    'payments',
     'content',
     'audit',
-    'promotions',
-    'operations',
+    'notifications',
+    'inventory',
   ]);
 });
 
 test('applies the same permission filter to mobile navigation', () => {
-  assert.deepEqual(keys(getAdminMobileNavigation(['support'])), ['catalog', 'orders']);
+  assert.deepEqual(keys(getAdminMobileNavigation(['support'])), ['orders', 'catalog']);
   assert.deepEqual(keys(getAdminMobileNavigation(['operations'])), [
-    'catalog',
     'orders',
-    'operations',
+    'catalog',
+    'inventory',
   ]);
   assert.deepEqual(keys(getAdminWorkspaceNavigation(undefined)), []);
 });

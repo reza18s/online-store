@@ -15,7 +15,7 @@ export function createQueryClient(options: { onStaffSessionExpired?: () => void 
   const queryCache = new QueryCache({
     onError: (error, query) => {
       if (!isStaffProtectedQueryKey(query.queryKey)) return;
-      if (clearStaffSessionAfterFailure(error)) onStaffSessionExpired();
+      if (handleStaffSessionFailure(queryClient, error, query.queryKey)) onStaffSessionExpired();
     },
   });
   const mutationCache = new MutationCache({

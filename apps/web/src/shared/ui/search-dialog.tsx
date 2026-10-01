@@ -8,7 +8,7 @@ import { navigateToRoute } from '@/app/routing/route';
 import { Icon } from '@/shared/ui/icon';
 import { useDialogFocus } from '@/shared/ui/use-dialog-focus';
 
-export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function SearchDialog({ open, onClose, initialQuery }: { open: boolean; onClose: () => void; initialQuery?: string }) {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [recent, setRecent] = useState<string[]>([]);
@@ -17,6 +17,10 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
   const handleDialogKeyDown = useDialogFocus(open, dialogRef, inputRef);
   const suggestionQuery = useCatalogSuggestions(debouncedQuery, open);
   const normalizedQuery = query.trim();
+
+  useEffect(() => {
+    if (open && initialQuery !== undefined) setQuery(initialQuery);
+  }, [open, initialQuery]);
 
   useEffect(() => {
     const nextQuery = query.trim();
@@ -98,7 +102,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
             <span className="section-heading__eyebrow">NOVA / SEARCH</span>
             <h2 id="search-title">چه چیزی پیدا می‌کنید؟</h2>
           </div>
-          <Button className="icon-button" type="button" onClick={onClose} aria-label="بستن جست‌وجو">
+          <Button className="icon-button" variant="ghost" size="icon" type="button" onClick={onClose} aria-label="بستن جست‌وجو">
             <Icon name="close" />
           </Button>
         </div>

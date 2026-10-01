@@ -170,8 +170,8 @@ test('renders the live fixture-backed authenticated admin dashboard and changes 
   expect(response?.ok()).toBeTruthy();
 
   const main = page.getByRole('main');
-  await expect(main.getByRole('heading', { name: 'نمای کلی مدیریت', exact: true })).toBeVisible();
-  await expect(main).toContainText('NOVA / ADMIN DASHBOARD · LIVE SUMMARY');
+  await expect(main.getByRole('heading', { name: 'صبح بخیر 👋', exact: true })).toBeVisible();
+  await expect(main).toContainText('ATELIER EDITORIAL');
   await expect(main).toContainText('محصولات منتشرشده');
   await expect(main).toContainText('۴۲');
   await expect(main).toContainText('مشتریان جدید');
@@ -220,7 +220,7 @@ test('denies an authenticated support staff member without requesting dashboard 
   const main = page.getByRole('main');
   await expect(main.getByRole('alert')).toBeVisible();
   await expect(main.getByRole('heading', { name: 'دسترسی کافی نیست', exact: true })).toBeVisible();
-  await expect(main).not.toContainText('NOVA / ADMIN DASHBOARD · LIVE SUMMARY');
+  await expect(main).not.toContainText('ATELIER EDITORIAL');
   await expect(main.getByRole('region', { name: 'شاخص‌های خلاصه داشبورد' })).toHaveCount(0);
   await expect(main).not.toContainText('۴۲');
   await expect(main).not.toContainText('۹۸۷٬۶۵۴٬۰۰۰ تومان');

@@ -18,28 +18,31 @@ export function InventoryRow({
 }) {
   return (
     <Button
-      className={`flex min-h-[92px] w-full items-center gap-3 px-4 py-4 text-right transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 ${selected ? 'bg-accent-soft' : ''}`}
+      className={`admin-reference-inventory-row ${selected ? 'is-selected' : ''}`}
       onClick={() => onSelect(item.variantId)}
       type="button"
+      variant="ghost"
     >
-      <span
-        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-control ${item.stockStatus === 'LOW_STOCK' ? 'bg-warning-soft text-warning' : item.stockStatus === 'OUT_OF_STOCK' ? 'bg-error-soft text-destructive' : 'bg-success-soft text-success'}`}
-      >
-        <Icon name="warehouse" size={19} />
-      </span>
-      <span className="min-w-0 flex-1">
-        <span className="block truncate text-xs font-semibold">{item.productName}</span>
-        <span className="mt-1 block truncate text-[10px] text-muted-foreground">
-          {item.variantTitle ?? 'تنوع اصلی'} · <span dir="ltr">{item.sku}</span>
+      <span className="admin-reference-inventory-row__product">
+        <span
+          className={`admin-reference-inventory-row__thumb ${item.stockStatus === 'LOW_STOCK' ? 'is-low' : item.stockStatus === 'OUT_OF_STOCK' ? 'is-out' : 'is-ok'}`}
+        >
+          <Icon name="shirt" size={20} />
+        </span>
+        <span>
+          <strong>{item.productName}</strong>
+          <small>{item.variantTitle ?? 'تنوع اصلی'}</small>
         </span>
       </span>
-      <span className="hidden text-left text-xs sm:block">
-        <span className="block">{formatNumber(item.available)} قابل فروش</span>
-        <span className="mt-1 block text-[10px] text-muted-foreground">
-          نقطه سفارش {formatNumber(item.reorderPoint)}
-        </span>
-      </span>
+      <span dir="ltr" className="admin-reference-inventory-row__sku">{item.sku}</span>
+      <span>{formatNumber(item.available)}</span>
+      <span>{formatNumber(item.reserved)}</span>
+      <span>{formatNumber(item.onHand)}</span>
+      <span>{formatNumber(item.reorderPoint)}</span>
       <StatusBadge status={item.stockStatus} />
+      <span className="admin-reference-inventory-row__more" aria-hidden="true">
+        <Icon name="more-vertical" size={17} />
+      </span>
     </Button>
   );
 }

@@ -1,5 +1,7 @@
 import { type ReactNode } from 'react';
 
+import { ApiClientError } from '@nova/api-client';
+
 import type { useCatalogProducts } from '@/features/catalog/api/catalog-api';
 
 import { CatalogRefreshNotice } from '@/features/catalog/components/catalog-refresh-notice';
@@ -22,13 +24,22 @@ export function CatalogQueryState({
   if (query.isPending && !query.data) return <ProductSkeleton />;
   if (query.isError && !query.data) {
     const offline = typeof navigator !== 'undefined' && navigator.onLine === false;
+    const serviceUnavailable = query.error instanceof ApiClientError && query.error.status >= 500;
     return (
       <MessageCard
-        title={offline ? 'اتصال اینترنت برقرار نیست' : 'بارگذاری محصولات ممکن نشد'}
+        title={
+          offline
+            ? 'اتصال اینترنت برقرار نیست'
+            : serviceUnavailable
+              ? 'سرویس فهرست محصولات در دسترس نیست'
+              : 'بارگذاری محصولات ممکن نشد'
+        }
         description={
           offline
             ? 'اتصال خود را بررسی کنید و دوباره تلاش کنید.'
-            : 'لطفاً چند لحظه بعد دوباره تلاش کنید.'
+            : serviceUnavailable
+              ? 'ارتباط با سرور محصولات برقرار نشد. پس از بررسی وضعیت سامانه دوباره تلاش کنید.'
+              : 'لطفاً چند لحظه بعد دوباره تلاش کنید.'
         }
         icon={offline ? 'info' : 'warning'}
         action="تلاش دوباره"

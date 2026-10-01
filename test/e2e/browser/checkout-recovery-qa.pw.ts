@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import { captureUiAudit } from './ui-audit-screenshot';
 
 test.use({ viewport: { width: 1440, height: 900 } });
 
@@ -76,6 +77,7 @@ test.describe('WEB-004 checkout recovery browser coverage', () => {
         page.getByRole('link', { name: route.primaryAction, exact: true }),
       ).toHaveAttribute('href', route.primaryHref);
       await expectSettledCheckoutState(page);
+      await captureUiAudit(page, `checkout/${route.path.split('/').pop()}`);
     }
 
     expect(blockedRequests).toEqual([]);

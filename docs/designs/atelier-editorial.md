@@ -4,9 +4,9 @@
 
 ## 1. Direction
 
-ATELIER EDITORIAL is NOVA's **luxury fashion-magazine direction**: warm ivory paper, oxblood actions, charcoal typography, champagne/brass editorial accents, expressive Persian display type, portrait-led fashion photography, restrained geometry, and asymmetric magazine composition.
+ATELIER EDITORIAL is NOVA's **soft-modern fashion-journal direction**: pearl and linen neutrals, muted rosewood actions, warm charcoal typography, quiet clay accents, natural-light fashion photography, rounded editorial cards, and an airy magazine composition.
 
-This direction must remain unmistakably different from Design 2. It must **not** use a ivory/oxblood storefront identity, oxblood primary actions, soft-boutique card language, or the same compact three-part commerce hero used by NOVA Atelier Editorial. Shared commerce behavior remains identical, but the visual system, image rhythm, typography, geometry, and composition are independent.
+Keep this direction distinct through tactile materials, editorial pacing, and carefully composed photography. The refreshed visual language should feel lighter and more contemporary than the earlier high-contrast oxblood treatment, while remaining recognizably NOVA and easy to shop. Shared commerce behavior remains identical; the palette, spacing, typography, shape, and image rhythm are updated below.
 
 The direction must feel:
 
@@ -18,6 +18,11 @@ The direction must feel:
 - Suitable for women, men, and children without becoming generic or family-marketplace-like.
 
 All pages and components in this specification remain required. Design exploration may change composition and visual hierarchy, but it does not remove route, state, accessibility, admin, or API parity requirements.
+
+**Visual source of truth:** the Soft Modern refresh in Section 18 supersedes
+conflicting appearance-only values elsewhere in this inherited specification.
+Routes, commerce rules, RTL behavior, accessibility requirements, and state
+coverage remain in force.
 
 ## 1.1 Attached reference analysis and redesign contract
 
@@ -71,7 +76,7 @@ story → trust/footer, with fixed bottom navigation reserved below the content.
 
 **Observed:** The wordmark may be optically centered or intentionally offset within the editorial grid; it must not reproduce Design 2's centered three-column commerce header. Small Persian navigation links sit
 near the physical right side, while the physical left utility cluster contains
-an outlined sign-in pill, a oxblood cart control, and search/account icons.
+an outlined sign-in control, a muted rosewood cart control, and search/account icons.
 The header is quiet and does not consume the first viewport with a tall promo
 bar.
 
@@ -85,7 +90,7 @@ the logo. Expose `زنانه`, `مردانه`, `بچگانه`, `اکسسوری`,
 compact login control. On mobile, collapse links into an RTL sheet, keep search and cart
 visible, and add a fixed `64 px` bottom navigation with safe-area padding.
 
-The active category uses a oxblood label or a `2 px` underline; do not add a
+The active category uses a rosewood label or a `2 px` underline; do not add a
 large filled navigation tab that competes with the hero. Search opens a modal
 surface with focus trapping; Escape closes it and returns focus to the trigger.
 
@@ -106,13 +111,13 @@ wordmark as an SVG or owned image asset rather than rendering it with a font.
 
 | Role | Desktop | Mobile | Family / weight | Rule |
 | --- | ---: | ---: | --- | --- |
-| Hero title | `30/40 px` | `24/32 px` | Peyda 700 | Maximum two lines; short, high-contrast copy |
-| Section title | `24/32 px` | `20/28 px` | Peyda 700 | Align to the product-grid anchor |
-| Card title | `14/22 px` | `13/20 px` | Vazirmatn/Peyda 600 | Maximum two lines |
-| Body | `14/23 px` | `14/23 px` | Vazirmatn 400 | Maximum measure `32–42 ch` |
-| Navigation / label | `12/20 px` | `12/20 px` | Vazirmatn 500 | No all-caps Persian; use Latin caps only for small eyebrow labels |
-| Price | `14/22 px` | `13/21 px` | Vazirmatn 700 | Persian digits plus `تومان`; never hide on hover |
-| Caption / stock | `11/18 px` | `11/18 px` | Vazirmatn 400 | Must remain at least `11 px` and pass contrast |
+| Hero title | `34/44 px` | `28/36 px` | Peyda 600 | Maximum two lines; calm, readable contrast |
+| Section title | `26/34 px` | `22/30 px` | Peyda 600 | Align to the product-grid anchor |
+| Card title | `15/23 px` | `14/22 px` | Vazirmatn/Peyda 500–600 | Maximum two lines |
+| Body | `15/24 px` | `14/23 px` | Vazirmatn 400 | Maximum measure `32–42 ch` |
+| Navigation / label | `13/21 px` | `12/20 px` | Vazirmatn 500 | No all-caps Persian; use Latin caps only for small eyebrow labels |
+| Price | `14/22 px` | `14/22 px` | Vazirmatn 600 | Persian digits plus `تومان`; never hide on hover |
+| Caption / stock | `12/19 px` | `12/19 px` | Vazirmatn 400 | Must pass WCAG AA contrast |
 
 Use `0` letter-spacing for Persian text. Use `0.02em` only for Latin labels.
 Keep mixed strings isolated with `dir="ltr"` for SKU, phone, payment, and
@@ -120,7 +125,7 @@ tracking references; numerals in customer prices remain Persian.
 
 ### Color System
 
-**Direction lock:** Atelier uses warm ivory, charcoal, oxblood, and champagne/brass. Mint and forest green are reserved for Design 2 and must not appear as Atelier's global canvas, primary CTA, selected state, or navigation identity.
+**Direction lock:** Atelier uses pearl, linen, warm charcoal, muted rosewood, and subdued clay. Use soft sage only for quiet editorial surfaces; status colors remain separate and semantic.
 
 **Observed:** The page canvas is a very light blue-green/mint. Cards are white
 or soft warm-gray, text is charcoal, and the primary CTA is a deep muted
@@ -131,44 +136,47 @@ editorial details; it is not a dominant action color.
 
 | Semantic token | Value | Use |
 | --- | --- | --- |
-| `ivory/50` | `#F6F1E8` | Main storefront paper canvas |
-| `surface/0` | `#FFFCF7` | Product, form, drawer, and reading surfaces |
-| `surface/soft` | `#EEE6DA` | Secondary editorial blocks and quiet controls |
-| `surface/warm` | `#E7DED2` | Garment/image backing and tactile campaign fields |
-| `ink/950` | `#272220` | Headings, prices, primary icons |
-| `ink/700` | `#5E534D` | Navigation and supporting text |
-| `ink/500` | `#8A7D75` | Metadata only |
-| `oxblood/700` | `#6D2838` | Primary CTA, active state, cart, focus accent |
-| `oxblood/800` | `#54202D` | Hover/pressed and deep editorial surfaces |
-| `oxblood/100` | `#F0DEE3` | Selected/soft state |
-| `line/200` | `#D8CEC2` | Borders and dividers |
-| `champagne/600` | `#B79A6B` | Folio numbers, editorial rules, wordmark detail |
+| `pearl/50` | `#F7F4F0` | Main storefront canvas |
+| `surface/0` | `#FFFCF9` | Product, form, drawer, and reading surfaces |
+| `surface/soft` | `#F1ECE7` | Secondary editorial blocks and quiet controls |
+| `surface/warm` | `#E8DFD7` | Garment/image backing and tactile campaign fields |
+| `surface/sage` | `#E8ECE7` | Optional quiet editorial surface only |
+| `ink/950` | `#302B29` | Headings, prices, primary icons |
+| `ink/700` | `#6F6560` | Navigation and supporting text |
+| `ink/500` | `#756B66` | Metadata; maintain WCAG AA on its surface |
+| `rosewood/700` | `#7B4B59` | Primary CTA, active state, cart, focus accent |
+| `rosewood/800` | `#633D49` | Hover/pressed state |
+| `rosewood/100` | `#F2E8EB` | Selected/soft state |
+| `line/200` | `#E4DCD5` | Borders and dividers |
+| `clay/600` | `#A88F78` | Small editorial marks only; never small text or price |
 | `success/700` | `#39705A` | Success state with text/icon |
 | `warning/700` | `#87643A` | Low-stock/delivery warning |
-| `error/700` | `#A83D38` | Validation/payment error |
+| `error/700` | `#A34E4C` | Validation/payment error |
 
 
-Do not introduce Design 2's mint/forest-green identity into Atelier customer-facing surfaces. Text must meet WCAG AA contrast; muted
-green is metadata only and never carries price, stock, error, or primary-action
-meaning. Statuses always include text or an icon in addition to color.
+Text must meet WCAG AA contrast. Sage is never used to communicate stock,
+errors, prices, or primary actions. Statuses always include text or an icon in
+addition to color.
 
 ### Spacing and Layout Rhythm
 
-Use a compact 4-point base scale: `4, 8, 12, 16, 20, 24, 32, 40, 48, 64 px`.
-The visible reference is intentionally tighter than the previous editorial
-specification: the hero-to-category gap is `24 px`, category-to-products is
-`32 px`, hero internal gaps are `12–16 px`, and product-card content starts
-`10–12 px` below the image. Desktop shell gutters are `80 px` at `1440 px` and
-`64 px` at `1280 px`; mobile gutter is `16 px`.
+Use a 4-point base scale: `4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64 px`.
+Give the desktop page more breathing room: use `32 px` from hero to category,
+`40 px` from category to products, and `56–64 px` between later sections.
+Keep hero internals at `16–20 px` and product-card content `14–16 px` below
+the image. Preserve the documented shell: `80 px` gutters at `1440 px`,
+`64 px` at `1280 px`, and `16 px` on mobile.
 
-Use `16 px` for the primary grid gap, `12 px` for mobile product/category
-gaps, `24 px` for card padding on large panels, and `12–16 px` for compact
-cards. Recurring radii are `4 px` for fields and editorial surfaces, `6 px` for product cards and hero media, `8 px` only for drawers/sheets, and `999 px` only for tiny status chips or circular icon targets. Primary storefront CTAs are rectangular with `4–6 px` radius.
-Avoid large `96–128 px` whitespace blocks above the first product rail.
+Use `20 px` for the primary desktop grid gap, `12–16 px` for mobile
+product/category gaps, `28–32 px` for large-panel padding, and `16–20 px` for
+compact cards. Use `10–12 px` for controls, `14 px` for product cards, and
+`18 px` for hero/editorial media. Reserve pill shapes for status chips and
+swatches; primary CTAs use a soft `10 px` radius. Keep section spacing
+intentional and consistent rather than leaving oversized empty bands.
 
-Use only a soft elevation: `0 8px 24px rgba(39, 34, 32, 0.08)` for floating
-surfaces and `0 2px 8px rgba(39, 34, 32, 0.06)` for selected cards. Most
-product cards use a border or surface contrast instead of a shadow.
+Use very light elevation: `0 10px 28px rgba(48, 43, 41, 0.06)` for floating
+surfaces and `0 2px 8px rgba(48, 43, 41, 0.04)` for selected cards. Most
+product cards use a fine border or surface contrast instead of a shadow.
 
 ### Image Treatment
 
@@ -177,11 +185,11 @@ inside a rounded card. Supporting cards use contained shirt/garment imagery on
 warm-gray fields. Product imagery is mostly square, centered, isolated, and
 easy to compare. Images are not covered by a heavy gradient.
 
-**Recommended:** Use `cover` for the lifestyle hero with `4–6 px` radius and
+**Recommended:** Use `cover` for the lifestyle hero with `18 px` radius and
 an explicit focal point. Keep a copy-safe area in the right-hand copy panel
 for RTL text; do not place copy on top of a face or garment detail. Supporting
-story cards use `4:3` media. Home and listing product cards use a portrait `4:5` image frame with a white
-or warm-soft surface and `6 px` radius; the garment occupies roughly `72–82%`
+story cards use `4:3` media. Home and listing product cards use a portrait `4:5` image frame with a pearl
+or warm-soft surface and `14 px` radius; the garment occupies roughly `72–82%`
 of the frame with breathing room around its silhouette. Category thumbnails
 use `1:1` contained crops at `56–64 px`.
 
@@ -195,46 +203,46 @@ an explicit failed-image fallback.
 
 Use three visible card families in the first viewport:
 
-- `HeroStoryCard`: restrained `4–6 px`, image/copy split, short title, one
-  oxblood editorial rectangular CTA, and no more than one supporting sentence.
-- `SupportGarmentCard`: `4–6 px` radius, contained garment image, small
+- `HeroStoryCard`: soft `16–18 px` radius, image/copy split, short title, one
+  rosewood CTA, and no more than one supporting sentence.
+- `SupportGarmentCard`: `14–16 px` radius, contained garment image, small
   category label, and one short link/action. Two cards stack on desktop and
   become a horizontal rail on mobile.
-- `ProductCard`: portrait `4:5` image, small oxblood editorial sale/availability marker at the
+- `ProductCard`: portrait `4:5` image, small rosewood sale/availability marker at the
   upper inline-start, two-line name, color swatches, price, and a circular
   quick-add action anchored at the lower inline-start. Card surface remains
   white with no large border.
 
-Category tiles use a `56–64 px` rounded image well, a `12 px` Persian label,
-and a `10–16 px` gap. Selected/hover cards change surface or border color in
-`140 ms`; they do not scale in a way that shifts the grid. Loading cards
+Category tiles use a `64–72 px` rounded image well, a `13 px` Persian label,
+and a `12–16 px` gap. Selected/hover cards change surface or border color in
+`180 ms`; they do not scale in a way that shifts the grid. Loading cards
 preserve the exact final image and content heights.
 
 ### Buttons and CTAs
 
-The primary action is a restrained oxblood editorial rectangle (`36–40 px` high on compact cards,
-`44–48 px` on hero actions, and `52 px` for primary purchase actions), `12–18 px` horizontal padding, `4–6 px`
-radius, white text, and a `16 px` line icon. The hero uses one primary CTA;
-secondary actions use a white/transparent surface with a `1 px` oxblood border.
+The primary action uses muted rosewood (`40 px` on compact cards, `48 px` on
+hero actions, and `52 px` for purchase actions), `16–20 px` horizontal
+padding, a `10 px` radius, white text, and a `16 px` line icon. The hero uses
+one primary CTA; secondary actions use a transparent or pearl surface with a
+fine neutral border.
 The sign-in control is outlined and compact. Product quick-add is a `40 px`
-oxblood square-round action with a bag/plus icon and a Persian accessible label; it never
+rosewood rounded-square action with a bag/plus icon and a Persian accessible label; it never
 depends on hover.
 
-States are explicit: hover uses `oxblood/800`, pressed uses `ink/950`, focus
-uses a `2 px` outside `oxblood/700` ring plus a `2 px` light separation,
+States are explicit: hover uses `rosewood/800`, pressed uses `ink/950`, focus
+uses a `2 px` outside `rosewood/700` ring plus a `2 px` light separation,
 disabled uses a muted surface and label, loading preserves label width, and
 success uses icon + `افزوده شد` or `به سبد اضافه شد`. Minimum pointer target is
 `44 × 44 px` even when the visible glyph is smaller.
 
 ### Overall Design Feel
 
-The target is **luxury fashion journal commerce**: a quiet pale canvas, oxblood
-navigation and actions, warm neutral photography, restrained editorial cards, compact
-Persian sans typography, and a deliberate amount of product information. The
-quality comes from consistent crops, a centered wordmark, restrained contrast,
-and a strong 16 px spacing rhythm—not from oversized headlines, ornate
-backgrounds, or heavy shadows. The first scan should communicate “curated
-clothing store” within one viewport and make the next action obvious.
+The target is **soft-modern editorial commerce**: a luminous pearl canvas,
+muted rosewood actions, warm natural photography, gently rounded cards, calm
+Persian typography, and clear product information. Use generous but measured
+spacing, softer contrast, fine borders, and unobtrusive motion. Keep the first
+scan useful for shopping while letting the photography and materials set the
+mood.
 
 ## 1.2 Direction uniqueness lock
 
@@ -242,16 +250,16 @@ Atelier is approved only when it can be recognized with the NOVA logo removed.
 
 Required distinguishing signals:
 
-- Warm ivory paper canvas, never mint.
-- Oxblood primary actions, never forest green.
-- Champagne/brass folio accents instead of green/gold boutique accents.
-- Asymmetric `8 / 4` editorial hero rather than Design 2's three-part commerce cluster.
-- Portrait `4:5` fashion imagery as the dominant product language.
-- Restrained `4–8 px` radii; pills are limited to tiny metadata/status uses.
-- Rectangular editorial CTAs rather than a pill-heavy component language.
-- Expressive Persian display typography for campaign/headline roles.
-- Magazine-style captions, folio numbers, rules, and controlled negative space.
-- Transactional pages become quieter and more systematic, but keep the ivory/oxblood identity.
+- Pearl, linen, and warm sand surfaces with a muted rosewood action color.
+- Airy image-first composition with an asymmetric editorial hero and a visible
+  product rail.
+- Portrait fashion imagery, soft natural light, and tactile fabric detail.
+- Rounded `10–18 px` surfaces, fine borders, and very light elevation.
+- Calm Persian typography with restrained weight contrast and clear prices.
+- Small clay accents and editorial captions; no heavy gradients or ornamental
+  decoration.
+- Transactional pages retain the same palette but use quieter, more systematic
+  layouts.
 
 ## 1.3 Implementation boundary from the NOVA launch plan
 
@@ -416,7 +424,7 @@ Historical Penpot handoff (verified `2026-09-04` on page `AE · Home`):
 | --- | --- | --- |
 | `AE / Home / Desktop / Default` | `91ff5271-c10d-803f-8008-93c5d6a77550` | `1440 × 2954`; revised studio-fashion hero, corrected headline rhythm, audience story, line Tabs, four product Cards, collection story, trust/journal, and footer |
 | `AE / Home / Mobile / Default` | `91ff5271-c10d-803f-8008-93c5d6d439dd` | `390 × 2248`; revised studio-fashion hero, contained meta/action stack, all three audience Cards, two-column product rail, editorial rail, trust stack, footer, and fixed bottom navigation |
-| `AE / Foundations / shadcn-animate` | `3f608dcd-52e9-8034-8008-95073b2d75f3` | `1280 × 1500`; 115 editable layers from the pre-reference palette; retokenize to the ivory/oxblood editorial system before approval |
+| `AE / Foundations / shadcn-animate` | `3f608dcd-52e9-8034-8008-95073b2d75f3` | `1280 × 1500`; 115 editable layers from the pre-reference palette; retokenize to the Soft Modern system in Section 18 before approval |
 
 The desktop and mobile hero notes above are historical records of the earlier
 Penpot pass. They remain useful for naming and state coverage, but they are not
@@ -433,17 +441,17 @@ the design and implementation share one vocabulary:
 
 | shadcn variable | Atelier token | Value | Usage |
 | --- | --- | --- | --- |
-| `--background` | `color/bg/page` | `#F6F1E8` | Pale ivory editorial storefront canvas |
-| `--card` | `color/bg/surface` | `#FFFFFF` | White product and transactional card surface |
-| `--foreground` | `color/text/primary` | `#272220` | Charcoal-oxblood primary text and icons |
-| `--muted-foreground` | `color/text/secondary` | `#5E534D` | Supporting copy and navigation |
-| `--border` | `color/border/default` | `#D8CEC2` | Inputs, cards, and dividers |
-| `--primary` | `color/action/primary` | `#6D2838` | Deep muted oxblood primary action and active state |
+| `--background` | `color/bg/page` | `#F7F4F0` | Pearl editorial storefront canvas |
+| `--card` | `color/bg/surface` | `#FFFCF9` | Raised product and transactional card surface |
+| `--foreground` | `color/text/primary` | `#302B29` | Warm charcoal primary text and icons |
+| `--muted-foreground` | `color/text/secondary` | `#6F6560` | Supporting copy and navigation |
+| `--border` | `color/border/default` | `#E4DCD5` | Fine neutral inputs, cards, and dividers |
+| `--primary` | `color/action/primary` | `#7B4B59` | Muted rosewood primary action and active state |
 | `--primary-foreground` | `color/text/inverse` | `#FFFFFF` | Text on primary action |
-| `--secondary` | `color/bg/subtle` | `#EEE6DA` | Secondary button and category surface |
-| `--accent` | `color/accent/editorial` | `#B79A6B` | Small wordmark/editorial accent only |
-| `--destructive` | `error/700` | `#A83D38` | Destructive action and error state |
-| `--radius` | `radius/control` | `8 px` | Base control radius; storefront CTAs override to `4–6 px`; `999 px` is reserved for circular actions, swatches, and compact status chips |
+| `--secondary` | `color/bg/subtle` | `#F1ECE7` | Secondary button and category surface |
+| `--accent` | `color/accent/editorial` | `#A88F78` | Small clay wordmark/editorial accent only |
+| `--destructive` | `error/700` | `#A34E4C` | Destructive action and error state |
+| `--radius` | `radius/control` | `12 px` | Soft control radius; product cards use `14 px`, hero media `18 px`; pills are reserved for swatches and compact status chips |
 
 Do not create a separate dark theme or a second “kit” palette for this
 direction. If the implementation later adds dark admin surfaces, it must be a
@@ -453,15 +461,15 @@ named admin theme and must not alter the customer-facing Atelier aliases.
 
 | Motion token | Value | Applies to |
 | --- | --- | --- |
-| `motion/fast` | `140 ms ease-out` | Button, tab, icon, badge, and color feedback |
-| `motion/image` | `220 ms ease-out` | Product image crossfade and capped image zoom |
-| `motion/sheet` | `260 ms cubic-bezier(0.2,0.8,0.2,1)` | RTL menu, filter, and cart sheets |
+| `motion/fast` | `180 ms ease-out` | Button, tab, icon, badge, and color feedback |
+| `motion/image` | `240 ms ease-out` | Product image crossfade and capped image zoom |
+| `motion/sheet` | `280 ms cubic-bezier(0.2,0.8,0.2,1)` | RTL menu, filter, and cart sheets |
 | `motion/stagger` | `40 ms` per row, maximum 4 rows | Search suggestions and small result groups |
 
 Reduced-motion mode removes translation, zoom, and stagger; retain a short
 opacity transition only when it communicates a state change. No interaction
 may depend on hover, and no motion may reduce a `44 × 44 px` pointer target.
-Keyboard focus uses a light `2 px` separation plus `2 px` `#6D2838` outer ring.
+Keyboard focus uses a light `2 px` separation plus `2 px` `#7B4B59` outer ring.
 Sheet and dialog states document focus trapping, Escape,
 and return-focus targets. Labels stay Persian RTL while phone, SKU, coupon,
 payment, and tracking values remain isolated LTR strings. shadcn's documented
@@ -476,9 +484,9 @@ reference is not mistaken for a verified inspection.
 
 | Reference | Useful direction for Atelier | Evidence and guardrail |
 | --- | --- | --- |
-| [Momento — Fashion Website Design](https://dribbble.com/shots/25685557-Momento-Fashion-Website-Design) | Restrained neutral/earth palette, large image-led opening, and deliberate editorial pacing. The listed palette includes `#EBEBEC`, `#BCBEBF`, `#0D0B09`, `#6D6E6C`, `#5A4224`, and `#A7592F`; use it only as a mood cue because Atelier owns the ivory/oxblood system defined in Section 1.1. | Direct page was viewable, but its description frames the work as an architecture landing-page exploration and credits third-party imagery. Do not copy its artwork or imagery. |
+| [Momento — Fashion Website Design](https://dribbble.com/shots/25685557-Momento-Fashion-Website-Design) | Restrained neutral/earth palette, large image-led opening, and deliberate editorial pacing. The listed palette includes `#EBEBEC`, `#BCBEBF`, `#0D0B09`, `#6D6E6C`, `#5A4224`, and `#A7592F`; use it only as a mood cue because Atelier owns the Soft Modern system in Section 18. | Direct page was viewable, but its description frames the work as an architecture landing-page exploration and credits third-party imagery. Do not copy its artwork or imagery. |
 | [Fashion E-Commerce Website Design / Clothing Store UI](https://dribbble.com/shots/27637205-Fashion-E-Commerce-Website-Design-Clothing-Store-UI) | Clean typography, generous whitespace, filterable product grid, quick Men/Women switching, ratings, color swatches, PDP gallery/details, promo badges, and a sticky mobile quick-add path. Translate the audience switch to `زنانه / مردانه / بچگانه` and keep size, price, stock, and returns visible. | Direct page was viewable and is a visual reference only; retain NOVA copy, RTL order, toman pricing, and Pexels metadata. |
-| [Saden — UI/UX Project / Men's Clothing Store Website](https://dribbble.com/shots/27416730-UI-UX-Project-Men-s-Clothing-Store-Website) | The supplied reference combines an airy pale canvas, espresso/taupe neutrals, a compact centered header, a dominant menswear hero, supporting garment tiles, a quick-add product card, a category shortcut rail, and a product rail with sale badges, color swatches, and visible pricing. Its listed palette is `#F6F1E8`, `#453C36`, `#23221F`, `#A5A19B`, and `#8E7D6F`; use those as mood cues only. | The page is a visual reference by Mahla Hamzeh for the Saden menswear concept. The attached WebP is a presentation composite with overlapping desktop/mobile views, so the overlaps are not literal page layout and the imagery is not a NOVA asset. Preserve Atelier ownership, Persian RTL content, toman pricing, and the ivory/oxblood token system defined in Section 1.1. |
+| [Saden — UI/UX Project / Men's Clothing Store Website](https://dribbble.com/shots/27416730-UI-UX-Project-Men-s-Clothing-Store-Website) | The supplied reference combines an airy pale canvas, espresso/taupe neutrals, a compact centered header, a dominant menswear hero, supporting garment tiles, a quick-add product card, a category shortcut rail, and a product rail with sale badges, color swatches, and visible pricing. Its listed palette is `#F6F1E8`, `#453C36`, `#23221F`, `#A5A19B`, and `#8E7D6F`; use those as mood cues only. | The page is a visual reference by Mahla Hamzeh for the Saden menswear concept. The attached WebP is a presentation composite with overlapping desktop/mobile views, so the overlaps are not literal page layout and the imagery is not a NOVA asset. Preserve Atelier ownership, Persian RTL content, toman pricing, and the Soft Modern system defined in Section 18. |
 | [Yokoto Fashion Clothing UI Kit](https://ui8.net/keitoto/products/yokoto-fashion-clothing-ui-kit) | Use the kit's implied system-level organization as a cue for reusable variants, auto-layout, and page coverage. | The UI8 page returned `403 Forbidden`, so no proprietary screen or asset is treated as verified. A secondary search result mentions 40+ screens and organized auto-layout; that is a planning hint only. |
 | [Paperpillar E-commerce UI Kit](https://www.figma.com/design/M8bAXlqBa8PSV5AKu7GgiU/E-commerce-Website-UI-Kit---Paperpillar--Community-?node-id=54-93\&p=f\&t=CvG3W6OZuxFMjhyG-0) | Use the reported component-library/style-guide mindset: shared search, icon, title-card, button, footer, responsive, and auto-layout variants. | The direct Figma URL was blocked by the browser safety check; a secondary listing describes desktop/responsive screens and a component library. Do not claim direct file inspection or copy proprietary components. |
 
@@ -489,10 +497,10 @@ four design directions remain unchanged.
 
 ### 3.6 Attached reference adaptation for the first design
 
-The supplied WebP is now the direct visual reference for the first Atelier home
+The supplied WebP remains a composition reference for the first Atelier home
 screen. This is an adaptation, not a reproduction: keep NOVA's Persian copy,
 RTL behavior, ownership of assets, toman pricing, and complete commerce
-coverage while adopting the reference's compact ivory/oxblood composition.
+coverage while applying the Soft Modern visual system in Section 18.
 
 #### Observed cues
 
@@ -514,23 +522,23 @@ coverage while adopting the reference's compact ivory/oxblood composition.
 For `AE/Home/Desktop/Default` and `AE/Home/Mobile/Default`:
 
 1. Make the `HeroCommerceCluster` the canonical first viewport. Use a `7 / 3 /
-   2` desktop split, `320–360 px` cluster height, `16 px` gap, one dominant portrait campaign panel and one narrow editorial rail with a direct product CTA. The selected story may default to `مردانه`, but `زنانه` and
+   2` desktop split, `420–500 px` cluster height, `20 px` gap, one dominant portrait campaign panel and one narrow editorial rail with a direct product CTA. Use softly rounded media and a warm copy-safe area. The selected story may default to `مردانه`, but `زنانه` and
    `بچگانه` remain first-class navigation choices.
 2. Use a `72 px` desktop editorial header and `60 px` mobile header with no default
    announcement bar. Center the wordmark independently from both utility
    groups and keep every icon target at least `44 × 44 px`.
 3. Place a seven-item `CategoryRail` directly after the hero. Each item has a
-   `56–64 px` rounded image well, a `12 px` label, and a `10–16 px` gap.
+   `64–72 px` rounded image well, a `13 px` label, and a `12–16 px` gap.
    Mobile keeps the rail horizontally scrollable with the first item fully
    visible and part of the next item visible as an affordance.
-4. Make `NewArrivals` the first product comparison surface. Use a `1:1` home
-   product image, four desktop columns, two mobile columns, a small oxblood editorial
+4. Make `NewArrivals` the first product comparison surface. Use a portrait `4:5` home
+   product image, four desktop columns, two mobile columns, a small rosewood editorial
    badge, `12–14 px` color swatches, a visible toman price, and a `40 px`
    circular quick-add action. Products requiring a size choice open the size
    sheet instead of silently adding a default.
 5. Keep `CollectionStory`, `TrustJournal`, and the footer below the first
-   product scan. They should use the same ivory/oxblood tokens with a little more
-   vertical breathing room, remain inside the Atelier ivory/oxblood theme.
+   product scan. Use the pearl, linen, rosewood, and clay tokens with generous
+   but measured vertical spacing.
 6. On mobile, the editorial rail becomes two stacked full-width blocks, category tiles
    remain touchable, products remain two columns, and the fixed bottom nav sits
    above the safe area. No purchase action may be hidden behind hover.
@@ -539,12 +547,12 @@ For `AE/Home/Desktop/Default` and `AE/Home/Mobile/Default`:
 
 | Reference cue | Atelier translation | Rule |
 | --- | --- | --- |
-| Pale ivory canvas `#F6F1E8` family | `ivory/50` `#F6F1E8` | Use as the single customer-facing page background. |
-| Dark oxblood action and text | `oxblood/700` `#6D2838` / `ink/950` `#272220` | Use for CTAs, selected states, headings, prices, and primary icons. |
-| Soft green secondary blocks | `surface/soft` `#EEE6DA` / `oxblood/100` `#F0DEE3` | Use for category wells, selected controls, and quiet callouts. |
-| Warm garment tiles | `surface/warm` `#E7DED2` | Keep contained imagery readable; do not tint product photography green. |
-| Small gold wordmark detail | `gold/600` `#B79A6B` | Decorative accent only; never use for body copy or price. |
-| Rounded white product card | `surface/0` `#FFFFFF` with `line/200` | Prefer surface contrast and a soft shadow over a dark outline. |
+| Pale ivory reference canvas | `pearl/50` `#F7F4F0` | Use as the softer customer-facing page background. |
+| Dark reference action/text | `rosewood/700` `#7B4B59` / `ink/950` `#302B29` | Use for CTAs, selected states, headings, prices, and primary icons. |
+| Soft green reference blocks | `surface/soft` `#F1ECE7` / `surface/sage` `#E8ECE7` | Use for category wells and quiet editorial blocks; never for status meaning. |
+| Warm garment tiles | `surface/warm` `#E8DFD7` | Keep contained imagery readable and naturally toned. |
+| Small warm accent | `clay/600` `#A88F78` | Decorative accent only; never use for body copy or price. |
+| Soft pearl product card | `surface/0` `#FFFCF9` with `line/200` | Prefer surface contrast and a very light shadow over a dark outline. |
 
 The responsive screen-stack contract remains the source of exact viewport
 bounds. This update changes the `HOME` composition and its visual tokens; it
@@ -568,7 +576,7 @@ Layout rules:
   not reserve `600+ px` for a single full-bleed campaign image.
 - Storefront desktop content is capped at `1280 px`; transactional pages may
   use the same shell but can narrow their reading/form columns.
-- The home hero uses `7 / 3 / 2` columns with `16 px` gaps. Product rails use
+- The home hero uses `7 / 3 / 2` columns with `20 px` gaps. Product rails use
   four equal cards on desktop and two on mobile.
 - Product cards always align to a predictable comparison grid even when the
   hero or editorial blocks span multiple columns.
@@ -582,32 +590,33 @@ Layout rules:
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `ivory/50` | `#F6F1E8` | Main storefront canvas |
-| `surface/0` | `#FFFFFF` | Raised cards, forms, and drawers |
-| `surface/soft` | `#EEE6DA` | Category wells and selected soft surfaces |
-| `surface/warm` | `#E7DED2` | Warm-gray garment tiles and lifestyle card backing |
-| `ink/950` | `#272220` | Primary text, prices, and icons |
-| `ink/700` | `#5E534D` | Navigation and supporting text |
-| `ink/500` | `#8A7D75` | Metadata and placeholder only |
-| `line/200` | `#D8CEC2` | Default border and divider |
-| `line/100` | `#E6EFEC` | Subtle divider |
-| `oxblood/800` | `#54202D` | Hover, pressed, hero copy, and admin sidebar |
-| `oxblood/700` | `#6D2838` | Primary action, cart, selected state, and focus |
-| `oxblood/100` | `#F0DEE3` | Selected background and quiet callout |
-| `champagne/600` | `#B79A6B` | Wordmark ornament and tiny editorial accent |
-| `success/700` | `#6D2838` | Success |
-| `success/100` | `#F0DEE3` | Success surface |
+| `pearl/50` | `#F7F4F0` | Main storefront canvas |
+| `surface/0` | `#FFFCF9` | Raised cards, forms, and drawers |
+| `surface/soft` | `#F1ECE7` | Category wells and selected soft surfaces |
+| `surface/warm` | `#E8DFD7` | Warm linen garment tiles and lifestyle card backing |
+| `surface/sage` | `#E8ECE7` | Optional quiet editorial block |
+| `ink/950` | `#302B29` | Primary text, prices, and icons |
+| `ink/700` | `#6F6560` | Navigation and supporting text |
+| `ink/500` | `#756B66` | Metadata; maintain WCAG AA contrast |
+| `line/200` | `#E4DCD5` | Default border and divider |
+| `line/100` | `#EFEAE5` | Subtle divider |
+| `rosewood/800` | `#633D49` | Hover and pressed states |
+| `rosewood/700` | `#7B4B59` | Primary action, cart, selected state, and focus |
+| `rosewood/100` | `#F2E8EB` | Selected background and quiet callout |
+| `clay/600` | `#A88F78` | Wordmark detail and tiny editorial accent |
+| `success/700` | `#39705A` | Success |
+| `success/100` | `#E7F0EA` | Success surface |
 | `warning/700` | `#87643A` | Warning and low stock |
 | `warning/100` | `#F4EBDD` | Warning surface |
-| `error/700` | `#A83D38` | Error and validation |
-| `error/100` | `#F8E4E1` | Error surface |
+| `error/700` | `#A34E4C` | Error and validation |
+| `error/100` | `#F5E8E7` | Error surface |
 | `info/700` | `#356A78` | Information |
 | `info/100` | `#E3F1F4` | Information surface |
 
 ### 5.2 Semantic aliases
 
 ```text
-color/bg/page              ivory/50
+color/bg/page              pearl/50
 color/bg/surface           surface/0
 color/bg/subtle            surface/soft
 color/bg/warm              surface/warm
@@ -617,14 +626,14 @@ color/text/muted           ink/500
 color/text/inverse         surface/0
 color/border/default       line/200
 color/border/subtle        line/100
-color/action/primary       oxblood/700
-color/action/primary-hover oxblood/800
-color/action/selected      oxblood/100
-color/accent/editorial     champagne/600
+color/action/primary       rosewood/700
+color/action/primary-hover rosewood/800
+color/action/selected      rosewood/100
+color/accent/editorial     clay/600
 ```
 
-Oxblood is the only primary storefront action family. Champagne/brass is decorative and
-must not be used for small low-contrast text, price, stock, or errors. Error,
+Rosewood is the primary storefront action family. Clay is decorative and must
+not be used for small low-contrast text, price, stock, or errors. Error,
 stock, order, and payment statuses always include an icon and label.
 
 ## 6. Typography
@@ -637,16 +646,16 @@ stock, order, and payment statuses always include an icon and label.
 
 | Style | Desktop | Mobile | Family/weight |
 | --- | --- | --- | --- |
-| `display/hero` | 30/40 px | 24/32 px | Peyda 700 |
-| `display/section` | 24/32 px | 20/28 px | Peyda 700 |
-| `heading/h1` | 28/38 px | 24/32 px | Peyda 700 |
-| `heading/h2` | 22/30 px | 20/28 px | Peyda 600 |
-| `heading/h3` | 18/26 px | 17/25 px | Peyda 600 |
-| `body/md` | 14/23 px | 14/23 px | Vazirmatn 400 |
-| `body/sm` | 13/21 px | 13/21 px | Vazirmatn 400 |
-| `label/md` | 12/20 px | 12/20 px | Vazirmatn 500 |
-| `caption` | 11/18 px | 11/18 px | Vazirmatn 400 |
-| `price/md` | 14/22 px | 13/21 px | Vazirmatn 700 |
+| `display/hero` | 34/44 px | 28/36 px | Peyda 600 |
+| `display/section` | 26/34 px | 22/30 px | Peyda 600 |
+| `heading/h1` | 30/40 px | 26/34 px | Peyda 600 |
+| `heading/h2` | 24/32 px | 21/29 px | Peyda 600 |
+| `heading/h3` | 19/27 px | 18/26 px | Peyda 500–600 |
+| `body/md` | 15/24 px | 14/23 px | Vazirmatn 400 |
+| `body/sm` | 14/22 px | 13/21 px | Vazirmatn 400 |
+| `label/md` | 13/21 px | 12/20 px | Vazirmatn 500 |
+| `caption` | 12/19 px | 12/19 px | Vazirmatn 400 |
+| `price/md` | 14/22 px | 14/22 px | Vazirmatn 600 |
 
 Hero headings use a maximum of two lines. Product titles use a compact
 interface face, never an oversized display style, so the four-column product
@@ -658,20 +667,20 @@ Spacing variables: `4, 8, 12, 16, 20, 24, 32, 40, 48, 64 px`.
 
 Radius variables:
 
-- `8 px`: inputs, compact fields, and small utility controls.
-- `12 px`: product cards and contained image wells.
-- `14–16 px`: hero and supporting story cards.
-- `999 px`: badges, swatches, and circular icon actions only; storefront CTAs remain `4–6 px` and compact utility controls remain `8 px`.
+- `10–12 px`: inputs, compact fields, and utility controls.
+- `14 px`: product cards and contained image wells.
+- `16–18 px`: hero and supporting story cards.
+- `999 px`: swatches, circular icon actions, and compact status chips only.
 - `0 px`: data-table internals only; do not use square corners for the home
   image cards.
 
 Effects:
 
 - Product cards: surface contrast or `1 px` border; avoid heavy shadows.
-- Selected/floating card: `0 2px 8px rgba(32,77,66,0.06)`.
-- Dropdown/drawer: `0 8px 24px rgba(32,77,66,0.08)`.
-- Sticky purchase bar: `0 -6px 20px rgba(32,77,66,0.10)`.
-- Focus: light `2 px` separation plus `2 px #6D2838` outer ring.
+- Selected/floating card: `0 2px 8px rgba(48,43,41,0.04)`.
+- Dropdown/drawer: `0 10px 28px rgba(48,43,41,0.06)`.
+- Sticky purchase bar: `0 -6px 20px rgba(48,43,41,0.06)`.
+- Focus: light `2 px` separation plus `2 px #7B4B59` outer ring.
 
 Motion:
 
@@ -803,10 +812,10 @@ These are reusable state compositions, not standalone routes. `Permission Gate` 
 
 | State | Fill | Border | Text/icon | Additional rule |
 | --- | --- | --- | --- | --- |
-| Default primary | `oxblood/700` | `oxblood/700` | `surface/0` | Restrained `4–6 px` shape; no heavy shadow |
-| Hover primary | `oxblood/800` | `oxblood/800` | `surface/0` | `140 ms` transition |
+| Default primary | `rosewood/700` | `rosewood/700` | `surface/0` | Soft `10 px` shape; no heavy shadow |
+| Hover primary | `rosewood/800` | `rosewood/800` | `surface/0` | `180 ms` transition |
 | Pressed primary | `ink/950` | `ink/950` | `surface/0` | No scale animation |
-| Focus | Existing state fill | Light separation plus `oxblood/700` | Existing state text | Two-ring focus remains outside component bounds |
+| Focus | Existing state fill | Light separation plus `rosewood/700` | Existing state text | Two-ring focus remains outside component bounds |
 | Disabled | `surface/soft` | `line/100` | `ink/500` | No pointer action; opacity is not the sole indicator |
 | Loading | Same as originating state | Same as originating state | Spinner plus preserved label width | Prevent repeat submission |
 | Error | `error/100` | `error/700` | `error/700` | Icon, message, and error-summary link |
@@ -1141,13 +1150,13 @@ The property names come from the root contract; these are the ATELIER defaults a
 
 | Component | ATELIER value |
 | --- | --- |
-| `Button` | `primary=oxblood/700`, `hover=oxblood/800`, `pressed=ink/950`, radius `999`, compact height `36–40`, purchase height `48–52` |
-| `ProductCard` | `homeImageRatio=1:1`, desktop `w=288–300`, mobile `w=173`, title `maxLines=2`, `showSwatches=true`, `quickAdd=40`, no required hover information |
-| `EditorialFeature` | `layout=asymmetric`, `imageRatio=4:3`, `copyMeasure=300–360`, `copySafeInset=24`, `accent=gold/600` for labels only |
+| `Button` | `primary=rosewood/700`, `hover=rosewood/800`, `pressed=ink/950`, radius `10`, compact height `40`, purchase height `48–52` |
+| `ProductCard` | `homeImageRatio=4:5`, desktop `w=288–300`, mobile `w=173`, title `maxLines=2`, `showSwatches=true`, `quickAdd=40`, no required hover information |
+| `EditorialFeature` | `layout=asymmetric`, `imageRatio=4:3`, `copyMeasure=300–360`, `copySafeInset=28`, `accent=clay/600` for labels only |
 | `MediaGallery` | `thumbnail=64×80`, `gap=8`, `zoom=true`, image fallback uses `surface/soft` with an outlined icon and text |
 | `PriceBlock` | Customer amount `Vazirmatn 700`; regular/sale prices remain adjacent; currency suffix is `تومان`; no brass for price text |
-| `Drawer/Sheet` | Drawer `w=400–440`; sheet max `90vh`; warm ivory/surface paper; oxblood CTA; focus return to trigger |
-| `Admin` | Admin uses ivory/50 canvas and ink text; oxblood actions; gold is never used for status or body text |
+| `Drawer/Sheet` | Drawer `w=400–440`; sheet max `90vh`; pearl/surface paper; rosewood CTA; focus return to trigger |
+| `Admin` | Admin uses pearl/50 canvas and ink text; rosewood actions; clay is never used for status or body text |
 
 ### 16.4 State and Persian copy fixtures
 
@@ -1188,22 +1197,22 @@ For every `AE/<Screen>/<Viewport>/<State>` frame, record the direct node URL, ow
 
 - all bounds and tokens match this appendix;
 - Persian RTL, mixed LTR references, focus, dialog return-focus, and reduced motion are checked;
-- contrast is checked for ink, oxblood, champagne/brass, and every status alias;
+- contrast is checked for ink, rosewood, clay, and every status alias;
 - desktop/mobile crops and text wrapping match the asset/content record;
 - `360 px` has no horizontal scroll or clipped prices/actions;
 - loading, empty, offline, error, stock-conflict, payment-conflict, and success frames are linked;
 - no unresolved issue is hidden in a Figma comment instead of this handoff table.
 
-## 17. Coded preview and implementation alignment (revised 2026-09-19)
+## 17. Coded preview baseline and implementation alignment (reviewed 2026-09-19)
 
-This section records how the Atelier design handoff maps to the current NOVA
-implementation plan. The coded review surface is split between two independent
+This section records the earlier coded review baseline and its implementation
+map as of 2026-09-19. The coded review surface is split between two independent
 frontends; it is not a claim that the public web bundle serves the admin
-application. The preview follows the supplied warm-ivory clothing reference:
-a compact centered header, oxblood editorial hero, portrait editorial image
-blocks, Persian RTL copy, restrained type sizes, and direct paths to the
-customer and staff surfaces. It remains a visual and interaction handoff, not
-a replacement for the editable Penpot frames, API contracts, or release gates.
+application. Its appearance notes describe that earlier warm-ivory clothing
+reference. Section 18 is the newer Soft Modern visual proposal; it has not been
+applied to the production frontend. This remains a visual and interaction
+handoff, not a replacement for editable Penpot frames, API contracts, or
+release gates.
 
 ### 17.1 Delivered route map
 
@@ -1224,30 +1233,29 @@ Both frontends consume the shared NestJS API at `127.0.0.1:4000` through
 development/test review, but no fixture route may be presented as a staging or
 production data source.
 
-### 17.2 Current coded-preview tokens
+### 17.2 Soft Modern design-preview tokens
 
-The browser preview uses this compact reference translation so it can be
-reviewed against the supplied image without adding a second dependency or
-theme package:
+The Soft Modern homepage mockup uses this token translation. The visual
+refresh does not by itself change the production frontend implementation:
 
 | Token | Value | Use |
 | --- | --- | --- |
-| Page | `#F6F1E8` | Main warm-ivory canvas |
-| Surface | `#FFFFFF` | Cards, forms, drawers, and admin panels |
-| Soft surface | `#EEE6DA` | Category tiles, notes, selected controls, and secondary blocks |
-| Warm surface | `#E7DED2` | Lifestyle card backing and warm garment tiles |
-| Ink | `#272220` | Primary Persian text, headings, prices, and icons |
-| Oxblood | `#6D2838` | Primary action, active state, links, cart, and progress |
-| Deep oxblood | `#54202D` | Hover/pressed state, hero copy panel, and admin sidebar |
-| Gold | `#B79A6B` | Wordmark ornament, eyebrows, and quiet editorial accents |
-| Type | `Peyda Variable` + `Vazirmatn` + `Inter` | Peyda for compact headings/UI; Vazirmatn for body/prices; Inter for isolated LTR strings |
-| Shape | `4–6 / 8 / 12 / 14–16 / 999 px` | Editorial CTAs; utility controls; product cards; hero/supporting cards; circular actions/status chips |
-| Scale | `11–14 px` UI; `24–30 px` hero | Compact labels and a short, readable heading step |
+| Page | `#F7F4F0` | Pearl canvas |
+| Surface | `#FFFCF9` | Product cards, forms, and drawers |
+| Soft surface | `#F1ECE7` | Category tiles, notes, and quiet controls |
+| Warm surface | `#E8DFD7` | Linen story panels and garment tiles |
+| Sage surface | `#E8ECE7` | Optional editorial block only |
+| Ink | `#302B29` | Primary Persian text, headings, prices, and icons |
+| Rosewood | `#7B4B59` | Primary actions, selected states, links, and cart |
+| Deep rosewood | `#633D49` | Hover and pressed states |
+| Clay | `#A88F78` | Small wordmark ornament and quiet editorial accents |
+| Type | `Peyda Variable` + `Vazirmatn` + `Inter` | Peyda for calm medium-weight headings; Vazirmatn for body/prices; Inter for isolated LTR strings |
+| Shape | `10–12 / 14 / 16–18 / 999 px` | Controls; product cards; hero/supporting media; swatches and status chips |
+| Scale | `12–15 px` UI; `28–34 px` hero | Comfortable labels/body and a clear but restrained headline |
 
-This ivory/oxblood translation is the canonical customer-facing system for the
-first design and is aligned with the attached reference. Admin may use the
-same tokens on a denser named surface, but must not introduce a competing
-palette or silently alter the customer-facing aliases.
+This is the approved visual system for the refreshed design. Apply it to the
+production frontend in a separate implementation change; do not treat the
+mockup as evidence that the live app already uses these tokens.
 
 ### 17.3 Reference image and asset set
 
@@ -1258,10 +1266,10 @@ scale, spacing, and token relationships.
 
 | Asset role | Required treatment | Persian alt/content rule |
 | --- | --- | --- |
-| Dominant lifestyle hero | Real fashion portrait, `cover`, `4–6 px` radius, focal point recorded, copy-safe area for RTL text | Describe the person, garment, and setting without claiming it is a NOVA SKU |
-| Supporting garment tile | Contained garment image on `surface/warm`, `4:3`, `4–6 px` radius | Name the garment/category; do not use ambiguous generic alt text |
-| Home product card | Square `1:1`, centered cut-out or product photo, `72–82%` garment occupancy, white/warm surface | Product name, color, price, availability, and a visible quick-add label |
-| Category tile | `56–64 px` square rounded image well, consistent crop and label | Persian category label is required even when the image fails |
+| Dominant lifestyle hero | Real fashion portrait, `cover`, `16–18 px` radius, focal point recorded, copy-safe area for RTL text | Describe the person, garment, and setting without claiming it is a NOVA SKU |
+| Supporting garment tile | Contained garment image on `surface/warm`, `4:3`, `14–16 px` radius | Name the garment/category; do not use ambiguous generic alt text |
+| Home product card | Portrait `4:5`, centered cut-out or product photo, `72–82%` garment occupancy, pearl/warm surface | Product name, color, price, availability, and a visible quick-add label |
+| Category tile | `64–72 px` square rounded image well, consistent crop and label | Persian category label is required even when the image fails |
 
 Every production asset record includes `assetId`, license/owner, source
 dimensions, crop mode, focal point, desktop/mobile variant, Persian alt text,
@@ -1284,7 +1292,7 @@ lazy-loading policy, and a broken-image fallback.
   detail, content/SEO editor, and login shell are reachable from the canonical
   `/admin/...` route family, with role-aware forbidden and expired-session
   states.
-- The primary viewport keeps the reference's compact commerce usefulness but translates it into Atelier's warm ivory, oxblood, restrained-radius editorial
+- The primary viewport keeps the reference's compact commerce usefulness but translates it into the Soft Modern pearl, rosewood, and linen editorial
   visual language; the stylesheet contains mobile transitions for the
   `390 px`, `360 px`, `768 px`, and desktop contracts listed above.
 - The frontend boundaries remain explicit: no admin page or staff-session
@@ -1294,3 +1302,59 @@ lazy-loading policy, and a broken-image fallback.
   provider-failure states are visible in the design review. No backend
   mutation, payment request, real authentication, or persistent data write is
   implied by an isolated fixture preview.
+
+## 18. Soft Modern refresh (updated 2026-09-26)
+
+This refresh is the canonical visual direction for new or revised Atelier
+frames. It supersedes conflicting palette, shape, typography, spacing, and
+home-composition guidance in earlier sections. Preserve all route, commerce,
+RTL, accessibility, loading/error, and API-parity requirements.
+
+### Visual direction
+
+- Make the storefront feel softer, lighter, and more contemporary while
+  keeping its fashion-journal identity and immediate product discovery.
+- Use a pearl canvas, linen and warm-sand surfaces, warm charcoal text, muted
+  rosewood actions, and small clay accents. Soft sage may appear only as a
+  quiet editorial surface.
+- Prefer daylight fashion photography, tactile natural fabrics, rounded
+  media, fine neutral borders, and very light shadows. Avoid hard contrast,
+  heavy gradients, oversized promo badges, dense dividers, and decorative
+  clutter.
+- Keep the established home sequence: centered compact header, image-led
+  editorial hero, seven-item category rail, four-product new-arrivals grid,
+  material story, audience stories, service strip, journal/newsletter, and
+  footer.
+- On desktop, retain the asymmetric hero and four-column product grid. Use
+  open copy space next to the hero image and measured section spacing. On
+  mobile, stack the hero story and rail, keep two product columns, and retain
+  touch targets and safe-area behavior.
+
+### Approved appearance tokens
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `pearl/50` | `#F7F4F0` | Main canvas |
+| `surface/0` | `#FFFCF9` | Cards and forms |
+| `surface/soft` | `#F1ECE7` | Quiet secondary surfaces |
+| `surface/warm` | `#E8DFD7` | Linen and material stories |
+| `surface/sage` | `#E8ECE7` | Optional editorial surface |
+| `ink/950` | `#302B29` | Headings, prices, and icons |
+| `ink/700` | `#6F6560` | Body and navigation text |
+| `rosewood/700` | `#7B4B59` | Primary actions and selected states |
+| `rosewood/800` | `#633D49` | Hover and pressed states |
+| `rosewood/100` | `#F2E8EB` | Soft selection state |
+| `line/200` | `#E4DCD5` | Borders and dividers |
+| `clay/600` | `#A88F78` | Small decorative accents only |
+
+Use `10–12 px` control radii, `14 px` product cards, and `16–18 px` hero and
+editorial media. Use `10 px` CTA corners, `12–15 px` UI type, and `28–34 px`
+hero titles. Keep focus rings, contrast, semantic status colors, and `44 × 44
+px` minimum pointer targets intact.
+
+### Updated full-page visual
+
+![Soft Modern full-page homepage mockup](atelier-editorial-homepage-soft-modern.png)
+
+This is a visual mockup for design review, not a screenshot of the live
+production storefront.

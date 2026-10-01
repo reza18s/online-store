@@ -9,7 +9,7 @@ export function AdminContentSeoNavigation({ activeView }: { activeView: AdminCon
     ['redirects', 'redirectها', 'rotate'],
   ];
   return (
-    <nav className="overflow-x-auto" aria-label="بخش‌های محتوا و SEO">
+    <nav className="admin-reference-tabs overflow-x-auto" aria-label="بخش‌های محتوا و SEO">
       <div className="flex min-w-max gap-2">
         {items.map(([view, label, icon]) => (
           <a

@@ -1,15 +1,13 @@
-import { isStaffAuthFailure, isStaffAuthorizationFailure } from '@/features/auth/api/admin-auth';
-import { useStaffUser } from '@/features/auth';
 import { Icon } from '@/shared/ui/icon';
 
 import type { AdminSupportFinanceView } from '@/features/support/pages/admin-support-finance-page-shared';
 import { VIEW_ACCESS } from '@/features/support/pages/admin-support-finance-page-shared';
 
-import { AdminSessionState } from '@/features/support/components/support-finance/admin-session-state';
-
 import { AuditInspection } from '@/features/support/components/support-finance/audit-inspection';
 
 import { CustomerInspection } from '@/features/support/components/support-finance/customer-inspection';
+
+import { AdminSessionState } from '@/features/support/components/support-finance/admin-session-state';
 
 import { NotificationInspection } from '@/features/support/components/support-finance/notification-inspection';
 
@@ -24,32 +22,27 @@ import { normalizeAdminSupportFinanceView } from '@/features/support/components/
 export function SupportFinanceView({
   view = 'payments',
   queryString = '',
+  staffRoles = [],
 }: {
   view?: string;
   queryString?: string;
+  staffRoles?: readonly string[];
 }) {
   const activeView = normalizeAdminSupportFinanceView(view);
-  const staffQuery = useStaffUser();
-  const roles = staffQuery.data?.roles ?? [];
-
-  if (staffQuery.isPending) return <AdminSessionState kind="loading" />;
-  if (isStaffAuthFailure(staffQuery.error)) return <AdminSessionState kind="expired" />;
-  if (isStaffAuthorizationFailure(staffQuery.error)) return <AdminSessionState kind="denied" />;
-  if (!staffQuery.data) return <AdminSessionState kind="missing" />;
 
   const accessibleViews = (Object.keys(VIEW_ACCESS) as AdminSupportFinanceView[]).filter(
-    (candidate) => canStaffInspectView(candidate, roles),
+    (candidate) => canStaffInspectView(candidate, staffRoles),
   );
-  if (!canStaffInspectView(activeView, roles)) return <AdminSessionState kind="denied" />;
+  if (!canStaffInspectView(activeView, staffRoles)) return <AdminSessionState kind="denied" />;
 
   const config = VIEW_ACCESS[activeView];
   return (
     <main
-      className="min-h-svh bg-[#f6f6f4] px-4 py-5 text-foreground md:px-6 md:py-8 lg:px-8"
+      className="admin-reference-module admin-reference-support min-h-0 bg-transparent px-0 py-0 text-foreground"
       dir="rtl"
     >
-      <div className="mx-auto max-w-[1120px]">
-        <header className="flex flex-col gap-4 border-b border-border pb-5 md:flex-row md:items-end md:justify-between">
+      <div className="admin-reference-module__inner mx-auto max-w-[1120px]">
+        <header className="admin-reference-module__header flex flex-col gap-4 border-b border-border pb-5 md:flex-row md:items-end md:justify-between">
           <div className="text-right">
             <span className="section-heading__eyebrow">{config.eyebrow}</span>
             <h1 className="mt-1 text-2xl leading-relaxed md:text-3xl">{config.label}</h1>
@@ -62,7 +55,7 @@ export function SupportFinanceView({
             داده‌های محدودشده
           </span>
         </header>
-        <nav className="mt-5 overflow-x-auto" aria-label="بخش‌های پشتیبانی و مالی">
+        <nav className="admin-reference-tabs mt-5 overflow-x-auto" aria-label="بخش‌های پشتیبانی و مالی">
           <div className="flex min-w-max gap-2">
             {accessibleViews.map((candidate) => {
               const item = VIEW_ACCESS[candidate];

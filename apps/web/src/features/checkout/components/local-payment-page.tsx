@@ -53,12 +53,12 @@ export function LocalPaymentPage({ queryString = '' }: { queryString?: string })
   return (
     <CheckoutShell>
       <section
-        className="mx-auto flex min-h-[55svh] max-w-xl flex-col items-center justify-center border border-border bg-surface p-8 text-center shadow-card"
+        className="checkout-state-card"
         role={error ? 'alert' : 'status'}
       >
         <Icon name={error ? 'warning' : 'shield'} size={24} />
-        <h1 className="mt-4 text-xl">{error ? 'پرداخت انجام نشد' : 'در حال تکمیل پرداخت محلی'}</h1>
-        <p className="mt-2 text-sm leading-7 text-muted-foreground">
+        <h1>{error ? 'پرداخت انجام نشد' : 'در حال تکمیل پرداخت محلی'}</h1>
+        <p>
           {error || 'پرداخت آزمایشی بدون اتصال به درگاه خارجی در حال ثبت است.'}
         </p>
         {error ? (

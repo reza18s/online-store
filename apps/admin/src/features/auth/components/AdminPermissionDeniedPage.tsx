@@ -1,9 +1,11 @@
 import { AdminLogoutButton } from '@/features/auth/components/AdminLogoutButton';
 
+import '@/styles/admin-reference.css';
+
 export function AdminPermissionDeniedPage() {
   return (
-    <main className="flex min-h-svh items-center justify-center bg-background px-4" dir="rtl">
-      <section className="w-full max-w-md bg-surface p-8 text-right shadow-float" role="alert">
+    <main className="admin-reference-system flex min-h-svh items-center justify-center bg-background px-4" dir="rtl">
+      <section className="admin-reference-system__card w-full max-w-md bg-surface p-8 text-right shadow-float" role="alert">
         <span className="section-heading__eyebrow">NOVA / ADMIN ACCESS</span>
         <h1 className="mt-2 text-2xl leading-relaxed">دسترسی کافی نیست</h1>
         <p className="mt-3 text-sm leading-8 text-muted-foreground">

@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from '@playwright/test';
+import { captureUiAudit } from './ui-audit-screenshot';
 import type {
   AdminAuditPage,
   AdminContentPage,
@@ -350,11 +351,13 @@ test('renders fixture-backed authenticated admin operations without real auth or
   await expect(ordersMain).toContainText(qaMarker);
   await expect(ordersMain).toContainText(orderNumber);
   await expect(ordersMain).toContainText('تأیید شده');
+  await captureUiAudit(page, 'admin-populated/orders');
 
   await page.goto(`/admin/orders/${orderNumber}`, { waitUntil: 'domcontentloaded' });
   await expect(page.getByRole('heading', { name: orderNumber, exact: true })).toBeVisible();
   await expect(page.getByRole('main')).toContainText(`محصول عملیات مدیریت ${qaMarker}`);
   await expect(page.getByRole('main')).toContainText('اقلام سفارش');
+  await captureUiAudit(page, 'admin-populated/order-detail');
 
   await page.goto('/admin/payments', { waitUntil: 'domcontentloaded' });
   const paymentsMain = page.getByRole('main');
@@ -367,6 +370,7 @@ test('renders fixture-backed authenticated admin operations without real auth or
   await expect(
     paymentsMain.getByRole('heading', { name: 'جزئیات تلاش پرداخت', exact: true }),
   ).toBeVisible();
+  await captureUiAudit(page, 'admin-populated/payment-detail');
 
   await page.goto(`/admin/customers?q=${encodeURIComponent(qaMarker)}`, {
     waitUntil: 'domcontentloaded',
@@ -374,9 +378,10 @@ test('renders fixture-backed authenticated admin operations without real auth or
   const customersMain = page.getByRole('main');
   await expect(customersMain.getByRole('heading', { name: 'مشتریان', exact: true })).toBeVisible();
   await expect(
-    customersMain.getByRole('heading', { name: 'جست‌وجوی مشتری', exact: true }),
+    customersMain.getByRole('heading', { name: 'مدیریت مشتریان', exact: true }),
   ).toBeVisible();
   await expect(customersMain).toContainText(qaMarker);
+  await captureUiAudit(page, 'admin-populated/customers');
 
   await page.goto('/admin/notifications', { waitUntil: 'domcontentloaded' });
   const notificationsMain = page.getByRole('main');
@@ -384,6 +389,7 @@ test('renders fixture-backed authenticated admin operations without real auth or
     notificationsMain.getByRole('heading', { name: 'تحویل اعلان‌ها', exact: true }).first(),
   ).toBeVisible();
   await expect(notificationsMain).toContainText(`QA_NOTIFICATION_${qaMarker}`);
+  await captureUiAudit(page, 'admin-populated/notifications');
 
   await page.goto('/admin/audit', { waitUntil: 'domcontentloaded' });
   const auditMain = page.getByRole('main');
@@ -392,6 +398,7 @@ test('renders fixture-backed authenticated admin operations without real auth or
     auditMain.getByRole('heading', { name: 'گزارش رویدادها', exact: true }),
   ).toBeVisible();
   await expect(auditMain).toContainText(`admin.read.${qaMarker}`);
+  await captureUiAudit(page, 'admin-populated/audit');
 
   await page.goto(`/admin/content/pages/${contentPageId}`, { waitUntil: 'domcontentloaded' });
   const contentMain = page.getByRole('main');
@@ -400,11 +407,13 @@ test('renders fixture-backed authenticated admin operations without real auth or
   ).toBeVisible();
   await expect(contentMain).toContainText(`صفحه محتوای مدیریت ${qaMarker}`);
   await expect(contentMain.getByLabel('متن صفحه')).toHaveValue(`بدنه مصنوعی ${qaMarker}`);
+  await captureUiAudit(page, 'admin-populated/content-editor');
 
   await page.goto('/admin/content/seo', { waitUntil: 'domcontentloaded' });
   const seoMain = page.getByRole('main');
-  await expect(seoMain.getByRole('heading', { name: 'متادیتای SEO', exact: true })).toBeVisible();
+  await expect(seoMain.getByRole('link', { name: 'متادیتای SEO', exact: true })).toBeVisible();
   await expect(seoMain).toContainText(`SEO مدیریت ${qaMarker}`);
+  await captureUiAudit(page, 'admin-populated/seo');
 
   await page.goto('/admin/content/redirects', { waitUntil: 'domcontentloaded' });
   const redirectsMain = page.getByRole('main');
@@ -412,6 +421,7 @@ test('renders fixture-backed authenticated admin operations without real auth or
     redirectsMain.getByRole('heading', { name: 'redirectها', exact: true }),
   ).toBeVisible();
   await expect(redirectsMain).toContainText(`/qa-old/${qaMarker.toLowerCase()}`);
+  await captureUiAudit(page, 'admin-populated/redirects');
 
   expect(staffSessionRequests.length).toBeGreaterThan(0);
   expect(staffSessionRequests.every((request) => request === 'GET /v1/staff/auth/me')).toBeTruthy();

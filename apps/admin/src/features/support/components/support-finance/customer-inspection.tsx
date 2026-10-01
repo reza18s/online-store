@@ -3,6 +3,8 @@ import { type AdminCustomerListQuery, type AdminCustomerPage } from '@nova/api-c
 
 import { useAdminCustomers } from '@/features/support/api/customers/admin-customers-api';
 
+import { Icon } from '@/shared/ui/icon';
+
 import type { QueryResult } from '@/features/support/pages/admin-support-finance-page-shared';
 import { CUSTOMER_STATUSES } from '@/features/support/pages/admin-support-finance-page-shared';
 
@@ -35,19 +37,23 @@ import { statusLabel } from '@/features/support/components/support-finance/statu
 export function CustomerInspection({ initialQuery = '' }: { initialQuery?: string }) {
   const [draftQ, setDraftQ] = useState(initialQuery);
   const [draftStatus, setDraftStatus] = useState('');
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
   const [filters, setFilters] = useState<AdminCustomerListQuery>(() => ({
     page: 1,
     limit: 12,
     ...(initialQuery ? { q: initialQuery } : {}),
   }));
   const query = useAdminCustomers(filters);
+
   useEffect(() => {
     setDraftQ(initialQuery);
+    setSelectedCustomerId(null);
     setFilters({ page: 1, limit: 12, ...(initialQuery ? { q: initialQuery } : {}) });
   }, [initialQuery]);
 
   const applyFilters = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setSelectedCustomerId(null);
     setFilters({
       page: 1,
       limit: 12,
@@ -57,99 +63,190 @@ export function CustomerInspection({ initialQuery = '' }: { initialQuery?: strin
   };
 
   return (
-    <InspectionPanel title="جست‌وجوی مشتری" icon="users">
-      <FilterBar onSubmit={applyFilters}>
-        <TextFilter
-          id="customer-query"
-          label="ایمیل، تلفن یا شناسه مشتری"
-          value={draftQ}
-          onChange={setDraftQ}
-          placeholder="برای جست‌وجو وارد کنید..."
-          dir="ltr"
-        />
-        <SelectFilter
-          id="customer-status"
-          label="وضعیت مشتری"
-          value={draftStatus}
-          onChange={setDraftStatus}
-          options={CUSTOMER_STATUSES}
-        />
-      </FilterBar>
-      <div className="p-3 md:p-5">
+    <InspectionPanel title="مدیریت مشتریان" icon="users">
+      <div className="admin-reference-customer-filters">
+        <FilterBar onSubmit={applyFilters}>
+          <TextFilter
+            id="customer-query"
+            label="جست‌وجو"
+            value={draftQ}
+            onChange={setDraftQ}
+            placeholder="ایمیل، تلفن یا شناسه مشتری..."
+            dir="ltr"
+          />
+          <SelectFilter
+            id="customer-status"
+            label="وضعیت"
+            value={draftStatus}
+            onChange={setDraftStatus}
+            options={CUSTOMER_STATUSES}
+          />
+        </FilterBar>
+      </div>
+
+      <div className="admin-reference-customers">
         <QueryState
           query={query as QueryResult<AdminCustomerPage>}
           emptyTitle="مشتری پیدا نشد"
           emptyDescription="عبارت جست‌وجو یا وضعیت را تغییر دهید."
         >
-          {(data) => (
-            <>
-              <div className="overflow-x-auto">
-                <table className="min-w-[820px] w-full border-collapse text-right text-xs">
-                  <caption className="sr-only">فهرست مشتریان</caption>
-                  <thead>
-                    <tr className="border-b border-border text-[10px] text-muted-foreground">
-                      <th className="px-3 py-3 font-normal">مشتری</th>
-                      <th className="px-3 py-3 font-normal">وضعیت</th>
-                      <th className="px-3 py-3 font-normal">سفارش‌ها</th>
-                      <th className="px-3 py-3 font-normal">آخرین سفارش</th>
-                      <th className="px-3 py-3 font-normal">به‌روزرسانی</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.items.map((customer) => (
-                      <tr className="border-b border-border last:border-b-0" key={customer.id}>
-                        <td className="max-w-[270px] px-3 py-3">
-                          <a
-                            className="inline-flex min-h-11 max-w-full flex-col justify-center rounded-control px-2 text-right hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                            href={adminCustomerLookupHref(customer.email ?? customer.phone)}
-                          >
-                            <span className="truncate">
-                              {ltr(customer.email ?? 'ایمیل ثبت نشده')}
-                            </span>
-                            <span className="mt-1 text-[10px] text-muted-foreground">
-                              {ltr(customer.phone)}
-                            </span>
-                          </a>
-                        </td>
-                        <td className="px-3 py-3">
-                          <StatusBadge status={customer.status} />
-                        </td>
-                        <td className="px-3 py-3">{formatNumber(customer.orderCount)}</td>
-                        <td className="px-3 py-3">
-                          {customer.lastOrderNumber ? (
-                            <a
-                              className="inline-flex min-h-11 items-center rounded-control px-2 text-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                              href={adminOrderHref(customer.lastOrderNumber)}
+          {(data) => {
+            const activeCount = data.items.filter((customer) => customer.status === 'ACTIVE').length;
+            const inactiveCount = data.items.filter((customer) => customer.status !== 'ACTIVE').length;
+            const orderedCount = data.items.filter((customer) => customer.orderCount > 0).length;
+            const selected =
+              data.items.find((customer) => customer.id === selectedCustomerId) ?? null;
+
+            return (
+              <>
+                <section className="admin-reference-customer-metrics" aria-label="خلاصه مشتریان">
+                  <article>
+                    <span><Icon name="users" size={20} /></span>
+                    <div><strong>{formatNumber(data.total)}</strong><small>کل مشتریان</small></div>
+                  </article>
+                  <article>
+                    <span><Icon name="check" size={20} /></span>
+                    <div><strong>{formatNumber(activeCount)}</strong><small>فعال در این صفحه</small></div>
+                  </article>
+                  <article>
+                    <span><Icon name="bag" size={20} /></span>
+                    <div><strong>{formatNumber(orderedCount)}</strong><small>دارای سفارش</small></div>
+                  </article>
+                  <article>
+                    <span><Icon name="warning" size={20} /></span>
+                    <div><strong>{formatNumber(inactiveCount)}</strong><small>غیرفعال در این صفحه</small></div>
+                  </article>
+                </section>
+
+                <div className="admin-reference-customer-layout">
+                  <section className="admin-reference-customer-table">
+                    <div className="overflow-x-auto">
+                      <table>
+                        <caption className="sr-only">فهرست مشتریان</caption>
+                        <thead>
+                          <tr>
+                            <th>مشتری</th>
+                            <th>وضعیت</th>
+                            <th>سفارش‌ها</th>
+                            <th>آخرین سفارش</th>
+                            <th>به‌روزرسانی</th>
+                            <th><span className="sr-only">عملیات</span></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.items.map((customer) => (
+                            <tr
+                              className={selected?.id === customer.id ? 'is-selected' : ''}
+                              key={customer.id}
+                              onClick={() => setSelectedCustomerId(customer.id)}
                             >
-                              {ltr(customer.lastOrderNumber)}
-                              <span className="mr-2 text-[10px] text-muted-foreground">
-                                {customer.lastOrderStatus
-                                  ? statusLabel(customer.lastOrderStatus)
-                                  : ''}
-                              </span>
-                            </a>
-                          ) : (
-                            <span className="text-muted-foreground">بدون سفارش</span>
-                          )}
-                        </td>
-                        <td className="px-3 py-3 text-muted-foreground">
-                          {ltr(formatDate(customer.updatedAt))}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className="mt-4">
-                <Pagination
-                  page={data.page}
-                  total={data.total}
-                  limit={data.limit}
-                  onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
-                />
-              </div>
-            </>
-          )}
+                              <td>
+                                <button
+                                  type="button"
+                                  className="admin-reference-customer-name"
+                                  onClick={() => setSelectedCustomerId(customer.id)}
+                                >
+                                  <span className="admin-reference-avatar">
+                                    <Icon name="user" size={17} />
+                                  </span>
+                                  <span>
+                                    <strong>{ltr(customer.email ?? customer.phone)}</strong>
+                                    <small>{ltr(customer.phone)}</small>
+                                  </span>
+                                </button>
+                              </td>
+                              <td><StatusBadge status={customer.status} /></td>
+                              <td>{formatNumber(customer.orderCount)}</td>
+                              <td>
+                                {customer.lastOrderNumber ? (
+                                  <a href={adminOrderHref(customer.lastOrderNumber)}>
+                                    {ltr(customer.lastOrderNumber)}
+                                    <small>{customer.lastOrderStatus ? statusLabel(customer.lastOrderStatus) : ''}</small>
+                                  </a>
+                                ) : (
+                                  <span className="text-muted-foreground">بدون سفارش</span>
+                                )}
+                              </td>
+                              <td>{ltr(formatDate(customer.updatedAt))}</td>
+                              <td>
+                                <a
+                                  className="admin-reference-more"
+                                  href={adminCustomerLookupHref(customer.email ?? customer.phone)}
+                                  aria-label="مشاهده مشتری"
+                                >
+                                  <Icon name="more-vertical" size={17} />
+                                </a>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div className="admin-reference-customer-mobile">
+                      {data.items.map((customer) => (
+                        <article
+                          className={selected?.id === customer.id ? 'is-selected' : ''}
+                          key={customer.id}
+                        >
+                          <button type="button" onClick={() => setSelectedCustomerId(customer.id)}>
+                            <span className="admin-reference-avatar"><Icon name="user" size={16} /></span>
+                            <span>
+                              <strong>{ltr(customer.email ?? customer.phone)}</strong>
+                              <small>{ltr(customer.phone)}</small>
+                            </span>
+                          </button>
+                          <StatusBadge status={customer.status} />
+                          <a href={adminCustomerLookupHref(customer.email ?? customer.phone)}>
+                            <Icon name="more-vertical" size={17} />
+                          </a>
+                        </article>
+                      ))}
+                    </div>
+
+                    <Pagination
+                      page={data.page}
+                      total={data.total}
+                      limit={data.limit}
+                      onPageChange={(page) => setFilters((current) => ({ ...current, page }))}
+                    />
+                  </section>
+
+                  {selected ? (
+                    <aside className="admin-reference-customer-detail">
+                      <button
+                        type="button"
+                        className="admin-reference-customer-detail__close"
+                        aria-label="بستن جزئیات"
+                        onClick={() => setSelectedCustomerId(null)}
+                      >
+                        <Icon name="close" size={16} />
+                      </button>
+                      <span className="admin-reference-customer-detail__avatar">
+                        <Icon name="user" size={28} />
+                      </span>
+                      <h3>{ltr(selected.email ?? 'مشتری نوا')}</h3>
+                      <p>{ltr(selected.phone)}</p>
+                      <StatusBadge status={selected.status} />
+                      <dl>
+                        <div><dt>تعداد سفارش</dt><dd>{formatNumber(selected.orderCount)}</dd></div>
+                        <div><dt>آخرین سفارش</dt><dd>{selected.lastOrderNumber ? ltr(selected.lastOrderNumber) : '—'}</dd></div>
+                        <div><dt>آخرین به‌روزرسانی</dt><dd>{ltr(formatDate(selected.updatedAt))}</dd></div>
+                      </dl>
+                      <div className="admin-reference-customer-detail__actions">
+                        <a href={adminCustomerLookupHref(selected.email ?? selected.phone)}>
+                          مشاهده پروفایل
+                        </a>
+                        {selected.lastOrderNumber ? (
+                          <a href={adminOrderHref(selected.lastOrderNumber)}>مشاهده سفارش</a>
+                        ) : null}
+                      </div>
+                    </aside>
+                  ) : null}
+                </div>
+              </>
+            );
+          }}
         </QueryState>
       </div>
     </InspectionPanel>

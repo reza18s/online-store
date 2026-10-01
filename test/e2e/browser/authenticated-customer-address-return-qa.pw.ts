@@ -7,6 +7,7 @@ import type {
   CustomerReturnRequest,
   CustomerUser,
 } from '../../../packages/api-client/src/types';
+import { captureUiAudit } from './ui-audit-screenshot';
 
 const syntheticMarker = 'QA-SYNTHETIC-ADDRESS-RETURN-001';
 const syntheticCustomerPhone = '+989000000002';
@@ -269,11 +270,12 @@ test.describe('authenticated customer address and return presentation', () => {
     await expect(main.getByRole('heading', { name: 'آدرس‌های من', level: 1 })).toBeVisible();
     await expect(main.locator('article')).toHaveCount(1);
     await expect(main.locator('article')).toContainText(syntheticMarker);
-    await expect(main.locator('article')).toContainText('آدرس اصلی');
+    await expect(main.locator('article')).toContainText('آدرس پیش‌فرض');
     await expect(main.getByRole('link', { name: 'ویرایش' })).toHaveAttribute(
       'href',
       '/account/addresses/edit/QA-SYNTHETIC-ADDRESS-001',
     );
+    await captureUiAudit(page, 'account/addresses');
 
     expect(network.addressRequests).toEqual(['GET /v1/account/addresses']);
     expectReadOnlyFixture(network);
@@ -315,14 +317,162 @@ test.describe('authenticated customer address and return presentation', () => {
       main.getByRole('heading', { name: 'درخواست بازگشت کالا', level: 1 }),
     ).toBeVisible();
     await expect(main).toContainText(orderNumber);
-    await expect(main.getByRole('button', { name: 'ثبت درخواست بازگشت' })).toBeEnabled();
+    await expect(main.getByRole('button', { name: 'ارسال درخواست بازگشت' })).toBeEnabled();
     await expect(main.locator('form')).toBeVisible();
     await expect(main.getByRole('link', { name: 'انصراف' })).toHaveAttribute(
       'href',
       `/order/${orderNumber}`,
     );
+    await captureUiAudit(page, 'account/return-request');
+    await page.setViewportSize({ width: 390, height: 844 });
+    const submitBounds = await main.getByRole('button', { name: 'ارسال درخواست بازگشت' }).boundingBox();
+    const navigationBounds = await page.getByRole('navigation', { name: 'ناوبری سریع' }).boundingBox();
+    await expect(main.getByRole('button', { name: 'ارسال درخواست بازگشت' })).toBeEnabled();
+    expect(submitBounds).not.toBeNull();
+    expect(navigationBounds).not.toBeNull();
+    expect(submitBounds!.y + submitBounds!.height).toBeLessThanOrEqual(navigationBounds!.y);
+    await page.setViewportSize({ width: 1280, height: 720 });
 
     expect(network.orderDetailRequests).toEqual([`GET /v1/account/orders/${orderNumber}`]);
+    expectReadOnlyFixture(network);
+  });
+
+  test('validates and saves address forms and routes destructive address actions safely', async ({
+    page,
+  }) => {
+    const secondAddress: CustomerAddress = {
+      ...syntheticAddress,
+      id: 'QA-SYNTHETIC-ADDRESS-002',
+      label: 'محل کار آزمایشی',
+      isDefault: false,
+    };
+    const network = await installSyntheticCustomerNetwork(page, {
+      addresses: [syntheticAddress, secondAddress],
+    });
+    const mutationMethods: string[] = [];
+    await page.route('**/v1/account/addresses**', async (route) => {
+      const request = route.request();
+      const url = new URL(request.url());
+      if (request.method() === 'POST' && url.pathname === '/v1/account/addresses') {
+        mutationMethods.push('POST create');
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(envelope({ ...syntheticAddress, id: 'QA-SYNTHETIC-ADDRESS-003' })),
+        });
+        return;
+      }
+      if (request.method() === 'PATCH') {
+        mutationMethods.push('PATCH update');
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(envelope({ ...syntheticAddress, label: 'خانه ویرایش‌شده' })),
+        });
+        return;
+      }
+      if (request.method() === 'POST' && url.pathname.endsWith('/default')) {
+        mutationMethods.push('POST default');
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(envelope({ ...secondAddress, isDefault: true })),
+        });
+        return;
+      }
+      if (request.method() === 'DELETE') {
+        mutationMethods.push('DELETE address');
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(envelope([syntheticAddress])),
+        });
+        return;
+      }
+      await route.fallback();
+    });
+
+    await gotoPath(page, '/account/addresses/create');
+    const createMain = page.getByRole('main');
+    const createSubmit = createMain.getByRole('button', { name: 'ذخیره آدرس جدید' });
+    await expect(createSubmit).toBeDisabled();
+    await captureUiAudit(page, 'account/address-create');
+    await createMain.getByLabel('نام و نام خانوادگی گیرنده').fill('گیرنده جدید');
+    await createMain.getByLabel('شماره تماس').fill('+989000000099');
+    await createMain.getByLabel('استان').fill('استان آزمایشی');
+    await createMain.getByLabel('شهر').fill('شهر آزمایشی');
+    await createMain.getByLabel('نشانی کامل').fill('نشانی جدید، بدون اطلاعات واقعی');
+    await createMain.getByRole('textbox', { name: /عنوان آدرس برای/ }).fill('خانه جدید');
+    await createMain.getByLabel('کد پستی').fill('1111111111');
+    await expect(createSubmit).toBeEnabled();
+    await createSubmit.click();
+    await expect(createMain.getByRole('status')).toContainText('با موفقیت ذخیره شد');
+
+    await gotoPath(page, '/account/addresses/edit/QA-SYNTHETIC-ADDRESS-001');
+    const editMain = page.getByRole('main');
+    await expect(editMain.getByRole('heading', { name: 'ویرایش آدرس', level: 1 })).toBeVisible();
+    await captureUiAudit(page, 'account/address-edit');
+    await editMain.getByRole('textbox', { name: 'عنوان آدرس' }).fill('خانه ویرایش‌شده');
+    await editMain.getByRole('button', { name: 'ذخیره تغییرات' }).click();
+    await expect(editMain.getByRole('status')).toContainText('با موفقیت ذخیره شد');
+
+    await gotoPath(page, '/account/addresses');
+    const listMain = page.getByRole('main');
+    await listMain.getByRole('button', { name: 'قرار دادن به عنوان پیش‌فرض' }).click();
+    await expect.poll(() => mutationMethods).toContain('POST default');
+    page.once('dialog', (dialog) => void dialog.accept());
+    await listMain.getByRole('button', { name: 'حذف' }).nth(1).click();
+    await expect.poll(() => mutationMethods).toContain('DELETE address');
+    expect(mutationMethods).toEqual(expect.arrayContaining(['POST create', 'PATCH update']));
+    expectReadOnlyFixture(network);
+  });
+
+  test('validates and submits an eligible return request through the customer action boundary', async ({
+    page,
+  }) => {
+    const orderNumber = 'QA-RETURN-ACTION-001';
+    const order = makeCustomerOrder(orderNumber, { deliveredDaysAgo: 1 });
+    const network = await installSyntheticCustomerNetwork(page, {
+      orders: { [orderNumber]: order },
+    });
+    let submitted = false;
+    await page.route(`**/v1/account/orders/${orderNumber}/returns`, async (route) => {
+      if (route.request().method() !== 'POST') return route.fallback();
+      submitted = true;
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(envelope({
+          ...order,
+          returnRequest: {
+            id: `${syntheticMarker}-ACTION-RETURN`,
+            reason: 'SIZE_PREFERENCE',
+            note: null,
+            status: 'REQUESTED',
+            requestedAt: syntheticTimestamp,
+            reviewedAt: null,
+            receivedAt: null,
+            items: [{ orderItemId: order.items[0]!.id, quantity: 1 }],
+          },
+        })),
+      });
+    });
+
+    await gotoPath(page, `/return/request?orderNumber=${encodeURIComponent(orderNumber)}`);
+    const main = page.getByRole('main');
+    const submit = main.getByRole('button', { name: 'ارسال درخواست بازگشت' });
+    await submit.click();
+    await expect(main.getByRole('alert')).toContainText('حداقل یک کالا');
+
+    const checkboxes = main.getByRole('checkbox');
+    await checkboxes.nth(0).check();
+    await checkboxes.nth(1).check();
+    await checkboxes.nth(2).check();
+    await checkboxes.nth(3).check();
+    await submit.click();
+
+    await expect.poll(() => submitted).toBe(true);
+    await expect(main.getByRole('status')).toContainText('درخواست بازگشت این سفارش ثبت شده است');
     expectReadOnlyFixture(network);
   });
 
@@ -386,6 +536,7 @@ test.describe('authenticated customer address and return presentation', () => {
       '/support',
     );
     await expect(main.getByRole('button', { name: 'ثبت درخواست بازگشت' })).toHaveCount(0);
+    await captureUiAudit(page, 'account/return-status');
 
     expect(network.orderDetailRequests).toEqual([`GET /v1/account/orders/${orderNumber}`]);
     expectReadOnlyFixture(network);

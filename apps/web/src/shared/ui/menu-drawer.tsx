@@ -40,6 +40,8 @@ export function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => vo
           <Button
             ref={closeButtonRef}
             className="icon-button"
+            variant="ghost"
+            size="icon"
             type="button"
             onClick={onClose}
             aria-label="بستن منو"

@@ -16,16 +16,14 @@ export function RecommendationCard({
   const variant = product.variants?.find((item) => item.available);
   const disabled = !variant || product.available === false || busy;
   return (
-    <article className="min-w-0">
+    <article className="recommendation-card">
       <a
-        className="block aspect-square overflow-hidden rounded-editorial bg-secondary"
+        className="recommendation-card__media"
         href={`/product/${encodeURIComponent(product.slug)}`}
         aria-label={`مشاهده ${product.name}`}
       >
         {product.image ? (
-          <img
-            className="h-full w-full object-cover"
-            src={product.image}
+          <img src={product.image}
             alt={product.alt}
             loading="lazy"
           />
@@ -35,17 +33,17 @@ export function RecommendationCard({
           </span>
         )}
       </a>
-      <div className="pt-2">
+      <div className="recommendation-card__body">
         <a
-          className="block text-sm font-semibold leading-6 hover:text-primary"
+          className="recommendation-card__title"
           href={`/product/${encodeURIComponent(product.slug)}`}
         >
           {product.name}
         </a>
-        <div className="mt-1 flex items-center justify-between gap-2">
-          <span className="text-xs text-primary">{formatToman(product.price)}</span>
+        <div className="recommendation-card__footer">
+          <span className="recommendation-card__price">{formatToman(product.price)}</span>
           <Button
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground disabled:cursor-not-allowed disabled:bg-secondary disabled:text-muted-foreground"
+            className="recommendation-card__add"
             type="button"
             disabled={disabled}
             aria-label={

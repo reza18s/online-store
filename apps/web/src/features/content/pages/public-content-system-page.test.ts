@@ -47,6 +47,25 @@ function renderPage(
   );
 }
 
+test('reference editorial layouts preserve every supported published block and safe link', () => {
+  for (const slug of ['about', 'campaign', 'lookbook', 'care-guide', 'privacy', 'returns-policy']) {
+    const client = new QueryClient();
+    client.setQueryData(queryKeys.content.page(slug), { ...page, slug });
+    const html = renderPage(client, { slug });
+    assert.match(html, /ارسال سراسری نوا با بسته‌بندی دقیق انجام می‌شود/);
+    assert.match(html, /زمان ارسال/);
+    assert.match(html, /سفارش‌ها پس از تأیید آماده می‌شوند/);
+    assert.match(html, /href="\/content\/size%20guide\?from=help"/);
+    assert.doesNotMatch(html, /support@novaatelier\.com/);
+    if (slug === 'privacy') {
+      assert.match(html, /<details/);
+      assert.match(html, /<summary/);
+      assert.doesNotMatch(html, /خرداد ۱۴۰۳/);
+    }
+    client.clear();
+  }
+});
+
 test('normalizes published slugs and keeps canonical/content links encoded', () => {
   assert.equal(normalizePublicContentSlug(' Shipping-Policy '), 'shipping-policy');
   assert.equal(normalizePublicContentSlug('%20Shipping-Policy%20'), 'shipping-policy');

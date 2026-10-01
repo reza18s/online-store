@@ -68,18 +68,33 @@ test('clears stale protected data for a session failure but preserves it for a r
   queryClient.setQueryData(['admin', 'orders', 'list'], { id: 'admin-data' });
   queryClient.setQueryData(['staff-auth', 'current'], { id: 'staff-data' });
 
-  assert.equal(
-    handleStaffSessionFailure(queryClient, new ApiClientError(403)),
-    false,
-  );
+  assert.equal(handleStaffSessionFailure(queryClient, new ApiClientError(403)), false);
   assert.deepEqual(queryClient.getQueryData(['admin', 'orders', 'list']), { id: 'admin-data' });
   assert.deepEqual(queryClient.getQueryData(['staff-auth', 'current']), { id: 'staff-data' });
 
-  assert.equal(
-    handleStaffSessionFailure(queryClient, new ApiClientError(401)),
-    true,
-  );
+  assert.equal(handleStaffSessionFailure(queryClient, new ApiClientError(401)), true);
   assert.equal(queryClient.getQueryData(['admin', 'orders', 'list']), undefined);
   assert.equal(queryClient.getQueryData(['staff-auth', 'current']), undefined);
+  queryClient.clear();
+});
+
+test('retains a failed staff session query without retaining stale protected data', () => {
+  const queryClient = new QueryClient();
+  const key = ['staff-auth', 'current'];
+  queryClient.setQueryData(key, { id: 'expired-staff' });
+  queryClient.setQueryData(['admin', 'orders'], { id: 'protected-order' });
+  queryClient.setQueryData(['account', 'current'], { id: 'customer' });
+  queryClient.setQueryData(['cart', 'current'], { id: 'cart' });
+  const sessionQuery = queryClient.getQueryCache().find({ queryKey: key });
+  const failure = new ApiClientError(401);
+
+  assert.equal(handleStaffSessionFailure(queryClient, failure, key), true);
+  assert.equal(queryClient.getQueryCache().find({ queryKey: key }), sessionQuery);
+  assert.equal(queryClient.getQueryData(key), undefined);
+  assert.equal(queryClient.getQueryState(key)?.status, 'error');
+  assert.equal(queryClient.getQueryState(key)?.error, failure);
+  assert.equal(queryClient.getQueryData(['admin', 'orders']), undefined);
+  assert.deepEqual(queryClient.getQueryData(['account', 'current']), { id: 'customer' });
+  assert.deepEqual(queryClient.getQueryData(['cart', 'current']), { id: 'cart' });
   queryClient.clear();
 });

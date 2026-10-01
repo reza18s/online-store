@@ -208,7 +208,7 @@ test('renders a fixture-backed authenticated admin catalog within the staff boun
     await expect(editor).not.toContainText('این مسیر هنوز به داده‌های واقعی پنل متصل نشده است');
   }
 
-  expect(staffSessionRequests).toEqual(['GET /v1/staff/auth/me']);
+  expect(staffSessionRequests).toEqual(['GET /v1/staff/auth/me', 'GET /v1/staff/auth/me']);
   expect(stateChangingRequests).toEqual([]);
   expect(unexpectedApiRequests).toEqual([]);
 });

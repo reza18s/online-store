@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
 import { parseE2eEndpoint } from '../run';
 
@@ -9,6 +9,56 @@ const adminEndpoint = parseE2eEndpoint(
 );
 
 test.use({ viewport: { width: 1440, height: 900 } });
+
+async function installCatalogAndCartFixtures(page: Page) {
+  const product = {
+    id: 'product-1',
+    slug: 'linen-overshirt',
+    name: 'مانتوی لینن آوا',
+    priceToman: 2490000,
+    compareAtPriceToman: null,
+    available: true,
+    imageUrl: '/assets/nova-product-linen-overshirt.webp',
+    imageAlt: 'مانتوی لینن روشن',
+    categories: [{ id: 'women', slug: 'women', name: 'زنانه' }],
+    options: [],
+    variants: [],
+    colors: [],
+    stockStatus: 'IN_STOCK',
+    shortDescription: 'رویه‌ای سبک برای روزهای روشن.',
+    description: 'رویه‌ای سبک و خوش‌دوخت برای استفاده روزمره.',
+    brand: 'NOVA',
+    media: [],
+    attributes: [],
+  };
+  const envelope = (data: unknown, status = 200) => ({
+    status,
+    contentType: 'application/json',
+    body: JSON.stringify({ data, meta: {} }),
+  });
+  await page.route('**/v1/auth/me', (route) => route.fulfill(envelope(null)));
+  await page.route('**/v1/catalog/products**', (route) =>
+    route.fulfill(
+      route.request().url().includes('/linen-overshirt')
+        ? envelope(product)
+        : envelope({ items: [product], page: 1, limit: 8, total: 1 }),
+    ),
+  );
+  await page.route('**/v1/catalog/categories', (route) => route.fulfill(envelope([])));
+  await page.route('**/v1/catalog/facets', (route) => route.fulfill(envelope({ groups: [] })));
+  await page.route('**/v1/cart', (route) =>
+    route.fulfill(
+      envelope({
+        id: 'browser-empty-cart',
+        kind: 'GUEST',
+        items: [],
+        itemCount: 0,
+        subtotalToman: 0,
+        currency: 'IRR',
+      }),
+    ),
+  );
+}
 
 test('renders the anonymous RTL storefront shell', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
@@ -37,6 +87,7 @@ test('renders public category, listing, and product routes', async ({ page }) =>
     await expect(page.locator('main h1')).toContainText(route.heading);
   }
 
+  await installCatalogAndCartFixtures(page);
   const productResponse = await page.goto('/product/linen-overshirt', {
     waitUntil: 'domcontentloaded',
   });
@@ -48,6 +99,7 @@ test('renders public category, listing, and product routes', async ({ page }) =>
 
 test('renders the empty anonymous cart shell', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
+  await installCatalogAndCartFixtures(page);
   const response = await page.goto('/cart', { waitUntil: 'domcontentloaded' });
 
   expect(response?.ok()).toBeTruthy();
@@ -156,6 +208,7 @@ test('settles unauthenticated account and recovery routes without permanent load
   page,
 }) => {
   page.setDefaultNavigationTimeout(15_000);
+  await installCatalogAndCartFixtures(page);
 
   const sessionRoutes = [
     { path: '/account/addresses', heading: 'برای دیدن آدرس‌های من وارد شوید' },

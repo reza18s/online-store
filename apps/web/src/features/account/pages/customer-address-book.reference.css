@@ -1,0 +1,1292 @@
+.nova-address-list-page {
+  --address-wine: #7d1f2d;
+  --address-wine-dark: #641722;
+  --address-ink: #1d1714;
+  --address-muted: #746961;
+  --address-surface: #fffdf9;
+  --address-soft: #f7f0e8;
+  --address-line: rgba(82, 60, 45, 0.13);
+  --address-shadow: 0 10px 30px rgba(58, 38, 24, 0.065);
+  padding-block: 16px 30px;
+}
+
+.nova-address-list-page *,
+.nova-address-list-page *::before,
+.nova-address-list-page *::after {
+  box-sizing: border-box;
+}
+
+.nova-address-list-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nova-address-shell {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--address-line);
+  border-radius: 22px;
+  background: rgba(255, 253, 249, 0.78);
+  box-shadow: var(--address-shadow);
+  direction: rtl;
+}
+
+.nova-address-sidebar {
+  display: flex;
+  min-height: 720px;
+  flex-direction: column;
+  border-left: 1px solid var(--address-line);
+  padding: 26px 16px 18px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.75), rgba(248,241,233,.92));
+  direction: rtl;
+}
+
+.nova-address-sidebar__profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.nova-address-sidebar__profile img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.nova-address-sidebar__profile strong {
+  margin-top: 9px;
+  font-size: 15px;
+}
+
+.nova-address-sidebar__profile span {
+  margin-top: 2px;
+  color: var(--address-muted);
+  font-size: 10px;
+}
+
+.nova-address-sidebar__nav {
+  display: grid;
+  gap: 5px;
+  margin-top: 24px;
+}
+
+.nova-address-sidebar__nav a {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 10px;
+  padding: 0 11px;
+  color: #332a25;
+  font-size: 12px;
+  font-weight: 650;
+  transition: 150ms ease;
+}
+
+.nova-address-sidebar__nav a:hover {
+  background: rgba(125, 31, 45, 0.06);
+}
+
+.nova-address-sidebar__nav a.is-active {
+  background: linear-gradient(90deg, rgba(125,31,45,.07), rgba(125,31,45,.13));
+  color: var(--address-wine);
+}
+
+.nova-address-sidebar__promo {
+  position: relative;
+  min-height: 205px;
+  margin-top: auto;
+  overflow: hidden;
+  border-radius: 16px;
+  color: #fff;
+}
+
+.nova-address-sidebar__promo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nova-address-sidebar__promo > span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(26,18,13,.08), rgba(26,18,13,.62));
+}
+
+.nova-address-sidebar__promo > div {
+  position: absolute;
+  z-index: 2;
+  right: 15px;
+  bottom: 15px;
+  left: 15px;
+}
+
+.nova-address-sidebar__promo strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.nova-address-sidebar__promo small {
+  display: block;
+  margin-top: 8px;
+  font-family: Georgia, serif;
+  font-size: 8px;
+  letter-spacing: .12em;
+}
+
+.nova-address-content {
+  padding: 28px 24px 22px;
+  direction: rtl;
+}
+
+.nova-address-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.nova-address-header h1 {
+  margin: 0;
+  font-size: 26px;
+  letter-spacing: -.025em;
+}
+
+.nova-address-header p {
+  margin: 5px 0 0;
+  color: var(--address-muted);
+  font-size: 12px;
+}
+
+.nova-address-add {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 10px;
+  padding: 0 18px;
+  background: var(--address-wine);
+  color: #fff !important;
+  font-size: 12px;
+  font-weight: 800;
+  transition: 150ms ease;
+}
+
+.nova-address-add:hover {
+  background: var(--address-wine-dark);
+  transform: translateY(-1px);
+}
+
+.nova-address-alert {
+  margin: 16px 0 0;
+  border: 1px solid #d6a34c;
+  border-radius: 10px;
+  padding: 11px 13px;
+  background: #fff7e3;
+  color: #7a5415;
+  font-size: 12px;
+}
+
+.nova-address-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.nova-address-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 18px;
+  overflow: hidden;
+  border: 1px solid var(--address-line);
+  border-radius: 15px;
+  padding: 15px 16px 12px;
+  background: var(--address-surface);
+  box-shadow: 0 7px 22px rgba(58,38,24,.045);
+}
+
+.nova-address-card.is-default {
+  border-color: rgba(125,31,45,.2);
+}
+
+.nova-address-card__icon {
+  grid-row: 1 / span 2;
+  display: flex;
+  min-height: 112px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #f2e5db, #fbf7f2);
+  color: var(--address-wine);
+}
+
+.nova-address-card__body {
+  min-width: 0;
+}
+
+.nova-address-card__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nova-address-card__title h2 {
+  margin: 0;
+  font-size: 19px;
+}
+
+.nova-address-card__title > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #f3e8d9;
+  color: #966025;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.nova-address-card address {
+  display: grid;
+  gap: 6px;
+  margin-top: 9px;
+  color: #3d342f;
+  font-size: 12px;
+  font-style: normal;
+  line-height: 1.55;
+}
+
+.nova-address-card address > span {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+}
+
+.nova-address-card address svg {
+  flex: 0 0 auto;
+  margin-top: 1px;
+  color: #914348;
+}
+
+.nova-address-card__actions {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.nova-address-card__actions > a,
+.nova-address-card__actions .nova-button {
+  display: inline-flex;
+  min-height: 36px !important;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--address-line) !important;
+  border-radius: 9px !important;
+  padding: 0 13px !important;
+  background: #fffaf6 !important;
+  color: #3b312c !important;
+  font-size: 11px !important;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.nova-address-card__actions > a {
+  min-width: 118px;
+}
+
+.nova-address-card__actions .nova-address-card__delete {
+  color: #ad3337 !important;
+}
+
+.nova-address-card__actions .nova-address-card__more {
+  width: 38px;
+  min-width: 38px;
+  padding-inline: 0 !important;
+}
+
+.nova-address-editorial {
+  position: relative;
+  min-height: 160px;
+  margin-top: 15px;
+  overflow: hidden;
+  border: 1px solid var(--address-line);
+  border-radius: 16px;
+  background: #efe7dc;
+}
+
+.nova-address-editorial img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.nova-address-editorial::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(246,239,230,.18), rgba(246,239,230,.9) 64%, rgba(246,239,230,.98));
+}
+
+.nova-address-editorial > div {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: 36px;
+  transform: translateY(-50%);
+  text-align: right;
+}
+
+.nova-address-editorial strong {
+  display: block;
+  font-size: 20px;
+  line-height: 1.55;
+}
+
+.nova-address-editorial span {
+  display: block;
+  margin-top: 10px;
+  font-family: Georgia, serif;
+  font-size: 18px;
+}
+
+.nova-address-add--mobile {
+  display: none;
+}
+
+/* Keep account copy readable over editorial imagery and at the shared 12px floor. */
+.nova-address-sidebar__promo,
+.nova-address-sidebar__promo strong,
+.nova-address-sidebar__promo small {
+  color: #fff !important;
+  text-shadow: 0 1px 3px rgba(20, 12, 10, 0.8);
+}
+
+.nova-address-sidebar__promo > span {
+  background: linear-gradient(180deg, rgba(20, 13, 10, 0.18), rgba(20, 13, 10, 0.82));
+}
+
+.nova-address-list-page .nova-address-sidebar__profile span,
+.nova-address-list-page .nova-address-card address,
+.nova-address-list-page .nova-address-card__actions > a,
+.nova-address-list-page .nova-address-card__actions .nova-button,
+.nova-address-list-page .nova-address-header p,
+.nova-address-list-page .nova-address-sidebar__nav a,
+.nova-address-create-page .nova-address-create-header p,
+.nova-address-create-page .address-field,
+.nova-address-edit-page .address-field,
+.nova-address-edit-page .nova-address-edit-header p {
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .nova-address-shell {
+    grid-template-columns: 235px minmax(0, 1fr);
+  }
+
+  .nova-address-sidebar {
+    padding-inline: 12px;
+  }
+}
+
+@media (max-width: 767px) {
+  .nova-address-list-page {
+    width: min(100%, 560px) !important;
+    padding: 0 10px 84px;
+  }
+
+  .nova-address-shell {
+    display: block;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .nova-address-sidebar {
+    display: none;
+  }
+
+  .nova-address-content {
+    padding: 10px 0 0;
+  }
+
+  .nova-address-header {
+    display: block;
+    padding: 0 2px;
+  }
+
+  .nova-address-header h1 {
+    font-size: 22px;
+  }
+
+  .nova-address-header p {
+    font-size: 10.5px;
+  }
+
+  .nova-address-add--desktop {
+    display: none;
+  }
+
+  .nova-address-list {
+    gap: 10px;
+    margin-top: 13px;
+  }
+
+  .nova-address-card {
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: 10px;
+    border-radius: 13px;
+    padding: 12px 10px 10px;
+  }
+
+  .nova-address-card__icon {
+    min-height: 46px;
+    grid-row: auto;
+    border-radius: 50%;
+  }
+
+  .nova-address-card__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .nova-address-card__title {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .nova-address-card__title h2 {
+    font-size: 16px;
+  }
+
+  .nova-address-card__title > span {
+    padding: 4px 8px;
+    font-size: 9px;
+  }
+
+  .nova-address-card address {
+    grid-column: 1 / -1;
+    gap: 5px;
+    margin-top: 9px;
+    font-size: 11px;
+  }
+
+  .nova-address-card__actions {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 38px 1fr 1fr;
+    gap: 7px;
+    margin-top: 4px;
+  }
+
+  .nova-address-card__actions > a,
+  .nova-address-card__actions .nova-button {
+    min-width: 0;
+    min-height: 35px !important;
+    padding-inline: 8px !important;
+    font-size: 10px !important;
+  }
+
+  .nova-address-card__actions .nova-address-card__more {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .nova-address-card__actions > a {
+    grid-column: 3;
+  }
+
+  .nova-address-card__actions .nova-address-card__delete {
+    grid-column: 2;
+  }
+
+  .nova-address-card__actions .nova-address-card__more + .nova-button:not(.nova-address-card__delete) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .nova-address-editorial {
+    display: none;
+  }
+
+  .nova-address-add--mobile {
+    position: fixed;
+    z-index: 20;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    display: flex;
+    max-width: 520px;
+    margin-inline: auto;
+    box-shadow: 0 9px 24px rgba(85, 21, 34, .2);
+  }
+}
+
+/* Page 03 — /account/addresses/create */
+.nova-address-create-page {
+  --address-wine: #7d1f2d;
+  --address-wine-dark: #641722;
+  --address-ink: #1d1714;
+  --address-muted: #746961;
+  --address-surface: #fffdf9;
+  --address-soft: #f7f0e8;
+  --address-line: rgba(82, 60, 45, 0.13);
+  --address-shadow: 0 10px 30px rgba(58, 38, 24, 0.065);
+  padding-block: 16px 30px;
+}
+
+.nova-address-create-page *,
+.nova-address-create-page *::before,
+.nova-address-create-page *::after {
+  box-sizing: border-box;
+}
+
+.nova-address-create-page a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.nova-address-create-shell {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr) 225px;
+  overflow: hidden;
+  border: 1px solid var(--address-line);
+  border-radius: 22px;
+  background: rgba(255, 253, 249, 0.8);
+  box-shadow: var(--address-shadow);
+  direction: ltr;
+}
+
+.nova-address-create-art {
+  position: relative;
+  min-height: 720px;
+  overflow: hidden;
+  border-left: 1px solid var(--address-line);
+  background: #c9b8a6;
+}
+
+.nova-address-create-art > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nova-address-create-art > span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(27, 19, 14, 0.02) 35%, rgba(27, 19, 14, 0.68));
+}
+
+.nova-address-create-art > div {
+  position: absolute;
+  z-index: 2;
+  right: 18px;
+  bottom: 28px;
+  left: 18px;
+  color: #fff;
+  direction: rtl;
+  text-align: right;
+}
+
+.nova-address-create-art strong {
+  display: block;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.nova-address-create-art small {
+  display: block;
+  margin-top: 15px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+}
+
+.nova-address-create-content {
+  min-width: 0;
+  padding: 18px 24px 20px;
+  direction: rtl;
+}
+
+.nova-address-create-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.nova-address-create-header > div {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.nova-address-create-header__icon {
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f3e5e4;
+  color: var(--address-wine);
+}
+
+.nova-address-create-header h1 {
+  margin: 0;
+  font-size: 24px;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.nova-address-create-header p {
+  margin: 5px 0 0;
+  color: var(--address-muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.nova-address-create-header > a {
+  display: inline-flex;
+  min-height: 36px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 7px;
+  border-radius: 9px;
+  padding: 0 11px;
+  background: #f8f2ec;
+  color: #714036;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.nova-address-create-page .nova-address-sidebar--create {
+  min-height: 720px;
+}
+
+.nova-address-create-form {
+  overflow: hidden;
+  border: 1px solid var(--address-line);
+  border-radius: 15px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 8px 24px rgba(58, 38, 24, 0.035);
+}
+
+.nova-address-create-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 12px;
+}
+
+.nova-address-create-form .address-field {
+  gap: 6px;
+  border: 1px solid rgba(82, 60, 45, 0.105);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(255, 253, 249, 0.72);
+}
+
+.nova-address-create-form .address-field__label,
+.nova-address-create-form__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #2a211d;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.nova-address-create-form .address-field__label b,
+.nova-address-create-form__label b {
+  color: #b72d35;
+  font-size: 13px;
+}
+
+.nova-address-create-form .address-field__control {
+  position: relative;
+  display: block;
+}
+
+.nova-address-create-form .address-field__control .nova-input {
+  min-height: 42px;
+  border-color: rgba(82, 60, 45, 0.13);
+  border-radius: 9px;
+  padding-inline: 36px 11px;
+  background: #fff;
+  font-size: 11px;
+}
+
+.nova-address-create-form .address-field__control > svg {
+  position: absolute;
+  top: 50%;
+  right: 11px;
+  color: #77675c;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.nova-address-create-form .address-field__hint {
+  color: #94867b;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.nova-address-create-form__address {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(82, 60, 45, 0.105);
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(255, 253, 249, 0.72);
+}
+
+.nova-address-create-form__textarea {
+  position: relative;
+  display: block;
+}
+
+.nova-address-create-form__textarea .nova-textarea {
+  min-height: 76px;
+  resize: vertical;
+  border-color: rgba(82, 60, 45, 0.13);
+  border-radius: 9px;
+  padding: 10px 36px 10px 11px;
+  background: #fff;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.nova-address-create-form__textarea > svg {
+  position: absolute;
+  top: 12px;
+  right: 11px;
+  color: #77675c;
+  pointer-events: none;
+}
+
+.nova-address-create-form__address > small {
+  color: #94867b;
+  font-size: 9px;
+}
+
+.nova-address-create-form__default {
+  display: flex;
+  min-height: 62px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  border-top: 1px solid var(--address-line);
+  padding-top: 12px;
+}
+
+.nova-address-create-form__default .nova-checkbox {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--address-wine);
+}
+
+.nova-address-create-form__default > span {
+  display: grid;
+  gap: 3px;
+}
+
+.nova-address-create-form__default strong {
+  font-size: 11px;
+}
+
+.nova-address-create-form__default small {
+  color: var(--address-muted);
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.nova-address-create-form__message {
+  margin: 10px 0 0;
+  border-radius: 9px;
+  padding: 9px 11px;
+  font-size: 10px;
+}
+
+.nova-address-create-form__message.is-error {
+  border: 1px solid #d99b4a;
+  background: #fff7e4;
+  color: #7b5517;
+}
+
+.nova-address-create-form__message.is-success {
+  border: 1px solid #83ba8d;
+  background: #eaf7ec;
+  color: #2a6c3c;
+}
+
+.nova-address-create-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.nova-address-create-form__actions .nova-button {
+  min-height: 42px;
+  border-radius: 9px;
+  font-size: 11px;
+}
+
+.nova-address-create-form__submit {
+  min-width: 200px;
+  margin-right: auto;
+  background: var(--address-wine) !important;
+  color: #fff !important;
+}
+
+.nova-address-create-form__submit:hover {
+  background: var(--address-wine-dark) !important;
+}
+
+.nova-address-create-form__back {
+  color: var(--address-wine) !important;
+}
+
+.nova-address-create-form__dirty {
+  color: var(--address-muted);
+  font-size: 9px;
+}
+
+@media (max-width: 980px) and (min-width: 768px) {
+  .nova-address-create-shell {
+    grid-template-columns: 138px minmax(0, 1fr) 195px;
+  }
+
+  .nova-address-create-content {
+    padding-inline: 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .nova-address-create-page {
+    width: min(100%, 560px) !important;
+    padding: 0 10px 86px;
+  }
+
+  .nova-address-create-shell {
+    display: block;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .nova-address-create-art,
+  .nova-address-create-page .nova-address-sidebar--create {
+    display: none;
+  }
+
+  .nova-address-create-content {
+    padding: 9px 0 0;
+  }
+
+  .nova-address-create-header {
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .nova-address-create-header h1 {
+    font-size: 20px;
+  }
+
+  .nova-address-create-header p {
+    max-width: 32ch;
+    font-size: 10px;
+    line-height: 1.65;
+  }
+
+  .nova-address-create-header__icon {
+    width: 31px;
+    height: 31px;
+  }
+
+  .nova-address-create-header > a {
+    width: 34px;
+    min-height: 34px;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+    color: var(--address-wine);
+    font-size: 0;
+  }
+
+  .nova-address-create-form {
+    overflow: visible;
+    border-radius: 13px;
+    padding: 9px;
+  }
+
+  .nova-address-create-form__grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .nova-address-create-form .address-field {
+    border-radius: 10px;
+    padding: 8px;
+  }
+
+  .nova-address-create-form .address-field__label,
+  .nova-address-create-form__label {
+    font-size: 10.5px;
+  }
+
+  .nova-address-create-form .address-field__control .nova-input {
+    min-height: 39px;
+    font-size: 10.5px;
+  }
+
+  .nova-address-create-form__address {
+    grid-column: auto;
+    border-radius: 10px;
+    padding: 8px;
+  }
+
+  .nova-address-create-form__textarea .nova-textarea {
+    min-height: 65px;
+    font-size: 10.5px;
+  }
+
+  .nova-address-create-form__default {
+    min-height: 54px;
+    margin-top: 8px;
+    padding-top: 9px;
+  }
+
+  .nova-address-create-form__default strong {
+    font-size: 10.5px;
+  }
+
+  .nova-address-create-form__actions {
+    position: fixed;
+    z-index: 30;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    display: block;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .nova-address-create-form__submit {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px !important;
+    box-shadow: 0 10px 26px rgba(91, 22, 35, 0.24);
+  }
+
+  .nova-address-create-form__back,
+  .nova-address-create-form__dirty {
+    display: none !important;
+  }
+}
+
+/* Page 04 — /account/addresses/edit/:addressId */
+.nova-address-edit-page {
+  --address-wine: #7d1f2d;
+  --address-wine-dark: #641722;
+  --address-ink: #1d1714;
+  --address-muted: #746961;
+  --address-surface: #fffdf9;
+  --address-line: rgba(82, 60, 45, 0.13);
+  --address-shadow: 0 10px 30px rgba(58, 38, 24, 0.065);
+  padding-block: 16px 30px;
+}
+
+.nova-address-edit-page *,
+.nova-address-edit-page *::before,
+.nova-address-edit-page *::after { box-sizing: border-box; }
+
+.nova-address-edit-page a { color: inherit; text-decoration: none; }
+
+.nova-address-edit-shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 225px;
+  overflow: hidden;
+  border: 1px solid var(--address-line);
+  border-radius: 22px;
+  background: rgba(255, 253, 249, 0.8);
+  box-shadow: var(--address-shadow);
+  direction: ltr;
+}
+
+.nova-address-edit-art {
+  position: relative;
+  min-height: 720px;
+  overflow: hidden;
+  border-left: 1px solid var(--address-line);
+}
+
+.nova-address-edit-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nova-address-edit-art > span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(22,16,12,.06), rgba(22,16,12,.2) 60%, rgba(22,16,12,.55));
+}
+
+.nova-address-edit-art > div {
+  position: absolute;
+  z-index: 2;
+  top: 52px;
+  right: 22px;
+  left: 22px;
+  color: #fff;
+  direction: rtl;
+  text-align: right;
+}
+
+.nova-address-edit-art strong {
+  font-size: 22px;
+  line-height: 1.55;
+}
+
+.nova-address-edit-art small {
+  display: block;
+  margin-top: 20px;
+  font-family: Georgia, serif;
+  font-size: 18px;
+}
+
+.nova-address-edit-content {
+  padding: 24px 24px 20px;
+  direction: rtl;
+}
+
+.nova-address-edit-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.nova-address-edit-header h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -.03em;
+}
+
+.nova-address-edit-header p {
+  margin: 5px 0 0;
+  color: var(--address-muted);
+  font-size: 11px;
+}
+
+.nova-address-edit-header > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--address-wine);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.nova-address-sidebar--edit { min-height: 720px; }
+
+.nova-address-edit-form {
+  border: 1px solid var(--address-line);
+  border-radius: 15px;
+  padding: 16px;
+  background: rgba(255,255,255,.72);
+}
+
+.nova-address-edit-form__heading h2 {
+  margin: 0 0 14px;
+  font-size: 18px;
+}
+
+.nova-address-edit-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px 12px;
+}
+
+.nova-address-edit-form .address-field {
+  gap: 5px;
+  font-size: 10.5px;
+}
+
+.nova-address-edit-form .address-field__label {
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.nova-address-edit-form .address-field__control {
+  position: relative;
+}
+
+.nova-address-edit-form .nova-input,
+.nova-address-edit-form .nova-textarea {
+  min-height: 42px;
+  border-color: var(--address-line);
+  border-radius: 9px;
+  background: #fff;
+  font-size: 11px;
+}
+
+.nova-address-edit-form .address-field__control > svg {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  color: #7b6b60;
+  transform: translateY(-50%);
+}
+
+.nova-address-edit-form .address-field__control > svg + * { pointer-events: none; }
+
+.nova-address-edit-form__wide { grid-column: 1 / -1; }
+
+.nova-address-edit-form__address {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+  color: #2a211d;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.nova-address-edit-form__address .nova-textarea {
+  min-height: 74px;
+  padding: 10px 11px;
+  font-weight: 400;
+}
+
+.nova-address-edit-form__default {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 9px;
+  margin-top: 11px;
+  border-top: 1px solid var(--address-line);
+  padding-top: 11px;
+  color: #3d342f;
+  font-size: 10.5px;
+}
+
+.nova-address-edit-form__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.nova-address-edit-form__actions .nova-button {
+  min-height: 43px;
+  border-radius: 9px;
+  font-size: 11px;
+}
+
+.nova-address-edit-form__save {
+  background: var(--address-wine) !important;
+  color: #fff !important;
+}
+
+.nova-address-edit-form__delete {
+  border-color: #c74b4f !important;
+  color: #b53036 !important;
+  background: #fff !important;
+}
+
+@media (max-width: 980px) and (min-width: 768px) {
+  .nova-address-edit-shell { grid-template-columns: 205px minmax(0,1fr) 190px; }
+}
+
+@media (max-width: 767px) {
+  .nova-address-edit-page {
+    width: min(100%, 560px) !important;
+    padding: 0 10px 84px;
+  }
+
+  .nova-address-edit-shell {
+    display: block;
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .nova-address-edit-art,
+  .nova-address-edit-page .nova-address-sidebar--edit { display: none; }
+
+  .nova-address-edit-content { padding: 9px 0 0; }
+
+  .nova-address-edit-header {
+    margin-bottom: 10px;
+  }
+
+  .nova-address-edit-header h1 { font-size: 21px; }
+  .nova-address-edit-header p { font-size: 9.5px; }
+
+  .nova-address-edit-header > a {
+    width: 34px;
+    height: 34px;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 0;
+  }
+
+  .nova-address-edit-form {
+    border-radius: 13px;
+    padding: 10px;
+  }
+
+  .nova-address-edit-form__heading h2 { font-size: 16px; }
+
+  .nova-address-edit-form__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .nova-address-edit-form__wide,
+  .nova-address-edit-form__address { grid-column: 1 / -1; }
+
+  .nova-address-edit-form__actions {
+    position: fixed;
+    z-index: 30;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    grid-template-columns: 1.55fr 1fr;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  .nova-address-edit-form__actions .nova-button {
+    min-height: 44px;
+    box-shadow: 0 10px 26px rgba(91,22,35,.12);
+  }
+}

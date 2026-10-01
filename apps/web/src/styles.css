@@ -1598,7 +1598,7 @@ textarea:focus-visible {
     gap: 8px;
   }
 
-  .form-card input,
+  .form-card input:not([type='radio']):not([type='checkbox']),
   .form-card textarea,
   .form-card select {
     background: var(--surface);
@@ -2298,7 +2298,7 @@ textarea:focus-visible {
   .editorial-cta,
   .sort-control,
   .size-picker__options button,
-  .form-card input,
+  .form-card input:not([type='radio']):not([type='checkbox']),
   .form-card textarea,
   .form-card select,
   .search-field,
@@ -4341,5 +4341,442 @@ textarea:focus-visible {
       transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
     }
+  }
+}
+
+/* The Atelier homepage follows the selected phone composition below 769px. */
+.atelier-mobile-home {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .lookbook-home:has(.atelier-mobile-home) {
+    padding-block: 10px 0;
+  }
+
+  body:has(.lookbook-home) {
+    padding-block-end: 0;
+  }
+
+  .app-root:has(.lookbook-home) .mobile-bottom-nav {
+    display: none;
+  }
+
+  .lookbook-desktop {
+    display: none;
+  }
+
+  .atelier-mobile-home {
+    display: block;
+  }
+
+  .site-header:has(+ .lookbook-home) {
+    border: 0;
+    background: var(--page);
+    box-shadow: none;
+  }
+
+  .site-header:has(+ .lookbook-home) .site-header__inner {
+    background: var(--surface);
+    border-radius: 16px;
+    min-height: 62px;
+    padding-inline: 6px;
+  }
+
+  .site-header:has(+ .lookbook-home) .site-header__nav-wrap {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  .site-header:has(+ .lookbook-home) .site-header__actions {
+    direction: ltr;
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .site-header:has(+ .lookbook-home) .cart-button {
+    background: transparent;
+    color: var(--oxblood);
+    padding-inline: 5px;
+  }
+
+  .atelier-mobile-hero {
+    aspect-ratio: 1.1;
+    background: var(--surface-soft);
+    border-radius: 18px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .atelier-mobile-hero > img {
+    display: block;
+    height: 100%;
+    object-fit: cover;
+    object-position: 45% center;
+    width: 100%;
+  }
+
+  .atelier-mobile-hero__copy {
+    align-items: flex-start;
+    color: var(--surface-strong);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    inset-block: 0;
+    justify-content: center;
+    padding-inline: 14px;
+    position: absolute;
+    right: 0;
+    text-align: right;
+    text-shadow: 0 1px 5px rgb(39 34 32 / 45%);
+    width: 52%;
+  }
+
+  .atelier-mobile-hero__copy h1 {
+    font-size: clamp(19px, 6vw, 27px);
+    line-height: 1.45;
+  }
+
+  .atelier-mobile-hero__copy p {
+    font-size: clamp(15px, 4.2vw, 19px);
+    line-height: 1.7;
+  }
+
+  .atelier-mobile-hero__copy a {
+    align-items: center;
+    background: var(--oxblood);
+    border-radius: 11px;
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 700;
+    gap: 8px;
+    margin-block-start: 8px;
+    min-height: 44px;
+    padding-inline: 12px;
+    text-shadow: none;
+  }
+
+  .atelier-mobile-categories {
+    display: flex;
+    gap: 8px;
+    margin-block: 12px 23px;
+    margin-inline: -16px;
+    overflow-x: auto;
+    padding-inline: 16px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .atelier-mobile-categories::-webkit-scrollbar {
+    display: none;
+  }
+
+  .atelier-mobile-categories a {
+    background: var(--surface);
+    border-radius: 14px;
+    flex: 0 0 132px;
+    overflow: hidden;
+    scroll-snap-align: start;
+    text-align: center;
+  }
+
+  .atelier-mobile-categories img {
+    aspect-ratio: 1.42;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .atelier-mobile-categories span {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    padding-block: 10px;
+  }
+
+  .atelier-mobile-section {
+    margin-block-start: 22px;
+  }
+
+  .atelier-mobile-heading {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-block-end: 10px;
+  }
+
+  .atelier-mobile-heading h2 {
+    font-size: 20px;
+  }
+
+  .atelier-mobile-heading > a {
+    align-items: center;
+    color: var(--oxblood);
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 700;
+    gap: 6px;
+    min-height: 44px;
+  }
+
+  .atelier-mobile-products {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .atelier-mobile-product {
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: 16px;
+    min-width: 0;
+    overflow: hidden;
+    padding: 6px;
+  }
+
+  .atelier-mobile-product__media {
+    aspect-ratio: 1.15;
+    background: var(--surface-soft);
+    border-radius: 11px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .atelier-mobile-product__media > a,
+  .atelier-mobile-product__media img {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  .atelier-mobile-product__media img {
+    object-fit: cover;
+  }
+
+  .atelier-mobile-product__favorite {
+    background: rgb(255 252 247 / 88%);
+    height: 40px;
+    left: 5px;
+    min-width: 40px;
+    position: absolute;
+    top: 5px;
+    width: 40px;
+  }
+
+  .atelier-mobile-product__favorite.is-selected {
+    color: var(--oxblood);
+  }
+
+  .atelier-mobile-product__details {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-height: 116px;
+    padding: 8px 2px 1px;
+  }
+
+  .atelier-mobile-product__details > a {
+    display: -webkit-box;
+    font-size: 12px;
+    line-height: 1.6;
+    min-height: 38px;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .atelier-mobile-product__details strong {
+    color: var(--oxblood);
+    font-size: 12px;
+  }
+
+  .atelier-mobile-product__details button {
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    display: inline-flex;
+    font-size: 11px;
+    gap: 5px;
+    justify-content: center;
+    min-height: 42px;
+    width: 100%;
+  }
+
+  .atelier-mobile-story {
+    background: var(--surface);
+    border-radius: 17px;
+    margin-block-start: 14px;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .atelier-mobile-story > img {
+    aspect-ratio: 1.55;
+    display: block;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .atelier-mobile-story > div {
+    padding: 20px 20px 18px;
+  }
+
+  .atelier-mobile-story span {
+    color: var(--oxblood);
+    font-family: var(--font-latin);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+  }
+
+  .atelier-mobile-story h2 {
+    font-size: 20px;
+    line-height: 1.5;
+    margin-block: 8px;
+  }
+
+  .atelier-mobile-story p {
+    color: var(--ink-soft);
+    font-size: 12px;
+    line-height: 1.9;
+  }
+
+  .atelier-mobile-story a {
+    border: 1px solid var(--oxblood);
+    border-radius: 10px;
+    color: var(--oxblood);
+    display: inline-flex;
+    font-size: 12px;
+    font-weight: 700;
+    margin-block-start: 12px;
+    min-height: 44px;
+    padding: 11px 17px;
+  }
+
+  .atelier-mobile-benefits {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-block-start: 15px;
+  }
+
+  .atelier-mobile-benefits > div {
+    align-items: center;
+    background: var(--surface);
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    min-height: 118px;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  .atelier-mobile-benefits svg {
+    color: #9a5c30;
+    margin-block-end: 6px;
+  }
+
+  .atelier-mobile-benefits strong {
+    font-size: 12px;
+  }
+
+  .atelier-mobile-benefits span {
+    color: var(--ink-muted);
+    font-size: 10px;
+    line-height: 1.6;
+  }
+
+  .atelier-mobile-newsletter {
+    background: var(--surface);
+    border-radius: 16px;
+    margin-block-start: 12px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .atelier-mobile-newsletter__image {
+    aspect-ratio: 1.8;
+    border-radius: 12px;
+    display: block;
+    margin-block-end: 14px;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .atelier-mobile-newsletter h2 {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .atelier-mobile-newsletter p {
+    color: var(--ink-soft);
+    font-size: 11px;
+    margin-block: 5px 12px;
+  }
+
+  .atelier-mobile-newsletter form {
+    display: grid;
+    gap: 7px;
+  }
+
+  .atelier-mobile-newsletter label {
+    font-size: 0;
+  }
+
+  .atelier-mobile-newsletter input,
+  .atelier-mobile-newsletter button {
+    border-radius: 10px;
+    min-height: 44px;
+    width: 100%;
+  }
+
+  .atelier-mobile-newsletter input {
+    background: var(--surface-strong);
+    border: 1px solid var(--line);
+    padding-inline: 12px;
+  }
+
+  .atelier-mobile-newsletter button {
+    background: var(--oxblood);
+    color: var(--surface-strong);
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .atelier-mobile-footer {
+    border-block-start: 1px solid var(--line-soft);
+    margin-block-start: 12px;
+    padding-block: 22px 18px;
+    text-align: center;
+  }
+
+  .atelier-mobile-footer .brand-lockup {
+    margin-inline: auto;
+  }
+
+  .atelier-mobile-footer p {
+    color: var(--ink-soft);
+    font-size: 11px;
+    margin-block: 10px 16px;
+  }
+
+  .atelier-mobile-footer nav {
+    display: grid;
+    gap: 0;
+    text-align: right;
+  }
+
+  .atelier-mobile-footer nav a {
+    border-block-start: 1px solid var(--line-soft);
+    font-size: 12px;
+    min-height: 44px;
+    padding-block: 12px;
+  }
+
+  .atelier-mobile-footer small {
+    color: var(--ink-muted);
+    display: block;
+    font-size: 10px;
+    margin-block-start: 15px;
   }
 }

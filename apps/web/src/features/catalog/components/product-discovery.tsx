@@ -72,13 +72,13 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
   }, [productQuery.data?.id, productQuery.data?.slug]);
   if (shouldShowProductLoading(slug, productQuery.isPending) && !productQuery.data)
     return (
-      <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background py-6">
+      <main className="shell inner-page product-page">
         <ProductSkeleton count={1} />
       </main>
     );
   if (productQuery.isError && !productQuery.data)
     return (
-      <main className="shell mx-auto flex min-h-[55svh] w-[calc(100%-2rem)] max-w-[1280px] items-center bg-background py-8">
+      <main className="shell system-page">
         <MessageCard
           title="بارگذاری محصول ممکن نشد"
           description="لطفاً اتصال خود را بررسی کنید و دوباره تلاش کنید."
@@ -91,7 +91,7 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     );
   if (!productQuery.data)
     return (
-      <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] bg-background py-8">
+      <main className="shell system-page">
         <MessageCard
           title="این محصول پیدا نشد"
           description="ممکن است مسیر تغییر کرده یا محصول دیگر منتشر نباشد."
@@ -100,6 +100,7 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
       </main>
     );
   const product = toStorefrontProductDetail(productQuery.data);
+  const isWishlisted = props.isWishlisted?.(product.slug) ?? false;
   const variants = product.variants ?? [];
   const variantOptions = structuredVariantOptions(product);
   const usesStructuredVariantOptions =
@@ -170,8 +171,8 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     );
   };
   return (
-    <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-8 bg-background py-6 md:py-10">
-      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+    <main className="shell inner-page product-page">
+      <div className="breadcrumb">
         <a href="/" className="hover:text-primary">
           خانه
         </a>
@@ -182,13 +183,11 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
         <span aria-hidden="true">/</span>
         <span>{product.name}</span>
       </div>
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.9fr)]">
-        <section aria-label="تصاویر محصول" className="space-y-3">
-          <div className="aspect-[4/5] overflow-hidden rounded-editorial bg-secondary">
+      <div className="product-detail">
+        <section aria-label="تصاویر محصول" className="product-detail__gallery">
+          <div className="product-detail__main-image">
             {media?.url || product.image ? (
-              <img
-                className="h-full w-full object-cover"
-                src={media?.url ?? product.image}
+              <img src={media?.url ?? product.image}
                 alt={media?.altText ?? product.alt}
               />
             ) : (
@@ -198,49 +197,54 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
             )}
           </div>
           {gallery.length > 1 ? (
-            <div className="flex gap-2 overflow-x-auto">
+            <div className="product-detail__thumbs">
               {gallery.map((item, index) => (
                 <Button
-                  className={`h-20 w-16 shrink-0 overflow-hidden rounded-control border ${index === mediaIndex ? 'border-primary' : 'border-border'}`}
+                  className={index === mediaIndex ? 'is-active' : ''}
                   type="button"
                   aria-label={`نمایش تصویر ${index + 1}`}
                   aria-pressed={index === mediaIndex}
                   onClick={() => setMediaIndex(index)}
                   key={`${item.url}-${index}`}
                 >
-                  <img className="h-full w-full object-cover" src={item.url} alt="" />
+                  <img src={item.url} alt="" />
                 </Button>
               ))}
             </div>
           ) : null}
         </section>
-        <section className="space-y-5" aria-labelledby="product-title">
-          <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+        <section className="product-detail__info" aria-labelledby="product-title">
+          <div className="product-detail__eyebrow">
             <span>{product.category}</span>
             <Button
-              className="icon-button"
+              className={`icon-button ${isWishlisted ? 'is-selected' : ''}`}
               type="button"
-              aria-label="افزودن به علاقه‌مندی‌ها"
+              aria-label={
+                isWishlisted
+                  ? `حذف ${product.name} از علاقه‌مندی‌ها`
+                  : `افزودن ${product.name} به علاقه‌مندی‌ها`
+              }
+              aria-pressed={isWishlisted}
               onClick={() => (props.onToggleWishlist ?? (() => undefined))(product.slug)}
             >
               <Icon name="heart" size={19} />
             </Button>
           </div>
-          <h1 className="text-2xl md:text-3xl" id="product-title">
+          <h1 id="product-title">
             {product.name}
           </h1>
           {product.description ? (
-            <p className="text-sm leading-8 text-muted-foreground">{product.description}</p>
+            <p className="product-detail__description">{product.description}</p>
           ) : null}
-          <div className="text-lg font-bold text-primary">
+          <div className="product-detail__price">
             {compareAt ? (
-              <del className="me-2 text-sm font-normal text-muted-foreground">
+              <del>
                 {formatToman(compareAt)}
               </del>
             ) : null}
             <strong>{formatToman(price)}</strong>
           </div>
-          <p className={available ? 'text-sm text-success' : 'text-sm text-warning'} role="status">
+          <p className={available ? 'product-detail__availability is-available' : 'product-detail__availability is-unavailable'} role="status">
             {variants.length && !selectedVariant
               ? 'انتخاب کنید'
               : available
@@ -250,12 +254,12 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
                 : 'ناموجود'}
           </p>
           {variantOptions.map((option) => (
-            <fieldset className="space-y-2" key={option.id}>
-              <legend className="text-sm font-semibold">{option.name}</legend>
-              <div className="flex flex-wrap gap-2">
+            <fieldset className="size-picker" key={option.id}>
+              <legend>{option.name}</legend>
+              <div className="size-picker__options">
                 {option.values.map((value) => (
                   <Button
-                    className={`min-h-11 border px-3 text-sm ${selectedOptionValues[option.key] === value.id ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
+                    className={selectedOptionValues[option.key] === value.id ? 'is-active' : ''}
                     type="button"
                     aria-pressed={selectedOptionValues[option.key] === value.id}
                     onClick={() =>
@@ -270,12 +274,12 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
             </fieldset>
           ))}
           {legacySizes.length ? (
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-semibold">اندازه</legend>
-              <div className="flex flex-wrap gap-2">
+            <fieldset className="size-picker">
+              <legend>اندازه</legend>
+              <div className="size-picker__options">
                 {legacySizes.map((value) => (
                   <Button
-                    className={`min-h-11 min-w-11 border px-3 text-sm ${selectedSize === value ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
+                    className={selectedSize === value ? 'is-active' : ''}
                     type="button"
                     aria-pressed={selectedSize === value}
                     onClick={() => setSelectedSize(value)}
@@ -288,12 +292,12 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
             </fieldset>
           ) : null}
           {legacyColors.length ? (
-            <fieldset className="space-y-2">
-              <legend className="text-sm font-semibold">رنگ</legend>
-              <div className="flex flex-wrap gap-2">
+            <fieldset className="size-picker">
+              <legend>رنگ</legend>
+              <div className="size-picker__options">
                 {legacyColors.map((value) => (
                   <Button
-                    className={`min-h-11 min-w-11 border px-3 text-sm ${selectedColor === value ? 'border-primary bg-accent-soft text-primary' : 'border-border bg-surface hover:border-primary'}`}
+                    className={selectedColor === value ? 'is-active' : ''}
                     type="button"
                     aria-pressed={selectedColor === value}
                     onClick={() => setSelectedColor(value)}
@@ -306,7 +310,7 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
             </fieldset>
           ) : null}
           <Button
-            className="w-full"
+            className="product-detail__add"
             type="button"
             size="lg"
             disabled={addDisabled}
@@ -317,15 +321,15 @@ export function ProductDiscovery({ props }: { props: StorefrontDiscoveryPageProp
             <Icon name="bag" size={17} />
           </Button>
           {feedback ? <AddToCartFeedback {...feedback} /> : null}
-          <div className="border-t border-border pt-4 text-sm leading-7 text-muted-foreground">
+          <div className="product-detail__delivery">
             <p>ارسال به تهران، بین دوشنبه تا چهارشنبه</p>
             <p>امکان مرجوعی تا ۷ روز مطابق شرایط کالا</p>
           </div>
         </section>
       </div>
       {relatedQuery.data?.items.length ? (
-        <section className="space-y-5" aria-labelledby="related-title">
-          <h2 className="text-xl" id="related-title">
+        <section className="product-related" aria-labelledby="related-title">
+          <h2 id="related-title">
             پیشنهادهای همراه
           </h2>
           <ProductGrid

@@ -95,93 +95,102 @@ export function AuthPage({
   };
 
   return (
-    <main className="shell inner-page mx-auto flex min-h-[70svh] w-[calc(100%-2rem)] max-w-[1280px] items-center justify-center bg-background">
-      <section className="w-full max-w-xl border border-border bg-surface px-6 py-12 text-center shadow-card md:px-12">
-        <span className="section-heading__eyebrow">
-          NOVA / {isVerify ? 'OTP VERIFY' : 'SIGN IN'}
-        </span>
-        <span className="mx-auto mb-5 mt-3 flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-primary">
-          <Icon name={isVerify ? 'check' : 'user'} size={24} />
-        </span>
-        <h1 className="text-3xl leading-relaxed">
-          {isVerify ? 'کد ورود را وارد کنید' : 'به نوا خوش آمدید'}
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-sm leading-8 text-muted-foreground">
-          {isVerify
-            ? 'کد شش‌رقمی ارسال‌شده به شماره شما را وارد کنید. کد تا ۵ دقیقه معتبر است.'
-            : 'برای ورود یا ساخت حساب، شماره موبایل خود را وارد کنید تا کد یکبار مصرف برای شما ارسال شود.'}
-        </p>
-        <form
-          className="mx-auto mt-8 flex max-w-md flex-col gap-4 text-right"
-          onSubmit={(event) => void submitForm(event)}
-        >
-          <label className="flex flex-col gap-2 text-sm font-medium">
-            {isVerify ? 'کد تأیید' : 'شماره موبایل'}
-            <UiInput
-              className="min-h-12 border border-border bg-background px-4 text-center outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-accent-soft"
-              dir="ltr"
-              inputMode={isVerify ? 'numeric' : 'tel'}
-              maxLength={isVerify ? 6 : undefined}
-              placeholder={isVerify ? '۱۲۳۴۵۶' : '۰۹۱۲ ۱۲۳ ۴۵۶۷'}
-              required
-              type={isVerify ? 'text' : 'tel'}
-              value={isVerify ? code : phone}
-              onChange={(event) =>
-                isVerify ? setCode(event.target.value) : setPhone(event.target.value)
-              }
-              autoComplete={isVerify ? 'one-time-code' : 'tel'}
-              aria-invalid={formError ? 'true' : undefined}
-            />
-          </label>
-          {successMessage ? (
-            <div className="inline-message inline-message--success" role="status">
-              <Icon name="check" size={16} />
-              {successMessage}
-            </div>
-          ) : null}
-          {isVerify && localCode ? (
-            <div className="inline-message inline-message--success" role="status">
-              <Icon name="check" size={16} />
-              کد تست محلی:{' '}
-              <strong dir="ltr" className="font-mono tracking-[0.2em]">
-                {localCode}
-              </strong>
-            </div>
-          ) : null}
-          {formError ||
-          (isVerify && !challengeId ? 'نشست ورود پیدا نشد؛ دوباره درخواست کد بدهید.' : '') ? (
-            <div className="inline-message inline-message--error" role="alert">
-              <Icon name="warning" size={16} />
-              {formError || 'نشست ورود پیدا نشد؛ دوباره درخواست کد بدهید.'}
-            </div>
-          ) : null}
-          {isVerify ? (
-            <Button disabled={isSubmitting || !challengeId} size="lg" type="submit">
-              {verifyOtpMutation.isPending ? 'در حال بررسی...' : 'تأیید و ورود'}{' '}
+    <main className="shell auth-page">
+      <section className="auth-shell">
+        <aside className="auth-visual" aria-label="NOVA Atelier Editorial">
+          <img src="/assets/nova-women-lifestyle.webp" alt="استایل زنانه نوا" />
+          <span className="auth-visual__veil" aria-hidden="true" />
+          <div className="auth-visual__copy">
+            <span>NOVA / ATELIER EDITORIAL</span>
+            <strong>
+              زیبایی،
+              <br />
+              از انتخاب‌های آگاهانه آغاز می‌شود.
+            </strong>
+            <small>TIMELESS · PERSIAN · ALWAYS YOU</small>
+          </div>
+        </aside>
+
+        <section className="auth-form-panel">
+          <span className="auth-form-panel__mark" aria-hidden="true">
+            <Icon name={isVerify ? 'check' : 'user'} size={22} />
+          </span>
+          <span className="section-heading__eyebrow">
+            NOVA / {isVerify ? 'OTP VERIFY' : 'SIGN IN'}
+          </span>
+          <h1>{isVerify ? 'کد ورود را وارد کنید' : 'به نوا خوش آمدید'}</h1>
+          <p>
+            {isVerify
+              ? 'کد شش‌رقمی ارسال‌شده به شماره شما را وارد کنید. کد تا ۵ دقیقه معتبر است.'
+              : 'برای ورود یا ساخت حساب، شماره موبایل خود را وارد کنید تا کد یکبار مصرف برای شما ارسال شود.'}
+          </p>
+          <form className="auth-form" onSubmit={(event) => void submitForm(event)}>
+            <label>
+              <span>{isVerify ? 'کد تأیید' : 'شماره موبایل'}</span>
+              <UiInput
+                dir="ltr"
+                inputMode={isVerify ? 'numeric' : 'tel'}
+                maxLength={isVerify ? 6 : undefined}
+                placeholder={isVerify ? '۱۲۳۴۵۶' : '۰۹۱۲ ۱۲۳ ۴۵۶۷'}
+                required
+                type={isVerify ? 'text' : 'tel'}
+                value={isVerify ? code : phone}
+                onChange={(event) =>
+                  isVerify ? setCode(event.target.value) : setPhone(event.target.value)
+                }
+                autoComplete={isVerify ? 'one-time-code' : 'tel'}
+                aria-invalid={formError ? 'true' : undefined}
+              />
+            </label>
+            {successMessage ? (
+              <div className="inline-message inline-message--success" role="status">
+                <Icon name="check" size={16} />
+                {successMessage}
+              </div>
+            ) : null}
+            {isVerify && localCode ? (
+              <div className="inline-message inline-message--success" role="status">
+                <Icon name="check" size={16} />
+                کد تست محلی:{' '}
+                <strong dir="ltr" className="font-mono tracking-[0.2em]">
+                  {localCode}
+                </strong>
+              </div>
+            ) : null}
+            {formError ||
+            (isVerify && !challengeId ? 'نشست ورود پیدا نشد؛ دوباره درخواست کد بدهید.' : '') ? (
+              <div className="inline-message inline-message--error" role="alert">
+                <Icon name="warning" size={16} />
+                {formError || 'نشست ورود پیدا نشد؛ دوباره درخواست کد بدهید.'}
+              </div>
+            ) : null}
+            <Button disabled={isSubmitting || (isVerify && !challengeId)} size="lg" type="submit">
+              {isVerify
+                ? verifyOtpMutation.isPending
+                  ? 'در حال بررسی...'
+                  : 'تأیید و ورود'
+                : requestOtpMutation.isPending
+                  ? 'در حال ارسال...'
+                  : 'ارسال کد ورود'}{' '}
               <Icon name="arrow-left" size={17} />
             </Button>
-          ) : (
-            <Button disabled={isSubmitting} size="lg" type="submit">
-              {requestOtpMutation.isPending ? 'در حال ارسال...' : 'ارسال کد ورود'}{' '}
-              <Icon name="arrow-left" size={17} />
-            </Button>
-          )}
-        </form>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
-          <a className="text-link" href={isVerify ? '/auth' : '/'}>
-            {isVerify ? 'تغییر شماره' : 'بازگشت به فروشگاه'} <Icon name="arrow-left" size={14} />
-          </a>
-          {isVerify ? (
-            <Button
-              className="min-h-11 text-primary underline underline-offset-4 disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={isSubmitting}
-              onClick={() => void resendCode()}
-              type="button"
-            >
-              {requestOtpMutation.isPending ? 'در حال ارسال...' : 'ارسال دوباره کد'}
-            </Button>
-          ) : null}
-        </div>
+          </form>
+          <div className="auth-form-panel__links">
+            <a className="text-link" href={isVerify ? '/auth' : '/'}>
+              {isVerify ? 'تغییر شماره' : 'بازگشت به فروشگاه'} <Icon name="arrow-left" size={14} />
+            </a>
+            {isVerify ? (
+              <Button
+                className="auth-resend"
+                disabled={isSubmitting}
+                onClick={() => void resendCode()}
+                type="button"
+              >
+                {requestOtpMutation.isPending ? 'در حال ارسال...' : 'ارسال دوباره کد'}
+              </Button>
+            ) : null}
+          </div>
+        </section>
       </section>
     </main>
   );

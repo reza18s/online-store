@@ -57,9 +57,9 @@ async function openPublicHome(page: Page) {
     await route.continue();
   });
 
-  const response = await page.goto('/home', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
-  await expect(page.locator('main h1#storefront-home-title')).toBeVisible();
+  await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toBeVisible();
 }
 
 async function getUnnamedVisibleControls(page: Page) {
@@ -129,7 +129,7 @@ async function assertHomeAccessibility(page: Page) {
   await expect(page.getByRole('banner')).toHaveCount(1);
   await expect(page.getByRole('main')).toHaveCount(1);
 
-  const headings = await page.locator('main :is(h1, h2, h3, h4, h5, h6)').evaluateAll((elements) =>
+  const headings = await page.locator('main :is(h1, h2, h3, h4, h5, h6):visible').evaluateAll((elements) =>
     elements.map((element) => ({
       level: Number(element.tagName.slice(1)),
       text: element.textContent?.trim() ?? '',

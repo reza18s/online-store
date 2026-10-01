@@ -31,6 +31,8 @@ import { SessionState } from '@/features/account/components/session-state';
 
 import { findCustomerAddressByRouteId } from '@/features/account/components/find-customer-address-by-route-id';
 
+import './customer-address-book.reference.css';
+
 export function CustomerAddressBookPage({
   mode = 'list',
   addressId,
@@ -126,111 +128,375 @@ export function CustomerAddressBookPage({
         />
       </PageFrame>
     );
-  return (
-    <PageFrame>
-      <div className="breadcrumb">
-        <a href="/account">حساب کاربری</a>
-        <span>/</span>
-        <span>آدرس‌ها</span>
-      </div>
-      <header className="simple-page-header">
-        <span className="section-heading__eyebrow">MY NOVA / ADDRESSES</span>
-        <h1>
-          {mode === 'create' ? 'افزودن آدرس جدید' : mode === 'edit' ? 'ویرایش آدرس' : 'آدرس‌های من'}
-        </h1>
-        <p>آدرس تحویل سفارش‌های شما، جدا و امن نگهداری می‌شود.</p>
-      </header>
-      {actionError ? (
-        <p
-          className="mb-4 border border-warning bg-warning-100 px-4 py-3 text-sm text-warning"
-          role="alert"
-        >
-          {actionError}
-        </p>
-      ) : null}
-      {mode !== 'list' ? (
-        <CustomerAddressForm mode={mode} selectedAddress={selected} />
-      ) : addresses.length === 0 ? (
-        <EmptyState
-          title="هنوز آدرسی ثبت نکرده‌اید"
-          description="برای تحویل سریع‌تر سفارش، اولین آدرس خود را اضافه کنید."
-          action="افزودن آدرس جدید"
-          href="/account/addresses/create"
-        />
-      ) : (
-        <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
-          {addresses.map((address) => (
-            <article
-              className={`border bg-surface p-5 shadow-card ${address.isDefault ? 'border-primary' : 'border-border'}`}
-              key={address.id}
-            >
-              <div className="flex items-start justify-between gap-3">
+  const profileName =
+    addresses.find((address) => address.isDefault)?.recipientName ??
+    addresses[0]?.recipientName ??
+    'مشتری نوا';
+
+  if (mode === 'create') {
+    return (
+      <PageFrame className="nova-address-create-page">
+        <div className="nova-address-create-shell">
+          <aside className="nova-address-create-art" aria-label="NOVA editorial">
+            <img src="/assets/nova-materials.webp" alt="گل‌ها و فضای آرام آتلیه نوا" />
+            <span aria-hidden="true" />
+            <div>
+              <strong>
+                خانه،
+                <br />
+                جایی که سبک زندگی شما ادامه دارد.
+              </strong>
+              <small>NOVA</small>
+            </div>
+          </aside>
+
+          <section className="nova-address-create-content">
+            <header className="nova-address-create-header">
+              <div>
+                <span className="nova-address-create-header__icon" aria-hidden="true">
+                  <Icon name="home" size={19} />
+                </span>
                 <div>
-                  {address.isDefault ? (
-                    <span className="section-heading__eyebrow">پیش‌فرض</span>
-                  ) : null}
-                  <h2 className="mt-2 text-lg">{address.label}</h2>
+                  <h1>ایجاد آدرس جدید</h1>
+                  <p>لطفاً اطلاعات آدرس خود را با دقت وارد کنید تا سفارش‌ها به‌درستی ارسال شوند.</p>
                 </div>
-                {address.isDefault ? (
-                  <span className="rounded-pill bg-accent-soft px-3 py-1 text-xs text-primary">
-                    آدرس اصلی
-                  </span>
-                ) : null}
               </div>
-              <address className="mt-4 not-italic text-sm leading-8 text-muted-foreground">
-                <span className="block font-medium text-foreground">{address.recipientName}</span>
-                <span className="block" dir="ltr">
-                  {address.phone}
-                </span>
-                <span className="block">
-                  {address.province}، {address.city}، {address.addressLine}
-                </span>
-                <span className="block">
-                  کد پستی: <b dir="ltr">{address.postalCode}</b>
-                </span>
-              </address>
-              <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-                <a
-                  className="text-link"
-                  href={`/account/addresses/edit/${encodeURIComponent(address.id)}`}
-                >
-                  ویرایش <Icon name="edit" size={15} />
-                </a>
-                {!address.isDefault ? (
-                  <Button
-                    className="min-h-9 text-muted-foreground underline underline-offset-4 transition-colors hover:text-primary disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                    type="button"
-                    disabled={isMutating}
-                    onClick={() => void changeDefault(address.id)}
-                  >
-                    انتخاب به عنوان اصلی
-                  </Button>
-                ) : null}
-                <Button
-                  className="min-h-9 text-destructive underline underline-offset-4 transition-colors hover:text-destructive/80 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  type="button"
-                  disabled={isMutating}
-                  onClick={() => {
-                    if (window.confirm('آیا از حذف این آدرس مطمئن هستید؟')) void remove(address.id);
-                  }}
-                >
-                  حذف
-                </Button>
+              <a href="/account/addresses">
+                <Icon name="arrow-right" size={15} />
+                بازگشت
+              </a>
+            </header>
+
+            {actionError ? (
+              <p className="nova-address-alert" role="alert">
+                {actionError}
+              </p>
+            ) : null}
+
+            <CustomerAddressForm mode="create" />
+          </section>
+
+          <aside className="nova-address-sidebar nova-address-sidebar--create" aria-label="حساب کاربری">
+            <div className="nova-address-sidebar__profile">
+              <img src="/assets/nova-women-lifestyle.webp" alt="" />
+              <strong>{profileName}</strong>
+              <span dir="ltr">{customerQuery.data.email ?? customerQuery.data.phone}</span>
+            </div>
+
+            <nav className="nova-address-sidebar__nav">
+              <a href="/account">
+                <Icon name="home" size={18} />
+                داشبورد حساب
+              </a>
+              <a href="/account/profile">
+                <Icon name="user" size={18} />
+                اطلاعات شخصی
+              </a>
+              <a href="/account/addresses" className="is-active" aria-current="page">
+                <Icon name="home" size={18} />
+                آدرس‌های من
+              </a>
+              <a href="/account/orders">
+                <Icon name="bag" size={18} />
+                سفارش‌های من
+              </a>
+              <a href="/products">
+                <Icon name="heart" size={18} />
+                علاقه‌مندی‌ها
+              </a>
+              <a href="/return">
+                <Icon name="rotate" size={18} />
+                مرجوعی‌ها
+              </a>
+              <a href="/support">
+                <Icon name="users" size={18} />
+                پشتیبانی
+              </a>
+            </nav>
+
+            <a className="nova-address-sidebar__promo" href="/campaign">
+              <img src="/assets/nova-home-mobile-story.webp" alt="" />
+              <span aria-hidden="true" />
+              <div>
+                <strong>به دنیای نوا بپیوندید</strong>
+                <small>مجموعه‌ها و پیشنهادهای اختصاصی</small>
               </div>
-            </article>
-          ))}
-          <a
-            className="flex min-h-48 flex-col items-center justify-center gap-3 border border-dashed border-border bg-surface text-center text-primary transition-colors hover:border-primary hover:bg-accent-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-            href="/account/addresses/create"
-          >
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary">
-              <Icon name="plus" size={21} />
-            </span>
-            <strong>افزودن آدرس جدید</strong>
-            <span className="text-xs text-muted-foreground">برای تحویل سریع‌تر سفارش</span>
-          </a>
+            </a>
+          </aside>
         </div>
-      )}
+      </PageFrame>
+    );
+  }
+
+  if (mode === 'list') {
+    return (
+      <PageFrame className="nova-address-list-page">
+        <div className="nova-address-shell">
+          <aside className="nova-address-sidebar" aria-label="حساب کاربری">
+            <div className="nova-address-sidebar__profile">
+              <img src="/assets/nova-women-lifestyle.webp" alt="" />
+              <strong>{profileName}</strong>
+              <span dir="ltr">{customerQuery.data.email ?? customerQuery.data.phone}</span>
+            </div>
+
+            <nav className="nova-address-sidebar__nav">
+              <a href="/account">
+                <Icon name="home" size={18} />
+                داشبورد حساب
+              </a>
+              <a href="/account/profile">
+                <Icon name="user" size={18} />
+                اطلاعات شخصی
+              </a>
+              <a href="/account/addresses" className="is-active" aria-current="page">
+                <Icon name="home" size={18} />
+                آدرس‌های من
+              </a>
+              <a href="/account/orders">
+                <Icon name="bag" size={18} />
+                سفارش‌های من
+              </a>
+              <a href="/products">
+                <Icon name="heart" size={18} />
+                علاقه‌مندی‌ها
+              </a>
+              <a href="/return">
+                <Icon name="rotate" size={18} />
+                مرجوعی‌ها
+              </a>
+              <a href="/support">
+                <Icon name="users" size={18} />
+                پشتیبانی
+              </a>
+            </nav>
+
+            <a className="nova-address-sidebar__promo" href="/campaign">
+              <img src="/assets/nova-home-mobile-story.webp" alt="" />
+              <span aria-hidden="true" />
+              <div>
+                <strong>خانه؛ فراتر از یک مکان، یک حس است.</strong>
+                <small>NOVA / ATELIER EDITORIAL</small>
+              </div>
+            </a>
+          </aside>
+
+          <section className="nova-address-content">
+            <header className="nova-address-header">
+              <div>
+                <h1>آدرس‌های من</h1>
+                <p>آدرس‌های خود را مدیریت کنید تا تجربه خرید سریع‌تر و آسان‌تری داشته باشید.</p>
+              </div>
+              {addresses.length > 0 ? (
+                <a className="nova-address-add nova-address-add--desktop" href="/account/addresses/create">
+                  <Icon name="plus" size={18} />
+                  افزودن آدرس جدید
+                </a>
+              ) : null}
+            </header>
+
+            {actionError ? (
+              <p className="nova-address-alert" role="alert">
+                {actionError}
+              </p>
+            ) : null}
+
+            {addresses.length === 0 ? (
+              <EmptyState
+                title="هنوز آدرسی ثبت نکرده‌اید"
+                description="برای تحویل سریع‌تر سفارش، اولین آدرس خود را اضافه کنید."
+                action="افزودن آدرس جدید"
+                href="/account/addresses/create"
+              />
+            ) : (
+              <div className="nova-address-list">
+                {addresses.map((address) => (
+                  <article
+                    className={`nova-address-card ${address.isDefault ? 'is-default' : ''}`}
+                    key={address.id}
+                  >
+                    <div className="nova-address-card__icon" aria-hidden="true">
+                      <Icon name={address.label.includes('کار') ? 'bag' : 'home'} size={24} />
+                    </div>
+
+                    <div className="nova-address-card__body">
+                      <div className="nova-address-card__title">
+                        <h2>{address.label}</h2>
+                        {address.isDefault ? (
+                          <span>
+                            <Icon name="sparkles" size={14} />
+                            آدرس پیش‌فرض
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <address>
+                        <span>
+                          <Icon name="user" size={16} />
+                          {address.recipientName}
+                        </span>
+                        <span dir="ltr">
+                          <Icon name="user" size={16} />
+                          {address.phone}
+                        </span>
+                        <span>
+                          <Icon name="home" size={16} />
+                          {address.province}، {address.city}، {address.addressLine}
+                        </span>
+                        <span>
+                          <Icon name="mail" size={16} />
+                          کد پستی <b dir="ltr">{address.postalCode}</b>
+                        </span>
+                      </address>
+                    </div>
+
+                    <div className="nova-address-card__actions">
+                      <a href={`/account/addresses/edit/${encodeURIComponent(address.id)}`}>
+                        <Icon name="edit" size={16} />
+                        ویرایش
+                      </a>
+
+                      {!address.isDefault ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={isMutating}
+                          onClick={() => void changeDefault(address.id)}
+                        >
+                          <Icon name="sparkles" size={15} />
+                          قرار دادن به عنوان پیش‌فرض
+                        </Button>
+                      ) : null}
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="nova-address-card__delete"
+                        disabled={isMutating}
+                        onClick={() => {
+                          if (window.confirm('آیا از حذف این آدرس مطمئن هستید؟')) void remove(address.id);
+                        }}
+                      >
+                        <Icon name="close" size={15} />
+                        حذف
+                      </Button>
+
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            <section className="nova-address-editorial" aria-label="پیام نوا">
+              <img src="/assets/nova-materials.webp" alt="فضای آرام و مینیمال نوا" loading="lazy" />
+              <div>
+                <strong>
+                  هر مقصدی
+                  <br />
+                  آغاز یک داستان زیباست.
+                </strong>
+                <span>NOVA</span>
+              </div>
+            </section>
+
+            <a className="nova-address-add nova-address-add--mobile" href="/account/addresses/create">
+              <Icon name="plus" size={18} />
+              افزودن آدرس جدید
+            </a>
+          </section>
+        </div>
+      </PageFrame>
+    );
+  }
+
+  return (
+    <PageFrame className="nova-address-edit-page">
+      <div className="nova-address-edit-shell">
+        <aside className="nova-address-edit-art" aria-label="NOVA editorial">
+          <img src="/assets/nova-materials.webp" alt="گلدان و شاخه‌های طبیعی در فضای نوا" />
+          <span aria-hidden="true" />
+          <div>
+            <strong>
+              مقصدهای زیباتر،
+              <br />
+              به خانه نزدیک‌ترند.
+            </strong>
+            <small>NOVA</small>
+          </div>
+        </aside>
+
+        <section className="nova-address-edit-content">
+          <header className="nova-address-edit-header">
+            <div>
+              <h1>ویرایش آدرس</h1>
+              <p>اطلاعات آدرس خود را ویرایش کنید.</p>
+            </div>
+            <a href="/account/addresses">
+              <Icon name="arrow-right" size={15} />
+              بازگشت به آدرس‌ها
+            </a>
+          </header>
+
+          {actionError ? (
+            <p className="nova-address-alert" role="alert">
+              {actionError}
+            </p>
+          ) : null}
+
+          <CustomerAddressForm
+            mode="edit"
+            selectedAddress={selected}
+            onDelete={() => {
+              if (selected && window.confirm('آیا از حذف این آدرس مطمئن هستید؟')) {
+                void remove(selected.id);
+              }
+            }}
+          />
+        </section>
+
+        <aside className="nova-address-sidebar nova-address-sidebar--edit" aria-label="حساب کاربری">
+          <div className="nova-address-sidebar__profile">
+            <img src="/assets/nova-women-lifestyle.webp" alt="" />
+            <strong>{profileName}</strong>
+            <span dir="ltr">{customerQuery.data.email ?? customerQuery.data.phone}</span>
+          </div>
+
+          <nav className="nova-address-sidebar__nav">
+            <a href="/account">
+              <Icon name="home" size={18} />
+              داشبورد حساب
+            </a>
+            <a href="/account/profile">
+              <Icon name="user" size={18} />
+              اطلاعات شخصی
+            </a>
+            <a href="/account/orders">
+              <Icon name="bag" size={18} />
+              سفارش‌های من
+            </a>
+            <a href="/account/addresses" className="is-active" aria-current="page">
+              <Icon name="home" size={18} />
+              آدرس‌ها
+            </a>
+            <a href="/products">
+              <Icon name="heart" size={18} />
+              علاقه‌مندی‌ها
+            </a>
+            <a href="/support">
+              <Icon name="users" size={18} />
+              پشتیبانی
+            </a>
+          </nav>
+
+          <a className="nova-address-sidebar__promo" href="/campaign">
+            <img src="/assets/nova-home-mobile-story.webp" alt="" />
+            <span aria-hidden="true" />
+            <div>
+              <strong>خانه برای آدم‌هایی است که زیبایی را در جزئیات زندگی می‌بینند.</strong>
+              <small>NOVA / ATELIER</small>
+            </div>
+          </a>
+        </aside>
+      </div>
     </PageFrame>
   );
 }

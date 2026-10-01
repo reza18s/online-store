@@ -27,7 +27,7 @@ export function CheckoutConfirmationPage({ queryString = '' }: { queryString?: s
       </div>
       {shouldShowCheckoutOrderLoading(params.orderNumber, orderQuery.isPending) ? (
         <section
-          className="mx-auto max-w-2xl animate-pulse border border-border bg-surface p-8"
+          className="checkout-state-card is-loading"
           role="status"
           aria-label="در حال دریافت سفارش ثبت‌شده"
         >

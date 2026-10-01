@@ -166,14 +166,14 @@ async function assertVisibleKeyboardFocus(selector: Locator) {
       matchesFocusVisible: element.matches(':focus-visible'),
       outlineStyle: style.outlineStyle,
       outlineWidth: Number.parseFloat(style.outlineWidth),
-      boxShadow: style.boxShadow,
+      outlineColor: style.outlineColor,
     };
   });
 
   expect(focusState.matchesFocusVisible).toBe(true);
   expect(focusState.outlineStyle).not.toBe('none');
   expect(focusState.outlineWidth).toBeGreaterThan(0);
-  expect(focusState.boxShadow).not.toBe('none');
+  expect(focusState.outlineColor).not.toBe('rgba(0, 0, 0, 0)');
 }
 
 test('keeps the authenticated admin dashboard semantic and keyboard-operable', async ({ page }) => {
@@ -185,7 +185,7 @@ test('keeps the authenticated admin dashboard semantic and keyboard-operable', a
 
   const main = page.getByRole('main');
   await expect(main).toHaveCount(1);
-  await expect(main.getByRole('heading', { name: 'نمای کلی مدیریت', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'صبح بخیر 👋', exact: true })).toBeVisible();
 
   const periodSelector = main.getByRole('combobox', { name: 'بازه گزارش', exact: true });
   await expect(periodSelector).toBeVisible();
@@ -222,7 +222,7 @@ test('makes reduced motion observable on the authenticated admin dashboard', asy
   const response = await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
   await expect(
-    page.getByRole('main').getByRole('heading', { name: 'نمای کلی مدیریت', exact: true }),
+    page.getByRole('main').getByRole('heading', { name: 'صبح بخیر 👋', exact: true }),
   ).toBeVisible();
 
   const motion = await page.evaluate(() => {

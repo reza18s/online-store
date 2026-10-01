@@ -58,7 +58,7 @@ export function CheckoutStepPanel({ controller, cart }: CheckoutStepPanelProps) 
   } = controller;
 
   return (
-    <div className="checkout-layout lg:grid">
+    <div className="checkout-layout">
       <section className="checkout-main" aria-labelledby="checkout-title">
         <nav className="checkout-stepper" aria-label="مراحل تکمیل سفارش">
           {steps.map((item, index) => (
@@ -117,10 +117,10 @@ export function CheckoutStepPanel({ controller, cart }: CheckoutStepPanelProps) 
         ) : (
           <>
             <PaymentOptions />
-            <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
+            <label className="checkout-coupon">
               کد تخفیف (اختیاری)
               <UiInput
-                className="min-h-12 border border-border bg-surface px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
+                className="checkout-coupon__input"
                 value={couponCode}
                 dir="ltr"
                 autoComplete="off"
@@ -170,7 +170,7 @@ export function CheckoutStepPanel({ controller, cart }: CheckoutStepPanelProps) 
           />
         ) : null}
         <Button
-          className="checkout-next mt-6 min-h-11"
+          className="checkout-next"
           disabled={
             submitMutation.isPending ||
             createAddressMutation.isPending ||

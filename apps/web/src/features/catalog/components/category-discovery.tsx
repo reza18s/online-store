@@ -19,38 +19,38 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
   const adder = useProductAdder();
   const products = productsQuery.data?.items.map(toStorefrontProduct) ?? [];
   return (
-    <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-8 bg-background py-6 md:py-10">
-      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+    <main className="shell inner-page category-page">
+      <div className="breadcrumb">
         <a href="/" className="hover:text-primary">
           خانه
         </a>
         <span aria-hidden="true">/</span>
         <span>{copy.label}</span>
       </div>
-      <section className="grid overflow-hidden rounded-editorial border border-border bg-surface md:grid-cols-2">
+      <section className="category-hero">
         <img
-          className="min-h-64 w-full object-cover md:min-h-[420px]"
+          className="category-hero__image"
           src={copy.image}
           alt={`تصویر ادیتوریال دسته ${copy.label}`}
         />
-        <div className="flex flex-col justify-center gap-4 p-6 md:p-10">
-          <span className="text-xs text-primary">کالکشن / {copy.label}</span>
-          <h1 className="text-2xl md:text-3xl">{copy.title}</h1>
-          <p className="text-sm leading-7 text-muted-foreground">{copy.description}</p>
+        <div className="category-hero__copy">
+          <span className="section-heading__eyebrow">کالکشن / {copy.label}</span>
+          <h1>{copy.title}</h1>
+          <p>{copy.description}</p>
           <a
-            className="inline-flex min-h-11 w-max items-center gap-2 rounded-pill bg-primary px-4 text-sm font-semibold text-primary-foreground"
+            className="editorial-cta"
             href={`/products/${audience}`}
           >
             مشاهده محصولات <Icon name="arrow-left" size={16} />
           </a>
         </div>
       </section>
-      <section aria-labelledby="category-products-title" className="space-y-5">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="text-xl" id="category-products-title">
+      <section aria-labelledby="category-products-title" className="category-products">
+        <div className="section-heading">
+          <h2 id="category-products-title">
             انتخاب‌های محبوب {copy.label}
           </h2>
-          <a className="text-sm text-primary underline" href={`/products/${audience}`}>
+          <a className="text-link" href={`/products/${audience}`}>
             مشاهده همه
           </a>
         </div>
@@ -67,15 +67,15 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
         </CatalogQueryState>
         {adder.feedback ? <AddToCartFeedback {...adder.feedback} /> : null}
       </section>
-      <section className="grid gap-4 rounded-editorial border border-border bg-secondary p-5 md:grid-cols-[1fr_auto] md:items-center">
+      <section className="guide-callout">
         <div>
-          <span className="text-xs text-primary">راهنمای انتخاب</span>
-          <h2 className="mt-2 text-lg">سایز درست، حس درست</h2>
-          <p className="mt-2 text-sm leading-7 text-muted-foreground">
+          <span className="section-heading__eyebrow">راهنمای انتخاب</span>
+          <h2>سایز درست، حس درست</h2>
+          <p>
             برای هر مدل، اندازه‌گیری و پیشنهاد فیت را کنار مشخصات محصول گذاشته‌ایم.
           </p>
         </div>
-        <a className="text-sm text-primary underline" href="/size-guide">
+        <a className="text-link" href="/size-guide">
           مشاهده راهنمای اندازه
         </a>
       </section>

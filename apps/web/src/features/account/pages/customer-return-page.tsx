@@ -2,6 +2,8 @@ import { useState, type FormEvent } from 'react';
 import { type CustomerReturnReason } from '@nova/api-client';
 import { Button, Checkbox, Select as UiSelect, Textarea as UiTextarea } from '@nova/ui';
 
+import { Icon } from '@/shared/ui/icon';
+
 import { useCurrentCustomer } from '@/features/auth/api/auth-api';
 import { useCustomerOrder, useRequestCustomerOrderReturn } from '@/features/orders/api/orders-api';
 
@@ -36,6 +38,8 @@ import { ReturnOrderState } from '@/features/account/components/return-order-sta
 import { SessionState } from '@/features/account/components/session-state';
 
 import { getSubmittedOrderForRoute } from '@/features/account/components/get-submitted-order-for-route';
+
+import './customer-return-request.reference.css';
 
 export function CustomerReturnPage({
   mode = 'request',
@@ -196,129 +200,192 @@ export function CustomerReturnPage({
     }
   };
   return (
-    <PageFrame>
-      <div className="breadcrumb">
-        <a href="/account/orders">سفارش‌ها</a>
-        <span>/</span>
-        <span>درخواست بازگشت</span>
-      </div>
-      <header className="simple-page-header">
-        <span className="section-heading__eyebrow">NOVA / RETURNS</span>
-        <h1>درخواست بازگشت کالا</h1>
-        <p>
-          سفارش <span dir="ltr">{order.orderNumber}</span> · مهلت بازگشت از تاریخ تحویل توسط سرور
-          بررسی می‌شود.
-        </p>
-      </header>
-      <form
-        className="mx-auto max-w-3xl border border-border bg-surface p-6 shadow-card md:p-8"
-        onSubmit={(event) => void submit(event)}
-      >
-        <fieldset className="grid gap-3">
-          <legend className="text-sm font-medium">کالاهای موردنظر</legend>
-          {order.items.map((item) => {
-            const selected = selectedItemIds.includes(item.id);
-            return (
-              <label className={`option-card ${selected ? 'is-selected' : ''}`} key={item.id}>
-                <Checkbox
-                  checked={selected}
-                  onChange={(event) =>
-                    setSelectedItemIds((current) =>
-                      event.target.checked
-                        ? [...current, item.id]
-                        : current.filter((id) => id !== item.id),
-                    )
-                  }
-                />
-                <span>
-                  <strong>{item.productName}</strong>
-                  <small>
-                    <span dir="ltr">{item.sku}</span> · {formatPersianNumber(item.quantity)} عدد
-                  </small>
+    <PageFrame className="nova-return-request-page">
+      <div className="nova-return-request-shell">
+        <aside className="nova-return-request-art" aria-label="NOVA returns">
+          <img src="/assets/nova-women-lifestyle.webp" alt="استایل زنانه نوا" />
+          <span aria-hidden="true" />
+          <div>
+            <strong>اعتماد شما برای ما ارزشمند است.</strong>
+            <p>بازگشت آسان، تجربه‌ای مطمئن.</p>
+            <small>NOVA</small>
+          </div>
+        </aside>
+
+        <section className="nova-return-request-content">
+          <header className="nova-return-request-header">
+            <h1>درخواست بازگشت کالا</h1>
+            <p>در چند مرحله، کالای خود را برای بازگشت ثبت کنید.</p>
+            <a className="nova-return-request-cancel" href={`/order/${encodeURIComponent(order.orderNumber)}`}>
+              انصراف
+            </a>
+          </header>
+
+          <div className="nova-return-request-steps" aria-label="مراحل درخواست بازگشت">
+            {[
+              ['۱', 'انتخاب سفارش'],
+              ['۲', 'انتخاب کالا'],
+              ['۳', 'دلیل بازگشت'],
+              ['۴', 'تکمیل اطلاعات'],
+              ['۵', 'ارسال درخواست'],
+            ].map(([n, label], index) => (
+              <div className={index === 0 ? 'is-active' : ''} key={n}>
+                <b>{n}</b>
+                <span>{label}</span>
+              </div>
+            ))}
+          </div>
+
+          <form className="nova-return-request-form" onSubmit={(event) => void submit(event)}>
+            <section className="nova-return-request-form__left">
+              <label className="nova-return-request-box">
+                <strong>۱. انتخاب سفارش</strong>
+                <span className="nova-return-request-select">
+                  <UiSelect value={order.orderNumber} onChange={() => undefined}>
+                    <option value={order.orderNumber}>
+                      سفارش شماره {order.orderNumber}
+                    </option>
+                  </UiSelect>
+                  <Icon name="chevron-down" size={16} />
                 </span>
-                <span className="text-xs text-muted-foreground">کل این قلم</span>
               </label>
-            );
-          })}
-        </fieldset>
-        <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
-          دلیل بازگشت
-          <UiSelect
-            className="min-h-12 border border-border bg-background px-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
-            value={reason}
-            onChange={(event) => setReason(event.target.value as CustomerReturnReason)}
-          >
-            {(Object.entries(returnReasonCopy) as Array<[CustomerReturnReason, string]>).map(
-              ([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ),
-            )}
-          </UiSelect>
-        </label>
-        <label className="mt-4 flex flex-col gap-2 text-sm font-medium">
-          توضیحات تکمیلی
-          <UiTextarea
-            className="border border-border bg-background px-3 py-3 outline-none focus:border-primary focus:ring-2 focus:ring-accent-soft"
-            rows={4}
-            maxLength={500}
-            placeholder="اگر نکته‌ای درباره درخواست خود دارید، اینجا بنویسید."
-            value={note}
-            onChange={(event) => setNote(event.target.value)}
-          />
-        </label>
-        <fieldset className="mt-4 grid gap-2 text-sm text-muted-foreground">
-          <legend className="font-medium text-foreground">تأیید شرایط بازگشت</legend>
-          {(
-            [
-              ['unused', 'کالا استفاده نشده است.'],
-              ['unwashed', 'کالا شسته نشده است.'],
-              ['tags', 'برچسب کالا متصل است.'],
-            ] as const
-          ).map(([key, label]) => (
-            <label className="flex min-h-11 items-center gap-2" key={key}>
-              <Checkbox
-                checked={confirmed[key]}
-                onChange={(event) =>
-                  setConfirmed((current) => ({ ...current, [key]: event.target.checked }))
-                }
-              />
-              {label}
-            </label>
-          ))}
-        </fieldset>
-        {formError ? (
-          <p
-            className="mt-4 border border-warning bg-warning-100 px-4 py-3 text-sm text-warning"
-            role="alert"
-          >
-            {formError}
-          </p>
-        ) : null}
-        {currentSubmittedOrder?.returnRequest ? (
-          <p
-            className="mt-4 border border-success bg-success-100 px-4 py-3 text-sm text-success"
-            role="status"
-          >
-            درخواست بازگشت ثبت شد و اکنون در وضعیت «
-            {returnRequestStatusCopy[currentSubmittedOrder.returnRequest.status]}» قرار دارد.
-          </p>
-        ) : null}
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Button
-            disabled={returnMutation.isPending || Boolean(currentSubmittedOrder?.returnRequest)}
-            loading={returnMutation.isPending}
-            size="lg"
-            type="submit"
-          >
-            {returnMutation.isPending ? 'در حال ثبت...' : 'ثبت درخواست بازگشت'}
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <a href={`/order/${encodeURIComponent(order.orderNumber)}`}>انصراف</a>
-          </Button>
-        </div>
-      </form>
+
+              <fieldset className="nova-return-request-box">
+                <legend>۲. انتخاب کالاهای قابل بازگشت</legend>
+                <p>کالاهایی که قصد بازگشت آن‌ها را دارید انتخاب کنید.</p>
+                <div className="nova-return-request-items">
+                  {order.items.map((item, index) => {
+                    const selected = selectedItemIds.includes(item.id);
+                    return (
+                      <label className={selected ? 'is-selected' : ''} key={item.id}>
+                        <Checkbox
+                          checked={selected}
+                          onChange={(event) =>
+                            setSelectedItemIds((current) =>
+                              event.target.checked
+                                ? [...current, item.id]
+                                : current.filter((id) => id !== item.id),
+                            )
+                          }
+                        />
+                        <img
+                          src={
+                            index % 2 === 0
+                              ? '/assets/nova-product-knit-cardigan.webp'
+                              : '/assets/nova-hero-men.webp'
+                          }
+                          alt=""
+                        />
+                        <span>
+                          <strong>{item.productName}</strong>
+                          <small>
+                            <span dir="ltr">{item.sku}</span> · {formatPersianNumber(item.quantity)} عدد
+                          </small>
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </fieldset>
+
+              <aside className="nova-return-request-support">
+                <Icon name="users" size={27} />
+                <div><strong>سوالی دارید؟</strong><small>تیم پشتیبانی نوا همراه شماست.</small></div>
+                <a href="/support">تماس با پشتیبانی</a>
+              </aside>
+            </section>
+
+            <section className="nova-return-request-form__right">
+              <label className="nova-return-request-box">
+                <strong>۳. دلیل بازگشت</strong>
+                <span className="nova-return-request-select">
+                  <UiSelect
+                    value={reason}
+                    onChange={(event) => setReason(event.target.value as CustomerReturnReason)}
+                  >
+                    {(Object.entries(returnReasonCopy) as Array<[CustomerReturnReason, string]>).map(
+                      ([value, label]) => <option key={value} value={value}>{label}</option>,
+                    )}
+                  </UiSelect>
+                  <Icon name="chevron-down" size={16} />
+                </span>
+              </label>
+
+              <label className="nova-return-request-box">
+                <strong>۴. توضیحات تکمیلی (اختیاری)</strong>
+                <UiTextarea
+                  rows={4}
+                  maxLength={500}
+                  placeholder="توضیحات خود را در اینجا بنویسید..."
+                  value={note}
+                  onChange={(event) => setNote(event.target.value)}
+                />
+                <small>{formatPersianNumber(note.length)} / ۵۰۰</small>
+              </label>
+
+              <fieldset className="nova-return-request-box nova-return-request-conditions">
+                <legend>۵. تأیید شرایط بازگشت</legend>
+                {(
+                  [
+                    ['unused', 'کالا استفاده نشده است.'],
+                    ['unwashed', 'کالا شسته نشده است.'],
+                    ['tags', 'برچسب کالا متصل است.'],
+                  ] as const
+                ).map(([key, label]) => (
+                  <label key={key}>
+                    <Checkbox
+                      checked={confirmed[key]}
+                      onChange={(event) =>
+                        setConfirmed((current) => ({ ...current, [key]: event.target.checked }))
+                      }
+                    />
+                    {label}
+                  </label>
+                ))}
+              </fieldset>
+
+              {formError ? <p className="nova-return-request-message is-error" role="alert">{formError}</p> : null}
+              {currentSubmittedOrder?.returnRequest ? (
+                <p className="nova-return-request-message is-success" role="status">
+                  درخواست بازگشت ثبت شد و اکنون در وضعیت «
+                  {returnRequestStatusCopy[currentSubmittedOrder.returnRequest.status]}» قرار دارد.
+                </p>
+              ) : null}
+
+              <Button
+                className="nova-return-request-submit"
+                disabled={returnMutation.isPending || Boolean(currentSubmittedOrder?.returnRequest)}
+                loading={returnMutation.isPending}
+                type="submit"
+              >
+                {returnMutation.isPending ? 'در حال ثبت...' : 'ارسال درخواست بازگشت'}
+                <Icon name="arrow-left" size={16} />
+              </Button>
+            </section>
+          </form>
+        </section>
+
+        <aside className="nova-return-request-sidebar" aria-label="حساب کاربری">
+          <div className="nova-return-request-sidebar__profile">
+            <img src="/assets/nova-women-lifestyle.webp" alt="" />
+            <strong>{customerQuery.data.email ?? 'مشتری نوا'}</strong>
+            <span dir="ltr">{customerQuery.data.phone}</span>
+          </div>
+          <nav>
+            <a href="/account"><Icon name="home" size={17} /> داشبورد حساب</a>
+            <a href="/account/profile"><Icon name="user" size={17} /> اطلاعات شخصی</a>
+            <a href="/account/orders" className="is-active"><Icon name="bag" size={17} /> سفارش‌های من</a>
+            <a href="/return" className="is-active-soft"><Icon name="rotate" size={17} /> درخواست‌های بازگشت</a>
+            <a href="/account/addresses"><Icon name="home" size={17} /> آدرس‌ها</a>
+            <a href="/support"><Icon name="users" size={17} /> پشتیبانی</a>
+          </nav>
+          <a href="/returns-policy" className="nova-return-request-sidebar__promo">
+            <img src="/assets/nova-home-mobile-story.webp" alt="" />
+            <span aria-hidden="true" />
+            <div><strong>زیبایی در انتخاب آگاهانه</strong><small>مشاهده راهنما</small></div>
+          </a>
+        </aside>
+      </div>
     </PageFrame>
   );
 }

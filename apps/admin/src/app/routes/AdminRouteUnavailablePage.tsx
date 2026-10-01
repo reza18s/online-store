@@ -1,5 +1,7 @@
 import { AdminLogoutButton } from '@/features/auth';
 
+import '@/styles/admin-reference.css';
+
 export function AdminRouteUnavailablePage({ page }: { page: string }) {
   const titleMap: Record<string, string> = {
     admin: 'داشبورد',
@@ -16,8 +18,8 @@ export function AdminRouteUnavailablePage({ page }: { page: string }) {
   const title = titleMap[page.split('/')[0] ?? page] ?? 'این بخش';
 
   return (
-    <main className="flex min-h-svh items-center justify-center bg-background px-4" dir="rtl">
-      <section className="w-full max-w-md bg-surface p-8 text-right shadow-float" role="status">
+    <main className="admin-reference-system flex min-h-svh items-center justify-center bg-background px-4" dir="rtl">
+      <section className="admin-reference-system__card w-full max-w-md bg-surface p-8 text-right shadow-float" role="status">
         <span className="section-heading__eyebrow">NOVA / ADMIN</span>
         <h1 className="mt-2 text-2xl leading-relaxed">{title} هنوز آماده نیست</h1>
         <p className="mt-3 text-sm leading-8 text-muted-foreground">

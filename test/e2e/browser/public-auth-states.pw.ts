@@ -1,4 +1,5 @@
 import { expect, test, type Page, type Route } from '@playwright/test';
+import { captureUiAudit } from './ui-audit-screenshot';
 
 const safeMethods = new Set(['GET', 'HEAD', 'OPTIONS']);
 const browserLocalFontStylesheet = {
@@ -85,6 +86,38 @@ async function installPublicAuthFixtures(page: Page): Promise<{
 test.describe('public customer authentication states', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
 
+  test('requests, resends, and verifies a synthetic customer code', async ({ page }) => {
+    await installPublicAuthFixtures(page);
+    let signedIn = false;
+    let requests = 0;
+    const customer = { id: 'synthetic-auth-customer', phone: '+989000000001', email: null, status: 'ACTIVE', createdAt: '2026-01-01T00:00:00.000Z' };
+    const respond = (data: unknown) => ({ status: 200, contentType: 'application/json', body: JSON.stringify({ data, meta: {} }) });
+    await page.route('**/v1/auth/me', (route) => route.fulfill(respond(signedIn ? customer : null)));
+    await page.route('**/v1/account/orders?*', (route) => route.fulfill(respond({ items: [], total: 0, page: 1, limit: 10 })));
+    await page.route('**/v1/auth/otp/request', async (route) => {
+      expect(route.request().postDataJSON()).toEqual({ phone: '09000000001' });
+      requests += 1;
+      await route.fulfill(respond({ challengeId: `synthetic-challenge-${requests}`, expiresAt: '2026-12-01T00:00:00.000Z', resendAvailableAt: '2026-01-01T00:00:00.000Z' }));
+    });
+    await page.route('**/v1/auth/otp/verify', async (route) => {
+      expect(route.request().postDataJSON()).toEqual({ challengeId: 'synthetic-challenge-2', code: '000000' });
+      signedIn = true;
+      await route.fulfill(respond({ user: customer, expiresAt: '2026-12-01T00:00:00.000Z' }));
+    });
+    await page.goto('/auth');
+    await page.getByRole('textbox', { name: 'شماره موبایل' }).fill('09000000001');
+    await page.getByRole('button', { name: 'ارسال کد ورود' }).click();
+    await expect(page).toHaveURL(/challengeId=synthetic-challenge-1/);
+    await page.getByRole('button', { name: 'ارسال دوباره کد' }).click();
+    await expect(page).toHaveURL(/challengeId=synthetic-challenge-2/);
+    await captureUiAudit(page, 'auth/verify');
+    await page.getByRole('textbox', { name: 'کد تأیید' }).fill('000000');
+    await page.getByRole('button', { name: 'تأیید و ورود' }).click();
+    await expect(page).toHaveURL(/\/account$/);
+    await expect(page.getByRole('main')).toContainText(customer.phone);
+    expect(requests).toBe(2);
+  });
+
   test('keeps the empty customer-auth form browser-invalid without requesting an OTP', async ({
     page,
   }) => {
@@ -102,6 +135,7 @@ test.describe('public customer authentication states', () => {
     await expect(phoneInput).toHaveAttribute('dir', 'ltr');
     await expect(phoneInput).toHaveAttribute('required', '');
     await expect(phoneInput).toBeEmpty();
+    await captureUiAudit(page, 'auth/request');
 
     await page.getByRole('button', { name: 'ارسال کد ورود' }).click();
 
@@ -137,6 +171,7 @@ test.describe('public customer authentication states', () => {
     );
     await expect(page.getByRole('button', { name: 'تأیید و ورود' })).toBeDisabled();
     await expect(page.getByRole('link', { name: 'تغییر شماره' })).toHaveAttribute('href', '/auth');
+    await captureUiAudit(page, 'auth/missing-challenge');
 
     expect(blockedExternalRequests).toEqual([]);
     expect(blockedMutationRequests).toEqual([]);

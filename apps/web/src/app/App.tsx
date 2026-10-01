@@ -14,6 +14,8 @@ import { resolveSeoDocumentForRoute } from '@/features/seo';
 
 export function App() {
   const route = useRoute();
+  const [pathname, queryString = ''] = route.split('?');
+  const searchQuery = pathname === '/search' ? new URLSearchParams(queryString).get('q') ?? '' : undefined;
   useScrollToTop(route);
   const cartQuery = useCart(true);
   const customerQuery = useCurrentCustomer(true);
@@ -34,7 +36,7 @@ export function App() {
   }, [route]);
 
   useEffect(() => {
-    if (route === '/search') setSearchOpen(true);
+    if (pathname === '/search') setSearchOpen(true);
   }, [route]);
 
   const toggleWishlist = (slug: string) => {
@@ -64,7 +66,7 @@ export function App() {
         onToggleWishlist={toggleWishlist}
       />
       <MobileBottomNav cartCount={cartCount} />
-      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchDialog open={searchOpen} initialQuery={searchQuery} onClose={() => setSearchOpen(false)} />
       <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );

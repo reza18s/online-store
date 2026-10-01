@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { type CustomerAddress, type CustomerAddressCreateInput } from '@nova/api-client';
 import { Button, Checkbox, Textarea as UiTextarea } from '@nova/ui';
+import { Icon } from '@/shared/ui/icon';
 import {
   useCreateCustomerAddress,
   useUpdateCustomerAddress,
@@ -21,10 +22,12 @@ export function CustomerAddressForm({
   mode,
   selectedAddress,
   onSaved,
+  onDelete,
 }: {
   mode: 'create' | 'edit';
   selectedAddress?: CustomerAddress;
   onSaved?: (address: CustomerAddress) => void;
+  onDelete?: () => void;
 }) {
   const createMutation = useCreateCustomerAddress();
   const updateMutation = useUpdateCustomerAddress();
@@ -90,6 +93,254 @@ export function CustomerAddressForm({
       setSaveState('error');
     }
   };
+  if (mode === 'create') {
+    return (
+      <form
+        className="nova-address-create-form"
+        onSubmit={(event) => void submit(event)}
+        noValidate
+      >
+        <div className="nova-address-create-form__grid">
+          <AddressField
+            className="nova-address-create-form__recipient"
+            label="نام و نام خانوادگی گیرنده"
+            value={form.recipientName}
+            onChange={(value) => updateField('recipientName', value)}
+            placeholder="مثال: مهسا کریمی"
+            autoComplete="name"
+            icon="user"
+            required
+          />
+          <AddressField
+            className="nova-address-create-form__phone"
+            label="شماره تماس"
+            value={form.phone}
+            onChange={(value) => updateField('phone', value)}
+            placeholder="مثال: ۰۹۱۲۱۲۳۴۵۶۷"
+            autoComplete="tel"
+            inputMode="tel"
+            dir="ltr"
+            icon="user"
+            hint="برای هماهنگی ارسال سفارش"
+            required
+          />
+          <AddressField
+            label="استان"
+            value={form.province}
+            onChange={(value) => updateField('province', value)}
+            placeholder="مثال: تهران"
+            autoComplete="address-level1"
+            icon="chevron-down"
+            required
+          />
+          <AddressField
+            label="شهر"
+            value={form.city}
+            onChange={(value) => updateField('city', value)}
+            placeholder="مثال: تهران"
+            autoComplete="address-level2"
+            icon="chevron-down"
+            required
+          />
+
+          <label className="nova-address-create-form__address">
+            <span className="nova-address-create-form__label">
+              نشانی کامل <b aria-hidden="true">*</b>
+            </span>
+            <span className="nova-address-create-form__textarea">
+              <UiTextarea
+                rows={3}
+                value={form.addressLine}
+                onChange={(event) => updateField('addressLine', event.target.value)}
+                placeholder="مثال: خیابان ولیعصر، بالاتر از میدان ونک، کوچه نسترن، پلاک ۱۲، واحد ۳"
+                autoComplete="street-address"
+              />
+              <Icon name="home" size={17} aria-hidden="true" />
+            </span>
+            <small>لطفاً نشانی را به‌صورت کامل و دقیق وارد کنید.</small>
+          </label>
+
+          <AddressField
+            label="عنوان آدرس"
+            value={form.label}
+            onChange={(value) => updateField('label', value)}
+            placeholder="مثال: خانه یا محل کار"
+            autoComplete="address-line1"
+            icon="home"
+            hint="برای شناسایی سریع این آدرس در حساب شما"
+            required
+          />
+          <AddressField
+            label="کد پستی"
+            value={form.postalCode}
+            onChange={(value) => updateField('postalCode', value)}
+            placeholder="مثال: ۱۴۳۴۵۶۷۸۹۰"
+            autoComplete="postal-code"
+            inputMode="numeric"
+            dir="ltr"
+            icon="mail"
+            hint="کد پستی ۱۰ رقمی"
+            required
+          />
+        </div>
+
+        <label className="nova-address-create-form__default">
+          <Checkbox
+            checked={form.isDefault}
+            onChange={(event) => updateField('isDefault', event.target.checked)}
+          />
+          <span>
+            <strong>به عنوان آدرس پیش‌فرض ذخیره شود</strong>
+            <small>این آدرس به صورت پیش‌فرض در هنگام ثبت سفارش انتخاب خواهد شد.</small>
+          </span>
+        </label>
+
+        {formError || mutationError ? (
+          <p className="nova-address-create-form__message is-error" role="alert">
+            {formError || apiErrorMessage(mutationError, 'عملیات آدرس انجام نشد.')}
+          </p>
+        ) : null}
+
+        {saveState === 'saved' ? (
+          <p className="nova-address-create-form__message is-success" role="status">
+            آدرس با موفقیت ذخیره شد.
+          </p>
+        ) : null}
+
+        <div className="nova-address-create-form__actions">
+          <Button
+            className="nova-address-create-form__submit"
+            type="submit"
+            disabled={saving || !dirty}
+            loading={saving}
+          >
+            {saving ? 'در حال ذخیره...' : 'ذخیره آدرس جدید'}
+            <Icon name="arrow-left" size={16} />
+          </Button>
+          <Button className="nova-address-create-form__back" asChild variant="outline">
+            <a href="/account/addresses">بازگشت به آدرس‌ها</a>
+          </Button>
+          {dirty ? (
+            <span className="nova-address-create-form__dirty" role="status">
+              تغییرات ذخیره‌نشده دارید.
+            </span>
+          ) : null}
+        </div>
+      </form>
+    );
+  }
+
+  if (mode === 'edit') {
+    return (
+      <form className="nova-address-edit-form" onSubmit={(event) => void submit(event)} noValidate>
+        <div className="nova-address-edit-form__heading">
+          <h2>اطلاعات آدرس</h2>
+        </div>
+
+        <div className="nova-address-edit-form__grid">
+          <AddressField
+            className="nova-address-edit-form__wide"
+            label="عنوان آدرس"
+            value={form.label}
+            onChange={(value) => updateField('label', value)}
+            placeholder="خانه"
+            autoComplete="address-line1"
+            icon="home"
+          />
+          <AddressField
+            className="nova-address-edit-form__wide"
+            label="نام گیرنده"
+            value={form.recipientName}
+            onChange={(value) => updateField('recipientName', value)}
+            autoComplete="name"
+          />
+          <AddressField
+            className="nova-address-edit-form__wide"
+            label="شماره تماس"
+            value={form.phone}
+            onChange={(value) => updateField('phone', value)}
+            autoComplete="tel"
+            inputMode="tel"
+            dir="ltr"
+          />
+          <AddressField
+            label="استان"
+            value={form.province}
+            onChange={(value) => updateField('province', value)}
+            autoComplete="address-level1"
+            icon="chevron-down"
+          />
+          <AddressField
+            label="شهر"
+            value={form.city}
+            onChange={(value) => updateField('city', value)}
+            autoComplete="address-level2"
+            icon="chevron-down"
+          />
+
+          <label className="nova-address-edit-form__address">
+            <span>آدرس کامل</span>
+            <UiTextarea
+              rows={3}
+              value={form.addressLine}
+              onChange={(event) => updateField('addressLine', event.target.value)}
+              placeholder="خیابان، کوچه، پلاک و واحد"
+              autoComplete="street-address"
+            />
+          </label>
+
+          <AddressField
+            className="nova-address-edit-form__wide"
+            label="کد پستی"
+            value={form.postalCode}
+            onChange={(value) => updateField('postalCode', value)}
+            autoComplete="postal-code"
+            inputMode="numeric"
+            dir="ltr"
+          />
+        </div>
+
+        <label className="nova-address-edit-form__default">
+          <Checkbox
+            checked={form.isDefault}
+            onChange={(event) => updateField('isDefault', event.target.checked)}
+          />
+          این آدرس به عنوان آدرس پیش‌فرض من باشد
+        </label>
+
+        {formError || mutationError ? (
+          <p className="nova-address-create-form__message is-error" role="alert">
+            {formError || apiErrorMessage(mutationError, 'عملیات آدرس انجام نشد.')}
+          </p>
+        ) : null}
+
+        {saveState === 'saved' ? (
+          <p className="nova-address-create-form__message is-success" role="status">
+            آدرس با موفقیت ذخیره شد.
+          </p>
+        ) : null}
+
+        <div className="nova-address-edit-form__actions">
+          <Button className="nova-address-edit-form__save" type="submit" disabled={saving || !dirty} loading={saving}>
+            {saving ? 'در حال ذخیره...' : 'ذخیره تغییرات'}
+          </Button>
+          {onDelete ? (
+            <Button
+              className="nova-address-edit-form__delete"
+              type="button"
+              variant="outline"
+              onClick={onDelete}
+              disabled={saving}
+            >
+              <Icon name="close" size={16} />
+              حذف آدرس
+            </Button>
+          ) : null}
+        </div>
+      </form>
+    );
+  }
+
   return (
     <form
       className="mx-auto max-w-3xl border border-border bg-surface p-6 shadow-card md:p-8"

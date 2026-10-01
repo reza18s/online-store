@@ -6,9 +6,14 @@ import { isStaffCurrentQueryKey } from '@/features/auth/api/is-staff-current-que
 
 import { isStaffProtectedMutationKey } from '@/features/auth/api/is-staff-protected-mutation-key';
 
-export function clearStaffSessionCache(queryClient: QueryClient): void {
+export function clearStaffSessionCache(
+  queryClient: QueryClient,
+  options: { preserveCurrentStaffQuery?: boolean } = {},
+): void {
   queryClient.removeQueries({
-    predicate: ({ queryKey }) => isAdminQueryKey(queryKey) || isStaffCurrentQueryKey(queryKey),
+    predicate: ({ queryKey }) =>
+      isAdminQueryKey(queryKey) ||
+      (!options.preserveCurrentStaffQuery && isStaffCurrentQueryKey(queryKey)),
   });
 
   const mutationCache = queryClient.getMutationCache();

@@ -52,24 +52,21 @@ export function DashboardView({ staffRoles }: { staffRoles: readonly string[] | 
       </main>
     );
 
+  const orderEntries = Object.entries(summaryQuery.data.orderStatusCounts);
+  const maxOrderCount = Math.max(1, ...orderEntries.map(([, count]) => count));
+
   return (
-    <main className="min-h-full" dir="rtl">
-      <div className="mx-auto max-w-[1120px] space-y-4 md:space-y-5" dir="rtl">
-        <header className="flex flex-col gap-4 py-1 md:flex-row md:items-end md:justify-between">
-          <div className="text-right">
-            <span className="section-heading__eyebrow">NOVA / ADMIN DASHBOARD · LIVE SUMMARY</span>
-            <h1 className="mt-1 text-2xl leading-relaxed md:text-3xl">نمای کلی مدیریت</h1>
-            <p className="mt-1 text-xs leading-7 text-muted-foreground">
-              این نما فقط خلاصه خواندنی بازه انتخاب‌شده را از API نمایش می‌دهد.
-            </p>
+    <main className="admin-reference-dashboard min-h-full" dir="rtl">
+      <div className="admin-reference-dashboard__inner" dir="rtl">
+        <header className="admin-reference-dashboard__header">
+          <div>
+            <span className="section-heading__eyebrow">NOVA / ATELIER EDITORIAL</span>
+            <h1>صبح بخیر 👋</h1>
+            <p>خوش آمدید به پنل مدیریت نوا. خلاصه وضعیت فروشگاه را در بازه انتخاب‌شده ببینید.</p>
           </div>
-          <label
-            className="flex min-h-11 items-center gap-2 border border-border bg-surface px-3 text-xs text-muted-foreground"
-            htmlFor="admin-dashboard-period"
-          >
+          <label className="admin-reference-period" htmlFor="admin-dashboard-period">
             <span>بازه گزارش</span>
             <UiSelect
-              className="min-h-9 bg-transparent text-foreground outline-none focus-visible:outline-2 focus-visible:outline-primary"
               id="admin-dashboard-period"
               value={periodDays}
               onChange={(event) => setPeriodDays(Number(event.target.value))}
@@ -83,37 +80,67 @@ export function DashboardView({ staffRoles }: { staffRoles: readonly string[] | 
           </label>
         </header>
 
-        <section
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5"
-          aria-label="شاخص‌های خلاصه داشبورد"
-        >
+        <section className="admin-reference-metrics" aria-label="شاخص‌های خلاصه داشبورد">
           {SUMMARY_METRICS.map((metric) => (
-            <Card
-              asChild
-              className="border border-border bg-surface p-4 shadow-card"
-              key={metric.key}
-            >
+            <Card asChild className="admin-reference-metric-card" key={metric.key}>
               <article>
-                <div className="flex items-start justify-between gap-3">
-                  <span
-                    className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-primary"
-                    aria-hidden="true"
-                  >
-                    <Icon name={metric.icon} size={17} />
-                  </span>
-                  <h2 className="text-right text-xs leading-6 text-muted-foreground">
-                    {metric.label}
-                  </h2>
+                <span className="admin-reference-metric-card__icon" aria-hidden="true">
+                  <Icon name={metric.icon} size={20} />
+                </span>
+                <div>
+                  <h2>{metric.label}</h2>
+                  <p dir="rtl">{metric.format(summaryQuery.data[metric.key])}</p>
+                  <small>بر اساس داده زنده بازه انتخاب‌شده</small>
                 </div>
-                <p className="mt-5 text-right text-xl font-semibold tabular-nums" dir="rtl">
-                  {metric.format(summaryQuery.data[metric.key])}
-                </p>
               </article>
             </Card>
           ))}
         </section>
 
-        <OrderStatusCounts summary={summaryQuery.data} />
+        <section className="admin-reference-dashboard-grid">
+          <article className="admin-reference-chart-card">
+            <div className="admin-reference-panel-heading">
+              <div>
+                <span>LIVE ORDERS</span>
+                <h2>نمودار وضعیت سفارش‌ها</h2>
+              </div>
+              <Icon name="layers" size={19} />
+            </div>
+            {orderEntries.length ? (
+              <div className="admin-reference-bars" aria-label="تعداد سفارش‌ها بر اساس وضعیت">
+                {orderEntries.map(([status, count]) => (
+                  <div className="admin-reference-bar" key={status}>
+                    <span
+                      style={{ height: `${Math.max(14, Math.round((count / maxOrderCount) * 100))}%` }}
+                      title={`${status}: ${count.toLocaleString('fa-IR')}`}
+                    />
+                    <small>{count.toLocaleString('fa-IR')}</small>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="admin-reference-empty-copy">در این بازه سفارشی ثبت نشده است.</p>
+            )}
+          </article>
+
+          <OrderStatusCounts summary={summaryQuery.data} />
+
+          <article className="admin-reference-shortcuts">
+            <div className="admin-reference-panel-heading">
+              <div>
+                <span>QUICK ACCESS</span>
+                <h2>دسترسی سریع</h2>
+              </div>
+              <Icon name="sparkles" size={19} />
+            </div>
+            <div>
+              <a href="/admin/orders"><Icon name="package" size={18} /><span>سفارش‌ها<small>پیگیری و عملیات</small></span></a>
+              <a href="/admin/catalog"><Icon name="bag" size={18} /><span>محصولات<small>کاتالوگ فروشگاه</small></span></a>
+              <a href="/admin/inventory"><Icon name="warehouse" size={18} /><span>موجودی<small>کنترل انبار</small></span></a>
+              <a href="/admin/content"><Icon name="book" size={18} /><span>محتوا<small>انتشار و SEO</small></span></a>
+            </div>
+          </article>
+        </section>
       </div>
     </main>
   );

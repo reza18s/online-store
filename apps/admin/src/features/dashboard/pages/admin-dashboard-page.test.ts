@@ -45,7 +45,7 @@ test('renders the API-backed summary without preview-only content', () => {
 
   const markup = renderDashboard(queryClient, ['ADMIN']);
 
-  assert.match(markup, /NOVA \/ ADMIN DASHBOARD · LIVE SUMMARY/);
+  assert.match(markup, /NOVA \/ ATELIER EDITORIAL/);
   assert.match(markup, /محصولات منتشرشده/);
   assert.match(markup, /۲۹۸٬۵۰۰٬۰۰۰ تومان/);
   assert.match(markup, /در انتظار پرداخت/);
@@ -62,7 +62,7 @@ test('does not enable or render dashboard data for a non-admin role', () => {
   const markup = renderDashboard(queryClient, ['support']);
 
   assert.match(markup, /دسترسی کافی نیست/);
-  assert.doesNotMatch(markup, /NOVA \/ ADMIN DASHBOARD · LIVE SUMMARY/);
+  assert.doesNotMatch(markup, /NOVA \/ ATELIER EDITORIAL/);
   assert.equal(
     queryClient.getQueryData(queryKeys.adminDashboard.summary({ periodDays: 30 })),
     undefined,

@@ -186,9 +186,9 @@ export function CartView(props: StorefrontCartPageProps) {
   if (!cart.items.length)
     return (
       <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-6 bg-background py-8 md:py-12">
-        <header className="space-y-2">
-          <span className="text-xs text-primary">NOVA / CART</span>
-          <h1 className="text-2xl md:text-3xl">سبد خرید</h1>
+        <header className="simple-page-header">
+          <span className="section-heading__eyebrow">NOVA / CART</span>
+          <h1>سبد خرید</h1>
         </header>
         {isError ? <CartRefreshNotice onRetry={retry} /> : null}
         <section className="rounded-editorial border border-border bg-surface p-8 text-center">
@@ -207,8 +207,8 @@ export function CartView(props: StorefrontCartPageProps) {
     );
 
   return (
-    <main className="shell mx-auto w-[calc(100%-2rem)] max-w-[1280px] space-y-7 bg-background py-6 md:space-y-10 md:py-10">
-      <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+    <main className="shell inner-page cart-page">
+      <div className="breadcrumb">
         <a href="/" className="hover:text-primary">
           خانه
         </a>
@@ -218,8 +218,8 @@ export function CartView(props: StorefrontCartPageProps) {
       {isError ? <CartRefreshNotice onRetry={retry} /> : null}
       <header className="space-y-2">
         <span className="text-xs text-primary">NOVA / CART</span>
-        <h1 className="text-2xl md:text-3xl">سبد خرید</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1>سبد خرید</h1>
+        <p>
           {formatPersianNumber(cart.itemCount)} کالا در سبد شماست.
         </p>
       </header>
@@ -230,8 +230,8 @@ export function CartView(props: StorefrontCartPageProps) {
           isBusy={isBusy}
         />
       ) : null}
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)]">
-        <section className="space-y-4" aria-labelledby="cart-items-title">
+      <div className="cart-layout">
+        <section className="cart-items" aria-labelledby="cart-items-title">
           <h2 className="sr-only" id="cart-items-title">
             کالاهای سبد خرید
           </h2>
@@ -244,7 +244,7 @@ export function CartView(props: StorefrontCartPageProps) {
               onRemove={removeItem}
             />
           ))}
-          <div className="flex items-start gap-2 rounded-control border border-border bg-surface p-4 text-sm leading-7 text-muted-foreground">
+          <div className="cart-note">
             <Icon name="info" size={17} />
             <span>
               قیمت و موجودی در مرحله پرداخت دوباره بررسی می‌شود. موجودی کم یا تغییر قیمت بدون تأیید
@@ -261,10 +261,10 @@ export function CartView(props: StorefrontCartPageProps) {
           ) : null}
         </section>
         <aside
-          className="h-max rounded-editorial border border-border bg-surface p-5 shadow-card lg:sticky lg:top-24"
+          className="summary-card"
           aria-labelledby="cart-summary-title"
         >
-          <h2 className="text-lg" id="cart-summary-title">
+          <h2 id="cart-summary-title">
             خلاصه سفارش
           </h2>
           <dl className="mt-4 space-y-3 text-sm">
@@ -281,7 +281,7 @@ export function CartView(props: StorefrontCartPageProps) {
               <dd className="text-primary">{formatToman(cart.subtotalToman)}</dd>
             </div>
           </dl>
-          <div className="mt-4 border-t border-border pt-4">
+          <div className="summary-card__actions mt-4 border-t border-border pt-4">
             <p className="text-xs leading-6 text-muted-foreground">
               کد تخفیف در مرحله پرداخت، همراه با آدرس و روش ارسال، با قیمت نهایی بررسی و محاسبه
               می‌شود.
@@ -298,14 +298,14 @@ export function CartView(props: StorefrontCartPageProps) {
         </aside>
       </div>
       {recommendationsQuery.data?.items.length ? (
-        <section className="space-y-5" aria-labelledby="cart-recommendations-title">
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-xl" id="cart-recommendations-title">
+        <section className="cart-recommendations" aria-labelledby="cart-recommendations-title">
+          <div className="section-heading">
+            <h2 id="cart-recommendations-title">
               پیشنهادهای همراه
             </h2>
             <span className="text-xs text-muted-foreground">انتخاب‌های واقعی کاتالوگ</span>
           </div>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          <div className="product-grid">
             {recommendationsQuery.data.items.map(toStorefrontProduct).map((product) => (
               <RecommendationCard
                 key={product.slug}
@@ -319,7 +319,7 @@ export function CartView(props: StorefrontCartPageProps) {
       ) : recommendationsQuery.isPending ? (
         <CartSkeleton />
       ) : recommendationsQuery.isError ? (
-        <p className="text-sm text-muted-foreground">پیشنهادهای همراه موقتاً در دسترس نیستند.</p>
+        <p>پیشنهادهای همراه موقتاً در دسترس نیستند.</p>
       ) : null}
     </main>
   );

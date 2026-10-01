@@ -43,6 +43,37 @@ test('keeps anonymous account, order, and return routes private and settled', as
       return;
     }
 
+    if (request.method() === 'GET' && url.pathname === '/v1/auth/me') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: null,
+          meta: { requestId: 'QA-ANONYMOUS-REQUEST', timestamp: '2026-09-30T00:00:00.000Z' },
+        }),
+      });
+      return;
+    }
+
+    if (request.method() === 'GET' && url.pathname === '/v1/cart') {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: {
+            id: 'QA-ANONYMOUS-CART',
+            kind: 'GUEST',
+            items: [],
+            itemCount: 0,
+            subtotalToman: 0,
+            currency: 'TOMAN',
+          },
+          meta: { requestId: 'QA-ANONYMOUS-CART-REQUEST', timestamp: '2026-09-30T00:00:00.000Z' },
+        }),
+      });
+      return;
+    }
+
     await route.continue();
   });
 

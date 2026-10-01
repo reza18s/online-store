@@ -47,6 +47,21 @@ async function installReadOnlyLocalNetworkGuard(
 
     if (fixture && (await fixture(route, url))) return;
 
+    if (url.pathname.startsWith('/v1/catalog/')) {
+      const data =
+        url.pathname === '/v1/catalog/products'
+          ? { items: [], page: 1, limit: 8, total: 0 }
+          : url.pathname === '/v1/catalog/facets'
+            ? { groups: [] }
+            : [];
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ data, meta: {} }),
+      });
+      return;
+    }
+
     if (url.pathname === '/v1/auth/me') {
       await route.fulfill({
         status: 200,
@@ -126,6 +141,100 @@ test('renders the uncovered public category and listing routes', async ({ page }
   expect(blockedRequests).toEqual([]);
 });
 
+test('gives home hero links clear pointer feedback and keeps the no-product card honest', async ({
+  page,
+}) => {
+  const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
+  await openRoute(page, '/');
+
+  const collectionLink = page.getByRole('link', { name: /مشاهده کالکشن/ });
+  await expect(collectionLink).toHaveAttribute('href', '/campaign');
+  await expect(collectionLink).toHaveCSS('cursor', 'pointer');
+  await expect(collectionLink).toHaveCSS('color', 'rgb(255, 255, 255)');
+
+  const heroTiles = page.locator('.nova-home-hero-tile');
+  await expect(heroTiles).toHaveCount(2);
+  for (const tile of await heroTiles.all()) {
+    await expect(tile).toHaveCSS('cursor', 'pointer');
+    await expect(tile.locator('em')).toHaveCSS('cursor', 'pointer');
+  }
+
+  const featuredCard = page.locator('.nova-home-featured-product');
+  await expect(featuredCard.getByText('اکسسوری‌های نوا')).toBeVisible();
+  await expect(featuredCard.getByRole('link', { name: /مشاهده محصولات/ })).toHaveAttribute(
+    'href',
+    '/products/accessories',
+  );
+  await expect(featuredCard.locator('.nova-home-featured-product__badge')).toHaveCount(0);
+  await expect(featuredCard.getByRole('button', { name: /افزودن به سبد/ })).toHaveCount(0);
+  expect(blockedRequests).toEqual([]);
+});
+
+test('uses an available accessory in the desktop feature card', async ({ page }) => {
+  const blockedRequests = await installReadOnlyLocalNetworkGuard(page, async (route, url) => {
+    if (url.pathname !== '/v1/catalog/products') return false;
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          items: [
+            {
+              id: 'mens-shirt',
+              slug: 'oxford-shirt',
+              name: 'پیراهن آکسفورد مردانه',
+              priceToman: 1_890_000,
+              compareAtPriceToman: null,
+              available: true,
+              imageUrl: '/assets/nova-product-oxford-shirt.webp',
+              imageAlt: 'پیراهن آکسفورد آبی روشن',
+              categories: [{ id: 'men', slug: 'men', name: 'مردانه' }],
+              options: [],
+              variants: [],
+              colors: [{ name: 'آبی', hex: '#536b88' }],
+              stockStatus: 'IN_STOCK',
+            },
+            {
+              id: 'accessory-scarf',
+              slug: 'textured-scarf',
+              name: 'شال بافت برجسته',
+              priceToman: 890_000,
+              compareAtPriceToman: null,
+              available: true,
+              imageUrl: '/assets/nova-product-textured-scarf.webp',
+              imageAlt: 'شال بافتنی با رنگ خنثی',
+              categories: [{ id: 'accessories', slug: 'accessories', name: 'اکسسوری' }],
+              options: [],
+              variants: [],
+              colors: [{ name: 'خاکی', hex: '#9b8b78' }],
+              stockStatus: 'IN_STOCK',
+            },
+          ],
+          page: 1,
+          limit: 8,
+          total: 2,
+        },
+        meta: {},
+      }),
+    });
+    return true;
+  });
+
+  await openRoute(page, '/');
+
+  const featuredCard = page.locator('.nova-home-featured-product');
+  await expect(
+    featuredCard.getByRole('link', { name: 'شال بافت برجسته', exact: true }),
+  ).toHaveAttribute('href', '/product/textured-scarf');
+  await expect(featuredCard.locator('img')).toHaveAttribute(
+    'src',
+    '/assets/nova-product-textured-scarf.webp',
+  );
+  await expect(featuredCard.getByRole('button', { name: /افزودن به سبد/ })).toBeEnabled();
+  expect(blockedRequests).toEqual([]);
+});
+
 test('settles an empty public search without a skeleton or mutation', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
@@ -182,8 +291,17 @@ test('settles public discovery and product API errors without loading forever', 
   page,
 }) => {
   page.setDefaultNavigationTimeout(15_000);
+  let recoverCatalogOnRetry = false;
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page, async (route, url) => {
     if (url.pathname === '/v1/catalog/products') {
+      if (recoverCatalogOnRetry) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ data: { items: [], page: 1, limit: 8, total: 0 }, meta: {} }),
+        });
+        return true;
+      }
       await route.fulfill({
         status: 503,
         contentType: 'application/json',
@@ -208,10 +326,17 @@ test('settles public discovery and product API errors without loading forever', 
 
   await openRoute(page, '/products/sale');
   await expect(page.getByRole('heading', { name: 'تخفیف‌های منتخب', level: 1 })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'بارگذاری محصولات ممکن نشد' })).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'سرویس فهرست محصولات در دسترس نیست' })).toBeVisible({
     timeout: 15_000,
   });
-  await expect(page.getByRole('button', { name: 'تلاش دوباره', exact: true })).toBeVisible({
+  await expect(page.getByText(/ارتباط با سرور محصولات برقرار نشد/)).toBeVisible();
+  const retryCatalog = page.getByRole('button', { name: 'تلاش دوباره', exact: true });
+  await expect(retryCatalog).toBeVisible({
+    timeout: 15_000,
+  });
+  recoverCatalogOnRetry = true;
+  await retryCatalog.click();
+  await expect(page.getByRole('heading', { name: 'محصولی برای نمایش پیدا نشد' })).toBeVisible({
     timeout: 15_000,
   });
   await expectSettledDiscovery(page);

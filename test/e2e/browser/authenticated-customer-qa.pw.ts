@@ -7,6 +7,7 @@ import type {
   CustomerOrderSummary,
   CustomerUser,
 } from '../../../packages/api-client/src/types';
+import { captureUiAudit } from './ui-audit-screenshot';
 
 const syntheticMarker = 'QA-SYNTHETIC-AUTH-CUSTOMER-001';
 const syntheticOrderNumber = 'QA-ORDER-001';
@@ -264,8 +265,26 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await expect(main.getByRole('heading', { name: 'سفارش‌های من', level: 1 })).toBeVisible();
   await expect(main.locator('.account-nav__profile')).toContainText(syntheticCustomerEmail);
   await expect(main.locator('.account-nav__profile')).toContainText(syntheticCustomerPhone);
+  await captureUiAudit(page, 'account/orders');
 
-  const orderCard = main.locator('a.order-card').filter({ hasText: syntheticOrderNumber });
+  await page.goto('/account', { waitUntil: 'domcontentloaded' });
+  await waitForSettledAccount(page);
+  await expect(page.getByRole('heading', { name: 'حساب کاربری', level: 1 })).toBeVisible();
+  await expect(page.getByRole('link', { name: /مدیریت آدرس‌ها/ })).toBeVisible();
+  await captureUiAudit(page, 'account/dashboard');
+
+  await page.goto('/account/profile', { waitUntil: 'domcontentloaded' });
+  await waitForSettledAccount(page);
+  await expect(page.getByRole('heading', { name: 'اطلاعات شخصی', level: 1 })).toBeVisible();
+  await expect(page.getByRole('main')).toContainText(syntheticCustomerEmail);
+  await captureUiAudit(page, 'account/profile');
+
+  await page.goto('/account/orders', { waitUntil: 'domcontentloaded' });
+  await waitForSettledAccount(page);
+  const ordersMain = page.getByRole('main');
+  await expect(ordersMain.getByRole('heading', { name: 'سفارش‌های من', level: 1 })).toBeVisible();
+
+  const orderCard = ordersMain.locator('a.order-card').filter({ hasText: syntheticOrderNumber });
   await expect(orderCard).toBeVisible();
   await expect(orderCard).toHaveAttribute('href', `/order/${syntheticOrderNumber}`);
   await orderCard.click();
@@ -276,6 +295,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await expect(page.getByRole('main')).toContainText(syntheticOrderNumber);
   await expect(page.getByRole('main')).toContainText(`${syntheticMarker} / مشتری آزمایشی`);
   await expect(page.getByRole('main')).toContainText('QA-SYNTHETIC-TRACKING-001');
+  await captureUiAudit(page, 'account/order-detail');
 
   await page.getByRole('link', { name: 'سفارش‌ها', exact: true }).click();
   await waitForSettledAccount(page);
@@ -288,7 +308,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await page.getByRole('button', { name: 'خروج از حساب', exact: true }).click();
   expect((await logoutResponse).status()).toBe(200);
 
-  await expect(page).toHaveURL(/\/home$/);
+  await expect(page).toHaveURL(/\/$/);
   await expect(page.getByRole('main')).toBeVisible();
   await expect(page.locator('body')).not.toContainText(syntheticMarker);
   await expect(page.locator('body')).not.toContainText(syntheticCustomerEmail);

@@ -8,34 +8,41 @@ import { formatPersianNumber } from '@/shared/utils/format-persian-number';
 
 export function OrderStatusCounts({ summary }: { summary: AdminDashboardSummary }) {
   const entries = Object.entries(summary.orderStatusCounts);
+  const total = entries.reduce((sum, [, count]) => sum + count, 0);
 
   return (
-    <Card asChild className="border border-border bg-surface p-5 text-right shadow-card" dir="rtl">
+    <Card asChild className="admin-reference-order-status" dir="rtl">
       <section>
-        <div className="flex items-start justify-between gap-3">
+        <div className="admin-reference-panel-heading">
           <div>
-            <span className="section-heading__eyebrow">SUMMARY FIELD ۶ / ۶</span>
-            <h2 className="mt-1 text-lg leading-relaxed">تعداد سفارش‌ها بر اساس وضعیت</h2>
+            <span>ORDER STATUS</span>
+            <h2>وضعیت سفارش‌ها</h2>
           </div>
-          <Icon name="layers" size={20} className="text-primary" aria-hidden="true" />
+          <Icon name="package" size={19} aria-hidden="true" />
         </div>
-        {entries.length > 0 ? (
-          <dl className="mt-4 grid gap-2 sm:grid-cols-2">
-            {entries.map(([status, count]) => (
-              <div
-                className="flex items-center justify-between gap-3 border-b border-border py-2 last:border-b-0"
-                key={status}
-              >
-                <dt className="text-sm text-muted-foreground">
-                  {ORDER_STATUS_LABELS[status] ?? status}
-                </dt>
-                <dd className="text-sm font-semibold tabular-nums">{formatPersianNumber(count)}</dd>
-              </div>
-            ))}
-          </dl>
-        ) : (
-          <p className="mt-4 text-sm text-muted-foreground">وضعیتی برای این بازه ثبت نشده است.</p>
-        )}
+
+        <div className="admin-reference-order-status__body">
+          <div className="admin-reference-order-status__ring" aria-label={`مجموع ${formatPersianNumber(total)} سفارش`}>
+            <strong>{formatPersianNumber(total)}</strong>
+            <small>مجموع سفارش‌ها</small>
+          </div>
+
+          {entries.length > 0 ? (
+            <dl>
+              {entries.map(([status, count], index) => (
+                <div key={status}>
+                  <dt>
+                    <span className={`admin-reference-dot dot-${(index % 5) + 1}`} />
+                    {ORDER_STATUS_LABELS[status] ?? status}
+                  </dt>
+                  <dd>{formatPersianNumber(count)}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : (
+            <p className="admin-reference-empty-copy">وضعیتی برای این بازه ثبت نشده است.</p>
+          )}
+        </div>
       </section>
     </Card>
   );

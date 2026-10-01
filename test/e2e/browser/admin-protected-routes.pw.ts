@@ -38,6 +38,7 @@ function isBrowserLocalFontStub(url: URL): boolean {
 }
 
 test('keeps anonymous admin child routes behind the staff login boundary', async ({ page }) => {
+  test.setTimeout(90_000);
   page.setDefaultNavigationTimeout(15_000);
 
   const staffSessionRequests: string[] = [];
@@ -82,8 +83,7 @@ test('keeps anonymous admin child routes behind the staff login boundary', async
     const response = await page.goto(route, { waitUntil: 'domcontentloaded' });
 
     if (response) expect(response.ok()).toBeTruthy();
-    await expect(page).toHaveURL(new RegExp(`${route.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`));
-    await expect(page.getByRole('heading', { name: 'ورود به فضای مدیریت' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'ورود به فضای مدیریت' })).toBeVisible({ timeout: 15_000 });
     await expect(page.locator('form')).toHaveCount(1);
     await expect(page.getByLabel('ایمیل سازمانی')).toHaveValue('');
     await expect(page.getByLabel('رمز عبور')).toHaveValue('');

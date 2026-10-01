@@ -20,11 +20,11 @@ export function AdminOperationsShell({
   ];
   return (
     <main
-      className="min-h-svh bg-background px-3 py-4 text-foreground md:px-6 md:py-7 lg:px-8"
+      className={`admin-reference-module admin-reference-catalog-shell is-${view} min-h-0 bg-transparent px-0 py-0 text-foreground`}
       dir="rtl"
     >
-      <div className="mx-auto max-w-[1320px]">
-        <header className="flex flex-col gap-4 border-b border-border pb-5 md:flex-row md:items-end md:justify-between">
+      <div className="admin-reference-module__inner mx-auto max-w-[1320px]">
+        <header className="admin-reference-module__header admin-reference-catalog-shell__header flex flex-col gap-4 border-b border-border pb-5 md:flex-row md:items-end md:justify-between">
           <div>
             <span className="section-heading__eyebrow">ATELIER / ADMIN OPERATIONS</span>
             <h1 className="mt-2 text-2xl font-semibold leading-relaxed md:text-3xl">
@@ -43,7 +43,7 @@ export function AdminOperationsShell({
             </span>
           </div>
         </header>
-        <nav className="mt-5 overflow-x-auto" aria-label="بخش‌های کاتالوگ و عملیات">
+        <nav className="admin-reference-tabs mt-5 overflow-x-auto" aria-label="بخش‌های کاتالوگ و عملیات">
           <div className="flex min-w-max gap-2">
             {navigation.map(([key, label, icon, href]) => (
               <a
@@ -57,10 +57,10 @@ export function AdminOperationsShell({
             ))}
           </div>
         </nav>
-        <div className="mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_250px]">
+        <div className="admin-reference-catalog-body mt-5 grid gap-5 xl:grid-cols-[minmax(0,1fr)_250px]">
           <div className="min-w-0">{children}</div>
           <aside
-            className="hidden border border-border bg-surface p-5 shadow-card xl:block"
+            className="admin-reference-operations-note hidden border border-border bg-surface p-5 shadow-card xl:block"
             aria-label="راهنمای عملیات"
           >
             <p className="text-[10px] font-semibold tracking-[0.16em] text-primary">

@@ -14,7 +14,7 @@ export function ProductGrid({
   onAdd: (product: StorefrontProduct) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+    <div className="product-grid">
       {products.map((product) => (
         <ProductCard
           key={product.slug}

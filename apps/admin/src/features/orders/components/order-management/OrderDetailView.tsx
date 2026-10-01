@@ -232,7 +232,7 @@ export function OrderDetailView({
     statusMutation.isPending || shipmentMutation.isPending || returnMutation.isPending;
   const returnRequest = order.returnRequest;
   return (
-    <main className="space-y-5" aria-labelledby="admin-order-detail-title">
+    <main className="admin-reference-order-detail space-y-5" aria-labelledby="admin-order-detail-title">
       <header className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
         <div>
           <a

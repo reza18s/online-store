@@ -168,7 +168,7 @@ test('filters support staff navigation to the customer inspection boundary', asy
   expect(response?.ok()).toBeTruthy();
   const main = page.getByRole('main');
   await expect(main.getByRole('heading', { name: 'مشتریان', exact: true })).toBeVisible();
-  await expect(main.getByRole('heading', { name: 'جست‌وجوی مشتری', exact: true })).toBeVisible();
+  await expect(main.getByRole('heading', { name: 'مدیریت مشتریان', exact: true })).toBeVisible();
 
   const inspectionNavigation = page.getByRole('navigation', {
     name: 'بخش‌های پشتیبانی و مالی',

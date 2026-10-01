@@ -76,9 +76,9 @@ async function openPublicHome(page: Page): Promise<string[]> {
     await route.continue();
   });
 
-  const response = await page.goto('/home', { waitUntil: 'domcontentloaded' });
+  const response = await page.goto('/', { waitUntil: 'domcontentloaded' });
   expect(response?.ok()).toBeTruthy();
-  await expect(page.locator('main h1#storefront-home-title')).toBeVisible();
+  await expect(page.getByRole('main').getByRole('heading', { level: 1 })).toBeVisible();
 
   return blockedMutationRequests;
 }

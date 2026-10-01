@@ -13,6 +13,7 @@ const adminEndpoint = parseE2eEndpoint(
   'http://127.0.0.1:5174',
 );
 const adminTestFiles = [
+  '**/admin-route-sweep.pw.ts',
   '**/admin-protected-routes.pw.ts',
   '**/auth-role-boundaries.pw.ts',
   '**/authenticated-admin-dashboard-accessibility-qa.pw.ts',

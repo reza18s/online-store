@@ -3,6 +3,8 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { test } from 'node:test';
 
+import { ApiClientError } from '@nova/api-client';
+
 import {
   buildDiscoveryHref,
   CatalogQueryState,
@@ -200,4 +202,25 @@ test('keeps cached catalog results visible with a retry warning after refresh fa
   assert.match(markup, /به‌روزرسانی نتایج انجام نشد/);
   assert.match(markup, /تلاش دوباره/);
   assert.match(markup, /cached product cards/);
+});
+
+test('explains when the product service is unavailable and keeps retry available', () => {
+  const markup = renderToStaticMarkup(
+    createElement(CatalogQueryState, {
+      query: {
+        data: undefined,
+        error: new ApiClientError(500),
+        isError: true,
+        isFetching: false,
+        isPending: false,
+        refetch: async () => undefined,
+      } as unknown as ReturnType<typeof useCatalogProducts>,
+      children: createElement('p', null, 'product cards'),
+    }),
+  );
+
+  assert.match(markup, /سرویس فهرست محصولات در دسترس نیست/);
+  assert.match(markup, /ارتباط با سرور محصولات برقرار نشد/);
+  assert.match(markup, /تلاش دوباره/);
+  assert.doesNotMatch(markup, /product cards/);
 });

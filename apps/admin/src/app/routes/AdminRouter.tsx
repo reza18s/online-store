@@ -73,7 +73,11 @@ export function AdminRouter({ page, queryString = '' }: { page: string; queryStr
     adminSection === 'audit'
   ) {
     return withWorkspaceShell(
-      <SupportFinanceView view={adminSection} queryString={queryString} />,
+      <SupportFinanceView
+        view={adminSection}
+        queryString={queryString}
+        staffRoles={staffRoles}
+      />,
     );
   }
   if (adminSection === 'catalog' || adminSection === 'inventory') {
@@ -101,7 +105,7 @@ export function AdminRouter({ page, queryString = '' }: { page: string; queryStr
       return withWorkspaceShell(
         <CatalogInventoryView
           view="inventory"
-          variantId={encodedId ? decodeRouteSegment(encodedId) : undefined}
+          variantId={subsection ? decodeRouteSegment(subsection) : undefined}
           staffRoles={staffRoles}
         />,
       );

@@ -76,7 +76,7 @@ test('renders public category, listing, and product routes', async ({ page }) =>
   page.setDefaultNavigationTimeout(15_000);
 
   const routes = [
-    { path: '/category/men', heading: 'فرم‌های ساده، حضور ماندگار' },
+    { path: '/category/men', heading: 'استایل مردانه' },
     { path: '/products/new', heading: 'تازه‌های آتلیه' },
   ] as const;
 

@@ -15,7 +15,10 @@ const product: AdminCatalogProductPage['items'][number] = {
   basePriceToman: 1250000,
   compareAtPriceToman: null,
   categories: [],
-  primaryMedia: null,
+  primaryMedia: {
+    url: '/assets/nova-product-oxford-shirt.webp',
+    altText: 'پیراهن مردانه روشن، داده آزمایشی مرورگر',
+  },
   inventory: {
     available: 7,
     lowStockVariantCount: 0,
@@ -27,6 +30,82 @@ const product: AdminCatalogProductPage['items'][number] = {
   createdAt: meta.timestamp,
   updatedAt: meta.timestamp,
 };
+const catalogProducts: AdminCatalogProductPage['items'] = [
+  product,
+  {
+    ...product,
+    id: 'route-sweep-knit-cardigan',
+    slug: 'route-sweep-knit-cardigan',
+    name: 'ژاکت بافت یقه‌گرد',
+    basePriceToman: 2190000,
+    primaryMedia: {
+      url: '/assets/nova-product-knit-cardigan.webp',
+      altText: 'ژاکت بافت قهوه‌ای، داده آزمایشی مرورگر',
+    },
+    inventory: {
+      available: 4,
+      lowStockVariantCount: 0,
+      outOfStockVariantCount: 0,
+      status: 'IN_STOCK',
+    },
+  },
+  {
+    ...product,
+    id: 'route-sweep-soft-trousers',
+    slug: 'route-sweep-soft-trousers',
+    name: 'شلوار کتان راحت',
+    basePriceToman: 1890000,
+    primaryMedia: {
+      url: '/assets/nova-product-soft-trousers.webp',
+      altText: 'شلوار کتان روشن، داده آزمایشی مرورگر',
+    },
+    inventory: {
+      available: 2,
+      lowStockVariantCount: 1,
+      outOfStockVariantCount: 0,
+      status: 'LOW_STOCK',
+    },
+  },
+  {
+    ...product,
+    id: 'route-sweep-linen-overshirt',
+    slug: 'route-sweep-linen-overshirt',
+    name: 'پیراهن لینن',
+    basePriceToman: 2450000,
+    primaryMedia: {
+      url: '/assets/nova-product-linen-overshirt.webp',
+      altText: 'پیراهن لینن، داده آزمایشی مرورگر',
+    },
+    inventory: {
+      available: 0,
+      lowStockVariantCount: 0,
+      outOfStockVariantCount: 1,
+      status: 'OUT_OF_STOCK',
+    },
+  },
+  {
+    ...product,
+    id: 'route-sweep-textured-scarf',
+    slug: 'route-sweep-textured-scarf',
+    name: 'شال بافت‌دار',
+    basePriceToman: 890000,
+    primaryMedia: {
+      url: '/assets/nova-product-textured-scarf.webp',
+      altText: 'شال بافت‌دار، داده آزمایشی مرورگر',
+    },
+  },
+  {
+    ...product,
+    id: 'route-sweep-kids-set',
+    slug: 'route-sweep-kids-set',
+    name: 'ست لباس کودک',
+    basePriceToman: 1790000,
+    primaryMedia: {
+      url: '/assets/nova-product-kids-set.webp',
+      altText: 'ست لباس کودک، داده آزمایشی مرورگر',
+    },
+  },
+];
 const category: AdminCatalogCategory = {
   id: 'route-sweep-category',
   slug: 'route-sweep-category',
@@ -98,7 +177,12 @@ export async function installAdminRouteFixtures(page: Page) {
       return route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: envelope({ items: [product], total: 1, page: 1, limit: 8 }),
+        body: envelope({
+          items: catalogProducts,
+          total: catalogProducts.length,
+          page: 1,
+          limit: 8,
+        }),
       });
     if (url.pathname.startsWith('/v1/admin/catalog/products/')) {
       const resource = url.pathname.split('/').at(-1);

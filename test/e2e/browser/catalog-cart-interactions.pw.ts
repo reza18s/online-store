@@ -252,7 +252,7 @@ test('sweeps populated public catalog routes at desktop and phone sizes', async 
     ['/products/new', 'تازه‌های آتلیه'],
     ['/products/sale', 'تخفیف‌های منتخب'],
     ['/products/accessories', 'همه محصولات'],
-    ['/category/women', 'لباس‌هایی برای روزهای روشن'],
+    ['/category/women', 'زنانه'],
     ['/product/linen-overshirt', 'مانتوی لینن آوا'],
     ['/cart', 'سبد خرید'],
     ['/search?q=linen', 'چه چیزی پیدا می‌کنید؟'],

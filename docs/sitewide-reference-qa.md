@@ -52,3 +52,11 @@ The component-library boards were compared with the shared storefront and admin 
 ## Git integration
 
 The sitewide changes are committed and pushed to `codex/category-reference-fidelity`; a post-push fetch confirmed the remote branch at the pushed revision. This updates the existing PR #6. The PR status query could not be refreshed after this push because the configured proxy refused the GitHub GraphQL connection. Its last available status showed a required check failing on the untouched `scripts/script.js`, so the PR remains open pending current green checks. The local deletion/change state of the `scripts/script.js` / `scripts/script.ts` pair is user-owned and was preserved.
+
+## Follow-up — 2026-10-02
+
+The women, men, and children category copy and CTA labels were aligned with the supplied category boards; the related route checks now assert the reference headlines. Storefront links explicitly use the hand cursor. The mobile admin catalog now presents each product as a compact image-and-details row while preserving the desktop table and edit links. Return-request rows no longer use alternating unrelated product photos because customer order data does not carry product media.
+
+See the current screenshot-led findings and route captures in the [design QA report](../design-qa.md). The admin visual fixture supplies six browser-only products with local product images to verify a populated catalog at both viewports; it does not change the live catalog.
+
+The 2026-10-02 final rerun completed with **153 browser tests passed**. Workspace typecheck, web/admin production builds, and targeted ESLint passed. See the design QA report for current screenshot paths, live catalog counts, and service/data limits.

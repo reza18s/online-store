@@ -130,8 +130,8 @@ test('renders the uncovered public category and listing routes', async ({ page }
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
 
   const categoryRoutes = [
-    { path: '/category/women', heading: 'لباس‌هایی برای روزهای روشن' },
-    { path: '/category/children', heading: 'برای بازی‌های تمام‌نشدنی' },
+    { path: '/category/women', heading: 'زنانه' },
+    { path: '/category/children', heading: 'دنیای کوچک با داستان‌های بزرگ' },
   ] as const;
 
   for (const route of categoryRoutes) {

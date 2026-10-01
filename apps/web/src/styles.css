@@ -84,6 +84,10 @@ select {
   cursor: pointer;
 }
 
+a[href] {
+  cursor: pointer;
+}
+
 button {
   border: 0;
 }

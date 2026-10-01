@@ -450,15 +450,24 @@ function CategoryHero({ audience }: { audience: CatalogAudience }) {
         alt={`پوشاک ${copy.label} در فضای آتلیه نوا`}
       />
       <div className="category-hero__copy">
-        <span className="section-heading__eyebrow">
-          NOVA / {audience === 'children' ? 'KIDS' : copy.label.toUpperCase()}
-        </span>
+        {audience !== 'men' ? (
+          <span className="section-heading__eyebrow">
+            NOVA {audience === 'children' ? 'KIDS' : 'WOMEN'}
+          </span>
+        ) : null}
         <h1>{copy.title}</h1>
+        {copy.lead ? <p className="category-hero__lead">{copy.lead}</p> : null}
         <p>{copy.description}</p>
         <a className="editorial-cta" href={`/products/${audience}`}>
-          مشاهده محصولات <Icon name="arrow-left" size={16} />
+          {copy.ctaLabel} <Icon name="arrow-left" size={16} />
         </a>
       </div>
+      {audience === 'women' ? (
+        <aside className="category-hero__note" aria-label="داستان کالکشن زنانه">
+          <span>لباس‌هایی برای داستان زندگی شما</span>
+          <em>TIMELESS<br />ELEGANT<br />PERSIAN</em>
+        </aside>
+      ) : null}
     </section>
   );
 }

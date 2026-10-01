@@ -58,25 +58,52 @@ async function installCategoryFixtures(page: Page): Promise<void> {
     if (url.pathname === '/v1/catalog/products') {
       const audience = url.searchParams.get('audience') ?? 'women';
       const page = Number(url.searchParams.get('page') ?? '1');
-      const item = {
-        id: `${audience}-shirt`,
-        slug: `${audience}-shirt`,
-        name: `پیراهن ${audience === 'women' ? 'زنانه' : audience === 'men' ? 'مردانه' : 'بچگانه'}`,
-        priceToman: 1_890_000,
+      const audienceLabel =
+        audience === 'women' ? 'زنانه' : audience === 'men' ? 'مردانه' : 'بچگانه';
+      const items = [
+        {
+          slug: `${audience}-shirt`,
+          name: `پیراهن ${audienceLabel}`,
+          category: 'shirts',
+          image: 'nova-product-oxford-shirt.webp',
+        },
+        {
+          slug: `${audience}-knit`,
+          name: `بافت ${audienceLabel}`,
+          category: 'knitwear',
+          image: 'nova-product-knit-cardigan.webp',
+        },
+        {
+          slug: `${audience}-trousers`,
+          name: `شلوار ${audienceLabel}`,
+          category: 'trousers',
+          image: 'nova-product-soft-trousers.webp',
+        },
+        {
+          slug: `${audience}-linen`,
+          name: `رویه لینن ${audienceLabel}`,
+          category: 'outerwear',
+          image: 'nova-product-linen-overshirt.webp',
+        },
+      ].map((item, index) => ({
+        id: item.slug,
+        slug: item.slug,
+        name: item.name,
+        priceToman: 1_890_000 + index * 100_000,
         compareAtPriceToman: null,
         available: true,
-        imageUrl: '/assets/nova-product-oxford-shirt.webp',
-        imageAlt: 'پیراهن آکسفورد',
-        categories: [{ id: audience, slug: audience, name: audience }],
+        imageUrl: `/assets/${item.image}`,
+        imageAlt: item.name,
+        categories: categories.filter(({ slug }) => slug === audience || slug === item.category),
         options: [],
         variants: [],
         colors: [{ name: 'سرمه‌ای', hex: '#25354b' }],
         stockStatus: 'IN_STOCK',
-      };
+      }));
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify({ data: { items: [item], page, limit: 8, total: 9 }, meta: {} }),
+        body: JSON.stringify({ data: { items, page, limit: 8, total: 9 }, meta: {} }),
       });
       return;
     }
@@ -115,17 +142,31 @@ test('category pages match their audience, real category links, and responsive h
 }) => {
   await installCategoryFixtures(page);
   const routes = [
-    { path: '/category/women', label: 'زنانه', title: 'لباس‌هایی برای روزهای روشن', quickCount: 0 },
-    { path: '/category/men', label: 'مردانه', title: 'فرم‌های ساده، حضور ماندگار', quickCount: 5 },
+    {
+      path: '/category/women',
+      label: 'زنانه',
+      title: 'زنانه',
+      ctaLabel: 'مشاهده مجموعه',
+      quickCount: 0,
+    },
+    {
+      path: '/category/men',
+      label: 'مردانه',
+      title: 'استایل مردانه',
+      ctaLabel: 'مشاهده کالکشن',
+      quickCount: 5,
+    },
     {
       path: '/category/children',
       label: 'بچگانه',
-      title: 'برای بازی‌های تمام‌نشدنی',
+      title: 'دنیای کوچک با داستان‌های بزرگ',
+      ctaLabel: 'مشاهده مجموعه',
       quickCount: 0,
     },
   ] as const;
 
   for (const route of routes) {
+    await page.setViewportSize({ width: 1440, height: 1000 });
     const response = await page.goto(route.path);
     expect(response?.ok()).toBeTruthy();
     await expect(page.getByRole('heading', { name: route.title, level: 1 })).toBeVisible();
@@ -138,7 +179,20 @@ test('category pages match their audience, real category links, and responsive h
       'href',
       `/products/${route.path.split('/').at(-1)}`,
     );
-    await expect(page.locator('.product-card')).toHaveCount(1);
+    await expect(page.locator('.category-hero .editorial-cta')).toHaveText(route.ctaLabel);
+    await expect(page.locator('.product-card')).toHaveCount(4);
+    await page.screenshot({
+      path: `test-results/ui-audit/category-reference/${route.label}-desktop.png`,
+      fullPage: true,
+    });
+    if (route.label === 'زنانه') {
+      await expect(page.locator('.category-hero__note')).toBeVisible();
+      await expect(
+        page.getByText('مجموعه‌ای از لباس‌ها و استایل‌های زنانه برای روزهای واقعی شما.'),
+      ).toBeVisible();
+    }
+    if (route.label === 'مردانه')
+      await expect(page.locator('.category-hero__lead')).toHaveText('تعادل میان اصالت و امروز');
     if (route.quickCount)
       await expect(page.locator('.category-quick-card')).toHaveCount(route.quickCount);
     if (route.label === 'مردانه')
@@ -188,6 +242,19 @@ test('phone category actions open search and filters and preserve real catalog s
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await installCategoryFixtures(page);
+  await page.goto('/category/women');
+  await expect(page.locator('.category-hero__note')).toBeHidden();
+  await expect(page.locator('.product-card')).toHaveCount(4);
+  await page.screenshot({
+    path: 'test-results/ui-audit/category-reference/women-phone.png',
+    fullPage: true,
+  });
+  await page.goto('/category/children');
+  await expect(page.locator('.category-card-stack')).toBeVisible();
+  await page.screenshot({
+    path: 'test-results/ui-audit/category-reference/children-phone.png',
+    fullPage: true,
+  });
   await page.goto('/category/men');
 
   await page.getByRole('button', { name: 'باز کردن منو' }).click();
@@ -210,6 +277,8 @@ test('phone category actions open search and filters and preserve real catalog s
 
   await page.getByLabel('مرتب‌سازی محصولات').selectOption('price_asc');
   await expect(page).toHaveURL(/sort=price_asc/);
+  await expect(page.locator('.product-card__meta').first()).toContainText('پیراهن');
+  await expect(page.locator('.product-card__add').first()).toHaveText('افزودن به سبد');
   const favorite = page.getByRole('button', { name: 'افزودن پیراهن مردانه به علاقه‌مندی‌ها' });
   await favorite.click();
   await expect(

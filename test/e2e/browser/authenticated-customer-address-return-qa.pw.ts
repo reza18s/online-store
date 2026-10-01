@@ -319,6 +319,8 @@ test.describe('authenticated customer address and return presentation', () => {
     await expect(main).toContainText(orderNumber);
     await expect(main.getByRole('button', { name: 'ارسال درخواست بازگشت' })).toBeEnabled();
     await expect(main.locator('form')).toBeVisible();
+    await expect(main.locator('.nova-return-request-items img')).toHaveCount(0);
+    await expect(main.locator('.nova-return-request-item__media')).toHaveCount(order.items.length);
     await expect(main.getByRole('link', { name: 'انصراف' })).toHaveAttribute(
       'href',
       `/order/${orderNumber}`,

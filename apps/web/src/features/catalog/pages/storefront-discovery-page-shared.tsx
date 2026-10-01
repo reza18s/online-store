@@ -28,25 +28,29 @@ export interface DiscoveryQueryState {
 
 export const audienceCopy: Record<
   CatalogAudience,
-  { label: string; title: string; description: string; image: string }
+  { label: string; title: string; lead?: string; description: string; image: string; ctaLabel: string }
 > = {
   women: {
     label: 'زنانه',
-    title: 'لباس‌هایی برای روزهای روشن',
-    description: 'رویه‌های سبک، بافت‌های آرام و جزئیاتی که هر روز را شخصی‌تر می‌کنند.',
+    title: 'زنانه',
+    description: 'مجموعه‌ای از لباس‌ها و استایل‌های زنانه برای روزهای واقعی شما.',
     image: '/assets/nova-hero-editorial-v2.png',
+    ctaLabel: 'مشاهده مجموعه',
   },
   men: {
     label: 'مردانه',
-    title: 'فرم‌های ساده، حضور ماندگار',
-    description: 'ترکیبی از برش دقیق، پارچه‌های خوش‌دست و رنگ‌هایی که به‌راحتی کنار هم می‌نشینند.',
+    title: 'استایل مردانه',
+    lead: 'تعادل میان اصالت و امروز',
+    description: 'انتخاب‌هایی برای مردان امروزی؛ کیفیت در جزئیات، استایلی برای هر روز و هر موقعیت.',
     image: '/assets/nova-hero-men.webp',
+    ctaLabel: 'مشاهده کالکشن',
   },
   children: {
     label: 'بچگانه',
-    title: 'برای بازی‌های تمام‌نشدنی',
-    description: 'لباس‌های راحت و مقاوم برای حرکت، کشف و روزهایی که باید آزاد باشند.',
+    title: 'دنیای کوچک با داستان‌های بزرگ',
+    description: 'لباس‌هایی راحت، باکیفیت و امن برای هر روز کودک شما.',
     image: '/assets/nova-children-lifestyle.webp',
+    ctaLabel: 'مشاهده مجموعه',
   },
 };
 

@@ -97,7 +97,9 @@ for (const viewport of targetViewports) {
       await expect(
         header.getByRole('link', { name: 'NOVA، صفحه اصلی', exact: true }),
       ).toBeVisible();
-      await expect(header.getByRole('button', { name: 'جست‌وجو', exact: true })).toBeVisible();
+      await expect(
+        header.getByRole('button', { name: 'جست‌وجوی محصولات', exact: true }),
+      ).toBeVisible();
       await expect(header.getByRole('link', { name: /^سبد خرید، \d+ کالا$/ })).toBeVisible();
 
       const primaryNavigation = page.locator('nav.site-nav[aria-label="دسته‌بندی‌های اصلی"]');

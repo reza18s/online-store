@@ -2,9 +2,11 @@ import { useState } from 'react';
 
 import { useCurrentCustomer, useLogoutCustomer } from '@/features/auth/api/auth-api';
 import { useCustomerOrders } from '@/features/orders/api/orders-api';
+import { useCustomerAddresses } from '@/features/account/api/addresses-api';
 import { Icon } from '@/shared/ui/icon';
 import {
   apiErrorMessage,
+  formatPersianDate,
   formatToman,
   isCustomerActive,
   isOfflineError,
@@ -41,6 +43,9 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
   const activeSection: AccountSection =
     section in accountTitles ? (section as AccountSection) : 'dashboard';
   const ordersQuery = useCustomerOrders({ page: 1, limit: 10 }, isCustomerActive(customer));
+  const addressesQuery = useCustomerAddresses(
+    activeSection === 'dashboard' && isCustomerActive(customer),
+  );
   const logoutMutation = useLogoutCustomer();
   const [logoutError, setLogoutError] = useState('');
   const online = useOnlineStatus();
@@ -88,7 +93,6 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
     );
   }
 
-  const latestOrder = ordersQuery.data?.items[0];
   const signOut = async () => {
     setLogoutError('');
     try {
@@ -130,61 +134,145 @@ export function CustomerAccountPage({ section = 'dashboard' }: { section?: strin
       ) : activeSection === 'orders' ? (
         <CustomerOrderListContent query={ordersQuery} />
       ) : (
-        <div className="account-panels md:grid-cols-2">
-          <div className="account-panel">
-            <span className="section-heading__eyebrow">آخرین سفارش</span>
+        <div className="nova-account-dashboard">
+          <section className="account-panel nova-account-dashboard__orders">
+            <header className="nova-account-dashboard__header">
+              <div>
+                <span className="section-heading__eyebrow">مرور سفارش‌ها</span>
+                <h2>سفارش‌های اخیر</h2>
+              </div>
+              <a className="text-link" href="/account/orders">
+                مشاهده همه <Icon name="arrow-left" size={15} />
+              </a>
+            </header>
             {ordersQuery.isPending ? (
               <div
-                className="mt-4 animate-pulse space-y-3"
+                className="nova-account-dashboard__loading"
                 role="status"
-                aria-label="در حال بارگذاری آخرین سفارش"
+                aria-label="در حال بارگذاری سفارش‌ها"
               >
-                <div className="h-6 w-48 rounded bg-secondary" />
-                <div className="h-4 w-64 rounded bg-secondary" />
+                <div />
+                <div />
+                <div />
               </div>
-            ) : latestOrder ? (
-              <>
-                <h2>
-                  سفارش <span dir="ltr">{latestOrder.orderNumber}</span>
-                </h2>
-                <p>
-                  {orderStatusCopy[latestOrder.status]} · {formatToman(latestOrder.totalToman)}
-                </p>
-                <a
-                  className="text-link"
-                  href={`/order/${encodeURIComponent(latestOrder.orderNumber)}`}
-                >
-                  مشاهده جزئیات <Icon name="arrow-left" size={15} />
-                </a>
-              </>
-            ) : (
-              <>
-                <h2>هنوز سفارشی ندارید</h2>
-                <p>اولین انتخاب خود را از مجموعه نوا شروع کنید.</p>
-                <a className="text-link" href="/products">
-                  مشاهده فروشگاه <Icon name="arrow-left" size={15} />
-                </a>
-              </>
-            )}
-            {ordersQuery.isError ? (
+            ) : ordersQuery.isError ? (
               <InlineQueryError
                 error={ordersQuery.error}
                 onRetry={() => void ordersQuery.refetch()}
               />
-            ) : null}
-          </div>
-          <div className="account-panel">
-            <span className="section-heading__eyebrow">دسترسی سریع</span>
-            <a href="/account/addresses">
-              مدیریت آدرس‌ها <Icon name="arrow-left" size={15} />
+            ) : ordersQuery.data?.items.length ? (
+              <ul className="nova-account-dashboard__order-list">
+                {ordersQuery.data.items.slice(0, 3).map((order) => (
+                  <li className="nova-account-dashboard__order" key={order.orderNumber}>
+                    <div className="nova-account-dashboard__order-id">
+                      <span aria-hidden="true">
+                        <Icon name="package" size={18} />
+                      </span>
+                      <div>
+                        <strong>سفارش</strong>
+                        <bdi dir="ltr">{order.orderNumber}</bdi>
+                      </div>
+                    </div>
+                    <small>{formatPersianDate(order.createdAt)}</small>
+                    <div className="nova-account-dashboard__order-status">
+                      <strong>{formatToman(order.totalToman)}</strong>
+                      <span>{orderStatusCopy[order.status]}</span>
+                    </div>
+                    <a
+                      href={`/order/${encodeURIComponent(order.orderNumber)}`}
+                      aria-label={`مشاهده جزئیات سفارش ${order.orderNumber}`}
+                    >
+                      <Icon name="arrow-left" size={16} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="nova-account-dashboard__empty">
+                <p>هنوز سفارشی ندارید. اولین انتخاب خود را از مجموعه نوا شروع کنید.</p>
+                <a className="text-link" href="/products">
+                  مشاهده فروشگاه <Icon name="arrow-left" size={15} />
+                </a>
+              </div>
+            )}
+          </section>
+
+          <section className="account-panel nova-account-dashboard__addresses">
+            <header className="nova-account-dashboard__header">
+              <div>
+                <span className="section-heading__eyebrow">تحویل سفارش‌ها</span>
+                <h2>آدرس‌های ذخیره‌شده</h2>
+              </div>
+              <a className="text-link" href="/account/addresses">
+                مدیریت آدرس‌ها <Icon name="arrow-left" size={15} />
+              </a>
+            </header>
+            {addressesQuery.isPending ? (
+              <div
+                className="nova-account-dashboard__loading"
+                role="status"
+                aria-label="در حال بارگذاری آدرس‌ها"
+              >
+                <div />
+                <div />
+              </div>
+            ) : addressesQuery.isError ? (
+              <InlineQueryError
+                error={addressesQuery.error}
+                onRetry={() => void addressesQuery.refetch()}
+              />
+            ) : addressesQuery.data?.length ? (
+              <ul className="nova-account-dashboard__address-list">
+                {addressesQuery.data.slice(0, 2).map((address) => (
+                  <li key={address.id}>
+                    <a
+                      className="nova-account-dashboard__address"
+                      href={`/account/addresses/edit/${encodeURIComponent(address.id)}`}
+                    >
+                      <span aria-hidden="true">
+                        <Icon name="home" size={18} />
+                      </span>
+                      <div>
+                        <strong>{address.label}</strong>
+                        <small>
+                          {address.recipientName} · {address.city}، {address.province}
+                        </small>
+                        <small className="nova-account-dashboard__address-line">
+                          {address.addressLine}
+                        </small>
+                      </div>
+                      {address.isDefault ? <b>پیش‌فرض</b> : null}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="nova-account-dashboard__empty">
+                <p>هنوز نشانی‌ای ثبت نکرده‌اید.</p>
+                <a className="text-link" href="/account/addresses/create">
+                  ثبت آدرس جدید <Icon name="arrow-left" size={15} />
+                </a>
+              </div>
+            )}
+          </section>
+
+          <section className="account-panel nova-account-dashboard__shortcuts">
+            <a href="/account/profile">
+              <Icon name="user" size={19} />
+              <span>اطلاعات شخصی</span>
+              <Icon name="arrow-left" size={15} />
             </a>
             <a href="/account/orders">
-              همه سفارش‌ها <Icon name="arrow-left" size={15} />
+              <Icon name="package" size={19} />
+              <span>پیگیری سفارش‌ها</span>
+              <Icon name="arrow-left" size={15} />
             </a>
             <a href="/support">
-              پرسش‌های متداول <Icon name="arrow-left" size={15} />
+              <Icon name="users" size={19} />
+              <span>پشتیبانی نوا</span>
+              <Icon name="arrow-left" size={15} />
             </a>
-          </div>
+          </section>
         </div>
       )}
     </AccountLayout>

@@ -32,6 +32,12 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
     { label: 'کالکشن‌ها', href: '/campaign', image: '/assets/nova-home-mobile-story.webp' },
     { label: 'تخفیف‌ها', href: '/products/sale', image: '/assets/nova-product-knit-cardigan.webp' },
   ];
+  const mobileCategoryHrefs = new Set([
+    '/products/accessories',
+    '/products/new',
+    '/products/sale',
+  ]);
+  const mobileCategories = categories.filter((category) => mobileCategoryHrefs.has(category.href));
 
   const benefits = [
     {
@@ -115,8 +121,15 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
     </article>
   );
 
-  const renderMobileProduct = (product: (typeof products)[number], badge?: string) => (
-    <article className="atelier-mobile-product" key={product.slug}>
+  const renderMobileProduct = (
+    product: (typeof products)[number],
+    badge?: string,
+    compact = false,
+  ) => (
+    <article
+      className={`atelier-mobile-product${compact ? ' atelier-mobile-product--compact' : ''}`}
+      key={product.slug}
+    >
       <div className="atelier-mobile-product__media">
         <a
           href={`/product/${encodeURIComponent(product.slug)}`}
@@ -509,14 +522,14 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
         </section>
 
         <nav className="atelier-mobile-categories" aria-label="دسته‌بندی‌های فروشگاه">
-          {categories.map((category, index) => (
+          {mobileCategories.map((category, index) => (
             <a
-              className={index === categories.length - 1 ? 'is-sale' : undefined}
+              className={index === mobileCategories.length - 1 ? 'is-sale' : undefined}
               href={category.href}
               key={category.href}
             >
               <img src={category.image} alt="" loading="lazy" />
-              {index === categories.length - 1 ? (
+              {index === mobileCategories.length - 1 ? (
                 <span className="atelier-mobile-categories__sale-mark" aria-hidden="true">
                   %
                 </span>
@@ -567,8 +580,10 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
             </a>
           </div>
           {productsQuery.data?.items.length ? (
-            <div className="atelier-mobile-products">
-              {selectedProducts.slice(0, 2).map((product) => renderMobileProduct(product))}
+            <div className="atelier-mobile-products atelier-mobile-products--compact">
+              {selectedProducts.slice(0, 2).map((product) =>
+                renderMobileProduct(product, undefined, true),
+              )}
             </div>
           ) : null}
         </section> : null}

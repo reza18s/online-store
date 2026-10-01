@@ -108,6 +108,23 @@ async function expectSettledDiscovery(page: Page): Promise<void> {
   await expect(page.locator('main')).not.toContainText('در حال بارگذاری...');
 }
 
+async function expectReferenceHeaderLayout(page: Page): Promise<void> {
+  const bounds = await page.evaluate(() => {
+    const nav = document.querySelector('.site-nav')?.getBoundingClientRect();
+    const brand = document.querySelector('.site-header .brand-lockup')?.getBoundingClientRect();
+    const actions = document.querySelector('.site-header__actions')?.getBoundingClientRect();
+    return {
+      navLeft: nav?.left ?? 0,
+      brandLeft: brand?.left ?? 0,
+      brandRight: brand?.right ?? 0,
+      actionsRight: actions?.right ?? 0,
+    };
+  });
+
+  expect(bounds.navLeft).toBeGreaterThan(bounds.brandRight);
+  expect(bounds.actionsRight).toBeLessThan(bounds.brandLeft);
+}
+
 test('renders the uncovered public category and listing routes', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
@@ -119,6 +136,7 @@ test('renders the uncovered public category and listing routes', async ({ page }
 
   for (const route of categoryRoutes) {
     await openRoute(page, route.path);
+    await expectReferenceHeaderLayout(page);
     await expect(page.getByRole('heading', { name: route.heading, level: 1 })).toBeVisible();
     await expectSettledDiscovery(page);
   }
@@ -146,6 +164,7 @@ test('gives home hero links clear pointer feedback and keeps the no-product card
 }) => {
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
   await openRoute(page, '/');
+  await expectReferenceHeaderLayout(page);
 
   const collectionLink = page.getByRole('link', { name: /مشاهده کالکشن/ });
   await expect(collectionLink).toHaveAttribute('href', '/campaign');

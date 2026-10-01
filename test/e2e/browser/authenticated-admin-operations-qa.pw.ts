@@ -358,6 +358,20 @@ test('renders fixture-backed authenticated admin operations without real auth or
   await expect(page.getByRole('main')).toContainText(`محصول عملیات مدیریت ${qaMarker}`);
   await expect(page.getByRole('main')).toContainText('اقلام سفارش');
   await captureUiAudit(page, 'admin-populated/order-detail');
+  await page.setViewportSize({ width: 390, height: 844 });
+  const customerEmail = page.getByText(orderDetail.customer!.email!, { exact: true });
+  const customerCard = page.locator('article').filter({ hasText: orderDetail.customer!.email! });
+  await expect(customerEmail).toHaveCSS('direction', 'ltr');
+  await expect(customerEmail).toHaveCSS('word-break', 'break-all');
+  const emailBounds = await customerEmail.boundingBox();
+  const cardBounds = await customerCard.boundingBox();
+  expect(emailBounds).not.toBeNull();
+  expect(cardBounds).not.toBeNull();
+  expect(emailBounds!.x).toBeGreaterThanOrEqual(cardBounds!.x);
+  expect(emailBounds!.x + emailBounds!.width).toBeLessThanOrEqual(
+    cardBounds!.x + cardBounds!.width,
+  );
+  await page.setViewportSize({ width: 1440, height: 900 });
 
   await page.goto('/admin/payments', { waitUntil: 'domcontentloaded' });
   const paymentsMain = page.getByRole('main');

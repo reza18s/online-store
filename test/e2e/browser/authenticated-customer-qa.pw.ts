@@ -2,6 +2,7 @@ import { expect, test, type Page, type Route } from '@playwright/test';
 import type {
   ApiEnvelope,
   CartView,
+  CustomerAddress,
   CustomerOrderDetail,
   CustomerOrderPage,
   CustomerOrderSummary,
@@ -56,11 +57,58 @@ const syntheticOrderSummary: CustomerOrderSummary = {
 };
 
 const syntheticOrders: CustomerOrderPage = {
-  items: [syntheticOrderSummary],
-  total: 1,
+  items: [
+    syntheticOrderSummary,
+    {
+      ...syntheticOrderSummary,
+      orderId: 'QA-SYNTHETIC-ORDER-ID-002',
+      orderNumber: 'QA-ORDER-002',
+      status: 'SHIPPED',
+      createdAt: '2026-09-10T00:00:00.000Z',
+      updatedAt: '2026-09-11T00:00:00.000Z',
+    },
+    {
+      ...syntheticOrderSummary,
+      orderId: 'QA-SYNTHETIC-ORDER-ID-003',
+      orderNumber: 'QA-ORDER-003',
+      status: 'CONFIRMED',
+      createdAt: '2026-09-08T00:00:00.000Z',
+      updatedAt: '2026-09-09T00:00:00.000Z',
+    },
+  ],
+  total: 3,
   page: 1,
   limit: 10,
 };
+
+const syntheticAddresses: CustomerAddress[] = [
+  {
+    id: 'QA-SYNTHETIC-ADDRESS-001',
+    label: 'خانه',
+    recipientName: 'مشتری آزمایشی',
+    phone: syntheticCustomerPhone,
+    province: 'استان آزمایشی',
+    city: 'شهر آزمایشی',
+    addressLine: 'نشانی آزمایشی، بدون اطلاعات واقعی',
+    postalCode: '0000000000',
+    isDefault: true,
+    createdAt: syntheticTimestamp,
+    updatedAt: syntheticTimestamp,
+  },
+  {
+    id: 'QA-SYNTHETIC-ADDRESS-002',
+    label: 'محل کار',
+    recipientName: 'مشتری آزمایشی',
+    phone: syntheticCustomerPhone,
+    province: 'استان آزمایشی',
+    city: 'شهر آزمایشی',
+    addressLine: 'نشانی دوم آزمایشی، بدون اطلاعات واقعی',
+    postalCode: '0000000001',
+    isDefault: false,
+    createdAt: syntheticTimestamp,
+    updatedAt: syntheticTimestamp,
+  },
+];
 
 const syntheticOrderDetail: CustomerOrderDetail = {
   ...syntheticOrderSummary,
@@ -143,7 +191,7 @@ function envelope<T>(data: T): ApiEnvelope<T> {
 
 async function installAuthenticatedFixtureNetwork(
   page: Page,
-  options: { orders?: CustomerOrderPage } = {},
+  options: { addresses?: CustomerAddress[]; orders?: CustomerOrderPage } = {},
 ) {
   const blockedNonLoopbackRequests: string[] = [];
   const unexpectedStateChangingRequests: string[] = [];
@@ -151,9 +199,11 @@ async function installAuthenticatedFixtureNetwork(
   const cartRequests: string[] = [];
   const orderListRequests: string[] = [];
   const orderDetailRequests: string[] = [];
+  const addressListRequests: string[] = [];
   const logoutRequests: string[] = [];
   let authenticated = true;
   const orders = options.orders ?? syntheticOrders;
+  const addresses = options.addresses ?? syntheticAddresses;
 
   await page.route('**/*', async (route: Route) => {
     const request = route.request();
@@ -217,6 +267,16 @@ async function installAuthenticatedFixtureNetwork(
       return;
     }
 
+    if (url.pathname === '/v1/account/addresses') {
+      addressListRequests.push(`${request.method()} ${url.pathname}`);
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(envelope(addresses)),
+      });
+      return;
+    }
+
     if (url.pathname === `/v1/account/orders/${syntheticOrderNumber}`) {
       orderDetailRequests.push(`${request.method()} ${url.pathname}`);
       await route.fulfill({
@@ -242,6 +302,7 @@ async function installAuthenticatedFixtureNetwork(
     cartRequests,
     orderListRequests,
     orderDetailRequests,
+    addressListRequests,
     logoutRequests,
   };
 }
@@ -270,7 +331,20 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await page.goto('/account', { waitUntil: 'domcontentloaded' });
   await waitForSettledAccount(page);
   await expect(page.getByRole('heading', { name: 'حساب کاربری', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'سفارش‌های اخیر' })).toBeVisible();
+  await expect(
+    page.getByRole('link', { name: /مشاهده جزئیات سفارش QA-ORDER-001/ }),
+  ).toHaveAttribute('href', '/order/QA-ORDER-001');
   await expect(page.getByRole('link', { name: /مدیریت آدرس‌ها/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'آدرس‌های ذخیره‌شده' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /خانه مشتری آزمایشی/ })).toHaveAttribute(
+    'href',
+    '/account/addresses/edit/QA-SYNTHETIC-ADDRESS-001',
+  );
+  await expect(page.getByRole('main')).toContainText('پیش‌فرض');
+  await expect(
+    page.locator('.nova-account-dashboard__shortcuts').getByRole('link', { name: 'اطلاعات شخصی' }),
+  ).toHaveAttribute('href', '/account/profile');
   await captureUiAudit(page, 'account/dashboard');
 
   await page.goto('/account/profile', { waitUntil: 'domcontentloaded' });
@@ -295,6 +369,15 @@ test('renders an authenticated synthetic customer order journey and clears it on
   await expect(page.getByRole('main')).toContainText(syntheticOrderNumber);
   await expect(page.getByRole('main')).toContainText(`${syntheticMarker} / مشتری آزمایشی`);
   await expect(page.getByRole('main')).toContainText('QA-SYNTHETIC-TRACKING-001');
+  await expect(page.getByRole('heading', { name: 'اقلام سفارش', exact: true })).toBeVisible();
+  await expect(page.getByRole('main')).toContainText(`${syntheticMarker} / پیراهن آزمایشی`);
+  await expect(page.getByRole('heading', { name: 'خلاصه مالی', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'روش پرداخت', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'اطلاعات مرسوله', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: /تماس با پشتیبانی/ })).toHaveAttribute(
+    'href',
+    '/support',
+  );
   await captureUiAudit(page, 'account/order-detail');
 
   await page.getByRole('link', { name: 'سفارش‌ها', exact: true }).click();
@@ -326,6 +409,7 @@ test('renders an authenticated synthetic customer order journey and clears it on
   expect(network.sessionRequests.length).toBeGreaterThan(0);
   expect(network.cartRequests.length).toBeGreaterThan(0);
   expect(network.orderListRequests).toContain('GET /v1/account/orders?page=1&limit=10');
+  expect(network.addressListRequests).toEqual(['GET /v1/account/addresses']);
   expect(network.orderDetailRequests).toEqual([`GET /v1/account/orders/${syntheticOrderNumber}`]);
   expect(network.logoutRequests).toEqual(['POST /v1/auth/logout']);
   expect(network.unexpectedStateChangingRequests).toEqual([]);

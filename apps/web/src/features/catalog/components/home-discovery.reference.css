@@ -1310,6 +1310,53 @@
     font-size: 12px;
   }
 
+  .atelier-mobile-products--compact .atelier-mobile-product--compact {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    align-items: stretch;
+    padding: 5px;
+    direction: ltr;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__media {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 128px;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details {
+    grid-column: 2;
+    grid-row: 1;
+    align-content: center;
+    gap: 5px 4px;
+    padding: 5px 6px;
+    direction: rtl;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details > a {
+    grid-column: 1 / -1;
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details > strong {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details .nova-button {
+    grid-column: 1 / -1;
+    min-height: 34px;
+    margin-top: 2px;
+    padding-inline: 4px;
+    font-size: 11px;
+  }
+
   .atelier-mobile-story {
     position: relative;
     overflow: hidden;

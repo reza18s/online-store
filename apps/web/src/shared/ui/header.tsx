@@ -3,18 +3,23 @@ import { Button } from '@nova/ui';
 import { Icon } from '@/shared/ui/icon';
 import { Logo } from '@/shared/ui/logo';
 import { navItems } from '@/shared/ui/site-navigation';
+import type { CatalogAudience } from '@nova/api-client';
 
 export function Header({
   cartCount,
   onMenu,
   onSearch,
+  categoryAudience,
 }: {
   cartCount: number;
   onMenu: () => void;
   onSearch: () => void;
+  categoryAudience?: CatalogAudience;
 }) {
   return (
-    <header className="site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur">
+    <header
+      className={`site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur${categoryAudience ? ' site-header--category' : ''}`}
+    >
       <div className="shell site-header__inner mx-auto w-[calc(100%-2rem)] max-w-[1280px]">
         <div className="site-header__nav-wrap flex items-center gap-3.5">
           <Button
@@ -29,7 +34,16 @@ export function Header({
           </Button>
           <nav className="site-nav" aria-label="دسته‌بندی‌های اصلی">
             {navItems.map((item) => (
-              <a key={item.href} href={item.href} className="site-nav__link">
+              <a
+                key={item.href}
+                href={item.href}
+                className={`site-nav__link${categoryAudience && item.href === `/category/${categoryAudience}` ? ' is-active' : ''}`}
+                aria-current={
+                  categoryAudience && item.href === `/category/${categoryAudience}`
+                    ? 'page'
+                    : undefined
+                }
+              >
                 {item.label}
               </a>
             ))}
@@ -39,8 +53,16 @@ export function Header({
         <Logo />
 
         <div className="site-header__actions flex items-center gap-0.5">
-          <Button className="icon-button" variant="ghost" size="icon" type="button" onClick={onSearch} aria-label="جست‌وجو">
+          <Button
+            className={`icon-button${categoryAudience ? ' site-header__search' : ''}`}
+            variant="ghost"
+            size="icon"
+            type="button"
+            onClick={onSearch}
+            aria-label="جست‌وجوی محصولات"
+          >
             <Icon name="search" />
+            {categoryAudience ? <span>جست‌وجوی محصولات، دسته‌ها یا الهام‌ها…</span> : null}
           </Button>
           <a className="icon-button site-header__account" href="/account" aria-label="حساب کاربری">
             <Icon name="user" />

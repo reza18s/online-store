@@ -54,6 +54,7 @@ export function PublicApp({
         <StorefrontDiscoveryPage
           view="category"
           audience={resolved.audience}
+          queryString={resolved.queryString}
           isWishlisted={isWishlisted}
           onToggleWishlist={onToggleWishlist}
         />

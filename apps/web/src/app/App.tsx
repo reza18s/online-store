@@ -15,6 +15,12 @@ import { resolveSeoDocumentForRoute } from '@/features/seo';
 export function App() {
   const route = useRoute();
   const [pathname, queryString = ''] = route.split('?');
+  const categoryAudience =
+    pathname === '/category/women' ||
+    pathname === '/category/men' ||
+    pathname === '/category/children'
+      ? (pathname.slice('/category/'.length) as 'women' | 'men' | 'children')
+      : undefined;
   const searchQuery = pathname === '/search' ? new URLSearchParams(queryString).get('q') ?? '' : undefined;
   useScrollToTop(route);
   const cartQuery = useCart(true);
@@ -54,6 +60,7 @@ export function App() {
         cartCount={cartCount}
         onSearch={() => setSearchOpen(true)}
         onMenu={() => setMenuOpen(true)}
+        categoryAudience={categoryAudience}
       />
       <PublicApp
         route={route}

@@ -60,3 +60,7 @@ The women, men, and children category copy and CTA labels were aligned with the 
 See the current screenshot-led findings and route captures in the [design QA report](../design-qa.md). The admin visual fixture supplies six browser-only products with local product images to verify a populated catalog at both viewports; it does not change the live catalog.
 
 The 2026-10-02 final rerun completed with **153 browser tests passed**. Workspace typecheck, web/admin production builds, and targeted ESLint passed. See the design QA report for current screenshot paths, live catalog counts, and service/data limits.
+
+## Git follow-up — 2026-10-02
+
+Commit `3b4fae9` (`fix(ui): align remaining storefront and admin references`) is pushed to `codex/category-reference-fidelity`; a post-push fetch confirmed `origin/codex/category-reference-fidelity` at the same commit. This updates the existing PR #6. The current PR/check query remains unavailable because the configured proxy refuses GitHub GraphQL connections. The last available status showed a required check failing on the untouched `scripts/script.js`; the PR remains unmerged pending current required checks.

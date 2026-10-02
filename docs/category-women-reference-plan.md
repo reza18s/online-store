@@ -34,3 +34,42 @@
 - Added browser assertions for the phone hero height, CTA color, and left-side placement.
 - The open app tab showed the final phone layout after hot reload. Fresh test screenshots were captured at 1440px and 390px in `test-results/ui-audit/category-reference/`; those automated screenshots use the project's browser-only catalog fixture (9 products). The open app tab currently has 3 live products, so its catalog content remains visibly different from the reference board's 344.
 - Validation passed: focused category browser tests (2), web typecheck, browser-test typecheck, web client/SSR build, and ESLint on the changed browser test. The build emitted the existing Vite CJS deprecation and bundle-size warnings.
+
+## Second Comparison After User Review
+
+The first pass only improved the phone hero. A full-page comparison found these larger remaining differences:
+
+- The women page shows a breadcrumb row between the header and hero; the reference begins directly with the hero.
+- The desktop header puts search and account/cart together on the left and centers the logo. The reference places account/cart at the left, the logo next, a wide search control after it, and navigation at the right. On phones, the reference header spans the full width while the current header floats as a rounded card.
+- The hero's supporting phrases are in the wrong roles: the reference has `TIMELESS · ELEGANT · PERSIAN` under the CTA and `A MORE BEAUTIFUL YOU` in the right note.
+- The desktop toolbar repeats category, size, color, material, and stock filters already present in the sidebar. The reference keeps the toolbar compact and lets the sidebar own those filters.
+- The results heading says `انتخاب‌های محبوب زنانه`; the reference uses the category name, supporting description, and live result count.
+- The phone navigation floats above the bottom edge and orders store/search/cart differently from the reference. Keep all current destinations and make only visual/order changes that preserve working actions.
+- Product count and product photography remain catalog-data differences: the live API has 9 women products with packshot images, while the board depicts 344 items with different lifestyle photos. Do not invent SKUs, counts, or product imagery.
+- The phone hero keeps the copy at the lower left; the reference centers the copy and call to action over the image.
+
+## Second-Pass Plan
+
+1. Recompose the shared category header for desktop and phone to match the reference alignment while preserving search, account, cart, navigation, and keyboard access.
+2. Remove the women breadcrumb from the visual layout, correct the hero phrase hierarchy, and retain its existing real image and destinations.
+3. Simplify the women toolbar to sort plus a functional filter affordance; keep the full filters available in the sidebar and phone filter sheet.
+4. Update the women results heading to show the actual category name, supporting copy, and API-provided count; tune the phone bottom navigation frame without removing its existing actions.
+5. Center the women phone hero copy and CTA to match the reference composition while retaining the real hero asset and current routes.
+6. Extend browser checks for desktop and phone alignment, control visibility, result copy/count, and overflow. Inspect fresh screenshots and rerun typecheck/build.
+
+## Second-Pass Execution Record — 2026-10-02
+
+- Reordered the shared category header so utility actions, brand, search, and navigation follow the reference; the phone header now spans the viewport and keeps its logo centered.
+- Removed the women breadcrumb, corrected the desktop editorial phrases, centered the phone hero copy and CTA, compacted desktop filtering, and added the category name, description, and API-backed product count above results.
+- Reordered the category phone navigation without removing existing destinations. Search, menu, filters, sort, pagination, product favorites, and add-to-cart behavior remain covered by browser checks.
+- Reviewed fresh desktop and phone screenshots in `test-results/ui-audit/category-reference/`. The browser fixture uses 9 products; live catalog volume and product photography remain data differences from the reference board and were not fabricated.
+- Validation passed: focused Playwright suite (2 tests across women, men, and children routes), web typecheck, browser-test typecheck, changed-source ESLint, Prettier check, `git diff --check`, and web client/SSR build. Build reports the existing Vite CJS deprecation and 550 kB client chunk warning.
+
+## Second-Pass Acceptance
+
+- The header and first viewport follow the reference's structure at desktop and phone widths.
+- The women hero uses the reference's distinct supporting phrases in the correct positions.
+- Desktop filtering is not duplicated across the toolbar and sidebar; the filter affordance still reaches usable controls.
+- The results area carries the reference hierarchy and an accurate live count.
+- Search, route navigation, filters, favorites, and cart actions remain usable; there is no horizontal overflow.
+- Product records and images remain sourced from the real catalog.

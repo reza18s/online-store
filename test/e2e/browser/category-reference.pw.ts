@@ -181,9 +181,9 @@ test('category pages match their audience, real category links, and responsive h
     await page.setViewportSize({ width: 1440, height: 1000 });
     const response = await page.goto(route.path);
     expect(response?.ok()).toBeTruthy();
-    await page.locator('.category-hero__image').evaluate((image) =>
-      (image as HTMLImageElement).decode(),
-    );
+    await page
+      .locator('.category-hero__image')
+      .evaluate((image) => (image as HTMLImageElement).decode());
     await expect(page.locator('.product-card')).toHaveCount(4);
     await loadVisibleProductImages(page);
     await expect(page.getByRole('heading', { name: route.title, level: 1 })).toBeVisible();
@@ -204,16 +204,48 @@ test('category pages match their audience, real category links, and responsive h
     });
     if (route.label === 'زنانه') {
       await expect(page.locator('.category-hero__note')).toBeVisible();
+      await expect(page.locator('.category-page--women > .breadcrumb')).toBeHidden();
+      await expect(page.locator('.category-hero__signature')).toHaveText(
+        'TIMELESS  ELEGANT  PERSIAN',
+      );
+      await expect(page.locator('.category-hero__note em')).toHaveText(/A MORE\s*BEAUTIFUL\s*YOU/);
+      await expect(page.locator('.category-hero--women')).toHaveCSS('height', '330px');
+      await expect(page.locator('.category-products__heading-copy h2')).toHaveText('زنانه');
+      await expect(page.locator('.category-products__summary')).toHaveText(
+        'مجموعه‌ای از لباس‌ها و استایل‌های زنانه برای روزهای واقعی شما.',
+      );
+      await expect(page.locator('.category-products__count')).toHaveText('۹ محصول');
+      await expect(page.locator('.category-toolbar__desktop-filters')).toBeHidden();
+      await expect(page.locator('.category-toolbar__desktop-filter')).toBeVisible();
       const heroImage = await page.locator('.category-hero__image').boundingBox();
       const editorialNote = await page.locator('.category-hero__note').boundingBox();
+      const categoryHeader = page.locator('.site-header--category');
+      const utility = await categoryHeader.locator('.site-header__utility').boundingBox();
+      const brand = await categoryHeader.locator('.brand-lockup').boundingBox();
+      const search = await categoryHeader.locator('.site-header__search-wrap').boundingBox();
+      const navigation = await categoryHeader.locator('.site-header__nav-wrap').boundingBox();
+      const desktopFilter = await page.locator('.category-toolbar__desktop-filter').boundingBox();
+      const desktopSort = await page.locator('.category-sort').boundingBox();
       expect(heroImage).not.toBeNull();
       expect(editorialNote).not.toBeNull();
+      expect(utility).not.toBeNull();
+      expect(brand).not.toBeNull();
+      expect(search).not.toBeNull();
+      expect(navigation).not.toBeNull();
+      expect(desktopFilter).not.toBeNull();
+      expect(desktopSort).not.toBeNull();
+      expect(utility!.x + utility!.width).toBeLessThan(brand!.x);
+      expect(brand!.x + brand!.width).toBeLessThan(search!.x);
+      expect(search!.x + search!.width).toBeLessThan(navigation!.x);
+      expect(desktopFilter!.x).toBeGreaterThan(desktopSort!.x + desktopSort!.width);
       expect(editorialNote!.x).toBeGreaterThanOrEqual(heroImage!.x);
       expect(editorialNote!.x + editorialNote!.width).toBeLessThanOrEqual(
         heroImage!.x + heroImage!.width + 1,
       );
       await expect(
-        page.getByText('مجموعه‌ای از لباس‌ها و استایل‌های زنانه برای روزهای واقعی شما.'),
+        page
+          .locator('.category-hero__copy')
+          .getByText('مجموعه‌ای از لباس‌ها و استایل‌های زنانه برای روزهای واقعی شما.'),
       ).toBeVisible();
     }
     if (route.label === 'مردانه')
@@ -263,7 +295,9 @@ test('category pages match their audience, real category links, and responsive h
       await expect(page.locator('.category-image-card')).toHaveCount(2);
       await expect(page.getByText('لباس‌های دخترانه', { exact: true })).toBeVisible();
       await expect(page.getByText('لباس‌های پسرانه', { exact: true })).toBeVisible();
-      await expect(page.getByText('رنگ‌های لطیف برای خیال‌های بزرگ', { exact: true })).toBeVisible();
+      await expect(
+        page.getByText('رنگ‌های لطیف برای خیال‌های بزرگ', { exact: true }),
+      ).toBeVisible();
       const heroImage = await page.locator('.category-hero__image').boundingBox();
       const heroCopy = await page.locator('.category-hero__copy').boundingBox();
       expect(heroImage).not.toBeNull();
@@ -293,30 +327,57 @@ test('phone category actions open search and filters and preserve real catalog s
   await installCategoryFixtures(page);
   await page.goto('/category/women');
   const categoryMenu = await page.getByRole('button', { name: 'باز کردن منو' }).boundingBox();
-  const categoryActions = await page.locator('.site-header__actions').boundingBox();
+  const categoryActions = await page.locator('.site-header__tools').boundingBox();
   const categoryBrand = await page.locator('.site-header .brand-lockup').boundingBox();
+  const categorySearch = await page.locator('.site-header__search-wrap').boundingBox();
+  const categoryCart = await page.locator('.site-header__utility .cart-button').boundingBox();
+  const categoryHeaderInner = await page
+    .locator('.site-header--category .site-header__inner')
+    .boundingBox();
   expect(categoryMenu).not.toBeNull();
   expect(categoryActions).not.toBeNull();
   expect(categoryBrand).not.toBeNull();
+  expect(categorySearch).not.toBeNull();
+  expect(categoryCart).not.toBeNull();
+  expect(categoryHeaderInner).not.toBeNull();
   expect(categoryMenu!.x + categoryMenu!.width).toBeLessThan(categoryBrand!.x);
   expect(categoryActions!.x).toBeGreaterThan(categoryBrand!.x + categoryBrand!.width);
+  expect(categorySearch!.x + categorySearch!.width).toBeLessThanOrEqual(categoryCart!.x);
+  expect(categoryHeaderInner!.x).toBe(0);
+  expect(categoryHeaderInner!.width).toBe(390);
+  expect(Math.abs(categoryBrand!.x + categoryBrand!.width / 2 - 195)).toBeLessThanOrEqual(1);
+  const phoneNavigation = page.locator('.mobile-bottom-nav--category');
+  await expect(phoneNavigation.locator('a')).toHaveCount(5);
+  await expect(phoneNavigation.locator('a').nth(2)).toHaveAttribute('aria-current', 'page');
+  await expect(phoneNavigation.locator('a').nth(2)).toContainText('دسته‌ها');
+  const bottomNavigationBounds = await phoneNavigation.boundingBox();
+  expect(bottomNavigationBounds).not.toBeNull();
+  expect(bottomNavigationBounds!.y + bottomNavigationBounds!.height).toBe(844);
   await expect(page.locator('.category-hero__note')).toBeHidden();
   await expect(page.locator('.product-card')).toHaveCount(4);
   await loadVisibleProductImages(page);
-  await page.locator('.category-hero__image').evaluate((image) =>
-    (image as HTMLImageElement).decode(),
-  );
+  await page
+    .locator('.category-hero__image')
+    .evaluate((image) => (image as HTMLImageElement).decode());
   const womenHero = page.locator('.category-hero--women');
   const womenHeading = womenHero.getByRole('heading', { level: 1 });
   const womenCta = womenHero.locator('.editorial-cta');
   await expect(womenHero).toHaveCSS('height', '320px');
+  await expect(page.locator('.category-hero__signature')).toBeHidden();
   await expect(womenCta).toHaveCSS('background-color', 'rgb(99, 61, 73)');
   const headingBounds = await womenHeading.boundingBox();
   const ctaBounds = await womenCta.boundingBox();
   expect(headingBounds).not.toBeNull();
   expect(ctaBounds).not.toBeNull();
-  expect(headingBounds!.x + headingBounds!.width).toBeLessThan(195);
-  expect(ctaBounds!.x + ctaBounds!.width).toBeLessThan(195);
+  expect(Math.abs(headingBounds!.x + headingBounds!.width / 2 - 195)).toBeLessThanOrEqual(1);
+  expect(Math.abs(ctaBounds!.x + ctaBounds!.width / 2 - 195)).toBeLessThanOrEqual(1);
+  const phoneFilter = await page.locator('.category-mobile-filter').boundingBox();
+  const phoneSort = await page.locator('.category-sort').boundingBox();
+  expect(phoneFilter).not.toBeNull();
+  expect(phoneSort).not.toBeNull();
+  expect(phoneFilter!.x + phoneFilter!.width).toBeLessThan(phoneSort!.x);
+  await expect(page.locator('.category-products__heading-copy h2')).toHaveText('زنانه');
+  await expect(page.locator('.category-products__count')).toHaveText('۹ محصول');
   const womenWidths = await page.evaluate(() => ({
     viewport: window.innerWidth,
     document: document.documentElement.scrollWidth,
@@ -333,9 +394,9 @@ test('phone category actions open search and filters and preserve real catalog s
   await expect(page.locator('.category-card-stack')).toBeVisible();
   await expect(page.locator('.product-card')).toHaveCount(4);
   await loadVisibleProductImages(page);
-  await page.locator('.category-hero__image').evaluate((image) =>
-    (image as HTMLImageElement).decode(),
-  );
+  await page
+    .locator('.category-hero__image')
+    .evaluate((image) => (image as HTMLImageElement).decode());
   await page.screenshot({
     path: 'test-results/ui-audit/category-reference/children-phone-viewport.png',
   });
@@ -346,9 +407,9 @@ test('phone category actions open search and filters and preserve real catalog s
   await page.goto('/category/men');
   await expect(page.locator('.product-card')).toHaveCount(4);
   await loadVisibleProductImages(page);
-  await page.locator('.category-hero__image').evaluate((image) =>
-    (image as HTMLImageElement).decode(),
-  );
+  await page
+    .locator('.category-hero__image')
+    .evaluate((image) => (image as HTMLImageElement).decode());
   await page.screenshot({
     path: 'test-results/ui-audit/category-reference/men-phone-viewport.png',
   });

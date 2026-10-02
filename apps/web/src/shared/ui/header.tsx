@@ -18,6 +18,38 @@ export function Header({
   categoryAudience?: CatalogAudience;
   isHomePage?: boolean;
 }) {
+  const searchButton = (
+    <Button
+      className={`icon-button${categoryAudience ? ' site-header__search' : ''}`}
+      variant="ghost"
+      size="icon"
+      type="button"
+      onClick={onSearch}
+      aria-label="جست‌وجوی محصولات"
+    >
+      <Icon name="search" />
+      {categoryAudience ? <span>جست‌وجوی محصولات، دسته‌ها یا الهام‌ها…</span> : null}
+    </Button>
+  );
+  const accountLink = (
+    <a className="icon-button site-header__account" href="/account" aria-label="حساب کاربری">
+      <Icon name="user" />
+    </a>
+  );
+  const cartLink = (
+    <a
+      className="cart-button inline-flex min-h-10 items-center gap-2 rounded-editorial bg-primary px-3 text-primary-foreground transition-transform duration-150 hover:-translate-y-px hover:bg-primary-hover"
+      href="/cart"
+      aria-label={`سبد خرید، ${cartCount} کالا`}
+    >
+      <Icon name="bag" size={18} />
+      <span className="cart-button__label">سبد</span>
+      <span className="cart-button__count" aria-hidden="true">
+        {cartCount}
+      </span>
+    </a>
+  );
+
   return (
     <header
       className={`site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur${categoryAudience ? ' site-header--category' : ''}${isHomePage ? ' site-header--home' : ''}`}
@@ -54,33 +86,21 @@ export function Header({
 
         <Logo />
 
-        <div className="site-header__actions flex items-center gap-0.5">
-          <Button
-            className={`icon-button${categoryAudience ? ' site-header__search' : ''}`}
-            variant="ghost"
-            size="icon"
-            type="button"
-            onClick={onSearch}
-            aria-label="جست‌وجوی محصولات"
-          >
-            <Icon name="search" />
-            {categoryAudience ? <span>جست‌وجوی محصولات، دسته‌ها یا الهام‌ها…</span> : null}
-          </Button>
-          <a className="icon-button site-header__account" href="/account" aria-label="حساب کاربری">
-            <Icon name="user" />
-          </a>
-          <a
-            className="cart-button inline-flex min-h-10 items-center gap-2 rounded-editorial bg-primary px-3 text-primary-foreground transition-transform duration-150 hover:-translate-y-px hover:bg-primary-hover"
-            href="/cart"
-            aria-label={`سبد خرید، ${cartCount} کالا`}
-          >
-            <Icon name="bag" size={18} />
-            <span className="cart-button__label">سبد</span>
-            <span className="cart-button__count" aria-hidden="true">
-              {cartCount}
-            </span>
-          </a>
-        </div>
+        {categoryAudience ? (
+          <div className="site-header__tools">
+            <div className="site-header__utility">
+              {accountLink}
+              {cartLink}
+            </div>
+            <div className="site-header__search-wrap">{searchButton}</div>
+          </div>
+        ) : (
+          <div className="site-header__actions flex items-center gap-0.5">
+            {searchButton}
+            {accountLink}
+            {cartLink}
+          </div>
+        )}
       </div>
     </header>
   );

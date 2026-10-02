@@ -42,7 +42,10 @@ const categoryImages: Record<string, { src: string; alt: string }> = {
   kidswear: { src: '/assets/nova-children-lifestyle.webp', alt: 'استایل روزمره کودک نوا' },
 };
 
-const childrenCategoryCopy: Record<string, { title: string; shortTitle: string; description: string }> = {
+const childrenCategoryCopy: Record<
+  string,
+  { title: string; shortTitle: string; description: string }
+> = {
   children: {
     title: 'لباس‌های دخترانه',
     shortTitle: 'دخترانه',
@@ -199,6 +202,14 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
           >
             <Icon name="filter" size={17} /> فیلترها
           </Button>
+          {audience !== 'men' ? (
+            <a
+              className="category-toolbar__desktop-filter"
+              href={`#category-filter-rail-${audience}`}
+            >
+              <Icon name="filter" size={17} /> فیلترها
+            </a>
+          ) : null}
           <label className="category-sort">
             <span>مرتب‌سازی</span>
             <UiSelect
@@ -378,6 +389,7 @@ function CategorySidebar({
 
   return (
     <aside
+      id={`category-filter-rail-${audience}`}
       className="category-filter-rail"
       aria-label={`فیلتر محصولات ${audienceCopy[audience].label}`}
     >
@@ -483,11 +495,22 @@ function CategoryHero({ audience }: { audience: CatalogAudience }) {
         <a className="editorial-cta" href={`/products/${audience}`}>
           {copy.ctaLabel} <Icon name="arrow-left" size={16} />
         </a>
+        {audience === 'women' ? (
+          <span className="category-hero__signature">
+            TIMELESS&nbsp;&nbsp; ELEGANT&nbsp;&nbsp; PERSIAN
+          </span>
+        ) : null}
       </div>
       {audience === 'women' ? (
         <aside className="category-hero__note" aria-label="داستان کالکشن زنانه">
           <span>لباس‌هایی برای داستان زندگی شما</span>
-          <em>TIMELESS<br />ELEGANT<br />PERSIAN</em>
+          <em>
+            A MORE
+            <br />
+            BEAUTIFUL
+            <br />
+            YOU
+          </em>
         </aside>
       ) : null}
     </section>
@@ -575,12 +598,31 @@ function CategoryResults({
   const copy = audienceCopy[audience];
   return (
     <section aria-labelledby="category-products-title" className="category-products">
-      <div className="section-heading">
-        <h2 id="category-products-title">انتخاب‌های محبوب {copy.label}</h2>
-        <a className="text-link" href={`/products/${audience}`}>
-          مشاهده همه
-        </a>
-      </div>
+      {audience === 'women' ? (
+        <div className="category-products__heading category-products__heading--women">
+          <div className="category-products__heading-copy">
+            <h2 id="category-products-title">{copy.label}</h2>
+          </div>
+          <div className="category-products__heading-actions">
+            <span className="category-products__count" aria-live="polite">
+              {productsQuery.isPending
+                ? 'در حال دریافت محصولات…'
+                : `${formatPersianNumber(productsQuery.data?.total ?? 0)} محصول`}
+            </span>
+            <a className="text-link" href={`/products/${audience}`}>
+              مشاهده همه
+            </a>
+          </div>
+          <p className="category-products__summary">{copy.description}</p>
+        </div>
+      ) : (
+        <div className="section-heading">
+          <h2 id="category-products-title">انتخاب‌های محبوب {copy.label}</h2>
+          <a className="text-link" href={`/products/${audience}`}>
+            مشاهده همه
+          </a>
+        </div>
+      )}
       <CatalogQueryState
         query={productsQuery}
         emptyTitle={`هنوز محصولی در دسته ${copy.label} منتشر نشده است`}

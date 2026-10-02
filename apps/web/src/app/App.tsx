@@ -21,7 +21,8 @@ export function App() {
     pathname === '/category/children'
       ? (pathname.slice('/category/'.length) as 'women' | 'men' | 'children')
       : undefined;
-  const searchQuery = pathname === '/search' ? new URLSearchParams(queryString).get('q') ?? '' : undefined;
+  const searchQuery =
+    pathname === '/search' ? (new URLSearchParams(queryString).get('q') ?? '') : undefined;
   useScrollToTop(route);
   const cartQuery = useCart(true);
   const customerQuery = useCurrentCustomer(true);
@@ -73,8 +74,12 @@ export function App() {
         isWishlisted={(slug) => wishlist.has(slug)}
         onToggleWishlist={toggleWishlist}
       />
-      <MobileBottomNav cartCount={cartCount} />
-      <SearchDialog open={searchOpen} initialQuery={searchQuery} onClose={() => setSearchOpen(false)} />
+      <MobileBottomNav cartCount={cartCount} categoryAudience={categoryAudience} />
+      <SearchDialog
+        open={searchOpen}
+        initialQuery={searchQuery}
+        onClose={() => setSearchOpen(false)}
+      />
       <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );

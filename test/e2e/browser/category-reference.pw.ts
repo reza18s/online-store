@@ -306,6 +306,22 @@ test('phone category actions open search and filters and preserve real catalog s
   await page.locator('.category-hero__image').evaluate((image) =>
     (image as HTMLImageElement).decode(),
   );
+  const womenHero = page.locator('.category-hero--women');
+  const womenHeading = womenHero.getByRole('heading', { level: 1 });
+  const womenCta = womenHero.locator('.editorial-cta');
+  await expect(womenHero).toHaveCSS('height', '320px');
+  await expect(womenCta).toHaveCSS('background-color', 'rgb(99, 61, 73)');
+  const headingBounds = await womenHeading.boundingBox();
+  const ctaBounds = await womenCta.boundingBox();
+  expect(headingBounds).not.toBeNull();
+  expect(ctaBounds).not.toBeNull();
+  expect(headingBounds!.x + headingBounds!.width).toBeLessThan(195);
+  expect(ctaBounds!.x + ctaBounds!.width).toBeLessThan(195);
+  const womenWidths = await page.evaluate(() => ({
+    viewport: window.innerWidth,
+    document: document.documentElement.scrollWidth,
+  }));
+  expect(womenWidths.document).toBeLessThanOrEqual(womenWidths.viewport);
   await page.screenshot({
     path: 'test-results/ui-audit/category-reference/women-phone-viewport.png',
   });

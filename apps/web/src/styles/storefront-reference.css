@@ -1861,6 +1861,21 @@ body {
   .category-hero--children::after {
     background: transparent;
   }
+  .category-hero--women {
+    height: 320px;
+    min-height: 320px;
+  }
+  .category-hero--women > img,
+  .category-hero--women .category-hero__copy {
+    height: 320px;
+    min-height: 320px;
+  }
+  .category-hero--women .category-hero__copy {
+    align-items: flex-end;
+  }
+  .category-hero--women .category-hero__copy .editorial-cta {
+    background: var(--nova-ref-wine-dark);
+  }
   .category-hero--women .category-hero__copy h1,
   .category-hero--women .category-hero__copy p,
   .category-hero--women .category-hero__copy .section-heading__eyebrow,

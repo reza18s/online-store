@@ -92,7 +92,7 @@ for (const viewport of targetViewports) {
     }) => {
       const blockedMutationRequests = await openPublicHome(page);
       const searchTrigger = page.getByRole('banner').getByRole('button', {
-        name: 'جست‌وجو',
+        name: 'جست‌وجوی محصولات',
         exact: true,
       });
 

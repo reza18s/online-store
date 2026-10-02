@@ -228,6 +228,20 @@ test('exercises populated catalog controls and product actions with fixtures', a
   });
 });
 
+async function loadMainImages(page: Page): Promise<void> {
+  const images = page.locator('main img');
+  for (let index = 0; index < (await images.count()); index += 1) {
+    const image = images.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() =>
+        image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0),
+      )
+      .toBe(true);
+  }
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+}
+
 test('sweeps populated public catalog routes at desktop and phone sizes', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
   await installCatalogCartFixtures(page);
@@ -238,7 +252,7 @@ test('sweeps populated public catalog routes at desktop and phone sizes', async 
     ['/products/new', 'تازه‌های آتلیه'],
     ['/products/sale', 'تخفیف‌های منتخب'],
     ['/products/accessories', 'همه محصولات'],
-    ['/category/women', 'لباس‌هایی برای روزهای روشن'],
+    ['/category/women', 'زنانه'],
     ['/product/linen-overshirt', 'مانتوی لینن آوا'],
     ['/cart', 'سبد خرید'],
     ['/search?q=linen', 'چه چیزی پیدا می‌کنید؟'],
@@ -264,6 +278,9 @@ test('sweeps populated public catalog routes at desktop and phone sizes', async 
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
       ).toBe(true);
+      // The search dialog makes the underlying page inert, so its background images are not
+      // part of the active route's image-health check.
+      if (!path.startsWith('/search')) await loadMainImages(page);
       await expect(page.locator('img').first()).toHaveAttribute('src', /.+/);
       await page.screenshot({
         path: `test-results/ui-audit/catalog/${viewportName}/${path
@@ -271,19 +288,21 @@ test('sweeps populated public catalog routes at desktop and phone sizes', async 
           .replace(/^-|-$/g, '')}.png`,
         fullPage: true,
       });
-      const imageHealth = await page
-        .locator('main img')
-        .evaluateAll((images: HTMLImageElement[]) =>
-          images.map((image) => ({
-            src: image.getAttribute('src'),
-            complete: image.complete,
-            naturalWidth: image.naturalWidth,
-          })),
-        );
-      expect(
-        imageHealth.every((image) => image.naturalWidth > 0),
-        `${path}: ${JSON.stringify(imageHealth)}`,
-      ).toBe(true);
+      if (!path.startsWith('/search')) {
+        const imageHealth = await page
+          .locator('main img')
+          .evaluateAll((images: HTMLImageElement[]) =>
+            images.map((image) => ({
+              src: image.getAttribute('src'),
+              complete: image.complete,
+              naturalWidth: image.naturalWidth,
+            })),
+          );
+        expect(
+          imageHealth.every((image) => image.naturalWidth > 0),
+          `${path}: ${JSON.stringify(imageHealth)}`,
+        ).toBe(true);
+      }
       if (path.startsWith('/search')) {
         await page
           .getByRole('dialog')

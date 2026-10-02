@@ -27,11 +27,17 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
     { label: 'زنانه', href: '/category/women', image: '/assets/nova-women-lifestyle.webp' },
     { label: 'مردانه', href: '/category/men', image: '/assets/nova-hero-men.webp' },
     { label: 'بچگانه', href: '/category/children', image: '/assets/nova-children-lifestyle.webp' },
-    { label: 'اکسسوری', href: '/products/accessories', image: '/assets/nova-materials.webp' },
+    { label: 'اکسسوری', href: '/products/accessories', image: '/assets/nova-product-textured-scarf.webp' },
     { label: 'جدیدترین‌ها', href: '/products/new', image: '/assets/nova-hero-editorial-v2.png' },
     { label: 'کالکشن‌ها', href: '/campaign', image: '/assets/nova-home-mobile-story.webp' },
     { label: 'تخفیف‌ها', href: '/products/sale', image: '/assets/nova-product-knit-cardigan.webp' },
   ];
+  const mobileCategoryHrefs = new Set([
+    '/products/accessories',
+    '/products/new',
+    '/products/sale',
+  ]);
+  const mobileCategories = categories.filter((category) => mobileCategoryHrefs.has(category.href));
 
   const benefits = [
     {
@@ -115,8 +121,15 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
     </article>
   );
 
-  const renderMobileProduct = (product: (typeof products)[number], badge?: string) => (
-    <article className="atelier-mobile-product" key={product.slug}>
+  const renderMobileProduct = (
+    product: (typeof products)[number],
+    badge?: string,
+    compact = false,
+  ) => (
+    <article
+      className={`atelier-mobile-product${compact ? ' atelier-mobile-product--compact' : ''}`}
+      key={product.slug}
+    >
       <div className="atelier-mobile-product__media">
         <a
           href={`/product/${encodeURIComponent(product.slug)}`}
@@ -161,10 +174,9 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
     </article>
   );
 
-  const featuredProduct =
-    products.find((product) => product.categories?.some((category) => category.slug === 'accessories')) ??
-    products[4] ??
-    products[0];
+  const featuredProduct = products.find((product) =>
+    product.categories?.some((category) => category.slug === 'accessories'),
+  );
   const featuredColors = productsQuery.data?.items.find((product) => product.slug === featuredProduct?.slug)?.colors ?? [];
 
   const newsletterForm = (idPrefix: string) => (
@@ -263,10 +275,12 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
                 <img src={featuredProduct.image} alt={featuredProduct.alt} />
               ) : !featuredProduct ? (
                 <a href="/products/accessories" aria-label="مشاهده اکسسوری‌های نوا">
-                  <img src="/assets/nova-materials.webp" alt="پارچه‌ها و بافت‌های اکسسوری نوا" />
+                  <img src="/assets/nova-product-textured-scarf.webp" alt="شال بافتنی و جزئیات اکسسوری نوا" />
                 </a>
               ) : (
-                <img src="/assets/nova-materials.webp" alt="اکسسوری منتخب نوا" />
+                <span className="nova-home-featured-product__placeholder" aria-hidden="true">
+                  <Icon name="shirt" size={32} />
+                </span>
               )}
             </div>
             {featuredProduct ? (
@@ -509,14 +523,14 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
         </section>
 
         <nav className="atelier-mobile-categories" aria-label="دسته‌بندی‌های فروشگاه">
-          {categories.map((category, index) => (
+          {mobileCategories.map((category, index) => (
             <a
-              className={index === categories.length - 1 ? 'is-sale' : undefined}
+              className={index === mobileCategories.length - 1 ? 'is-sale' : undefined}
               href={category.href}
               key={category.href}
             >
               <img src={category.image} alt="" loading="lazy" />
-              {index === categories.length - 1 ? (
+              {index === mobileCategories.length - 1 ? (
                 <span className="atelier-mobile-categories__sale-mark" aria-hidden="true">
                   %
                 </span>
@@ -567,8 +581,10 @@ export function HomeDiscovery({ props }: { props: StorefrontDiscoveryPageProps }
             </a>
           </div>
           {productsQuery.data?.items.length ? (
-            <div className="atelier-mobile-products">
-              {selectedProducts.slice(0, 2).map((product) => renderMobileProduct(product))}
+            <div className="atelier-mobile-products atelier-mobile-products--compact">
+              {selectedProducts.slice(0, 2).map((product) =>
+                renderMobileProduct(product, undefined, true),
+              )}
             </div>
           ) : null}
         </section> : null}

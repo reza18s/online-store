@@ -15,7 +15,14 @@ import { resolveSeoDocumentForRoute } from '@/features/seo';
 export function App() {
   const route = useRoute();
   const [pathname, queryString = ''] = route.split('?');
-  const searchQuery = pathname === '/search' ? new URLSearchParams(queryString).get('q') ?? '' : undefined;
+  const categoryAudience =
+    pathname === '/category/women' ||
+    pathname === '/category/men' ||
+    pathname === '/category/children'
+      ? (pathname.slice('/category/'.length) as 'women' | 'men' | 'children')
+      : undefined;
+  const searchQuery =
+    pathname === '/search' ? (new URLSearchParams(queryString).get('q') ?? '') : undefined;
   useScrollToTop(route);
   const cartQuery = useCart(true);
   const customerQuery = useCurrentCustomer(true);
@@ -54,6 +61,8 @@ export function App() {
         cartCount={cartCount}
         onSearch={() => setSearchOpen(true)}
         onMenu={() => setMenuOpen(true)}
+        categoryAudience={categoryAudience}
+        isHomePage={pathname === '/'}
       />
       <PublicApp
         route={route}
@@ -65,8 +74,12 @@ export function App() {
         isWishlisted={(slug) => wishlist.has(slug)}
         onToggleWishlist={toggleWishlist}
       />
-      <MobileBottomNav cartCount={cartCount} />
-      <SearchDialog open={searchOpen} initialQuery={searchQuery} onClose={() => setSearchOpen(false)} />
+      <MobileBottomNav cartCount={cartCount} categoryAudience={categoryAudience} />
+      <SearchDialog
+        open={searchOpen}
+        initialQuery={searchQuery}
+        onClose={() => setSearchOpen(false)}
+      />
       <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );

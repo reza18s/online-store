@@ -129,12 +129,14 @@ async function assertHomeAccessibility(page: Page) {
   await expect(page.getByRole('banner')).toHaveCount(1);
   await expect(page.getByRole('main')).toHaveCount(1);
 
-  const headings = await page.locator('main :is(h1, h2, h3, h4, h5, h6):visible').evaluateAll((elements) =>
-    elements.map((element) => ({
-      level: Number(element.tagName.slice(1)),
-      text: element.textContent?.trim() ?? '',
-    })),
-  );
+  const headings = await page
+    .locator('main :is(h1, h2, h3, h4, h5, h6):visible')
+    .evaluateAll((elements) =>
+      elements.map((element) => ({
+        level: Number(element.tagName.slice(1)),
+        text: element.textContent?.trim() ?? '',
+      })),
+    );
 
   expect(headings.filter((heading) => heading.level === 1)).toHaveLength(1);
   expect(headings.every((heading) => heading.text.length > 0)).toBeTruthy();
@@ -171,7 +173,10 @@ for (const viewport of targetViewports) {
       await openPublicHome(page);
       await assertHomeAccessibility(page);
 
-      const searchButton = page.getByRole('button', { name: 'جست‌وجو', exact: true });
+      const searchButton = page.getByRole('button', {
+        name: 'جست‌وجوی محصولات',
+        exact: true,
+      });
       await searchButton.focus();
       await expect(searchButton).toBeFocused();
     });

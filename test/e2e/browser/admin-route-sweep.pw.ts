@@ -58,6 +58,31 @@ for (const viewport of [
             page.getByRole('heading', { name: 'اصلاح موجودی', exact: true }),
           ).toBeVisible();
         }
+        if (route === '/admin/catalog') {
+          const productList = page.getByRole('region', { name: 'فهرست محصولات' });
+          const visibleProductRows = productList.locator('article:visible');
+          const visibleProductImages = productList.locator('img:visible');
+          if (viewport.width < 768) {
+            await expect(visibleProductRows).toHaveCount(6);
+            const rowHeights = await visibleProductRows.evaluateAll((rows) =>
+              rows.map((row) => row.getBoundingClientRect().height),
+            );
+            expect(Math.max(...rowHeights)).toBeLessThan(120);
+          }
+          await expect(visibleProductImages).toHaveCount(6);
+          await expect(visibleProductImages.first()).toHaveAttribute(
+            'alt',
+            'پیراهن مردانه روشن، داده آزمایشی مرورگر',
+          );
+          const productImageHealth = await visibleProductImages.evaluateAll((images) =>
+            images.map(
+              (image) => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0,
+            ),
+          );
+          expect(productImageHealth).toEqual([true, true, true, true, true, true]);
+          await expect(productList).toContainText('موجودی کم');
+          await expect(productList).toContainText('ناموجود');
+        }
         if (route.endsWith('/route-sweep-product')) {
           await expect(page.getByLabel('نام محصول', { exact: true })).toHaveValue('محصول تست مسیر');
         }

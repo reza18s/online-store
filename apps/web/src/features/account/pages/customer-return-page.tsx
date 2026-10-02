@@ -254,7 +254,7 @@ export function CustomerReturnPage({
                 <legend>۲. انتخاب کالاهای قابل بازگشت</legend>
                 <p>کالاهایی که قصد بازگشت آن‌ها را دارید انتخاب کنید.</p>
                 <div className="nova-return-request-items">
-                  {order.items.map((item, index) => {
+                  {order.items.map((item) => {
                     const selected = selectedItemIds.includes(item.id);
                     return (
                       <label className={selected ? 'is-selected' : ''} key={item.id}>
@@ -268,14 +268,9 @@ export function CustomerReturnPage({
                             )
                           }
                         />
-                        <img
-                          src={
-                            index % 2 === 0
-                              ? '/assets/nova-product-knit-cardigan.webp'
-                              : '/assets/nova-hero-men.webp'
-                          }
-                          alt=""
-                        />
+                        <span className="nova-return-request-item__media" aria-hidden="true">
+                          <Icon name="shirt" size={22} />
+                        </span>
                         <span>
                           <strong>{item.productName}</strong>
                           <small>

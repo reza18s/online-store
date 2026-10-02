@@ -116,70 +116,107 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
           درخواست لغو سفارش ثبت شد؛ وضعیت و بازپرداخت فقط از پاسخ سرور پیروی می‌کند.
         </p>
       ) : null}
-      <div className="order-layout lg:grid">
-        <section className="timeline-card">
-          <h2>مسیر سفارش</h2>
-          {events.map((event, index) => (
-            <div className="timeline-event is-done" key={`${event.createdAt}-${index}`}>
-              <span className="timeline-event__dot">
-                <Icon name="check" size={14} />
-              </span>
-              <div>
-                <strong>
-                  {index === 0
-                    ? 'سفارش ثبت شد'
-                    : event.toStatus
-                      ? orderStatusCopy[event.toStatus]
-                      : 'به‌روزرسانی سفارش'}
-                </strong>
-                <small>{formatPersianDate(event.createdAt)}</small>
-              </div>
+      <section className="timeline-card nova-order-timeline">
+        <h2>مسیر سفارش</h2>
+        {events.map((event, index) => (
+          <div className="timeline-event is-done" key={`${event.createdAt}-${index}`}>
+            <span className="timeline-event__dot">
+              <Icon name="check" size={14} />
+            </span>
+            <div>
+              <strong>
+                {index === 0
+                  ? 'سفارش ثبت شد'
+                  : event.toStatus
+                    ? orderStatusCopy[event.toStatus]
+                    : 'به‌روزرسانی سفارش'}
+              </strong>
+              <small>{formatPersianDate(event.createdAt)}</small>
             </div>
-          ))}
-          {order.shipment ? (
-            <div className="timeline-event is-done">
-              <span className="timeline-event__dot">
-                <Icon name="truck" size={14} />
-              </span>
-              <div>
-                <strong>
-                  وضعیت ارسال:{' '}
-                  {order.shipment.status === 'DELIVERED'
-                    ? 'تحویل شده'
-                    : order.shipment.status === 'SHIPPED'
-                      ? 'ارسال شده'
-                      : 'در حال آماده‌سازی'}
-                </strong>
-                <small>
-                  {order.shipment.trackingReference ? (
-                    <span dir="ltr">{order.shipment.trackingReference}</span>
-                  ) : (
-                    'کد رهگیری هنوز ثبت نشده است'
-                  )}
-                </small>
-              </div>
-            </div>
-          ) : null}
-        </section>
-        <aside className="summary-card">
-          <span className="section-heading__eyebrow">تحویل به</span>
-          <h2>{order.address?.recipientName ?? 'آدرس ثبت نشده'}</h2>
-          <p>
-            {order.address
-              ? `${order.address.province}، ${order.address.city}، ${order.address.addressLine}`
-              : 'آدرس تحویل برای این سفارش ثبت نشده است.'}
-          </p>
-          {order.address ? <p dir="ltr">{order.address.phone}</p> : null}
-          {order.shipment?.trackingReference ? (
-            <p>
-              کد رهگیری: <span dir="ltr">{order.shipment.trackingReference}</span>
-            </p>
-          ) : null}
-          <div className="summary-card__total">
-            <span>مبلغ سفارش</span>
-            <strong>{formatToman(order.totalToman)}</strong>
           </div>
-          <p className="text-sm text-muted-foreground">
+        ))}
+        {order.shipment ? (
+          <div className="timeline-event is-done">
+            <span className="timeline-event__dot">
+              <Icon name="truck" size={14} />
+            </span>
+            <div>
+              <strong>
+                وضعیت ارسال:{' '}
+                {order.shipment.status === 'DELIVERED'
+                  ? 'تحویل شده'
+                  : order.shipment.status === 'SHIPPED'
+                    ? 'ارسال شده'
+                    : 'در حال آماده‌سازی'}
+              </strong>
+              <small>
+                {order.shipment.trackingReference ? (
+                  <span dir="ltr">{order.shipment.trackingReference}</span>
+                ) : (
+                  'کد رهگیری هنوز ثبت نشده است'
+                )}
+              </small>
+            </div>
+          </div>
+        ) : null}
+      </section>
+      <div className="nova-customer-order-layout">
+        <section className="nova-order-card nova-order-items" aria-labelledby="order-items-title">
+          <header>
+            <h2 id="order-items-title">اقلام سفارش</h2>
+            <span>{order.items.length} کالا</span>
+          </header>
+          {order.items.length ? (
+            <div className="nova-order-items__list">
+              {order.items.map((item) => (
+                <article className="nova-order-item" key={item.id}>
+                  <div className="nova-order-item__media" aria-hidden="true">
+                    <Icon name="shirt" size={24} />
+                  </div>
+                  <div className="nova-order-item__copy">
+                    <h3>{item.productName}</h3>
+                    <p>
+                      {item.quantity} عدد · هر عدد {formatToman(item.unitPriceToman)}
+                    </p>
+                  </div>
+                  <strong>{formatToman(item.totalToman)}</strong>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <p className="nova-order-empty">جزئیات اقلام این سفارش در دسترس نیست.</p>
+          )}
+        </section>
+
+        <section className="nova-order-card nova-order-totals" aria-labelledby="order-total-title">
+          <h2 id="order-total-title">خلاصه مالی</h2>
+          <dl>
+            <div>
+              <dt>جمع کالاها</dt>
+              <dd>{formatToman(order.subtotalToman)}</dd>
+            </div>
+            {order.discountToman > 0 ? (
+              <div className="is-discount">
+                <dt>تخفیف</dt>
+                <dd>−{formatToman(order.discountToman)}</dd>
+              </div>
+            ) : null}
+            <div>
+              <dt>هزینه ارسال</dt>
+              <dd>{order.shippingToman > 0 ? formatToman(order.shippingToman) : 'رایگان'}</dd>
+            </div>
+            {order.taxToman > 0 ? (
+              <div>
+                <dt>مالیات</dt>
+                <dd>{formatToman(order.taxToman)}</dd>
+              </div>
+            ) : null}
+            <div className="nova-order-totals__grand">
+              <dt>مبلغ پرداخت‌شده</dt>
+              <dd>{formatToman(order.totalToman)}</dd>
+            </div>
+          </dl>
+          <p>
             وضعیت پرداخت:{' '}
             {order.paymentStatus === 'PAID'
               ? 'پرداخت شده'
@@ -189,10 +226,88 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
                   ? 'ناموفق'
                   : 'در انتظار'}
           </p>
+        </section>
+
+        <div className="nova-order-details">
+          <section className="nova-order-card" aria-labelledby="order-address-title">
+            <h2 id="order-address-title">
+              <Icon name="home" size={17} /> اطلاعات ارسال
+            </h2>
+            {order.address ? (
+              <>
+                <strong>{order.address.recipientName}</strong>
+                <p>
+                  {order.address.province}، {order.address.city}، {order.address.addressLine}
+                </p>
+                <p dir="ltr">{order.address.phone}</p>
+                <small>کد پستی: {order.address.postalCode}</small>
+              </>
+            ) : (
+              <p>آدرس تحویل برای این سفارش ثبت نشده است.</p>
+            )}
+          </section>
+
+          <section className="nova-order-card" aria-labelledby="order-payment-title">
+            <h2 id="order-payment-title">
+              <Icon name="check" size={17} /> روش پرداخت
+            </h2>
+            <strong>
+              {order.paymentStatus === 'PAID'
+                ? 'پرداخت موفق'
+                : order.paymentStatus === 'REFUNDED'
+                  ? 'بازپرداخت شده'
+                  : order.paymentStatus === 'FAILED'
+                    ? 'پرداخت ناموفق'
+                    : 'در انتظار پرداخت'}
+            </strong>
+            <p>{formatToman(order.payment?.amountToman ?? order.totalToman)}</p>
+            {order.payment?.paidAt ? (
+              <small>پرداخت در {formatPersianDate(order.payment.paidAt)}</small>
+            ) : null}
+            {order.refunds.map((refund) => (
+              <small key={refund.id}>
+                بازپرداخت {formatToman(refund.amountToman)} ·{' '}
+                {refund.status === 'SUCCEEDED'
+                  ? 'موفق'
+                  : refund.status === 'FAILED'
+                    ? 'ناموفق'
+                    : 'در انتظار'}
+              </small>
+            ))}
+          </section>
+
+          <section className="nova-order-card" aria-labelledby="order-shipment-title">
+            <h2 id="order-shipment-title">
+              <Icon name="truck" size={17} /> اطلاعات مرسوله
+            </h2>
+            {order.shipment ? (
+              <>
+                <strong>{order.shipment.method}</strong>
+                <p>{order.shipment.provider}</p>
+                <small>
+                  {order.shipment.trackingReference ? (
+                    <>
+                      کد رهگیری: <bdi dir="ltr">{order.shipment.trackingReference}</bdi>
+                    </>
+                  ) : (
+                    'کد رهگیری هنوز ثبت نشده است.'
+                  )}
+                </small>
+                {order.shipment.deliveredAt ? (
+                  <small>تحویل در {formatPersianDate(order.shipment.deliveredAt)}</small>
+                ) : null}
+              </>
+            ) : (
+              <p>اطلاعات مرسوله پس از آماده‌سازی سفارش نمایش داده می‌شود.</p>
+            )}
+          </section>
+        </div>
+
+        <div className="nova-customer-order__actions">
           {canCancelCustomerOrder(order) ? (
             <Button
-              className="mt-4 min-h-11 text-sm text-destructive underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               type="button"
+              variant="outline"
               onClick={() => {
                 setCancelOpen((current) => !current);
                 setCancelError('');
@@ -216,13 +331,16 @@ export function CustomerOrderPage({ orderNumber }: { orderNumber: string }) {
               درخواست بازگشت کالا <Icon name="arrow-left" size={15} />
             </a>
           ) : order.status === 'DELIVERED' ? (
-            <p className="mt-4 text-xs leading-6 text-muted-foreground">
+            <p className="nova-order-return-note">
               {eligibility.reason === 'expired'
                 ? 'مهلت هفت‌روزه بازگشت این سفارش تمام شده است.'
                 : 'این سفارش در حال حاضر شرایط بازگشت را ندارد.'}
             </p>
           ) : null}
-        </aside>
+          <a className="text-link" href="/support">
+            تماس با پشتیبانی <Icon name="arrow-left" size={15} />
+          </a>
+        </div>
       </div>
       {cancelOpen && canCancelCustomerOrder(order) ? (
         <form

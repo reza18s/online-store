@@ -84,6 +84,10 @@ select {
   cursor: pointer;
 }
 
+a[href] {
+  cursor: pointer;
+}
+
 button {
   border: 0;
 }
@@ -234,14 +238,14 @@ textarea:focus-visible {
 
   .site-header__nav-wrap {
     gap: 14px;
-    grid-column: 1;
-    justify-self: start;
+    grid-column: 3;
+    justify-self: end;
   }
 
   .site-header__actions {
     gap: 2px;
-    grid-column: 3;
-    justify-self: end;
+    grid-column: 1;
+    justify-self: start;
     direction: rtl;
   }
 
@@ -3433,6 +3437,12 @@ textarea:focus-visible {
 
     .site-header__nav-wrap {
       grid-column: 1;
+      justify-self: start;
+    }
+
+    .site-header__actions {
+      grid-column: 3;
+      justify-self: end;
     }
 
     .site-header__menu {

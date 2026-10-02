@@ -127,7 +127,7 @@ test.describe('solid-background section eyebrow contrast', () => {
   test('meets the 4.5:1 normal-text threshold in the search panel', async ({ page }) => {
     const blockedMutationRequests = await openPublicHome(page);
     const searchTrigger = page.getByRole('banner').getByRole('button', {
-      name: 'جست‌وجو',
+      name: 'جست‌وجوی محصولات',
       exact: true,
     });
 

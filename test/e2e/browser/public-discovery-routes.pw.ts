@@ -108,17 +108,35 @@ async function expectSettledDiscovery(page: Page): Promise<void> {
   await expect(page.locator('main')).not.toContainText('در حال بارگذاری...');
 }
 
+async function expectReferenceHeaderLayout(page: Page): Promise<void> {
+  const bounds = await page.evaluate(() => {
+    const nav = document.querySelector('.site-nav')?.getBoundingClientRect();
+    const brand = document.querySelector('.site-header .brand-lockup')?.getBoundingClientRect();
+    const actions = document.querySelector('.site-header__actions')?.getBoundingClientRect();
+    return {
+      navLeft: nav?.left ?? 0,
+      brandLeft: brand?.left ?? 0,
+      brandRight: brand?.right ?? 0,
+      actionsRight: actions?.right ?? 0,
+    };
+  });
+
+  expect(bounds.navLeft).toBeGreaterThan(bounds.brandRight);
+  expect(bounds.actionsRight).toBeLessThan(bounds.brandLeft);
+}
+
 test('renders the uncovered public category and listing routes', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
 
   const categoryRoutes = [
-    { path: '/category/women', heading: 'لباس‌هایی برای روزهای روشن' },
-    { path: '/category/children', heading: 'برای بازی‌های تمام‌نشدنی' },
+    { path: '/category/women', heading: 'زنانه' },
+    { path: '/category/children', heading: 'دنیای کوچک با داستان‌های بزرگ' },
   ] as const;
 
   for (const route of categoryRoutes) {
     await openRoute(page, route.path);
+    await expectReferenceHeaderLayout(page);
     await expect(page.getByRole('heading', { name: route.heading, level: 1 })).toBeVisible();
     await expectSettledDiscovery(page);
   }
@@ -146,6 +164,7 @@ test('gives home hero links clear pointer feedback and keeps the no-product card
 }) => {
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);
   await openRoute(page, '/');
+  await expectReferenceHeaderLayout(page);
 
   const collectionLink = page.getByRole('link', { name: /مشاهده کالکشن/ });
   await expect(collectionLink).toHaveAttribute('href', '/campaign');
@@ -232,6 +251,58 @@ test('uses an available accessory in the desktop feature card', async ({ page })
     '/assets/nova-product-textured-scarf.webp',
   );
   await expect(featuredCard.getByRole('button', { name: /افزودن به سبد/ })).toBeEnabled();
+  expect(blockedRequests).toEqual([]);
+});
+
+test('does not present an unrelated product as the featured accessory', async ({ page }) => {
+  const blockedRequests = await installReadOnlyLocalNetworkGuard(page, async (route, url) => {
+    if (url.pathname !== '/v1/catalog/products') return false;
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          items: [
+            {
+              id: 'mens-shirt',
+              slug: 'oxford-shirt',
+              name: 'پیراهن آکسفورد مردانه',
+              priceToman: 1_890_000,
+              compareAtPriceToman: null,
+              available: true,
+              imageUrl: '/assets/nova-product-oxford-shirt.webp',
+              imageAlt: 'پیراهن آکسفورد آبی روشن',
+              categories: [{ id: 'men', slug: 'men', name: 'مردانه' }],
+              options: [],
+              variants: [],
+              colors: [{ name: 'آبی', hex: '#536b88' }],
+              stockStatus: 'IN_STOCK',
+            },
+          ],
+          page: 1,
+          limit: 8,
+          total: 1,
+        },
+        meta: {},
+      }),
+    });
+    return true;
+  });
+
+  await openRoute(page, '/');
+
+  const featuredCard = page.locator('.nova-home-featured-product');
+  await expect(
+    featuredCard.getByRole('link', { name: 'اکسسوری‌های نوا', exact: true }),
+  ).toHaveAttribute('href', '/products/accessories');
+  await expect(featuredCard.locator('.nova-home-featured-product__media img')).toHaveAttribute(
+    'src',
+    '/assets/nova-product-textured-scarf.webp',
+  );
+  await expect(featuredCard).not.toContainText('پیراهن آکسفورد مردانه');
+  await expect(featuredCard.locator('.nova-home-featured-product__badge')).toHaveCount(0);
+  await expect(featuredCard.getByRole('button', { name: /افزودن به سبد/ })).toHaveCount(0);
   expect(blockedRequests).toEqual([]);
 });
 

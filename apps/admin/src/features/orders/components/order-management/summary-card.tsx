@@ -5,12 +5,14 @@ export function SummaryCard({
   label,
   value,
   detail,
+  ltrValue = false,
   ltrDetail = false,
 }: {
   icon: 'package' | 'user' | 'truck';
   label: string;
   value: string;
   detail: string;
+  ltrValue?: boolean;
   ltrDetail?: boolean;
 }) {
   return (
@@ -21,7 +23,11 @@ export function SummaryCard({
         </span>
         <span className="text-xs text-muted-foreground">{label}</span>
       </div>
-      <strong className="mt-4 block truncate text-base" title={value}>
+      <strong
+        className={`mt-4 block min-w-0 text-base ${ltrValue ? 'break-all text-left' : 'truncate'}`}
+        dir={ltrValue ? 'ltr' : undefined}
+        title={value}
+      >
         {value}
       </strong>
       <span

@@ -156,6 +156,15 @@ for (const viewport of viewports) {
           await expect(page.getByText('عضویت خبرنامه در حال حاضر فعال نیست.').filter({ visible: true })).toBeVisible();
         }
         if (path === '/' && viewport.width < 768) {
+          const menu = await page.getByRole('button', { name: 'باز کردن منو' }).boundingBox();
+          const headerActions = await page.locator('.site-header__actions').boundingBox();
+          const brand = await page.locator('.site-header .brand-lockup').boundingBox();
+          expect(menu).not.toBeNull();
+          expect(headerActions).not.toBeNull();
+          expect(brand).not.toBeNull();
+          expect(headerActions!.x + headerActions!.width).toBeLessThan(brand!.x);
+          expect(menu!.x).toBeGreaterThan(brand!.x + brand!.width);
+
           const hero = await page.locator('.atelier-mobile-hero').boundingBox();
           const copy = await page.locator('.atelier-mobile-hero__copy').boundingBox();
           expect(hero).not.toBeNull();
@@ -167,6 +176,20 @@ for (const viewport of viewports) {
             return { text: style.color, background: style.backgroundColor };
           });
           expect(storyColors.text).not.toBe(storyColors.background);
+          const categoryLinks = page.locator('.atelier-mobile-categories > a');
+          await expect(categoryLinks).toHaveCount(3);
+          await expect(categoryLinks.nth(0)).toHaveAttribute('href', '/products/accessories');
+          await expect(categoryLinks.nth(1)).toHaveAttribute('href', '/products/new');
+          await expect(categoryLinks.nth(2)).toHaveAttribute('href', '/products/sale');
+          const compactCard = page
+            .locator('.atelier-mobile-products--compact .atelier-mobile-product--compact')
+            .first();
+          await expect(compactCard).toBeVisible();
+          const media = await compactCard.locator('.atelier-mobile-product__media').boundingBox();
+          const details = await compactCard.locator('.atelier-mobile-product__details').boundingBox();
+          expect(media).not.toBeNull();
+          expect(details).not.toBeNull();
+          expect(media!.x + media!.width).toBeLessThanOrEqual(details!.x + 1);
         }
         const dir = `test-results/ui-audit/editorial/${viewport.width}`;
         await mkdir(dir, { recursive: true });

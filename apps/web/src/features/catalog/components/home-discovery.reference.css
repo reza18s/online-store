@@ -321,6 +321,14 @@
   object-fit: cover;
 }
 
+.nova-home-featured-product__placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: var(--nova-home-muted);
+}
+
 .nova-home-featured-product__media > a {
   display: block;
   height: 100%;
@@ -1308,6 +1316,53 @@
     border-radius: 10px;
     color: var(--nova-home-text);
     font-size: 12px;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product--compact {
+    display: grid;
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    align-items: stretch;
+    padding: 5px;
+    direction: ltr;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__media {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 128px;
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details {
+    grid-column: 2;
+    grid-row: 1;
+    align-content: center;
+    gap: 5px 4px;
+    padding: 5px 6px;
+    direction: rtl;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details > a {
+    grid-column: 1 / -1;
+    display: -webkit-box;
+    overflow: hidden;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details > strong {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+
+  .atelier-mobile-products--compact .atelier-mobile-product__details .nova-button {
+    grid-column: 1 / -1;
+    min-height: 34px;
+    margin-top: 2px;
+    padding-inline: 4px;
+    font-size: 11px;
   }
 
   .atelier-mobile-story {

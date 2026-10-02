@@ -90,7 +90,7 @@ export function ProductCard({
           onClick={() => onAdd(product)}
         >
           <Icon name="bag" size={16} />
-          {disabled ? 'ناموجود' : 'افزودن به سبد خرید'}
+          {disabled ? 'ناموجود' : 'افزودن به سبد'}
         </Button>
       </div>
     </article>

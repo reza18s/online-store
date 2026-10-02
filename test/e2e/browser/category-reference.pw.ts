@@ -137,6 +137,18 @@ async function installCategoryFixtures(page: Page): Promise<void> {
   });
 }
 
+async function loadVisibleProductImages(page: Page): Promise<void> {
+  await page.locator('.product-card img').evaluateAll(async (images) => {
+    await Promise.all(
+      images.map(async (image) => {
+        const productImage = image as HTMLImageElement;
+        productImage.loading = 'eager';
+        await productImage.decode();
+      }),
+    );
+  });
+}
+
 test('category pages match their audience, real category links, and responsive hero structure', async ({
   page,
 }) => {
@@ -169,6 +181,11 @@ test('category pages match their audience, real category links, and responsive h
     await page.setViewportSize({ width: 1440, height: 1000 });
     const response = await page.goto(route.path);
     expect(response?.ok()).toBeTruthy();
+    await page.locator('.category-hero__image').evaluate((image) =>
+      (image as HTMLImageElement).decode(),
+    );
+    await expect(page.locator('.product-card')).toHaveCount(4);
+    await loadVisibleProductImages(page);
     await expect(page.getByRole('heading', { name: route.title, level: 1 })).toBeVisible();
     await expect(
       page
@@ -187,14 +204,38 @@ test('category pages match their audience, real category links, and responsive h
     });
     if (route.label === 'زنانه') {
       await expect(page.locator('.category-hero__note')).toBeVisible();
+      const heroImage = await page.locator('.category-hero__image').boundingBox();
+      const editorialNote = await page.locator('.category-hero__note').boundingBox();
+      expect(heroImage).not.toBeNull();
+      expect(editorialNote).not.toBeNull();
+      expect(editorialNote!.x).toBeGreaterThanOrEqual(heroImage!.x);
+      expect(editorialNote!.x + editorialNote!.width).toBeLessThanOrEqual(
+        heroImage!.x + heroImage!.width + 1,
+      );
       await expect(
         page.getByText('مجموعه‌ای از لباس‌ها و استایل‌های زنانه برای روزهای واقعی شما.'),
       ).toBeVisible();
     }
     if (route.label === 'مردانه')
       await expect(page.locator('.category-hero__lead')).toHaveText('تعادل میان اصالت و امروز');
-    if (route.quickCount)
+    if (route.quickCount) {
       await expect(page.locator('.category-quick-card')).toHaveCount(route.quickCount);
+      const railCards = await page.locator('.category-quick-card').all();
+      const visualOrder = await Promise.all(
+        railCards.map(async (card) => ({
+          label: await card.locator('span').innerText(),
+          left: (await card.boundingBox())?.x ?? 0,
+        })),
+      );
+      visualOrder.sort((left, right) => right.left - left.left);
+      expect(visualOrder.map(({ label }) => label)).toEqual([
+        'پیراهن',
+        'شلوار',
+        'مانتو و رویه',
+        'بافت',
+        'اکسسوری',
+      ]);
+    }
     if (route.label === 'مردانه')
       await expect(page.locator('.category-filter-rail')).toHaveCount(0);
     if (route.label !== 'مردانه') await expect(page.locator('.category-filter-rail')).toBeVisible();
@@ -220,6 +261,14 @@ test('category pages match their audience, real category links, and responsive h
     }
     if (route.label === 'بچگانه') {
       await expect(page.locator('.category-image-card')).toHaveCount(2);
+      await expect(page.getByText('لباس‌های دخترانه', { exact: true })).toBeVisible();
+      await expect(page.getByText('لباس‌های پسرانه', { exact: true })).toBeVisible();
+      await expect(page.getByText('رنگ‌های لطیف برای خیال‌های بزرگ', { exact: true })).toBeVisible();
+      const heroImage = await page.locator('.category-hero__image').boundingBox();
+      const heroCopy = await page.locator('.category-hero__copy').boundingBox();
+      expect(heroImage).not.toBeNull();
+      expect(heroCopy).not.toBeNull();
+      expect(heroCopy!.x + heroCopy!.width).toBeLessThanOrEqual(heroImage!.x + 1);
       await expect(page.locator('.category-image-card').nth(0)).toHaveAttribute(
         'href',
         '/products/children?category=children',
@@ -243,19 +292,54 @@ test('phone category actions open search and filters and preserve real catalog s
   await page.setViewportSize({ width: 390, height: 844 });
   await installCategoryFixtures(page);
   await page.goto('/category/women');
+  const categoryMenu = await page.getByRole('button', { name: 'باز کردن منو' }).boundingBox();
+  const categoryActions = await page.locator('.site-header__actions').boundingBox();
+  const categoryBrand = await page.locator('.site-header .brand-lockup').boundingBox();
+  expect(categoryMenu).not.toBeNull();
+  expect(categoryActions).not.toBeNull();
+  expect(categoryBrand).not.toBeNull();
+  expect(categoryMenu!.x + categoryMenu!.width).toBeLessThan(categoryBrand!.x);
+  expect(categoryActions!.x).toBeGreaterThan(categoryBrand!.x + categoryBrand!.width);
   await expect(page.locator('.category-hero__note')).toBeHidden();
   await expect(page.locator('.product-card')).toHaveCount(4);
+  await loadVisibleProductImages(page);
+  await page.locator('.category-hero__image').evaluate((image) =>
+    (image as HTMLImageElement).decode(),
+  );
+  await page.screenshot({
+    path: 'test-results/ui-audit/category-reference/women-phone-viewport.png',
+  });
   await page.screenshot({
     path: 'test-results/ui-audit/category-reference/women-phone.png',
     fullPage: true,
   });
   await page.goto('/category/children');
   await expect(page.locator('.category-card-stack')).toBeVisible();
+  await expect(page.locator('.product-card')).toHaveCount(4);
+  await loadVisibleProductImages(page);
+  await page.locator('.category-hero__image').evaluate((image) =>
+    (image as HTMLImageElement).decode(),
+  );
+  await page.screenshot({
+    path: 'test-results/ui-audit/category-reference/children-phone-viewport.png',
+  });
   await page.screenshot({
     path: 'test-results/ui-audit/category-reference/children-phone.png',
     fullPage: true,
   });
   await page.goto('/category/men');
+  await expect(page.locator('.product-card')).toHaveCount(4);
+  await loadVisibleProductImages(page);
+  await page.locator('.category-hero__image').evaluate((image) =>
+    (image as HTMLImageElement).decode(),
+  );
+  await page.screenshot({
+    path: 'test-results/ui-audit/category-reference/men-phone-viewport.png',
+  });
+  await page.screenshot({
+    path: 'test-results/ui-audit/category-reference/men-phone.png',
+    fullPage: true,
+  });
 
   await page.getByRole('button', { name: 'باز کردن منو' }).click();
   const menu = page.getByRole('dialog', { name: 'منوی فروشگاه' });

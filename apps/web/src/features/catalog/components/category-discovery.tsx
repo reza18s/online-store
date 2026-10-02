@@ -33,13 +33,26 @@ const categorySlugs: Record<CatalogAudience, string[]> = {
 };
 
 const categoryImages: Record<string, { src: string; alt: string }> = {
-  accessories: { src: '/assets/nova-materials.webp', alt: 'جزئیات پارچه و اکسسوری' },
+  accessories: { src: '/assets/nova-product-textured-scarf.webp', alt: 'شال و اکسسوری نوا' },
   knitwear: { src: '/assets/nova-product-knit-cardigan.webp', alt: 'بافت نرم و گرم' },
-  outerwear: { src: '/assets/nova-women-lifestyle.webp', alt: 'رویه‌های روزمره نوا' },
+  outerwear: { src: '/assets/nova-category-men-hero.webp', alt: 'رویه‌های مردانه نوا' },
   trousers: { src: '/assets/nova-product-soft-trousers.webp', alt: 'شلوارهای راحت و خوش‌دوخت' },
   shirts: { src: '/assets/nova-product-oxford-shirt.webp', alt: 'پیراهن‌های نوا' },
   children: { src: '/assets/nova-category-children-hero.webp', alt: 'لباس‌های راحت کودک نوا' },
-  kidswear: { src: '/assets/nova-category-children-hero.webp', alt: 'استایل کودکانه نوا' },
+  kidswear: { src: '/assets/nova-children-lifestyle.webp', alt: 'استایل روزمره کودک نوا' },
+};
+
+const childrenCategoryCopy: Record<string, { title: string; shortTitle: string; description: string }> = {
+  children: {
+    title: 'لباس‌های دخترانه',
+    shortTitle: 'دخترانه',
+    description: 'رنگ‌های لطیف برای خیال‌های بزرگ',
+  },
+  kidswear: {
+    title: 'لباس‌های پسرانه',
+    shortTitle: 'پسرانه',
+    description: 'استایل‌های راحت برای ماجراجویی هر روز',
+  },
 };
 
 const sortLabels = [
@@ -151,7 +164,16 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
       {audience === 'children' ? (
         <div className="category-hero-layout category-hero-layout--children">
           <CategoryHero audience={audience} />
-          <CategoryCardStack categories={categoryCards} />
+          <CategoryCardStack
+            categories={categoryCards.map((category) => ({
+              ...category,
+              ...(childrenCategoryCopy[category.slug] ?? {
+                title: category.name,
+                shortTitle: category.name,
+                description: 'پوشاک راحت برای روزهای پرماجرای کودک',
+              }),
+            }))}
+          />
         </div>
       ) : (
         <CategoryHero audience={audience} />
@@ -475,7 +497,13 @@ function CategoryHero({ audience }: { audience: CatalogAudience }) {
 function CategoryCardStack({
   categories,
 }: {
-  categories: Array<{ slug: string; name: string; image: { src: string; alt: string } }>;
+  categories: Array<{
+    slug: string;
+    title: string;
+    shortTitle: string;
+    description: string;
+    image: { src: string; alt: string };
+  }>;
 }) {
   return (
     <nav className="category-card-stack" aria-label="دسته‌های لباس کودک">
@@ -486,8 +514,16 @@ function CategoryCardStack({
           key={category.slug}
         >
           <img src={category.image.src} alt={category.image.alt} loading="lazy" />
-          <span>{category.name}</span>
-          <Icon name="arrow-left" size={15} />
+          <span className="category-image-card__copy">
+            <strong className="category-image-card__title--desktop">{category.title}</strong>
+            <strong aria-hidden="true" className="category-image-card__title--mobile">
+              {category.shortTitle}
+            </strong>
+            <small>{category.description}</small>
+            <span className="category-image-card__action">
+              <Icon name="arrow-left" size={14} /> مشاهده
+            </span>
+          </span>
         </a>
       ))}
     </nav>
@@ -499,9 +535,14 @@ function CategoryQuickRail({
 }: {
   categories: Array<{ slug: string; name: string; image: { src: string; alt: string } }>;
 }) {
+  const visualOrder = ['shirts', 'trousers', 'outerwear', 'knitwear', 'accessories'];
+  const orderedCategories = [...categories].sort(
+    (left, right) => visualOrder.indexOf(left.slug) - visualOrder.indexOf(right.slug),
+  );
+
   return (
     <nav className="category-quick-rail" aria-label="دسته‌های پوشاک مردانه">
-      {categories.map((category) => (
+      {orderedCategories.map((category) => (
         <a
           href={`/products/men?category=${encodeURIComponent(category.slug)}`}
           className="category-quick-card"

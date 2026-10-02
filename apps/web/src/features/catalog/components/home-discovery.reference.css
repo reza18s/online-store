@@ -321,6 +321,14 @@
   object-fit: cover;
 }
 
+.nova-home-featured-product__placeholder {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  color: var(--nova-home-muted);
+}
+
 .nova-home-featured-product__media > a {
   display: block;
   height: 100%;

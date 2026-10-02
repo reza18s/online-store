@@ -10,15 +10,17 @@ export function Header({
   onMenu,
   onSearch,
   categoryAudience,
+  isHomePage,
 }: {
   cartCount: number;
   onMenu: () => void;
   onSearch: () => void;
   categoryAudience?: CatalogAudience;
+  isHomePage?: boolean;
 }) {
   return (
     <header
-      className={`site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur${categoryAudience ? ' site-header--category' : ''}`}
+      className={`site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur${categoryAudience ? ' site-header--category' : ''}${isHomePage ? ' site-header--home' : ''}`}
     >
       <div className="shell site-header__inner mx-auto w-[calc(100%-2rem)] max-w-[1280px]">
         <div className="site-header__nav-wrap flex items-center gap-3.5">

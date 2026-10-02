@@ -61,6 +61,7 @@ export function App() {
         onSearch={() => setSearchOpen(true)}
         onMenu={() => setMenuOpen(true)}
         categoryAudience={categoryAudience}
+        isHomePage={pathname === '/'}
       />
       <PublicApp
         route={route}

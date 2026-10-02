@@ -254,6 +254,58 @@ test('uses an available accessory in the desktop feature card', async ({ page })
   expect(blockedRequests).toEqual([]);
 });
 
+test('does not present an unrelated product as the featured accessory', async ({ page }) => {
+  const blockedRequests = await installReadOnlyLocalNetworkGuard(page, async (route, url) => {
+    if (url.pathname !== '/v1/catalog/products') return false;
+
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        data: {
+          items: [
+            {
+              id: 'mens-shirt',
+              slug: 'oxford-shirt',
+              name: 'پیراهن آکسفورد مردانه',
+              priceToman: 1_890_000,
+              compareAtPriceToman: null,
+              available: true,
+              imageUrl: '/assets/nova-product-oxford-shirt.webp',
+              imageAlt: 'پیراهن آکسفورد آبی روشن',
+              categories: [{ id: 'men', slug: 'men', name: 'مردانه' }],
+              options: [],
+              variants: [],
+              colors: [{ name: 'آبی', hex: '#536b88' }],
+              stockStatus: 'IN_STOCK',
+            },
+          ],
+          page: 1,
+          limit: 8,
+          total: 1,
+        },
+        meta: {},
+      }),
+    });
+    return true;
+  });
+
+  await openRoute(page, '/');
+
+  const featuredCard = page.locator('.nova-home-featured-product');
+  await expect(
+    featuredCard.getByRole('link', { name: 'اکسسوری‌های نوا', exact: true }),
+  ).toHaveAttribute('href', '/products/accessories');
+  await expect(featuredCard.locator('.nova-home-featured-product__media img')).toHaveAttribute(
+    'src',
+    '/assets/nova-product-textured-scarf.webp',
+  );
+  await expect(featuredCard).not.toContainText('پیراهن آکسفورد مردانه');
+  await expect(featuredCard.locator('.nova-home-featured-product__badge')).toHaveCount(0);
+  await expect(featuredCard.getByRole('button', { name: /افزودن به سبد/ })).toHaveCount(0);
+  expect(blockedRequests).toEqual([]);
+});
+
 test('settles an empty public search without a skeleton or mutation', async ({ page }) => {
   page.setDefaultNavigationTimeout(15_000);
   const blockedRequests = await installReadOnlyLocalNetworkGuard(page);

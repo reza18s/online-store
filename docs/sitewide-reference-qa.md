@@ -61,6 +61,8 @@ See the current screenshot-led findings and route captures in the [design QA rep
 
 The 2026-10-02 final rerun completed with **153 browser tests passed**. Workspace typecheck, web/admin production builds, and targeted ESLint passed. See the design QA report for current screenshot paths, live catalog counts, and service/data limits.
 
+The latest reference-fidelity follow-up corrected the women’s and children’s category hero composition, the men’s visual rail order, and the route-specific home/category phone header placement. It also prevents a non-accessory catalog item from appearing as a purchasable featured accessory. The full browser suite now completes with **154 passed**; the affected web typecheck, web client/SSR build, and targeted ESLint also pass. New viewport evidence is in `test-results/ui-audit/category-reference/` and `test-results/ui-audit/editorial/{1440,390}/home.png`.
+
 ## Git follow-up — 2026-10-02
 
 Commit `3b4fae9` (`fix(ui): align remaining storefront and admin references`) is pushed to `codex/category-reference-fidelity`; a post-push fetch confirmed `origin/codex/category-reference-fidelity` at the same commit. This updates the existing PR #6. The current PR/check query remains unavailable because the configured proxy refuses GitHub GraphQL connections. The last available status showed a required check failing on the untouched `scripts/script.js`; the PR remains unmerged pending current required checks.

@@ -156,6 +156,15 @@ for (const viewport of viewports) {
           await expect(page.getByText('عضویت خبرنامه در حال حاضر فعال نیست.').filter({ visible: true })).toBeVisible();
         }
         if (path === '/' && viewport.width < 768) {
+          const menu = await page.getByRole('button', { name: 'باز کردن منو' }).boundingBox();
+          const headerActions = await page.locator('.site-header__actions').boundingBox();
+          const brand = await page.locator('.site-header .brand-lockup').boundingBox();
+          expect(menu).not.toBeNull();
+          expect(headerActions).not.toBeNull();
+          expect(brand).not.toBeNull();
+          expect(headerActions!.x + headerActions!.width).toBeLessThan(brand!.x);
+          expect(menu!.x).toBeGreaterThan(brand!.x + brand!.width);
+
           const hero = await page.locator('.atelier-mobile-hero').boundingBox();
           const copy = await page.locator('.atelier-mobile-hero__copy').boundingBox();
           expect(hero).not.toBeNull();

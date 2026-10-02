@@ -42,4 +42,5 @@ The women, men, and children category hero headings and calls to action match th
 - `bun run --cwd apps/web typecheck`: passed.
 - `bun run --cwd apps/web build`: passed for client and SSR bundles. Vite emitted its existing Node API deprecation and chunk-size advisories.
 - Targeted ESLint passed for the changed implementation and browser-test files.
+- The updated PR’s required repository-wide lint checks still fail on 15 existing errors in `scripts/script.js`; this file is outside the UI change and was not modified.
 - The full unit-test command was not rerun for these UI-only changes; the preceding sitewide QA report records its existing Bun alias-resolution and unrelated coupon assertion failures.

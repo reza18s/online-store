@@ -52,7 +52,7 @@ The women, men, and children category hero headings and calls to action match th
 
 ### Reference and runtime evidence
 
-- Reference: user-provided filter.png, 1536 × 1024, supplied at C:\Users\Asus\Documents\ChatGPT\online store\docs\designs\atelier-editorial\filter.png. The attachment remains in the user’s main checkout and was not copied into this branch.
+- Reference: the user-provided `filter.png` (1536 × 1024 px), retained in the local checkout and not copied into this branch.
 - Desktop: /products/women, 1536 × 1024 CSS pixels at device scale factor 1. Screenshot: [filter-select-editorial-desktop.png](docs/refactoring/filter-select-editorial-desktop.png).
 - Mobile: /products/women, 390 × 844 CSS pixels at device scale factor 1. The centered sheet is 358 × 756 CSS pixels at this viewport. Screenshots: [filter-select-editorial-mobile.png](docs/refactoring/filter-select-editorial-mobile.png) and [filter-select-editorial-mobile-open.png](docs/refactoring/filter-select-editorial-mobile-open.png).
 - The screenshots show the desktop category options, compact mobile sheet, and expanded mobile option state.
@@ -82,7 +82,7 @@ final result: passed
 
 ### Source, runtime, and capture
 
-- Source visual truth: user-provided `C:\Users\Asus\Documents\ChatGPT\online store\docs\designs\atelier-editorial\card.png` (1536 × 1024 px). It remains in the primary checkout and was not copied into this worktree.
+- Source visual truth: the user-provided `card.png` (1536 × 1024 px), retained in the primary checkout and not copied into this worktree.
 - Implementation route: `http://127.0.0.1:5176/products/women` in the worktree preview.
 - The desktop capture used a 1536 × 1024 CSS viewport at `deviceScaleFactor: 1`. The first RTL card was 251.5 × 490.17 CSS px; its component screenshot is 252 × 491 px. The full viewport capture is 1536 × 1024 px.
 - The mobile capture used a 390 × 844 CSS viewport at `deviceScaleFactor: 1`. The card was 180.5 × 379.31 CSS px; its component screenshot is 181 × 380 px. The full viewport capture is 390 × 844 px.
@@ -91,9 +91,9 @@ final result: passed
 
 ### Comparison evidence
 
-- Full component comparison: `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-comparison-final.png` (652 × 632 px). It places the source card crop `(84, 100, 304, 540)` beside the rendered card screenshot at native pixels. The source crop includes reference leader lines; those lines are annotations, not card UI.
-- Focused body comparison: `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-body-comparison-final.png` (652 × 270 px). It compares the title, detail row, price, swatches, and CTA using source crop `(84, 436, 304, 197)` and implementation crop `(0, 300, 252, 185)`.
-- Rendered component captures: desktop `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-desktop-final.png`; mobile `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-mobile-final.png`. Full-page context captures are `product-list-desktop-final.png` and `product-list-mobile-final.png` in the same folder.
+- Full component comparison: `product-card-comparison-final.png` (652 × 632 px), saved in the local Codex visualization workspace. It places the source card crop `(84, 100, 304, 540)` beside the rendered card screenshot at native pixels. The source crop includes reference leader lines; those lines are annotations, not card UI.
+- Focused body comparison: `product-card-body-comparison-final.png` (652 × 270 px), saved in the same local workspace. It compares the title, detail row, price, swatches, and CTA using source crop `(84, 436, 304, 197)` and implementation crop `(0, 300, 252, 185)`.
+- Rendered component captures: desktop `product-card-desktop-final.png`; mobile `product-card-mobile-final.png`. Full-page context captures are `product-list-desktop-final.png` and `product-list-mobile-final.png` in the same local folder. These visual QA captures are local artifacts and are not committed to the repository.
 
 ### Fidelity review
 

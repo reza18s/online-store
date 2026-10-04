@@ -108,28 +108,33 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
     },
   }));
 
-  const filters = (
+  const renderFilters = (openCategoryByDefault: boolean) => (
     <div className="category-filters">
       <FilterSelect
         label="دسته‌بندی"
+        defaultOpen={openCategoryByDefault}
+        isLoading={categoryQuery.isPending}
         value={state.category}
         options={categoryOptions}
         onChange={(value) => update({ category: value })}
       />
       <FilterSelect
         label="سایز"
+        isLoading={facetsQuery.isPending}
         value={state.size}
         options={sizeOptions}
         onChange={(value) => update({ size: value })}
       />
       <FilterSelect
         label="رنگ"
+        isLoading={facetsQuery.isPending}
         value={state.color}
         options={colorOptions}
         onChange={(value) => update({ color: value })}
       />
       <FilterSelect
         label="جنس"
+        isLoading={facetsQuery.isPending}
         value={state.material}
         options={materialOptions}
         onChange={(value) => update({ material: value })}
@@ -224,7 +229,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
               ))}
             </UiSelect>
           </label>
-          <div className="category-toolbar__desktop-filters">{filters}</div>
+          <div className="category-toolbar__desktop-filters">{renderFilters(true)}</div>
         </div>
       </div>
 
@@ -305,7 +310,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
                 <Icon name="close" />
               </Button>
             </div>
-            {filters}
+            {renderFilters(false)}
             <Button
               className="listing-filter-sheet__apply"
               type="button"

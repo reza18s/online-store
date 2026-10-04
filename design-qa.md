@@ -44,3 +44,34 @@ The women, men, and children category hero headings and calls to action match th
 - Targeted ESLint passed for the changed implementation and browser-test files.
 - The updated PR’s required repository-wide lint checks still fail on 15 existing errors in `scripts/script.js`; this file is outside the UI change and was not modified.
 - The full unit-test command was not rerun for these UI-only changes; the preceding sitewide QA report records its existing Bun alias-resolution and unrelated coupon assertion failures.
+
+
+## FilterSelect component update — 2026-10-04
+
+**Final result: Passed for the FilterSelect scope.**
+
+### Reference and runtime evidence
+
+- Reference: user-provided filter.png, 1536 × 1024, supplied at C:\Users\Asus\Documents\ChatGPT\online store\docs\designs\atelier-editorial\filter.png. The attachment remains in the user’s main checkout and was not copied into this branch.
+- Desktop: /products/women, 1536 × 1024 CSS pixels at device scale factor 1. Screenshot: [filter-select-editorial-desktop.png](docs/refactoring/filter-select-editorial-desktop.png).
+- Mobile: /products/women, 390 × 844 CSS pixels at device scale factor 1. The centered sheet is 358 × 756 CSS pixels at this viewport. Screenshots: [filter-select-editorial-mobile.png](docs/refactoring/filter-select-editorial-mobile.png) and [filter-select-editorial-mobile-open.png](docs/refactoring/filter-select-editorial-mobile-open.png).
+- The screenshots show the desktop category options, compact mobile sheet, and expanded mobile option state.
+
+### Interaction and visual review
+
+- The category disclosure opens on desktop; selecting M updated the existing URL to ?size=M and exposed the selected state.
+- The mobile filter button opens the sheet, the category group starts collapsed, expanding a group shows its options in the shared scroll area, and “نمایش نتایج” closes the sheet.
+- Pressing Escape and clicking outside close an open desktop facet; Escape returns focus to its trigger.
+- The rendered controls use the Atelier ivory surfaces, fine dividers, RTL alignment, square selection marks, and wine accent. Hover, focus, disabled, loading, and reduced-motion styles are included in the component implementation.
+- The mobile review first showed a long category list and nested scrolling. The final capture shows the category group collapsed by default on mobile and one scroll container.
+- The browser console reported no warnings or errors.
+
+### Findings and scope
+
+| Priority | Finding | Status |
+| --- | --- | --- |
+| P0 | None. | — |
+| P1 | None. | — |
+| P2 | The reference board also includes multi-select chips, price range, and facets outside this component’s scalar value/onChange contract. | Kept outside this scoped FilterSelect update; existing query behavior is preserved. |
+
+Loading and disabled states were reviewed in code but were not forced in the live page, where the catalog data loaded successfully.

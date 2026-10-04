@@ -7,6 +7,7 @@ import { Header, MenuDrawer, MobileBottomNav, SearchDialog } from '@/shared/ui/s
 import { applySeoDocument, readInitialRenderContext } from '@/features/seo';
 
 import { useCart } from '@/features/cart';
+import { useCatalogCategories } from '@/features/catalog/api/catalog-api';
 
 import { PublicApp } from '@/app/PublicApp';
 
@@ -26,6 +27,7 @@ export function App() {
   useScrollToTop(route);
   const cartQuery = useCart(true);
   const customerQuery = useCurrentCustomer(true);
+  const categoriesQuery = useCatalogCategories();
   const cart = cartQuery.data;
   const cartCount = cart?.itemCount ?? 0;
   const [searchOpen, setSearchOpen] = useState(false);
@@ -62,7 +64,8 @@ export function App() {
         onSearch={() => setSearchOpen(true)}
         onMenu={() => setMenuOpen(true)}
         categoryAudience={categoryAudience}
-        isHomePage={pathname === '/'}
+        quickCategories={categoriesQuery.data ?? []}
+        isCategoryNavLoading={categoriesQuery.isPending}
       />
       <PublicApp
         route={route}

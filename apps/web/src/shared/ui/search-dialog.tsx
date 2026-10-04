@@ -4,6 +4,7 @@ import type { CatalogSearchSuggestion } from '@nova/api-client';
 import { Button, Input as UiInput } from '@nova/ui';
 
 import { useCatalogSuggestions } from '@/features/catalog/api/catalog-api';
+import { readRecentSearches, rememberRecentSearch } from '@/features/catalog/recent-searches';
 import { navigateToRoute } from '@/app/routing/route';
 import { Icon } from '@/shared/ui/icon';
 import { useDialogFocus } from '@/shared/ui/use-dialog-focus';
@@ -29,27 +30,11 @@ export function SearchDialog({ open, onClose, initialQuery }: { open: boolean; o
   }, [query]);
 
   useEffect(() => {
-    try {
-      const saved = JSON.parse(
-        window.localStorage.getItem('nova.recent-searches') ?? '[]',
-      ) as unknown;
-      if (Array.isArray(saved))
-        setRecent(saved.filter((item): item is string => typeof item === 'string').slice(0, 5));
-    } catch {
-      setRecent([]);
-    }
+    setRecent(readRecentSearches());
   }, []);
 
   const rememberSearch = (term: string) => {
-    const normalized = term.trim();
-    if (!normalized) return;
-    const next = [normalized, ...recent.filter((item) => item !== normalized)].slice(0, 5);
-    setRecent(next);
-    try {
-      window.localStorage.setItem('nova.recent-searches', JSON.stringify(next));
-    } catch {
-      // Local search history is an enhancement; private browsing may reject storage.
-    }
+    setRecent((current) => rememberRecentSearch(term, current));
   };
 
   const submitSearch = (term: string) => {

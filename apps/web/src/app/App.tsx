@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 
 import { useCurrentCustomer } from '@/features/auth';
 
-import { useRoute, useScrollToTop } from '@/app/routing/route';
+import { navigateToRoute, useRoute, useScrollToTop } from '@/app/routing/route';
 import { Header, MenuDrawer, MobileBottomNav, SearchDialog } from '@/shared/ui/site-shell';
 import { applySeoDocument, readInitialRenderContext } from '@/features/seo';
 
 import { useCart } from '@/features/cart';
 import { useCatalogCategories } from '@/features/catalog/api/catalog-api';
+import { rememberRecentSearch } from '@/features/catalog/recent-searches';
 
 import { PublicApp } from '@/app/PublicApp';
 
@@ -48,6 +49,14 @@ export function App() {
     if (pathname === '/search') setSearchOpen(true);
   }, [route]);
 
+  const submitHeaderSearch = (term: string) => {
+    const normalizedQuery = term.trim();
+    if (!normalizedQuery) return;
+
+    rememberRecentSearch(normalizedQuery);
+    navigateToRoute('/products?q=' + encodeURIComponent(normalizedQuery));
+  };
+
   const toggleWishlist = (slug: string) => {
     setWishlist((current) => {
       const next = new Set(current);
@@ -61,7 +70,7 @@ export function App() {
     <div className="app-root min-h-svh bg-background" dir="rtl">
       <Header
         cartCount={cartCount}
-        onSearch={() => setSearchOpen(true)}
+        onSearchSubmit={submitHeaderSearch}
         onMenu={() => setMenuOpen(true)}
         categoryAudience={categoryAudience}
         quickCategories={categoriesQuery.data ?? []}

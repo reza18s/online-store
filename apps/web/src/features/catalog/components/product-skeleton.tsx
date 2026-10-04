@@ -10,7 +10,6 @@ export function ProductSkeleton({ count = 4 }: { count?: number }) {
           <div className="product-skeleton__media" />
           <div className="product-skeleton__body">
             <div className="product-skeleton__title" />
-            <div className="product-skeleton__meta" />
             <div className="product-skeleton__price" />
             <div className="product-skeleton__swatches">
               <span />

@@ -2,8 +2,6 @@ import { Button } from '@nova/ui';
 import { Icon } from '@/shared/ui/icon';
 import { type StorefrontProduct } from '@/features/catalog/api/catalog-api';
 
-import { availabilityLabel } from '@/features/catalog/components/availability-label';
-
 import { formatToman } from '@/shared/utils/format-toman';
 
 import { validCompareAt } from '@/features/catalog/components/valid-compare-at';
@@ -65,27 +63,24 @@ export function ProductCard({
         <a className="product-card__title" href={`/product/${encodeURIComponent(product.slug)}`}>
           {product.name}
         </a>
-        <div className="product-card__meta">
-          <span>{product.category}</span>
-          {!disabled ? (
-            <span className={product.stock === 'رو به اتمام' ? 'is-warning' : ''}>
-              {availabilityLabel(product)}
-            </span>
-          ) : null}
-        </div>
+        {product.stock === 'رو به اتمام' ? (
+          <p className="product-card__meta">
+            <span className="is-warning">رو به اتمام</span>
+          </p>
+        ) : null}
         <div className="product-card__footer">
           <div className="product-card__price">
             {compareAt ? <del>{formatToman(compareAt)}</del> : null}
             <strong>{formatToman(product.price)}</strong>
           </div>
-          {product.colors.length > 0 ? (
-            <div className="product-card__swatches" aria-label="رنگ‌های موجود">
-              {product.colors.slice(0, 4).map((color) => (
-                <span style={{ backgroundColor: color }} key={color} />
-              ))}
-            </div>
-          ) : null}
         </div>
+        {product.colors.length > 0 ? (
+          <div className="product-card__swatches" aria-label="رنگ‌های موجود">
+            {product.colors.slice(0, 4).map((color) => (
+              <span style={{ backgroundColor: color }} key={color} />
+            ))}
+          </div>
+        ) : null}
         <Button
           className="product-card__add"
           type="button"

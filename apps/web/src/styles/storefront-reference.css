@@ -3143,3 +3143,172 @@ body {
 .listing-page .listing-filter-sheet > .listing-filters::-webkit-scrollbar {
   display: none;
 }
+
+/* Catalog filter rail controls and pinned actions. */
+.listing-page .filter-rail {
+  position: sticky;
+  top: calc(var(--header-height) + 14px);
+  display: flex;
+  max-height: min(580px, calc(100vh - 325px));
+  flex-direction: column;
+  overflow: hidden;
+  padding: 8px 14px 10px;
+}
+.listing-page .filter-rail[hidden] {
+  display: none;
+}
+.listing-page .filter-rail__heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.listing-page .filter-rail__close {
+  display: grid;
+  width: 28px;
+  min-width: 28px;
+  min-height: 28px;
+  place-items: center;
+  border: 0 !important;
+  border-radius: 7px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: var(--nova-ref-ink) !important;
+  box-shadow: none !important;
+}
+.listing-page .filter-rail__close:hover,
+.listing-page .filter-rail__close:focus-visible {
+  background: var(--nova-ref-surface-soft) !important;
+  color: var(--nova-ref-wine-dark) !important;
+}
+.listing-page .filter-rail__body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.listing-page .filter-rail__body::-webkit-scrollbar {
+  display: none;
+}
+.listing-page .filter-rail__footer {
+  flex: 0 0 auto;
+  border-top: 1px solid var(--nova-ref-line);
+  padding-top: 9px;
+  background: var(--nova-ref-surface);
+}
+.listing-page .filter-rail__footer .listing-filter-sheet__apply {
+  min-height: 52px !important;
+}
+.listing-page .listing-header__tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.listing-page .listing-header__filter-toggle {
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border-radius: 9px !important;
+  padding-inline: 11px !important;
+  font-size: 12px !important;
+}
+.listing-page .listing-header__filter-toggle.is-active {
+  border-color: var(--nova-ref-wine) !important;
+  color: var(--nova-ref-wine-dark) !important;
+}
+.listing-page .listing-filter-count {
+  display: inline-grid;
+  min-width: 19px;
+  height: 19px;
+  place-items: center;
+  border-radius: 999px;
+  padding: 0 5px;
+  background: var(--nova-ref-wine);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+.listing-page .listing-layout--filters-closed {
+  grid-template-columns: minmax(0, 1fr);
+}
+.listing-page #listing-results {
+  scroll-margin-top: calc(var(--header-height) + 18px);
+}
+.listing-page .filter-select__option {
+  min-height: 44px;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+}
+.listing-page .filter-select__indicator {
+  width: 20px;
+  height: 20px;
+}
+.listing-page .listing-filter-check {
+  min-height: 44px;
+}
+.listing-page .listing-status-filter {
+  min-width: 0;
+  border-bottom: 1px solid var(--nova-ref-line);
+}
+.listing-page .listing-status-filter__trigger {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  padding: 0 2px;
+  background: transparent;
+  color: var(--nova-ref-ink);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: start;
+  cursor: pointer;
+}
+.listing-page .listing-status-filter__trigger svg {
+  margin-inline-start: auto;
+  transition: transform 150ms ease;
+}
+.listing-page .listing-status-filter.is-open .listing-status-filter__trigger svg {
+  transform: rotate(180deg);
+}
+.listing-page .listing-status-filter__trigger:focus-visible {
+  outline: 2px solid var(--nova-ref-wine);
+  outline-offset: 2px;
+}
+.listing-page .listing-status-filter__count {
+  display: inline-grid;
+  min-width: 18px;
+  height: 18px;
+  place-items: center;
+  border-radius: 999px;
+  padding: 0 4px;
+  background: var(--nova-ref-wine-soft);
+  color: var(--nova-ref-wine-dark);
+  font-size: 10px;
+}
+.listing-page .listing-status-filter__options[hidden] {
+  display: none;
+}
+.listing-page .listing-status-filter__options {
+  padding-bottom: 8px;
+}
+@media (min-width: 1025px) {
+  .listing-page .listing-layout--filters-closed .product-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 767px) {
+  .listing-page .listing-header__tools,
+  .listing-page .filter-rail {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .listing-page .listing-status-filter__trigger svg {
+    transition: none;
+  }
+}

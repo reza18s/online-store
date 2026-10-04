@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 import { Button, Checkbox, Input as UiInput, Select as UiSelect } from '@nova/ui';
 import { Icon } from '@/shared/ui/icon';
@@ -58,8 +58,11 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     if (!state.q) return;
     trackAnalyticsEvent({ name: 'search', properties: { queryLength: state.q.length } });
   }, [state.q]);
+  const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
+  const desktopFilterToggleRef = useRef<HTMLButtonElement>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const mobileFilterSheetRef = useRef<HTMLElement>(null);
+  const listingContentRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (!mobileFiltersOpen) return;
@@ -109,6 +112,16 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
   const adder = useProductAdder();
   const update = (changes: Record<string, string | undefined>) =>
     routeTo(buildDiscoveryHref(baseRoute, props.queryString ?? '', changes));
+  const closeDesktopFilters = () => {
+    setDesktopFiltersOpen(false);
+    desktopFilterToggleRef.current?.focus();
+  };
+  const showResults = () => {
+    listingContentRef.current?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  };
   const selectedCategory = state.category;
   const audienceCategorySlugs = props.audience
     ? catalogCategorySlugsByAudience[props.audience]
@@ -231,20 +244,12 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
         options={materialOptions}
         onChange={(value) => update({ material: value })}
       />
-      <label className="listing-filter-check">
-        <Checkbox
-          checked={state.inStock}
-          onChange={(event) => update({ inStock: event.target.checked ? 'true' : undefined })}
-        />
-        فقط موجود
-      </label>
-      <label className="listing-filter-check">
-        <Checkbox
-          checked={state.onSale}
-          onChange={(event) => update({ onSale: event.target.checked ? 'true' : undefined })}
-        />
-        تخفیف ویژه
-      </label>
+      <ListingStatusFilter
+        inStock={state.inStock}
+        onSale={state.onSale}
+        onInStockChange={(checked) => update({ inStock: checked ? 'true' : undefined })}
+        onSaleChange={(checked) => update({ onSale: checked ? 'true' : undefined })}
+      />
     </div>
   );
   return (
@@ -266,19 +271,38 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
               : `${formatPersianNumber(productsQuery.data?.total ?? 0)} مدل برای انتخاب شما`}
           </p>
         </div>
-        <label className="sort-control">
-          <span>مرتب‌سازی</span>
-          <UiSelect
-            className="sort-control__select"
-            value={state.sort}
-            onChange={(event) => update({ sort: event.target.value })}
+        <div className="listing-header__tools">
+          <Button
+            ref={desktopFilterToggleRef}
+            className={'listing-header__filter-toggle' + (desktopFiltersOpen ? ' is-active' : '')}
+            type="button"
+            variant="outline"
+            aria-expanded={desktopFiltersOpen}
+            aria-controls="listing-filter-rail"
+            onClick={() => setDesktopFiltersOpen((open) => !open)}
           >
-            <option value="newest">جدیدترین</option>
-            <option value="price_asc">ارزان‌ترین</option>
-            <option value="price_desc">گران‌ترین</option>
-            <option value="name">الفبا</option>
-          </UiSelect>
-        </label>
+            <Icon name="filter" size={16} />
+            <span>فیلترها</span>
+            {activeFilterChips.length > 0 ? (
+              <small className="listing-filter-count">
+                {formatPersianNumber(activeFilterChips.length)}
+              </small>
+            ) : null}
+          </Button>
+          <label className="sort-control">
+            <span>مرتب‌سازی</span>
+            <UiSelect
+              className="sort-control__select"
+              value={state.sort}
+              onChange={(event) => update({ sort: event.target.value })}
+            >
+              <option value="newest">جدیدترین</option>
+              <option value="price_asc">ارزان‌ترین</option>
+              <option value="price_desc">گران‌ترین</option>
+              <option value="name">الفبا</option>
+            </UiSelect>
+          </label>
+        </div>
       </header>
       {state.q ? (
         <section className="listing-search-box" aria-label="پیشنهادهای جست‌وجو">
@@ -352,7 +376,13 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
           variant="outline"
           onClick={() => setMobileFiltersOpen(true)}
         >
-          <Icon name="filter" size={16} /> فیلترها
+          <Icon name="filter" size={16} />
+          <span>فیلترها</span>
+          {activeFilterChips.length > 0 ? (
+            <small className="listing-filter-count">
+              {formatPersianNumber(activeFilterChips.length)}
+            </small>
+          ) : null}
         </Button>
         <label className="mobile-filter-bar__sort">
           <span>مرتب‌سازی</span>
@@ -368,17 +398,48 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
           </UiSelect>
         </label>
       </div>
-      <div className="listing-layout">
-        <aside className="filter-rail" aria-label="فیلتر محصولات">
+      <div
+        className={'listing-layout' + (desktopFiltersOpen ? '' : ' listing-layout--filters-closed')}
+      >
+        <aside
+          hidden={!desktopFiltersOpen}
+          id="listing-filter-rail"
+          className="filter-rail"
+          aria-label="فیلتر محصولات"
+        >
           <div className="filter-rail__heading">
             <strong>فیلترها</strong>
-            <a className="listing-filter-reset" href={baseRoute}>
-              حذف همه
+            <div className="filter-rail__heading-actions">
+              <a className="listing-filter-reset" href={baseRoute}>
+                حذف همه
+              </a>
+              <Button
+                className="filter-rail__close"
+                type="button"
+                aria-label="بستن فیلترها"
+                onClick={closeDesktopFilters}
+              >
+                <Icon name="close" size={16} />
+              </Button>
+            </div>
+          </div>
+          <div className="filter-rail__body">{renderFilters(true, true)}</div>
+          <div className="filter-rail__footer">
+            <Button className="listing-filter-sheet__apply" type="button" onClick={showResults}>
+              اعمال فیلتر ({formatPersianNumber(productsQuery.data?.total ?? 0)} نتیجه)
+            </Button>
+            <a className="listing-filter-sheet__reset" href={baseRoute}>
+              حذف همه فیلترها
             </a>
           </div>
-          {renderFilters(true, true)}
         </aside>
-        <section className="listing-content" aria-label="نتایج محصولات">
+        <section
+          ref={listingContentRef}
+          id="listing-results"
+          tabIndex={-1}
+          className="listing-content"
+          aria-label="نتایج محصولات"
+        >
           <CatalogQueryState query={productsQuery}>
             <ProductGrid
               products={products}
@@ -448,6 +509,51 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
         </div>
       ) : null}
     </main>
+  );
+}
+
+function ListingStatusFilter({
+  inStock,
+  onSale,
+  onInStockChange,
+  onSaleChange,
+}: {
+  inStock: boolean;
+  onSale: boolean;
+  onInStockChange: (checked: boolean) => void;
+  onSaleChange: (checked: boolean) => void;
+}) {
+  const id = useId();
+  const optionsId = 'listing-status-' + id;
+  const [isOpen, setIsOpen] = useState(false);
+  const activeCount = Number(inStock) + Number(onSale);
+
+  return (
+    <section className={'listing-status-filter' + (isOpen ? ' is-open' : '')}>
+      <button
+        className="listing-status-filter__trigger"
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls={optionsId}
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <span>موجودی</span>
+        {activeCount > 0 ? (
+          <small className="listing-status-filter__count">{formatPersianNumber(activeCount)}</small>
+        ) : null}
+        <Icon name="chevron-down" size={15} aria-hidden="true" />
+      </button>
+      <div className="listing-status-filter__options" id={optionsId} hidden={!isOpen}>
+        <label className="listing-filter-check">
+          <Checkbox checked={inStock} onChange={(event) => onInStockChange(event.target.checked)} />
+          فقط موجود
+        </label>
+        <label className="listing-filter-check">
+          <Checkbox checked={onSale} onChange={(event) => onSaleChange(event.target.checked)} />
+          تخفیف ویژه
+        </label>
+      </div>
+    </section>
   );
 }
 

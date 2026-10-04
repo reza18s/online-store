@@ -75,3 +75,55 @@ The women, men, and children category hero headings and calls to action match th
 | P2 | The reference board also includes multi-select chips, price range, and facets outside this component’s scalar value/onChange contract. | Kept outside this scoped FilterSelect update; existing query behavior is preserved. |
 
 Loading and disabled states were reviewed in code but were not forced in the live page, where the catalog data loaded successfully.
+
+## Product card design update — 2026-10-04
+
+final result: passed
+
+### Source, runtime, and capture
+
+- Source visual truth: user-provided `C:\Users\Asus\Documents\ChatGPT\online store\docs\designs\atelier-editorial\card.png` (1536 × 1024 px). It remains in the primary checkout and was not copied into this worktree.
+- Implementation route: `http://127.0.0.1:5176/products/women` in the worktree preview.
+- The desktop capture used a 1536 × 1024 CSS viewport at `deviceScaleFactor: 1`. The first RTL card was 251.5 × 490.17 CSS px; its component screenshot is 252 × 491 px. The full viewport capture is 1536 × 1024 px.
+- The mobile capture used a 390 × 844 CSS viewport at `deviceScaleFactor: 1`. The card was 180.5 × 379.31 CSS px; its component screenshot is 181 × 380 px. The full viewport capture is 390 × 844 px.
+- The captured card is `رویه لینن روشن`, available, not wishlisted, with its add button enabled. It is shown in the default light theme without hover or focus. Fonts and the product image were loaded before capture.
+- No density scaling was applied. The source board is 1536 × 1024 px; the selected annotated card crop is 304 × 540 px. The implementation card is shown at its captured 252 × 491 px size. The viewport sizes match the board dimensions for desktop, but the source is a design board rather than a browser viewport.
+
+### Comparison evidence
+
+- Full component comparison: `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-comparison-final.png` (652 × 632 px). It places the source card crop `(84, 100, 304, 540)` beside the rendered card screenshot at native pixels. The source crop includes reference leader lines; those lines are annotations, not card UI.
+- Focused body comparison: `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-body-comparison-final.png` (652 × 270 px). It compares the title, detail row, price, swatches, and CTA using source crop `(84, 436, 304, 197)` and implementation crop `(0, 300, 252, 185)`.
+- Rendered component captures: desktop `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-desktop-final.png`; mobile `C:\Users\Asus\.codex\visualizations\2026\10\04\01a10643-d8cf-7791-836d-ed58be47cb2d\product-card-mobile-final.png`. Full-page context captures are `product-list-desktop-final.png` and `product-list-mobile-final.png` in the same folder.
+
+### Fidelity review
+
+- **Typography:** The title renders in loaded Vazirmatn at 13 px, weight 750, and 21.45 px line-height on desktop; the mobile title is 12 px with a 1.6 line-height and a two-line clamp. Letter spacing is normal. The body fallback is Tahoma/sans-serif; Estedad is loaded for the storefront display token. The reference lists IranYekan/Vazirmatn, so the rendered body face matches one of its listed options. No custom font-smoothing rule applies to the card.
+- **Spacing and layout:** The media keeps the reference's annotated 4:5 ratio. The rounded image, corner actions, right-aligned title, detail row, separated price and swatches, and full-width CTA follow the reference hierarchy at desktop and mobile widths.
+- **Colors and tokens:** The CTA now uses the reference clay `#B98F86` with a darker hover token. The favorite surface and warm card background remain consistent with the storefront. The red tag is retained for the product's `پیشنهاد ویژه` sale state, matching the reference's sale examples.
+- **Imagery:** The card uses the catalog's real product photo with a 4:5 crop. Its subject differs from the reference photo because the captured catalog item is a linen top; the image quality and crop treatment remain appropriate.
+- **Copy and content:** The displayed product name, category, availability, price, sale tag, and color swatch come from the catalog item. Category and availability occupy the reference's detail-row position without inventing a rating.
+- **Responsive structure:** The desktop listing retains its four-column grid and the 390 px viewport retains two columns. The captured card and action remain within the viewport.
+- **Interaction state:** The favorite toggle and add-to-cart action were exercised in the local fixture preview before the final style-only adjustments; the handlers and full-card button target remain intact.
+
+### Validation
+
+- `bun run typecheck`: passed.
+- `bun run build`: client and SSR builds passed. Vite reported its existing Node API deprecation and large-chunk advisories.
+- `bunx prettier --check` on the two changed TSX components: passed.
+- `git diff --check`: passed; Git only reported its existing LF-to-CRLF checkout warnings.
+- Automated tests were not run for this visual update; the product actions were exercised in the local fixture preview and their handlers were preserved.
+
+### Findings and comparison history
+
+| Priority | Finding | Status |
+| --- | --- | --- |
+| P0 | None. | — |
+| P1 | None. | — |
+| P2 | No actionable P2 remains after the final comparison. | Initial CTA color and RTL control ordering differences were corrected and recaptured. |
+| P3 | The existing catalog grid renders the desktop card at 251.5 CSS px versus the reference board's 280 px annotation; the compact CTA is 40 px versus the enlarged example's roughly 50 px. | This follows the current four-column listing and matches the compact-card examples. Changing those dimensions would require a parent-grid redesign. |
+
+The first side-by-side review showed a dark-wine CTA and the swatch row and bag icon on the opposite sides from the RTL reference. The card now uses `#B98F86`, places swatches at the physical left, and places the bag icon at the left of the action label. The final desktop and mobile captures confirm those changes.
+
+The existing `docs/refactoring/card-component-design-plan.md` also calls for using real category and availability details where the reference shows ratings. The final card restores that data-backed row and the skeleton placeholder. The catalog card type has no rating or review-count fields, and the listing adapter supplies a single image rather than a gallery. Rating values, carousel dots, and quick-preview controls therefore remain absent; adding them would require a separate data and interaction change.
+
+The source and final implementation were compared together in the saved full-card and focused-body images. No actionable P0/P1/P2 visual differences remain.

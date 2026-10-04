@@ -1,6 +1,7 @@
 import { Button } from '@nova/ui';
 import { Icon } from '@/shared/ui/icon';
 import { type StorefrontProduct } from '@/features/catalog/api/catalog-api';
+import { availabilityLabel } from '@/features/catalog/components/availability-label';
 
 import { formatToman } from '@/shared/utils/format-toman';
 
@@ -63,11 +64,14 @@ export function ProductCard({
         <a className="product-card__title" href={`/product/${encodeURIComponent(product.slug)}`}>
           {product.name}
         </a>
-        {product.stock === 'رو به اتمام' ? (
-          <p className="product-card__meta">
-            <span className="is-warning">رو به اتمام</span>
-          </p>
-        ) : null}
+        <div className="product-card__meta">
+          <span>{product.category}</span>
+          {!disabled ? (
+            <span className={product.stock === 'رو به اتمام' ? 'is-warning' : ''}>
+              {availabilityLabel(product)}
+            </span>
+          ) : null}
+        </div>
         <div className="product-card__footer">
           <div className="product-card__price">
             {compareAt ? <del>{formatToman(compareAt)}</del> : null}

@@ -5,25 +5,20 @@ import { Button } from '@nova/ui';
 import { Icon } from '@/shared/ui/icon';
 import { Logo } from '@/shared/ui/logo';
 import { navItems } from '@/shared/ui/site-navigation';
-import type { CatalogAudience, CatalogCategory } from '@nova/api-client';
+import type { CatalogAudience } from '@nova/api-client';
 
 export function Header({
   cartCount,
   onMenu,
   onSearch,
   categoryAudience,
-  quickCategories,
-  isCategoryNavLoading,
 }: {
   cartCount: number;
   onMenu: () => void;
   onSearch: () => void;
   categoryAudience?: CatalogAudience;
-  quickCategories: readonly Pick<CatalogCategory, 'slug' | 'name'>[];
-  isCategoryNavLoading: boolean;
 }) {
   const [isCompact, setIsCompact] = useState(false);
-  const hasQuickNav = isCategoryNavLoading || quickCategories.length > 0;
 
   useEffect(() => {
     const updateCompactState = () => {
@@ -81,7 +76,7 @@ export function Header({
 
   return (
     <header
-      className={`site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur${hasQuickNav ? ' site-header--with-quick-nav' : ''}${isCompact ? ' site-header--compact' : ''}`}
+      className={`site-header sticky top-0 z-[200] border-b border-border bg-background backdrop-blur${isCompact ? ' site-header--compact' : ''}`}
     >
       <div className="shell site-header__inner mx-auto w-[calc(100%-2rem)] max-w-[1280px]">
         <div className="site-header__nav-wrap">
@@ -129,27 +124,6 @@ export function Header({
           {accountLink}
           {cartLink}
         </div>
-
-        {isCategoryNavLoading ? (
-          <div className="site-header__quick-nav" aria-hidden="true">
-            <div className="site-header__quick-nav-skeleton" aria-hidden="true">
-              {Array.from({ length: 8 }, (_, index) => (
-                <span key={index} />
-              ))}
-            </div>
-          </div>
-        ) : quickCategories.length ? (
-          <nav className="site-header__quick-nav" aria-label="دسته‌بندی سریع">
-            {quickCategories.slice(0, 10).map((category) => (
-              <a
-                key={category.slug}
-                href={`/products?category=${encodeURIComponent(category.slug)}`}
-              >
-                {category.name}
-              </a>
-            ))}
-          </nav>
-        ) : null}
       </div>
     </header>
   );

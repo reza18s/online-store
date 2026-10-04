@@ -13,6 +13,7 @@ import type { StorefrontDiscoveryPageProps } from '@/features/catalog/pages/stor
 import { audienceCopy } from '@/features/catalog/pages/storefront-discovery-page-shared';
 import { AddToCartFeedback } from '@/features/catalog/components/add-to-cart-feedback';
 import { buildDiscoveryHref } from '@/features/catalog/components/build-discovery-href';
+import { catalogCategorySlugsByAudience } from '@/features/catalog/components/catalog-category-slugs-by-audience';
 import { CatalogQueryState } from '@/features/catalog/components/catalog-query-state';
 import { discoveryFacetFiltersFromQuery } from '@/features/catalog/components/discovery-facet-filters-from-query';
 import { discoveryFiltersFromQuery } from '@/features/catalog/components/discovery-filters-from-query';
@@ -25,12 +26,6 @@ import { routeTo } from '@/features/catalog/components/route-to';
 import { useProductAdder } from '@/features/catalog/components/use-product-adder';
 import { Icon } from '@/shared/ui/icon';
 import { formatPersianNumber } from '@/shared/utils/format-persian-number';
-
-const categorySlugs: Record<CatalogAudience, string[]> = {
-  women: ['outerwear', 'knitwear', 'trousers', 'shirts', 'accessories'],
-  men: ['accessories', 'knitwear', 'outerwear', 'trousers', 'shirts'],
-  children: ['children', 'kidswear'],
-};
 
 const categoryImages: Record<string, { src: string; alt: string }> = {
   accessories: { src: '/assets/nova-product-textured-scarf.webp', alt: 'شال و اکسسوری نوا' },
@@ -89,7 +84,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
   const adder = useProductAdder();
   const products = productsQuery.data?.items.map(toStorefrontProduct) ?? [];
   const availableCategories = (categoryQuery.data ?? []).filter((category) =>
-    categorySlugs[audience].includes(category.slug),
+    catalogCategorySlugsByAudience[audience].includes(category.slug),
   );
   const categoryOptions = asOptions(availableCategories, state.category);
   const groups = new Map(

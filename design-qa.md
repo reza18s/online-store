@@ -46,9 +46,11 @@ The women, men, and children category hero headings and calls to action match th
 - The full unit-test command was not rerun for these UI-only changes; the preceding sitewide QA report records its existing Bun alias-resolution and unrelated coupon assertion failures.
 
 
-## FilterSelect component update — 2026-10-04
+## Earlier FilterSelect component update — 2026-10-04
 
 **Final result: Passed for the FilterSelect scope.**
+
+This records the earlier component-only pass. The broader listing-level refinement below supersedes its mobile default-state and scope findings.
 
 ### Reference and runtime evidence
 
@@ -75,6 +77,37 @@ The women, men, and children category hero headings and calls to action match th
 | P2 | The reference board also includes multi-select chips, price range, and facets outside this component’s scalar value/onChange contract. | Kept outside this scoped FilterSelect update; existing query behavior is preserved. |
 
 Loading and disabled states were reviewed in code but were not forced in the live page, where the catalog data loaded successfully.
+
+## Filter component refinement — 2026-10-04
+
+**Status:** Visual review passed at the reference desktop and phone sizes. The real women’s catalog is sparser than the board, so product names, facet values, imagery, and result totals come from the catalog response.
+
+### Reference and visual comparison
+
+- Reference: the user-provided `filter.png` board (1536 × 1024 px), retained in the local checkout and not copied into this branch.
+- Route reviewed: `/products/women` in the worktree preview.
+- Desktop: 1536 × 1024. The filter is on the right beside a three-column grid. Category, price, size, and color are open in the first view. List rows are 44 px with 20 px marks; size chips and swatches are 36 px; the pinned apply action is 52 px. The bounded rail measured about 379 × 578 px at x=1029, y=322, with the footer visible. Facets scroll within the rail; availability options are collapsed behind their section heading.
+- Phone: 390 × 844. The sheet measured exactly 358 × 756 px at x=16, y=44. Its footer occupied y=704–784. Category and price open by default, the remaining facets scroll in one content area, and apply and clear-all stay pinned in the footer.
+- The sheet locks background scrolling while open; closing it restores scrolling and returns focus to the mobile filter button. Fresh desktop and mobile captures were inspected live. The earlier FilterSelect-only PNGs above are not evidence for this broader refinement.
+- The women’s response contains three products. The denser sample gallery and broader values in the board are not recreated with invented data.
+
+### Interaction review
+
+- Selecting the `خاکی` swatch updated the existing `color` query and reduced the result count from three to one. Its removable chip appeared above the listing; removing it restored all three results.
+- Setting the minimum price updated `minPrice`; clear-all in the mobile sheet returned to `/products/women` and restored all three results.
+- The desktop toolbar and panel close controls were exercised. Closing the rail returns keyboard focus to the toolbar; reopening restores the three-column grid. The mobile sheet close and Escape paths restore focus to its filter button.
+- Loading, empty, disabled, hover, focus, and reduced-motion states remain supported. Loading and disabled states were not forced because the live catalog loaded successfully.
+
+### Findings and validation
+
+No actionable P0, P1, or P2 finding remains. The only visual density difference is expected from the three-item demo response.
+
+- Web package TypeScript check: passed.
+- Web client and SSR build: passed with the existing Vite Node API deprecation and chunk-size advisories.
+- Targeted ESLint for the changed catalog components: passed.
+- Prettier check for the changed TypeScript and filter plan: passed. A whole-file check of `design-qa.md` reports existing table formatting, and the same check fails at the fetched target; those unrelated tables were left unchanged.
+- `git diff --check`: passed.
+- Automated test suites were not run for this visual refinement.
 
 ## Product card design update — 2026-10-04
 

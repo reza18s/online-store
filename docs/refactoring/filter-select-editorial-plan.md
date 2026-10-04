@@ -1,32 +1,36 @@
-# Filter Select Editorial Redesign Plan
+# Filter Component Visual Refinement Plan
 
-## Scope and outcome
+## Target and outcome
 
-Update the shared storefront FilterSelect control to match the supplied Atelier Editorial filter reference. Shoppers should be able to open a facet, see the current single selection, and change it from a compact list on desktop and mobile without changing the existing URL filter contract.
+Use the supplied filter.png component board as the visual source, with the desktop anatomy, selection states, control details, and mobile sheet as the primary references. Refine the live catalog listing filter so shoppers can scan facets quickly, recognize active filters, and change them on desktop or mobile without changing the existing query contract.
 
-## Ownership and design direction
+## Ownership and decisions
 
-- Production owner: apps/web/src/features/catalog/components/filter-select.tsx.
-- Shared final storefront visual layer: apps/web/src/styles/storefront-reference.css, imported after the base stylesheet.
-- Keep the existing CatalogFacetOption data and onChange(value) behavior. Do not add unsupported filter dimensions or change route/query semantics.
-- Use native disclosure and radio semantics, with square selection marks, facet counts, optional color swatches, Persian RTL layout, warm ivory surfaces, fine dividers, and the existing wine accent.
-- At the category toolbar, show each facet as a compact popover. In the listing rail and mobile sheet, show a vertical accordion list.
+- Facet control owner: apps/web/src/features/catalog/components/filter-select.tsx.
+- Listing composition owner: apps/web/src/features/catalog/components/listing-discovery.tsx.
+- Shared storefront tokens and responsive rules: apps/web/src/styles/storefront-reference.css, loaded after the base stylesheet.
+- Keep each facet's existing scalar URL value and radio-group behavior. Use square visual indicators for list facets, compact size chips, and labeled color swatches; do not imply multi-select within a single facet.
+- Connect the listing price controls to the existing minPrice/maxPrice query fields. Use the visible catalog prices to size the slider domain and allow the domain to grow for an active out-of-range value.
+- Reuse the audience-specific catalog category mapping so the category facet only shows relevant categories. Present active filters as removable chips and keep the clear-all route behavior.
 
 ## Acceptance criteria
 
-1. Each FilterSelect exposes its current value and available options accessibly; selecting an option calls onChange with the same scalar value as before.
-2. The all option clears the facet, counts remain localized, and color options display their supplied swatches.
-3. Desktop popovers and stacked mobile/rail disclosures fit their existing consumers without clipping or changing catalog navigation.
-4. Keyboard focus, native disclosure interaction, and narrow mobile layout remain usable.
+1. Desktop listing places the filter panel on the right with the reference hierarchy: panel title and clear-all action, divided facet rows, compact option rows, size chips, color swatches, and a price range control.
+2. The product grid sits to the left of the filter panel and uses three columns at the reviewed desktop width.
+3. Selected category, size, color, material, price, stock, and sale filters appear as removable chips; removing a chip clears only that query value.
+4. Existing URL values, result fetching, sorting, pagination, and single-selection semantics remain intact.
+5. The mobile filter opens as a centered 358 by 756 px sheet at the reference phone size, opens its category and price facets, locks background scrolling, keeps keyboard focus within the sheet, and keeps the results action and clear-all control in the footer.
+6. Keyboard focus, loading, disabled, hover, empty-option, and reduced-motion states remain legible and accessible.
+7. Review the running listing at 1536 by 1024 desktop and 390 by 844 mobile sizes, exercise selection, price, chip removal, and clear-all, and compare the source board with the rendered filter states.
 
 ## Work and validation
 
-1. Update FilterSelect markup and the focused shared styles only.
-2. Run the web app type check and production build.
-3. Run the storefront and inspect the category/listing filter in desktop and mobile states; verify open, select, and clear interactions.
-4. Compare rendered evidence with the supplied reference and record the outcome in design-qa.md.
-5. Review the final diff, commit the dedicated branch, and complete the repository integration workflow where policy permits.
+1. Refine FilterSelect markup and add list, size, and swatch presentations without changing its scalar contract.
+2. Update listing composition with the active-filter summary, existing-query price controls, panel heading, and mobile footer.
+3. Tune listing-scoped storefront rules for the right-to-left desktop grid, a roughly 30% filter rail, control dimensions, and mobile sheet proportions. Preserve the separate category-page styling.
+4. Capture and compare the updated desktop and mobile states, then update design-qa.md with findings and evidence.
+5. Run targeted type, lint, and build checks; inspect the final diff and preserve the clean worktree.
 
-## Risks and constraints
+## Constraints
 
-The API and URL state currently expose single-choice values. The visual control will retain that contract; it will not imply multi-select behavior. Brand, season, style, rating, and price are outside this component's current option contract and are not added here.
+The filter endpoint currently supplies scalar values for category, size, color, and material. The implementation will not invent multi-select query behavior or new facet data. The reference images contain denser sample inventory than the live catalog, so product imagery and result counts continue to reflect the actual response.

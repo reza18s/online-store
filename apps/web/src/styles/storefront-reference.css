@@ -3149,7 +3149,7 @@ body {
   position: sticky;
   top: calc(var(--header-height) + 14px);
   display: flex;
-  max-height: min(580px, calc(100vh - 325px));
+  max-height: min(600px, calc(100vh - 325px));
   flex-direction: column;
   overflow: hidden;
   padding: 8px 14px 10px;

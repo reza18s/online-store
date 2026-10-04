@@ -39,5 +39,5 @@ The filter endpoint currently supplies scalar values for category, size, color, 
 
 - Keep catalog filter list rows at 44 px with 20 px indicators, size chips and color swatches at 36 px, and the primary apply action at 52 px to follow the board's component measurements.
 - On desktop, keep the filter rail aligned with the three-column grid, allow its facet body to scroll independently, pin the result action and clear-all control, and provide toolbar and panel close controls. Collapse availability options behind a compact section heading.
-- At 1536 × 1024, the rendered desktop rail measured about 379 × 578 px at x=1029, y=322; its footer remained visible. At 390 × 844, the mobile sheet measured exactly 358 × 756 px at x=16, y=44; its footer occupied y=704–784 while the sheet was open.
+- At 1536 × 1024, the rendered desktop rail measured about 379 × 600 px at x=1029, y=274; its footer occupied y=774–863 and both price inputs remained visible above it. At 390 × 844, the mobile sheet measured exactly 358 × 756 px at x=16, y=44; its footer occupied y=704–784 while the sheet was open.
 - The live women’s catalog returned three products. Keep its real titles, facet options, imagery, and result count; the fuller image-board inventory remains illustrative.

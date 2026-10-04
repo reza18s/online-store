@@ -75,3 +75,30 @@ The women, men, and children category hero headings and calls to action match th
 | P2 | The reference board also includes multi-select chips, price range, and facets outside this component’s scalar value/onChange contract. | Kept outside this scoped FilterSelect update; existing query behavior is preserved. |
 
 Loading and disabled states were reviewed in code but were not forced in the live page, where the catalog data loaded successfully.
+
+## Shared header refresh — 2026-10-04
+
+**Final result: Passed for the shared header scope.**
+
+### Reference and runtime review
+
+- Reference: the user-supplied Atelier Editorial header board at `docs/designs/atelier-editorial/header.png` (1536 × 1024).
+- Desktop preview: `http://127.0.0.1:5175/`. The header is centered in a rounded shell, with a 68 px primary row and separate 40 px quick-category rail after an 8 px gap. The centered wordmark, right-to-left navigation, action controls, and category rail follow the board’s hierarchy.
+- Compact desktop: after scrolling, the quick-category rail is hidden and the sticky header settles to 56 px.
+- Mobile: reviewed at a 390 × 844 viewport. The shell uses 16 px side gutters, the main row is 60 px, the quick-category rail is hidden, and menu/search, centered wordmark, favorite, and cart remain visible.
+- Mobile search expands inside the header, stays in the page flow, submits to `/products?q=mantou`, and closes with Escape. The existing `/search` route remains reachable from bottom navigation.
+
+### Findings
+
+| Priority | Finding | Status |
+| --- | --- | --- |
+| P0 | None in the reviewed header states. | — |
+| P1 | None in the reviewed header states. | — |
+| P2 | Search query `mantou` has no matching catalog items in the current preview. | Existing catalog data; route and empty state render correctly. |
+
+### Validation
+
+- Web TypeScript check: passed.
+- Web client and SSR build: passed; Vite emitted its existing Node API deprecation and chunk-size advisories.
+- `git diff --check`: passed.
+- Desktop, compact desktop, and mobile header states were inspected in the running local preview. This review was limited to the shared header and its search interaction.

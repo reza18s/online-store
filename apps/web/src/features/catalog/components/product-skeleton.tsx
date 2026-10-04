@@ -1,16 +1,24 @@
 export function ProductSkeleton({ count = 4 }: { count?: number }) {
   return (
     <div
-      className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4"
+      className="product-grid product-grid--loading"
       role="status"
       aria-label="در حال بارگذاری محصولات"
     >
       {Array.from({ length: count }, (_, index) => (
-        <div className="min-w-0 motion-safe:animate-pulse" key={index}>
-          <div className="aspect-square rounded-editorial bg-secondary" />
-          <div className="mt-3 h-3 w-2/5 rounded bg-secondary" />
-          <div className="mt-2 h-4 w-4/5 rounded bg-secondary" />
-          <div className="mt-3 h-3 w-1/2 rounded bg-secondary" />
+        <div className="product-skeleton motion-safe:animate-pulse" key={index} aria-hidden="true">
+          <div className="product-skeleton__media" />
+          <div className="product-skeleton__body">
+            <div className="product-skeleton__title" />
+            <div className="product-skeleton__meta" />
+            <div className="product-skeleton__price" />
+            <div className="product-skeleton__swatches">
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className="product-skeleton__action" />
+          </div>
         </div>
       ))}
     </div>

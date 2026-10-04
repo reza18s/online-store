@@ -5,6 +5,9 @@ import type { CatalogFacetOption } from '@nova/api-client';
 import { Icon } from '@/shared/ui/icon';
 import { formatPersianNumber } from '@/shared/utils/format-persian-number';
 
+type FilterSelectAppearance = 'list' | 'size' | 'swatches';
+const visibleOptionLimit = 5;
+
 export function FilterSelect({
   label,
   value,
@@ -13,6 +16,9 @@ export function FilterSelect({
   isLoading = false,
   disabled = false,
   defaultOpen,
+  appearance = 'list',
+  showAllOption = true,
+  showMoreOptions = false,
 }: {
   label: string;
   value: string;
@@ -21,13 +27,26 @@ export function FilterSelect({
   isLoading?: boolean;
   disabled?: boolean;
   defaultOpen?: boolean;
+  appearance?: FilterSelectAppearance;
+  showAllOption?: boolean;
+  showMoreOptions?: boolean;
 }) {
   const groupName = 'filter-' + useId();
   const optionsId = groupName + '-options';
   const [isOpen, setIsOpen] = useState(() => defaultOpen ?? (label === 'دسته‌بندی' && !value));
+  const [isShowingAllOptions, setIsShowingAllOptions] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const selectedOption = options.find((option) => option.value === value);
+  const selectedOptionIndex = options.findIndex((option) => option.value === value);
+  const shouldShowMore =
+    appearance === 'list' && showMoreOptions && options.length > visibleOptionLimit;
+  const visibleOptions =
+    shouldShowMore && !isShowingAllOptions
+      ? selectedOptionIndex >= visibleOptionLimit && selectedOption
+        ? [...options.slice(0, visibleOptionLimit - 1), selectedOption]
+        : options.slice(0, visibleOptionLimit)
+      : options;
 
   useEffect(() => {
     if (disabled) {
@@ -57,7 +76,10 @@ export function FilterSelect({
   }, [disabled, isOpen]);
 
   return (
-    <div ref={rootRef} className={'filter-select' + (isOpen ? ' is-open' : '')}>
+    <div
+      ref={rootRef}
+      className={'filter-select filter-select--' + appearance + (isOpen ? ' is-open' : '')}
+    >
       <button
         ref={triggerRef}
         className="filter-select__trigger"
@@ -89,57 +111,90 @@ export function FilterSelect({
             <span />
             <span />
           </div>
+        ) : options.length === 0 ? (
+          <div className="filter-select__empty" role="status">
+            موردی برای نمایش نیست
+          </div>
         ) : (
-          <fieldset className="filter-select__group" disabled={disabled}>
-            <legend className="sr-only">{label}</legend>
-            <label className={'filter-select__option' + (value ? '' : ' is-selected')}>
-              <input
-                type="radio"
-                name={groupName}
-                value=""
-                checked={!value}
-                onChange={() => onChange('')}
-              />
-              <span className="filter-select__indicator" aria-hidden="true">
-                {!value ? <Icon name="check" size={12} /> : null}
-              </span>
-              <span className="filter-select__option-label">همه</span>
-            </label>
-            {options.map((option) => {
-              const isSelected = value === option.value;
-
-              return (
+          <>
+            <fieldset
+              className={'filter-select__group filter-select__group--' + appearance}
+              disabled={disabled}
+            >
+              <legend className="sr-only">{label}</legend>
+              {showAllOption ? (
                 <label
-                  className={'filter-select__option' + (isSelected ? ' is-selected' : '')}
-                  key={option.value}
+                  className={
+                    'filter-select__option filter-select__option--' +
+                    appearance +
+                    (!value ? ' is-selected' : '')
+                  }
                 >
                   <input
                     type="radio"
                     name={groupName}
-                    value={option.value}
-                    checked={isSelected}
-                    onChange={() => onChange(option.value)}
+                    value=""
+                    checked={!value}
+                    onChange={() => onChange('')}
                   />
-                  <span
-                    className={
-                      'filter-select__indicator' +
-                      (option.hex ? ' filter-select__indicator--swatch' : '')
-                    }
-                    style={option.hex ? { backgroundColor: option.hex } : undefined}
-                    aria-hidden="true"
-                  >
-                    {!option.hex && isSelected ? <Icon name="check" size={12} /> : null}
+                  <span className="filter-select__indicator" aria-hidden="true">
+                    {!value ? <Icon name="check" size={12} /> : null}
                   </span>
-                  <span className="filter-select__option-label">{option.label}</span>
-                  {option.count > 0 ? (
-                    <small className="filter-select__count">
-                      {formatPersianNumber(option.count)}
-                    </small>
-                  ) : null}
+                  <span className="filter-select__option-label">همه</span>
                 </label>
-              );
-            })}
-          </fieldset>
+              ) : null}
+              {visibleOptions.map((option) => {
+                const isSelected = value === option.value;
+                const showSwatch = appearance === 'swatches' && Boolean(option.hex);
+
+                return (
+                  <label
+                    className={
+                      'filter-select__option filter-select__option--' +
+                      appearance +
+                      (isSelected ? ' is-selected' : '')
+                    }
+                    key={option.value}
+                  >
+                    <input
+                      type="radio"
+                      name={groupName}
+                      value={option.value}
+                      checked={isSelected}
+                      onChange={() => onChange(option.value)}
+                    />
+                    <span
+                      className={
+                        'filter-select__indicator' +
+                        (showSwatch ? ' filter-select__indicator--swatch' : '')
+                      }
+                      style={showSwatch ? { backgroundColor: option.hex ?? undefined } : undefined}
+                      aria-hidden="true"
+                    >
+                      {!showSwatch && isSelected ? <Icon name="check" size={12} /> : null}
+                    </span>
+                    <span className="filter-select__option-label">{option.label}</span>
+                    {option.count > 0 ? (
+                      <small className="filter-select__count">
+                        {formatPersianNumber(option.count)}
+                      </small>
+                    ) : null}
+                  </label>
+                );
+              })}
+            </fieldset>
+            {shouldShowMore ? (
+              <button
+                className="filter-select__more"
+                type="button"
+                aria-expanded={isShowingAllOptions}
+                onClick={() => setIsShowingAllOptions((showing) => !showing)}
+              >
+                {isShowingAllOptions ? 'نمایش کمتر' : 'مشاهده بیشتر'}
+                <Icon name="chevron-down" size={13} />
+              </button>
+            ) : null}
+          </>
         )}
       </div>
     </div>

@@ -26,7 +26,7 @@ export function ProductCard({
     (variants.length > 0 && !variants.some((variant) => variant.available));
 
   return (
-    <article className="product-card">
+    <article className={`product-card${disabled ? ' is-unavailable' : ''}`}>
       <div className="product-card__media">
         <a
           href={`/product/${encodeURIComponent(product.slug)}`}
@@ -40,6 +40,11 @@ export function ProductCard({
             </span>
           )}
         </a>
+        {disabled ? (
+          <span className="product-card__sold-out" aria-hidden="true">
+            <span>ناموجود</span>
+          </span>
+        ) : null}
         <Button
           className={`icon-button product-card__favorite ${isWishlisted ? 'is-selected' : ''}`}
           type="button"
@@ -57,28 +62,29 @@ export function ProductCard({
       </div>
 
       <div className="product-card__body">
-        <div className="product-card__meta">
-          <span>{product.category}</span>
-          <span className={product.stock === 'رو به اتمام' ? 'is-warning' : ''}>
-            {availabilityLabel(product)}
-          </span>
-        </div>
-        <a
-          className="product-card__title"
-          href={`/product/${encodeURIComponent(product.slug)}`}
-        >
+        <a className="product-card__title" href={`/product/${encodeURIComponent(product.slug)}`}>
           {product.name}
         </a>
+        <div className="product-card__meta">
+          <span>{product.category}</span>
+          {!disabled ? (
+            <span className={product.stock === 'رو به اتمام' ? 'is-warning' : ''}>
+              {availabilityLabel(product)}
+            </span>
+          ) : null}
+        </div>
         <div className="product-card__footer">
           <div className="product-card__price">
             {compareAt ? <del>{formatToman(compareAt)}</del> : null}
             <strong>{formatToman(product.price)}</strong>
           </div>
-          <div className="product-card__swatches" aria-label="رنگ‌های موجود">
-            {product.colors.slice(0, 4).map((color) => (
-              <span style={{ backgroundColor: color }} key={color} />
-            ))}
-          </div>
+          {product.colors.length > 0 ? (
+            <div className="product-card__swatches" aria-label="رنگ‌های موجود">
+              {product.colors.slice(0, 4).map((color) => (
+                <span style={{ backgroundColor: color }} key={color} />
+              ))}
+            </div>
+          ) : null}
         </div>
         <Button
           className="product-card__add"
@@ -90,7 +96,7 @@ export function ProductCard({
           onClick={() => onAdd(product)}
         >
           <Icon name="bag" size={16} />
-          {disabled ? 'ناموجود' : 'افزودن به سبد'}
+          {disabled ? 'ناموجود' : 'افزودن به سبد خرید'}
         </Button>
       </div>
     </article>

@@ -1,7 +1,6 @@
 import { Button } from '@nova/ui';
 import { Icon } from '@/shared/ui/icon';
 import { type StorefrontProduct } from '@/features/catalog/api/catalog-api';
-
 import { availabilityLabel } from '@/features/catalog/components/availability-label';
 
 import { formatToman } from '@/shared/utils/format-toman';
@@ -78,14 +77,14 @@ export function ProductCard({
             {compareAt ? <del>{formatToman(compareAt)}</del> : null}
             <strong>{formatToman(product.price)}</strong>
           </div>
-          {product.colors.length > 0 ? (
-            <div className="product-card__swatches" aria-label="رنگ‌های موجود">
-              {product.colors.slice(0, 4).map((color) => (
-                <span style={{ backgroundColor: color }} key={color} />
-              ))}
-            </div>
-          ) : null}
         </div>
+        {product.colors.length > 0 ? (
+          <div className="product-card__swatches" aria-label="رنگ‌های موجود">
+            {product.colors.slice(0, 4).map((color) => (
+              <span style={{ backgroundColor: color }} key={color} />
+            ))}
+          </div>
+        ) : null}
         <Button
           className="product-card__add"
           type="button"

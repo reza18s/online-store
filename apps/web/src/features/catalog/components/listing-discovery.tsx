@@ -84,28 +84,33 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
           ? `محصولات ${audienceCopy[props.audience].label}`
           : 'همه محصولات';
   const products = productsQuery.data?.items.map(toStorefrontProduct) ?? [];
-  const filters = (
+  const renderFilters = (openCategoryByDefault: boolean) => (
     <div className="listing-filters">
       <FilterSelect
         label="دسته‌بندی"
+        defaultOpen={openCategoryByDefault}
+        isLoading={categoryQuery.isPending}
         value={selectedCategory}
         options={categoryOptions}
         onChange={(value) => update({ category: value })}
       />
       <FilterSelect
         label="اندازه"
+        isLoading={facetsQuery.isPending}
         value={state.size}
         options={sizeOptions}
         onChange={(value) => update({ size: value })}
       />
       <FilterSelect
         label="رنگ"
+        isLoading={facetsQuery.isPending}
         value={state.color}
         options={colorOptions}
         onChange={(value) => update({ color: value })}
       />
       <FilterSelect
         label="متریال"
+        isLoading={facetsQuery.isPending}
         value={state.material}
         options={materialOptions}
         onChange={(value) => update({ material: value })}
@@ -220,7 +225,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
       </div>
       <div className="listing-layout">
         <aside className="filter-rail" aria-label="فیلتر محصولات">
-          {filters}
+          {renderFilters(true)}
         </aside>
         <section className="listing-content" aria-label="نتایج محصولات">
           <CatalogQueryState query={productsQuery}>
@@ -274,7 +279,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
                 <Icon name="close" />
               </Button>
             </div>
-            {filters}
+            {renderFilters(false)}
             <Button
               className="listing-filter-sheet__apply"
               type="button"

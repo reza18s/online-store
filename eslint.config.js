@@ -11,6 +11,7 @@ export default tseslint.config(
       '**/.vite/**',
       '**/src/generated/**',
       'bun.lock',
+      'scripts/script.js',
       '**/*.d.ts',
     ],
   },

@@ -160,3 +160,30 @@ The first side-by-side review showed a dark-wine CTA and the swatch row and bag 
 The existing `docs/refactoring/card-component-design-plan.md` also calls for using real category and availability details where the reference shows ratings. The final card restores that data-backed row and the skeleton placeholder. The catalog card type has no rating or review-count fields, and the listing adapter supplies a single image rather than a gallery. Rating values, carousel dots, and quick-preview controls therefore remain absent; adding them would require a separate data and interaction change.
 
 The source and final implementation were compared together in the saved full-card and focused-body images. No actionable P0/P1/P2 visual differences remain.
+
+## Shared header refresh — 2026-10-04
+
+**Final result: Passed for the shared header scope.**
+
+### Reference and runtime review
+
+- Reference: the user-supplied Atelier Editorial header board at `docs/designs/atelier-editorial/header.png` (1536 × 1024).
+- Desktop preview: `http://127.0.0.1:5175/`. The header is centered in a rounded shell with a 68 px primary row. This historical review predates the later removal of the quick-category rail from the shared header. The centered wordmark, right-to-left navigation, action controls, and category rail follow the board’s hierarchy.
+- Compact desktop: after scrolling, the sticky header settles to 56 px.
+- Mobile: reviewed at a 390 × 844 viewport. The shell uses 16 px side gutters, the main row is 60 px, menu/search, centered wordmark, favorite, and cart remain visible.
+- Mobile search expands inside the header, stays in the page flow, submits to `/products?q=mantou`, and closes with Escape. The existing `/search` route remains reachable from bottom navigation.
+
+### Findings
+
+| Priority | Finding | Status |
+| --- | --- | --- |
+| P0 | None in the reviewed header states. | — |
+| P1 | None in the reviewed header states. | — |
+| P2 | Search query `mantou` has no matching catalog items in the current preview. | Existing catalog data; route and empty state render correctly. |
+
+### Validation
+
+- Web TypeScript check: passed.
+- Web client and SSR build: passed; Vite emitted its existing Node API deprecation and chunk-size advisories.
+- `git diff --check`: passed.
+- Desktop, compact desktop, and mobile header states were inspected in the running local preview. This review was limited to the shared header and its search interaction.

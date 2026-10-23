@@ -1,0 +1,38 @@
+# Page Context
+
+## Page
+
+**Path:** `src/features/auth/components/AdminSessionLoading.tsx`
+
+```tsx
+import '@/styles/admin-reference.css';
+
+export function AdminSessionLoading() {
+  return (
+    <main className="admin-reference-system flex min-h-svh items-center justify-center bg-background px-4" dir="rtl">
+      <section className="admin-reference-system__card is-loading w-full max-w-md bg-surface p-8 text-right shadow-float" role="status">
+        <span className="section-heading__eyebrow">NOVA / ADMIN ACCESS</span>
+        <h1 className="mt-2 text-2xl leading-relaxed">در حال بررسی دسترسی</h1>
+        <p className="mt-3 text-sm leading-8 text-muted-foreground">
+          نشست مدیریت شما در حال بررسی است.
+        </p>
+      </section>
+    </main>
+  );
+}
+
+```
+
+---
+
+## Custom Components
+
+
+No custom components found.
+
+
+## Summary
+
+- Page: `src/features/auth/components/AdminSessionLoading.tsx`
+- Custom component files: 0
+- Total files included: 1

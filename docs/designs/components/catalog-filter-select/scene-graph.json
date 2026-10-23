@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0.0",
+  "canvas": {
+    "widthPx": 1536,
+    "heightPx": 1024,
+    "unit": "css-px",
+    "direction": "rtl",
+    "background": "#F7F4F0"
+  },
+  "nodes": [
+    {
+      "id": "board-header",
+      "type": "header",
+      "rect": {
+        "x": 48,
+        "y": 34,
+        "width": 1440,
+        "height": 46
+      },
+      "children": [
+        "brand-lockup",
+        "package-stamp"
+      ]
+    },
+    {
+      "id": "board-intro",
+      "type": "title",
+      "rect": {
+        "x": 48,
+        "y": 94,
+        "width": 1440,
+        "height": 96
+      },
+      "children": [
+        "title-fa",
+        "scope-note",
+        "illustrative-data-badge"
+      ]
+    },
+    {
+      "id": "variants",
+      "type": "component-variants",
+      "rect": {
+        "x": 575,
+        "y": 204,
+        "width": 913,
+        "height": 616
+      },
+      "children": [
+        "list-variant",
+        "size-variant",
+        "swatches-variant",
+        "geometry-metrics"
+      ]
+    },
+    {
+      "id": "states",
+      "type": "state-matrix",
+      "rect": {
+        "x": 48,
+        "y": 204,
+        "width": 510,
+        "height": 616
+      },
+      "children": [
+        "focus-selected",
+        "disabled",
+        "loading",
+        "empty"
+      ]
+    },
+    {
+      "id": "footer",
+      "type": "reference-footer",
+      "rect": {
+        "x": 48,
+        "y": 834,
+        "width": 1440,
+        "height": 160
+      },
+      "children": [
+        "token-palette",
+        "target-diagram",
+        "responsive-note"
+      ]
+    },
+    {
+      "id": "mobile-clean-reference",
+      "type": "mobile-component-reference",
+      "rect": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844
+      },
+      "source": "render-source/render-mobile-reference.py"
+    }
+  ],
+  "typography": "Vazirmatn with Tahoma fallback; static captures use system Tahoma if Vazirmatn is unavailable.",
+  "dataPolicy": "All labels and swatches shown in the design board are illustrative."
+}

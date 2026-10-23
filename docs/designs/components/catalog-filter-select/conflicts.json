@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "1.0.0",
+  "conflicts": [
+    {
+      "id": "C1",
+      "property": "list-row-and-indicator-size",
+      "sources": [
+        "S3"
+      ],
+      "observed": [
+        "An earlier listing rule declares 40px rows and 18px indicators.",
+        "A later rule declares 44px rows and 20px indicators."
+      ],
+      "resolution": "The later, more specific listing cascade is effective; preserve 44px/20px and document the earlier declarations rather than changing them.",
+      "status": "resolved"
+    },
+    {
+      "id": "C2",
+      "property": "visual-control-size-versus-touch-target",
+      "sources": [
+        "S4",
+        "S5",
+        "S3"
+      ],
+      "observed": [
+        "The target plan calls for 36px visual size chips and color circles.",
+        "Atelier Section 18 requires at least 44px pointer targets."
+      ],
+      "resolution": "Keep each visible size chip and swatch at 36px while making its clickable label target at least 44px; swatch cells are at least 58px wide and 62px high.",
+      "status": "resolved"
+    },
+    {
+      "id": "C3",
+      "property": "desktop-filter-rail-side",
+      "sources": [
+        "S5",
+        "S8"
+      ],
+      "observed": [
+        "The target-specific plan describes a right-side rail.",
+        "The older desktop reference image visually places the rail on the left."
+      ],
+      "resolution": "Do not decide this page-composition conflict in a component-only task. The board isolates FilterSelect and the existing listing layout remains unchanged.",
+      "status": "deferred-out-of-scope"
+    }
+  ]
+}

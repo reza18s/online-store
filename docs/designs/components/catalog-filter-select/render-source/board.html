@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FilterSelect — Visual Design Board</title>
+<link rel="stylesheet" href="select.css">
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<div class="board">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">N</div>
+      <div class="brand-name"><strong>NOVA</strong><small>ATELIER / CATALOG</small></div>
+    </div>
+    <div class="stamp"><b>COMPONENT REF</b><span>FILTER SELECT</span><span>·</span><span>01 / 01</span></div>
+  </header>
+
+  <section class="intro">
+    <div class="intro-copy">
+      <div class="kicker">CATALOG FILTERS · SINGLE-CHOICE CONTROLS</div>
+      <h1>فیلتر انتخابی کاتالوگ</h1>
+      <p>سه نمایش برای یک قرارداد انتخاب؛ هماهنگ با زبان بصری آتلیه و آماده برای صفحه فهرست فارسی.</p>
+    </div>
+    <div class="intro-meta"><span class="mock-pill">داده‌ها و رنگ‌ها: نمونه نمایشی</span><span class="date-pill">DESIGN HANDOFF · 2026.10</span></div>
+  </section>
+
+  <main class="main-grid">
+    <section class="panel variants-panel" aria-label="نمایش‌های کامپوننت">
+      <div class="section-heading">
+        <div class="section-title"><span class="section-index">01</span><h2>سه نمایش از یک انتخاب</h2></div>
+        <span class="section-note">یک مقدار متنی · یک گزینهٔ فعال در هر گروه</span>
+      </div>
+      <div class="variant-grid">
+        <article class="variant-card list-demo">
+          <div class="variant-head">
+            <div><h3>فهرست</h3><p>دسته‌بندی · شمارش نتیجه</p></div>
+            <span class="variant-code">LIST</span>
+          </div>
+          <div class="control-demo">
+            <div class="filter-select filter-select--list is-open">
+              <button class="filter-select__trigger" type="button" aria-expanded="true">
+                <span class="filter-select__label">دسته‌بندی</span>
+                <span class="filter-select__selected">اکسسوری</span>
+                <span class="filter-select__chevron" aria-hidden="true"><i class="chevron"></i></span>
+              </button>
+              <div class="filter-select__options">
+                <fieldset class="filter-select__group" aria-label="دسته‌بندی نمونه">
+                  <legend hidden>دسته‌بندی</legend>
+                  <label class="filter-select__option is-selected">
+                    <input type="radio" name="demo-category" checked>
+                    <span class="filter-select__indicator" aria-hidden="true"><i class="checkmark"></i></span>
+                    <span class="filter-select__option-label">اکسسوری</span><small class="filter-select__count">۱۲</small>
+                  </label>
+                  <label class="filter-select__option">
+                    <input type="radio" name="demo-category">
+                    <span class="filter-select__indicator" aria-hidden="true"></span>
+                    <span class="filter-select__option-label">بافت</span><small class="filter-select__count">۸</small>
+                  </label>
+                  <label class="filter-select__option">
+                    <input type="radio" name="demo-category">
+                    <span class="filter-select__indicator" aria-hidden="true"></span>
+                    <span class="filter-select__option-label">پیراهن</span><small class="filter-select__count">۶</small>
+                  </label>
+                  <label class="filter-select__option">
+                    <input type="radio" name="demo-category">
+                    <span class="filter-select__indicator" aria-hidden="true"></span>
+                    <span class="filter-select__option-label">شلوار</span><small class="filter-select__count">۴</small>
+                  </label>
+                </fieldset>
+                <button class="filter-select__more" type="button">مشاهدهٔ بیشتر <span class="filter-select__chevron" aria-hidden="true"><i class="chevron"></i></span></button>
+              </div>
+            </div>
+          </div>
+          <div class="variant-foot"><span>ردیف ۴۴ · نشانگر ۲۰</span><strong>RADIO</strong></div>
+        </article>
+
+        <article class="variant-card size-demo">
+          <div class="variant-head">
+            <div><h3>سایز</h3><p>سطح دیداری فشرده</p></div>
+            <span class="variant-code">SIZE</span>
+          </div>
+          <div class="control-demo">
+            <div class="filter-select filter-select--size is-open">
+              <button class="filter-select__trigger" type="button" aria-expanded="true">
+                <span class="filter-select__label">سایز</span>
+                <span class="filter-select__selected">M</span>
+                <span class="filter-select__chevron" aria-hidden="true"><i class="chevron"></i></span>
+              </button>
+              <div class="filter-select__options">
+                <fieldset class="filter-select__group filter-select__group--size" aria-label="سایز نمونه">
+                  <legend hidden>سایز</legend>
+                  <label class="filter-select__option filter-select__option--size">
+                    <input type="radio" name="demo-size"><span class="filter-select__indicator" aria-hidden="true"></span><span class="filter-select__option-label">S</span>
+                  </label>
+                  <label class="filter-select__option filter-select__option--size is-selected">
+                    <input type="radio" name="demo-size" checked><span class="filter-select__indicator" aria-hidden="true"></span><span class="filter-select__option-label">M</span>
+                  </label>
+                  <label class="filter-select__option filter-select__option--size">
+                    <input type="radio" name="demo-size"><span class="filter-select__indicator" aria-hidden="true"></span><span class="filter-select__option-label">L</span>
+                  </label>
+                  <label class="filter-select__option filter-select__option--size">
+                    <input type="radio" name="demo-size"><span class="filter-select__indicator" aria-hidden="true"></span><span class="filter-select__option-label">XL</span>
+                  </label>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+          <div class="measure-tag"><b>۴۴</b> محدودهٔ انتخاب <span>·</span> <b>۳۶</b> سطح دیداری</div>
+          <div class="variant-foot"><span>گوشه ۱۰ · مقدار تکی</span><strong>SIZE</strong></div>
+        </article>
+
+        <article class="variant-card swatch-demo">
+          <div class="variant-head">
+            <div><h3>رنگ</h3><p>نمونهٔ رنگ همراه با نام</p></div>
+            <span class="variant-code">SWATCHES</span>
+          </div>
+          <div class="control-demo">
+            <div class="filter-select filter-select--swatches is-open">
+              <button class="filter-select__trigger" type="button" aria-expanded="true">
+                <span class="filter-select__label">رنگ</span>
+                <span class="filter-select__selected">زرشکی</span>
+                <span class="filter-select__chevron" aria-hidden="true"><i class="chevron"></i></span>
+              </button>
+              <div class="filter-select__options">
+                <fieldset class="filter-select__group filter-select__group--swatches" aria-label="رنگ نمونه">
+                  <legend hidden>رنگ</legend>
+                  <label class="filter-select__option filter-select__option--swatches">
+                    <input type="radio" name="demo-color">
+                    <span class="filter-select__indicator filter-select__indicator--swatch swatch-dot--sand" aria-hidden="true"></span>
+                    <span class="filter-select__option-label">شنّی</span>
+                  </label>
+                  <label class="filter-select__option filter-select__option--swatches is-selected">
+                    <input type="radio" name="demo-color" checked>
+                    <span class="filter-select__indicator filter-select__indicator--swatch swatch-dot--rose" aria-hidden="true"></span>
+                    <span class="filter-select__option-label">زرشکی</span>
+                  </label>
+                  <label class="filter-select__option filter-select__option--swatches">
+                    <input type="radio" name="demo-color">
+                    <span class="filter-select__indicator filter-select__indicator--swatch swatch-dot--ink" aria-hidden="true"></span>
+                    <span class="filter-select__option-label">ذغالی</span>
+                  </label>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+          <div class="inline-note">نام رنگ همیشه کنار نمونه می‌آید؛ انتخاب با رادیوی همان گروه انجام می‌شود.</div>
+          <div class="variant-foot"><span>دایره ۳۶ · هدف ≥۴۴</span><strong>SWATCH</strong></div>
+        </article>
+      </div>
+      <div class="metrics">
+        <div class="metric"><strong>44 × 44</strong><span>حداقل سطح تعاملی</span></div>
+        <div class="metric"><strong>20 × 20</strong><span>نشانگر فهرست</span></div>
+        <div class="metric"><strong>12 px</strong><span>متن کمکی و شمارنده</span></div>
+      </div>
+    </section>
+
+    <section class="panel states-panel" aria-label="حالت‌های کامپوننت">
+      <div class="section-heading">
+        <div class="section-title"><span class="section-index">02</span><h2>حالت‌های تعاملی</h2></div>
+        <span class="section-note">تمرکز · غیرفعال · بارگذاری · خالی</span>
+      </div>
+      <div class="states-grid">
+        <article class="state-card">
+          <div class="state-title"><strong>انتخاب‌شده و فوکوس</strong><small>KEYBOARD</small></div>
+          <div class="focus-demo">
+            <label class="filter-select__option is-selected">
+              <input type="radio" name="state-focus" checked>
+              <span class="filter-select__indicator" aria-hidden="true"><i class="checkmark"></i></span>
+              <span class="filter-select__option-label">اکسسوری</span><small class="filter-select__count">۱۲</small>
+            </label>
+          </div>
+          <p class="inline-note">حلقهٔ فوکوس مستقل از رنگ انتخاب دیده می‌شود.</p>
+        </article>
+        <article class="state-card">
+          <div class="state-title"><strong>غیرفعال</strong><small>DISABLED</small></div>
+          <fieldset class="filter-select__group" disabled>
+            <label class="filter-select__option">
+              <input type="radio" name="state-disabled" disabled>
+              <span class="filter-select__indicator" aria-hidden="true"></span>
+              <span class="filter-select__option-label">موجودی محدود</span>
+            </label>
+          </fieldset>
+          <p class="inline-note">حالت غیرفعال، با نشانگرهای کم‌رنگ و بدون کلیک.</p>
+        </article>
+        <article class="state-card">
+          <div class="state-title"><strong>در حال بارگذاری</strong><small>LOADING</small></div>
+          <div class="filter-select__loading" role="status" aria-label="در حال بارگذاری">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </article>
+        <article class="state-card">
+          <div class="state-title"><strong>بدون گزینه</strong><small>EMPTY</small></div>
+          <div class="filter-select__empty" role="status">موردی برای نمایش نیست</div>
+          <p class="inline-note">پیام کوتاه و قابل فهم؛ بدون کنترل بن‌بست.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-grid">
+    <section class="footer-card tokens">
+      <h3 class="footer-title">پالت تأییدشدهٔ آتلیه</h3>
+      <div class="palette">
+        <div class="token-block"><div class="swatch-token token-ink"></div><div class="token-name">INK / 950</div></div>
+        <div class="token-block"><div class="swatch-token token-muted"></div><div class="token-name">INK / 700</div></div>
+        <div class="token-block"><div class="swatch-token token-wine"></div><div class="token-name">ROSE / 700</div></div>
+        <div class="token-block"><div class="swatch-token token-soft"></div><div class="token-name">SURFACE / SOFT</div></div>
+        <div class="token-block"><div class="swatch-token token-surface"></div><div class="token-name">SURFACE / 0</div></div>
+        <div class="token-block"><div class="swatch-token token-line"></div><div class="token-name">LINE / 200</div></div>
+      </div>
+      <div class="footer-footnote">#302B29 · #6F6560 · #7B4B59 · #F1ECE7 · #FFFCF9 · #E4DCD5</div>
+    </section>
+    <section class="footer-card sizing">
+      <h3 class="footer-title">هندسهٔ دیداری در برابر هدف انتخاب</h3>
+      <div class="target-diagram"><div class="hitbox"><div class="visual-box"></div></div><span>۳۶ px دیداری<br>درون هدف ۴۴ px</span></div>
+      <div class="footer-footnote">فهرست: ردیف ۴۴ · نشانگر ۲۰ · دکمهٔ بیشتر ۴۴</div>
+    </section>
+    <section class="footer-card responsive">
+      <h3 class="footer-title">نقطه‌های بازبینی</h3>
+      <div class="responsive-note">
+        <div class="mini-phone"><span></span><span></span><span></span><span></span></div>
+        <div class="responsive-copy"><b>دو قاب برای یک زبان</b><small>DESKTOP · 1536 × 1024<br>MOBILE · 390 × 844</small></div>
+      </div>
+      <div class="footer-footnote">RTL · صفحه‌کلید · کاهش حرکت · دادهٔ نمونه</div>
+    </section>
+  </footer>
+</div>
+</body>
+</html>

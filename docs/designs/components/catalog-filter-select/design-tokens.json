@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0.0",
+  "authority": "docs/designs/atelier-editorial.md §18 and apps/web/src/styles/storefront-reference.css",
+  "tokens": [
+    {
+      "name": "pearl/50",
+      "cssVariable": "--nova-ref-page",
+      "value": "#F7F4F0",
+      "usage": "page canvas"
+    },
+    {
+      "name": "surface/0",
+      "cssVariable": "--nova-ref-surface",
+      "value": "#FFFCF9",
+      "usage": "component surface"
+    },
+    {
+      "name": "surface/soft",
+      "cssVariable": "--nova-ref-surface-soft",
+      "value": "#F1ECE7",
+      "usage": "quiet hover surface"
+    },
+    {
+      "name": "ink/950",
+      "cssVariable": "--nova-ref-ink",
+      "value": "#302B29",
+      "usage": "primary text"
+    },
+    {
+      "name": "ink/700",
+      "cssVariable": "--nova-ref-muted",
+      "value": "#6F6560",
+      "usage": "counts and secondary text"
+    },
+    {
+      "name": "rosewood/700",
+      "cssVariable": "--nova-ref-wine",
+      "value": "#7B4B59",
+      "usage": "selected and primary action"
+    },
+    {
+      "name": "rosewood/800",
+      "cssVariable": "--nova-ref-wine-dark",
+      "value": "#633D49",
+      "usage": "selected text"
+    },
+    {
+      "name": "rosewood/100",
+      "cssVariable": "--nova-ref-wine-soft",
+      "value": "#F2E8EB",
+      "usage": "quiet selected surface"
+    },
+    {
+      "name": "line/200",
+      "cssVariable": "--line",
+      "value": "#E4DCD5",
+      "usage": "control borders and dividers"
+    }
+  ],
+  "typography": {
+    "fontStack": "'Vazirmatn', Tahoma, sans-serif",
+    "uiRangePx": [
+      12,
+      15
+    ],
+    "smallCountPx": 12,
+    "swatchLabelPx": 12
+  },
+  "shape": {
+    "controlRadiusPx": [
+      10,
+      12
+    ],
+    "sizeChipRadiusPx": 10,
+    "swatchShape": "circle"
+  },
+  "accessibility": {
+    "minimumPointerTargetPx": 44,
+    "focusRing": "2px solid #7B4B59",
+    "reducedMotion": "disable transitions when prefers-reduced-motion: reduce"
+  }
+}

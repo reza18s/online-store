@@ -1,0 +1,152 @@
+{
+  "$schema": "./mobile-search-design.schema.json",
+  "modelVersion": "1.0.0",
+  "id": "nova-mobile-search-results",
+  "title": "NOVA mobile product search",
+  "titleFa": "جست‌وجوی محصولات",
+  "status": "implementation-review",
+  "audience": "NOVA storefront shoppers using a narrow-screen device",
+  "primaryAction": "submit-search",
+  "language": "fa-IR",
+  "direction": "rtl",
+  "route": {
+    "entry": "/search?q={query}",
+    "results": "/products?q={query}",
+    "queryParameter": "q",
+    "filterAndSortState": "preserved-on-submit",
+    "pageState": "reset-on-query-change"
+  },
+  "viewport": {
+    "primary": {
+      "width": 390,
+      "height": 844
+    },
+    "minimum": {
+      "width": 360,
+      "height": 800
+    },
+    "maximumWidth": 430,
+    "mobileBreakpointMaxWidth": 767,
+    "deviceScaleFactor": 1
+  },
+  "layout": {
+    "contentGutter": 10,
+    "headerHeight": 60,
+    "queryPanel": "full-width warm surface above filters",
+    "suggestionStrip": "one horizontally scrollable RTL row",
+    "productColumns": 2,
+    "bottomNavigation": "fixed, visible, 5 destinations"
+  },
+  "components": [
+    {
+      "id": "storefront-header",
+      "name": "Storefront header",
+      "role": "global navigation",
+      "order": 1,
+      "placement": "full-width above page content",
+      "tokenRefs": ["page", "surface", "ink", "line", "touchTarget"],
+      "sourceIds": ["runtime-tokens-css", "mobile-navigation-css"],
+      "assetIds": []
+    },
+    {
+      "id": "search-query-form",
+      "name": "Query edit, clear, and submit",
+      "role": "search form",
+      "order": 2,
+      "placement": "below result heading and above suggestions",
+      "behavior": "Mobile input is a draft until submit; clear empties the draft; submit updates q and resets page. Desktop retains live query updates.",
+      "touchTargetMin": 44,
+      "tokenRefs": ["surface", "ink", "primary", "line", "controlRadius", "touchTarget"],
+      "sourceIds": ["listing-discovery-owner", "query-url-builder"],
+      "assetIds": []
+    },
+    {
+      "id": "search-suggestions",
+      "name": "Suggested products and categories",
+      "role": "horizontally scrollable suggestion region",
+      "order": 3,
+      "placement": "inside query panel below controls",
+      "behavior": "One swipeable RTL row; each suggestion navigates to its existing product or category route.",
+      "overflow": "horizontal, contained within the query panel",
+      "touchTargetMin": 44,
+      "tokenRefs": ["surface", "ink", "line", "controlRadius", "touchTarget"],
+      "sourceIds": ["listing-discovery-owner", "suggestion-query-hook"],
+      "assetIds": []
+    },
+    {
+      "id": "result-controls",
+      "name": "Filters and sort",
+      "role": "catalog controls",
+      "order": 4,
+      "placement": "two-column row below query panel",
+      "tokenRefs": ["surface", "ink", "muted", "line", "controlRadius"],
+      "sourceIds": ["listing-discovery-owner"],
+      "assetIds": []
+    },
+    {
+      "id": "product-results",
+      "name": "Product results",
+      "role": "two-column result grid",
+      "order": 5,
+      "placement": "below filters and sort",
+      "behavior": "Two cards per row; search-scoped wishlist and add-to-cart controls use at least 44 px targets.",
+      "tokenRefs": ["surface", "ink", "muted", "line", "cardRadius", "touchTarget"],
+      "sourceIds": [
+        "listing-discovery-owner",
+        "product-grid",
+        "product-card",
+        "runtime-tokens-css"
+      ],
+      "assetIds": ["fixture-oxford-shirt", "fixture-linen-look", "fixture-kids-set"]
+    },
+    {
+      "id": "mobile-bottom-navigation",
+      "name": "Fixed mobile navigation",
+      "role": "quick navigation",
+      "order": 6,
+      "placement": "fixed above the device bottom edge",
+      "tokenRefs": ["surface", "ink", "muted", "line", "touchTarget"],
+      "sourceIds": ["mobile-navigation-css"],
+      "assetIds": []
+    }
+  ],
+  "states": [
+    "results-loaded",
+    "editing-draft",
+    "cleared-draft",
+    "submitting-query",
+    "loading-results",
+    "no-results",
+    "request-error",
+    "filters-open"
+  ],
+  "accessibility": {
+    "touchTargetMinimumPx": 44,
+    "preserveRtlReadingOrder": true,
+    "queryFieldHasPersistentLabel": true,
+    "clearAndSubmitHaveAccessibleNames": true,
+    "suggestionStripIsKeyboardFocusableWhenOverflowing": true,
+    "visibleFocusStyles": true,
+    "respectReducedMotion": true
+  },
+  "renderedAssets": ["fixture-oxford-shirt", "fixture-linen-look", "fixture-kids-set"],
+  "sourceIds": [
+    "design-authority",
+    "runtime-tokens-css",
+    "listing-discovery-owner",
+    "query-url-builder",
+    "suggestion-query-hook",
+    "product-grid",
+    "product-card",
+    "mobile-navigation-css",
+    "search-entry-dialog",
+    "dev-fixtures"
+  ],
+  "assetIds": [
+    "fixture-oxford-shirt",
+    "fixture-linen-look",
+    "fixture-kids-set",
+    "clean-reference-390",
+    "runtime-reference-360"
+  ]
+}

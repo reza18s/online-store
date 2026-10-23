@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-10-23",
+  "project": "C-Users-Asus-Documents-ChatGPT-online-store",
+  "signal": "best_effort",
+  "indexStatus": "no_recorded_issue",
+  "freshness": "metadata_changed",
+  "recommendation": "read_source_and_reindex",
+  "fallbackCompleted": "Relevant source files, CSS literals, and design-authority sections were read directly before use.",
+  "sourceFiles": [
+    "apps/web/src/features/catalog/components/listing-discovery.tsx",
+    "apps/web/src/features/catalog/components/build-discovery-href.tsx",
+    "apps/web/src/features/catalog/components/product-grid.tsx",
+    "apps/web/src/features/catalog/components/product-card.tsx",
+    "apps/web/src/features/catalog/api/use-catalog-suggestions.ts",
+    "apps/web/src/styles.css",
+    "apps/web/src/styles/storefront-reference.css",
+    "docs/designs/atelier-editorial.md",
+    "docs/designs/nova-atelier-editorial.md",
+    "docs/designs/quiet-grid.md",
+    "apps/web/page-contexts/README-storefront.md",
+    "apps/web/page-contexts/listing-discovery.md"
+  ],
+  "caveat": "The code graph is best-effort and is not evidence that every source relationship is complete."
+}

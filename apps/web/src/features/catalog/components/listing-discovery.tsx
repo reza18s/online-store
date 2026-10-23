@@ -63,6 +63,33 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const mobileFilterSheetRef = useRef<HTMLElement>(null);
   const listingContentRef = useRef<HTMLElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [searchDraft, setSearchDraft] = useState(state.q ?? '');
+  const [isMobileSearch, setIsMobileSearch] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 767px)');
+    const syncMobileSearch = () => setIsMobileSearch(mediaQuery.matches);
+
+    syncMobileSearch();
+    mediaQuery.addEventListener('change', syncMobileSearch);
+
+    return () => mediaQuery.removeEventListener('change', syncMobileSearch);
+  }, []);
+
+  useEffect(() => {
+    setSearchDraft(state.q ?? '');
+  }, [state.q]);
+
+  useEffect(() => {
+    const syncSearchDraftFromHistory = () => {
+      setSearchDraft(new URLSearchParams(window.location.search).get('q') ?? '');
+    };
+
+    window.addEventListener('popstate', syncSearchDraftFromHistory);
+
+    return () => window.removeEventListener('popstate', syncSearchDraftFromHistory);
+  }, []);
 
   useEffect(() => {
     if (!mobileFiltersOpen) return;
@@ -253,7 +280,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     </div>
   );
   return (
-    <main className="shell inner-page listing-page">
+    <main className={'shell inner-page listing-page' + (state.q ? ' listing-page--search' : '')}>
       <div className="breadcrumb">
         <a href="/" className="hover:text-primary">
           خانه
@@ -305,36 +332,82 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
         </div>
       </header>
       {state.q ? (
-        <section className="listing-search-box" aria-label="پیشنهادهای جست‌وجو">
-          <label className="sr-only" htmlFor="discovery-search">
-            عبارت جست‌وجو
-          </label>
-          <UiInput
-            id="discovery-search"
-            className="listing-search-box__input"
-            dir="auto"
-            value={state.q}
-            onChange={(event) => update({ q: event.target.value || undefined })}
-          />
-          <div className="listing-search-box__suggestions" aria-live="polite">
-            {suggestionsQuery.isPending ? (
-              <span className="text-xs text-muted-foreground">در حال جست‌وجو...</span>
-            ) : (
-              suggestionsQuery.data?.map((suggestion) => (
-                <a
-                  className="listing-search-box__suggestion"
-                  href={
-                    suggestion.type === 'CATEGORY'
-                      ? `/products?category=${encodeURIComponent(suggestion.slug)}`
-                      : `/product/${encodeURIComponent(suggestion.slug)}`
-                  }
-                  key={`${suggestion.type}:${suggestion.id}`}
+        <section className="listing-search-box" aria-label="جست‌وجوی محصولات">
+          <form
+            className="listing-search-box__form"
+            role="search"
+            aria-label="جست‌وجوی محصولات"
+            onSubmit={(event) => {
+              event.preventDefault();
+              update({ q: searchDraft.trim() || undefined });
+            }}
+          >
+            <label className="sr-only" htmlFor="discovery-search">
+              عبارت جست‌وجو
+            </label>
+            <div className="listing-search-box__controls">
+              <UiInput
+                ref={searchInputRef}
+                id="discovery-search"
+                className="listing-search-box__input"
+                dir="auto"
+                value={searchDraft}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setSearchDraft(value);
+                  if (!isMobileSearch) update({ q: value || undefined });
+                }}
+              />
+              {isMobileSearch && searchDraft ? (
+                <Button
+                  className="listing-search-box__clear"
+                  type="button"
+                  variant="outline"
+                  aria-label="پاک کردن عبارت جست‌وجو"
+                  onClick={() => {
+                    setSearchDraft('');
+                    searchInputRef.current?.focus();
+                  }}
                 >
-                  {suggestion.label}
-                </a>
-              ))
-            )}
-          </div>
+                  <Icon name="close" size={16} />
+                </Button>
+              ) : null}
+              <Button
+                className="listing-search-box__submit"
+                type="submit"
+                variant="primary"
+                aria-label="جست‌وجو"
+              >
+                <Icon name="search" size={17} />
+              </Button>
+            </div>
+          </form>
+          {searchDraft.trim() === state.q.trim() ? (
+            <div
+              className="listing-search-box__suggestions"
+              aria-label="پیشنهادهای جست‌وجو"
+              aria-live="polite"
+              tabIndex={0}
+            >
+              {suggestionsQuery.isPending ? (
+                <span className="text-xs text-muted-foreground">در حال جست‌وجو...</span>
+              ) : (
+                suggestionsQuery.data?.map((suggestion) => (
+                  <a
+                    className="listing-search-box__suggestion"
+                    href={
+                      suggestion.type === 'CATEGORY'
+                        ? `/products?category=${encodeURIComponent(suggestion.slug)}`
+                        : `/product/${encodeURIComponent(suggestion.slug)}`
+                    }
+                    key={`${suggestion.type}:${suggestion.id}`}
+                  >
+                    {suggestion.label}
+                  </a>
+                ))
+              )}
+            </div>
+          ) : null}
         </section>
       ) : null}
       {activeFilterChips.length > 0 ? (

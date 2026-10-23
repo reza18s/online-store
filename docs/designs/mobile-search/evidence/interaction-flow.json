@@ -1,0 +1,16 @@
+{
+  "urlAfterMobileTyping": "http://127.0.0.1:5175/products?q=%D9%BE%DB%8C%D8%B1%D8%A7%D9%87%D9%86&sort=price_asc&page=2&size=M",
+  "draftAfterTyping": "پیراهن سنتی",
+  "queryAfterSubmit": {
+    "q": "پیراهن سنتی",
+    "sort": "price_asc",
+    "page": null,
+    "size": "M"
+  },
+  "urlAfterClearClick": "http://127.0.0.1:5175/products?q=%D9%BE%DB%8C%D8%B1%D8%A7%D9%87%D9%86+%D8%B3%D9%86%D8%AA%DB%8C&sort=price_asc&size=M",
+  "draftAfterClear": "",
+  "urlAfterSubmittingEmptyQuery": "http://127.0.0.1:5175/products?sort=price_asc&size=M",
+  "valueAfterBrowserBack": "پیراهن سنتی",
+  "desktopQueryAfterTyping": "پیراهن لینن",
+  "desktopSubmitButtonVisible": false
+}

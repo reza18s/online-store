@@ -1,0 +1,76 @@
+{
+  "sceneId": "nova-mobile-search-results",
+  "viewport": {
+    "width": 390,
+    "height": 844,
+    "direction": "rtl"
+  },
+  "coordinateSpace": "CSS pixels from the top-right RTL page edge",
+  "nodes": [
+    {
+      "id": "screen",
+      "parentId": null,
+      "kind": "screen",
+      "order": 0,
+      "sourceIds": ["listing-discovery-owner", "runtime-tokens-css"],
+      "tokenRefs": ["page", "ink"]
+    },
+    {
+      "id": "storefront-header",
+      "parentId": "screen",
+      "kind": "global-navigation",
+      "order": 1,
+      "sourceIds": ["mobile-navigation-css"],
+      "tokenRefs": ["surface", "line", "touchTarget"]
+    },
+    {
+      "id": "listing-heading",
+      "parentId": "screen",
+      "kind": "page-heading-and-result-count",
+      "order": 2,
+      "sourceIds": ["listing-discovery-owner"],
+      "tokenRefs": ["ink", "muted"]
+    },
+    {
+      "id": "search-query-form",
+      "parentId": "screen",
+      "kind": "search-form",
+      "order": 3,
+      "sourceIds": ["listing-discovery-owner", "query-url-builder"],
+      "tokenRefs": ["surface", "primary", "line", "touchTarget"]
+    },
+    {
+      "id": "search-suggestions",
+      "parentId": "search-query-form",
+      "kind": "rtl-horizontal-scroll-region",
+      "order": 4,
+      "sourceIds": ["listing-discovery-owner", "suggestion-query-hook"],
+      "tokenRefs": ["surface", "line", "touchTarget"]
+    },
+    {
+      "id": "result-controls",
+      "parentId": "screen",
+      "kind": "filter-and-sort-row",
+      "order": 5,
+      "sourceIds": ["listing-discovery-owner"],
+      "tokenRefs": ["surface", "ink", "line"]
+    },
+    {
+      "id": "product-results",
+      "parentId": "screen",
+      "kind": "two-column-product-grid",
+      "order": 6,
+      "sourceIds": ["listing-discovery-owner", "product-grid", "product-card"],
+      "tokenRefs": ["surface", "ink", "line", "cardRadius", "touchTarget"],
+      "assetIds": ["fixture-oxford-shirt", "fixture-linen-look", "fixture-kids-set"]
+    },
+    {
+      "id": "mobile-bottom-navigation",
+      "parentId": "screen",
+      "kind": "fixed-navigation-overlay",
+      "order": 7,
+      "sourceIds": ["mobile-navigation-css"],
+      "tokenRefs": ["surface", "line", "touchTarget"]
+    }
+  ]
+}

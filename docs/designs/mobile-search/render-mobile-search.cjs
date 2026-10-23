@@ -5,7 +5,7 @@ const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { chromium } = require('@playwright/test');
 
-const packageDir = __dirname;
+const packageDir = path.dirname(module.filename);
 const evidenceDir = path.join(packageDir, 'evidence');
 const model = JSON.parse(
   fs.readFileSync(path.join(packageDir, 'mobile-search-design.json'), 'utf8'),
@@ -14,6 +14,7 @@ const sceneGraph = JSON.parse(fs.readFileSync(path.join(packageDir, 'scene-graph
 const tokens = JSON.parse(fs.readFileSync(path.join(packageDir, 'tokens.json'), 'utf8')).tokens;
 const sourceIndex = JSON.parse(fs.readFileSync(path.join(packageDir, 'source-index.json'), 'utf8'));
 const assetIndex = JSON.parse(fs.readFileSync(path.join(packageDir, 'asset-index.json'), 'utf8'));
+const process = require('node:process');
 const baseUrl = process.env.MOBILE_SEARCH_BASE_URL ?? 'http://127.0.0.1:5175';
 
 function validateSemanticReferences() {
@@ -70,6 +71,8 @@ async function withBrowserContext(viewport, callback) {
       deviceScaleFactor: 1,
       isMobile: false,
     });
+    context.setDefaultTimeout(10_000);
+    context.setDefaultNavigationTimeout(15_000);
     await callback(context, context.pages()[0] ?? (await context.newPage()));
   } finally {
     if (context) await context.close();
@@ -83,15 +86,19 @@ async function withBrowserContext(viewport, callback) {
 }
 
 async function waitForResults(page) {
-  await page.waitForLoadState('networkidle');
   await page.locator('#listing-results').waitFor({ state: 'visible', timeout: 15000 });
-  await page.evaluate(() => document.fonts.ready.then(() => true));
+  await page.evaluate(() =>
+    Promise.race([
+      globalThis.document.fonts.ready.then(() => true),
+      new Promise((resolve) => globalThis.setTimeout(resolve, 1000)),
+    ]),
+  );
 }
 
 async function collectMetrics(page, viewport) {
   return page.evaluate((expectedViewport) => {
     const measure = (selector) => {
-      const element = document.querySelector(selector);
+      const element = globalThis.document.querySelector(selector);
       if (!element) return null;
       const rect = element.getBoundingClientRect();
       return {
@@ -103,17 +110,19 @@ async function collectMetrics(page, viewport) {
     };
     const nav = measure('.mobile-bottom-nav');
     const firstAdd = measure('#listing-results .product-card__add');
-    const suggestions = document.querySelector('.listing-search-box__suggestions');
-    const grid = document.querySelector('#listing-results .product-grid');
-    const columns = grid ? getComputedStyle(grid).gridTemplateColumns.split(/\s+/).length : 0;
+    const suggestions = globalThis.document.querySelector('.listing-search-box__suggestions');
+    const grid = globalThis.document.querySelector('#listing-results .product-grid');
+    const columns = grid
+      ? globalThis.getComputedStyle(grid).gridTemplateColumns.split(/\s+/).length
+      : 0;
     const intersects = Boolean(
       nav && firstAdd && firstAdd.y < nav.y + nav.height && firstAdd.y + firstAdd.height > nav.y,
     );
     return {
       viewport: expectedViewport,
-      documentWidth: document.documentElement.scrollWidth,
-      clientWidth: document.documentElement.clientWidth,
-      horizontalOverflow: document.documentElement.scrollWidth > expectedViewport.width,
+      documentWidth: globalThis.document.documentElement.scrollWidth,
+      clientWidth: globalThis.document.documentElement.clientWidth,
+      horizontalOverflow: globalThis.document.documentElement.scrollWidth > expectedViewport.width,
       searchPanel: measure('.listing-search-box'),
       queryInput: measure('#discovery-search'),
       clearButton: measure('.listing-search-box__clear'),
@@ -161,8 +170,8 @@ async function captureViewport(width, height, screenshotPath) {
     const query = encodeURIComponent('پیراهن');
     await page.goto(`${baseUrl}/products?q=${query}`, { waitUntil: 'domcontentloaded' });
     await waitForResults(page);
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await page.screenshot({ path: screenshotPath, fullPage: false });
+    await page.evaluate(() => globalThis.window.scrollTo(0, 0));
+    await page.screenshot({ path: screenshotPath, fullPage: false, timeout: 15_000 });
     result = await collectMetrics(page, { width, height });
     assertMobileMetrics(result);
   });
@@ -189,9 +198,10 @@ async function inspectQueryFlow() {
 
     await input.press('Enter');
     await page.waitForFunction(
-      () => new URL(window.location.href).searchParams.get('q') === 'پیراهن سنتی',
+      () =>
+        new globalThis.URL(globalThis.window.location.href).searchParams.get('q') === 'پیراهن سنتی',
     );
-    const submitted = new URL(page.url());
+    const submitted = new globalThis.URL(page.url());
     const submittedUrl = page.url();
     flow.queryAfterSubmit = Object.fromEntries(
       ['q', 'sort', 'page', 'size'].map((key) => [key, submitted.searchParams.get(key)]),
@@ -210,17 +220,20 @@ async function inspectQueryFlow() {
     );
     assert.equal(flow.draftAfterClear, '');
     await page.locator('#discovery-search').press('Enter');
-    await page.waitForFunction(() => !new URL(window.location.href).searchParams.has('q'));
+    await page.waitForFunction(
+      () => !new globalThis.URL(globalThis.window.location.href).searchParams.has('q'),
+    );
     flow.urlAfterSubmittingEmptyQuery = page.url();
-    assert.equal(new URL(page.url()).searchParams.get('sort'), 'price_asc');
-    assert.equal(new URL(page.url()).searchParams.get('size'), 'M');
+    assert.equal(new globalThis.URL(page.url()).searchParams.get('sort'), 'price_asc');
+    assert.equal(new globalThis.URL(page.url()).searchParams.get('size'), 'M');
 
     await page.goBack();
     await page.waitForFunction(
-      () => new URL(window.location.href).searchParams.get('q') === 'پیراهن سنتی',
+      () =>
+        new globalThis.URL(globalThis.window.location.href).searchParams.get('q') === 'پیراهن سنتی',
     );
     await page.waitForFunction(
-      () => document.querySelector('#discovery-search')?.value === 'پیراهن سنتی',
+      () => globalThis.document.querySelector('#discovery-search')?.value === 'پیراهن سنتی',
     );
     flow.valueAfterBrowserBack = await page.locator('#discovery-search').inputValue();
     assert.equal(flow.valueAfterBrowserBack, 'پیراهن سنتی');
@@ -232,9 +245,10 @@ async function inspectQueryFlow() {
     await waitForResults(page);
     await page.locator('#discovery-search').fill('پیراهن لینن');
     await page.waitForFunction(
-      () => new URL(window.location.href).searchParams.get('q') === 'پیراهن لینن',
+      () =>
+        new globalThis.URL(globalThis.window.location.href).searchParams.get('q') === 'پیراهن لینن',
     );
-    flow.desktopQueryAfterTyping = new URL(page.url()).searchParams.get('q');
+    flow.desktopQueryAfterTyping = new globalThis.URL(page.url()).searchParams.get('q');
     flow.desktopSubmitButtonVisible = await page.locator('.listing-search-box__submit').isVisible();
     assert.equal(flow.desktopQueryAfterTyping, 'پیراهن لینن');
     assert.equal(flow.desktopSubmitButtonVisible, false);
@@ -245,7 +259,7 @@ async function inspectQueryFlow() {
 async function renderBoard() {
   const boardPath = path.join(packageDir, 'board.html');
   await withBrowserContext({ width: 1920, height: 1360 }, async (context, page) => {
-    await page.goto(pathToFileURL(boardPath).href, { waitUntil: 'load' });
+    await page.goto(pathToFileURL(boardPath).href, { waitUntil: 'domcontentloaded' });
     const annotations = [
       [
         'search-query-form',
@@ -292,7 +306,10 @@ async function renderBoard() {
     await page.locator('#token-list').evaluate((element, html) => {
       element.innerHTML = html;
     }, swatchesHtml);
-    await page.screenshot({ path: path.join(packageDir, '01-Visual-Design-Board.png') });
+    await page.screenshot({
+      path: path.join(packageDir, '01-Visual-Design-Board.png'),
+      timeout: 15_000,
+    });
   });
 }
 

@@ -1,0 +1,159 @@
+{
+  "manifestVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "createdOn": "2026-10-24",
+  "branch": "codex/fix-catalog-sidebar-gsap",
+  "baseCommit": "2d95671f56668f2731dccf2af3a3c6db6fa0e835",
+  "productionChanges": [
+    "apps/web/src/features/catalog/components/listing-discovery.tsx",
+    "apps/web/src/styles/storefront-reference.css",
+    "apps/web/package.json",
+    "bun.lock"
+  ],
+  "files": [
+    {
+      "path": "01-Visual-Design-Board.png",
+      "sizeBytes": 204414,
+      "sha256": "764b3d591d5fd8e68a263600876a9952e2d0c20484b9ab4aaaf1c95387b75214"
+    },
+    {
+      "path": "02-Clean-Reference.png",
+      "sizeBytes": 146401,
+      "sha256": "fd19ab5f220bff5a3b3080c46ffecc87564075f19ddeb6ffe40b2e6ee892014c"
+    },
+    {
+      "path": "03-Clean-Reference-Mobile.png",
+      "sizeBytes": 32300,
+      "sha256": "a2482f6591fb62c3c150ea16ba11a15506c6c5912bb60e6fc0d2f795b9b54d26"
+    },
+    {
+      "path": "asset-registry.json",
+      "sizeBytes": 487,
+      "sha256": "4108ea7c30b952d6214e3c16a2fd9f85a777f715809904ba54bf4508c1170939"
+    },
+    {
+      "path": "authority-map.json",
+      "sizeBytes": 1846,
+      "sha256": "d63b78c5c89f55d01aae326c9eb6c63013d004af81fc1a4ca55b5be08739196e"
+    },
+    {
+      "path": "component-handoff.md",
+      "sizeBytes": 3874,
+      "sha256": "34b04b844c6cfa851463e13c0f7b0140f57e07e962f3243c96b40134903f9025"
+    },
+    {
+      "path": "conflicts.json",
+      "sizeBytes": 2943,
+      "sha256": "d978d40aed8f41a8e087fe5583f4174f5cda362468c8dc308db4ecfc7ccb3b09"
+    },
+    {
+      "path": "coverage-matrix.json",
+      "sizeBytes": 2086,
+      "sha256": "be02bf5018af7706ccf992a96f77002b3cd2a5a3ee02155269062605bf430208"
+    },
+    {
+      "path": "design-spec.json",
+      "sizeBytes": 29930,
+      "sha256": "8501df1bca799a4baa767a660cfb11c5612e2a67af7c83a1cfc758ba127aec81"
+    },
+    {
+      "path": "design-spec.schema.json",
+      "sizeBytes": 22327,
+      "sha256": "ce2e02295feec6ce4c5eb3b2b25b660888e596d760f99fb5263dddc1daf4d04e"
+    },
+    {
+      "path": "design-tokens.json",
+      "sizeBytes": 2569,
+      "sha256": "e329406bb9f167ae04a336b477b1680f4d59963b36f6b843a46e64ca6e44e41a"
+    },
+    {
+      "path": "implementation-plan.md",
+      "sizeBytes": 3612,
+      "sha256": "e7c435b967d659f196d3400552adc8553ac4f16abd6b629eaf2610b45d4ce15b"
+    },
+    {
+      "path": "qa-report.json",
+      "sizeBytes": 1330,
+      "sha256": "6bfa30dcb0a8247d93c39a5ec777e70d5e335d1827f8cc0620b1f68443e06b45"
+    },
+    {
+      "path": "render-measurements.json",
+      "sizeBytes": 26817,
+      "sha256": "ad744ab8454a77939a3452f469d9bc542994d3fb8c817a389f6516e8a40d6573"
+    },
+    {
+      "path": "render-source/board.css",
+      "sizeBytes": 6787,
+      "sha256": "0dd9e9ea94a3535143fa2fe576ebd5b3282072bf878687ebce1b678f557bc4d5"
+    },
+    {
+      "path": "render-source/board.html",
+      "sizeBytes": 4225,
+      "sha256": "f68d3f3ee5d7148156bd28b462fc07099a6275388181e3d4fa99616e57c6e166"
+    },
+    {
+      "path": "render-source/clean-reference-desktop.html",
+      "sizeBytes": 4941,
+      "sha256": "76ef7f6d7cc529c33ad51ad66b578fcacb5444e6e1b38c2b36eed9d6305db1ac"
+    },
+    {
+      "path": "render-source/clean-reference-mobile.html",
+      "sizeBytes": 3775,
+      "sha256": "248378d564a9e268a21e3362b23b982a9d55adc001006b53319be502eb21764b"
+    },
+    {
+      "path": "render-source/clean-reference.css",
+      "sizeBytes": 10871,
+      "sha256": "f6fc8e750c7c4f87eb7a1ff8f44e0d66c04d6c18b9bc2472f94b2a7c9e1eb958"
+    },
+    {
+      "path": "render-source/README.md",
+      "sizeBytes": 2838,
+      "sha256": "689ca4aa5f49d61cf5aa7d9363cfbba80bb03cba06921b744d40badc3d0b79bf"
+    },
+    {
+      "path": "render-source/render-package.mjs",
+      "sizeBytes": 25460,
+      "sha256": "dba6a804fe2042aee9f66fb6ea33dbb1b1009a38c21bc37cdc829c18c201eded"
+    },
+    {
+      "path": "runtime-desktop-closed.png",
+      "sizeBytes": 39037,
+      "sha256": "800c3bfbb84d20e54a888efaf5d7b5502a6c8230787cda95b62df7f3d7d5a47b"
+    },
+    {
+      "path": "runtime-desktop-open.png",
+      "sizeBytes": 55386,
+      "sha256": "fc7881ee92676f441ac33eefb31ba6dd38556d3a2aee390411a55eea21ca07f7"
+    },
+    {
+      "path": "runtime-mobile-open.png",
+      "sizeBytes": 34047,
+      "sha256": "3e20abfbbc245d0cb71fe5433ca868bd52a84d5492d3ef512dabbfcd3ff1e839"
+    },
+    {
+      "path": "runtime-review.json",
+      "sizeBytes": 3049,
+      "sha256": "ac6a6dfb10a83404123835a697c0ed19040db20bb6976b21109906562abd1db0"
+    },
+    {
+      "path": "scene-graph.json",
+      "sizeBytes": 36089,
+      "sha256": "c16ccfd0b1062bdd44b9aa0c66e6ce78b3acfcd5f98e4076bf56017c0eeb8f8f"
+    },
+    {
+      "path": "source-index.json",
+      "sizeBytes": 4725,
+      "sha256": "c6f343f34a999ac5e34fcdbc3b39f011f7d8084cb83cd42a7d42408130ffee79"
+    }
+  ],
+  "verification": {
+    "designSpecSchema": "PASS_AJV_DRAFT_2020_12",
+    "sceneGraphSemantics": "PASS",
+    "referenceDimensions": "1536x1024, 1440x900, 390x844",
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "productionBuild": "PASS_WITH_WARNINGS",
+    "liveRuntimeVisualReview": "PASS_MANUAL_INTERACTION"
+  }
+}

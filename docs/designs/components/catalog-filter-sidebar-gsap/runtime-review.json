@@ -1,0 +1,93 @@
+{
+  "reviewedOn": "2026-10-24",
+  "runtimeUrl": "http://127.0.0.1:5199/products",
+  "viewportChecks": {
+    "desktop": { "width": 1280, "height": 900 },
+    "mobileReference": { "width": 390, "height": 844 },
+    "mobileNarrow": { "width": 360, "height": 800 },
+    "mobileCompact": { "width": 320, "height": 568 }
+  },
+  "desktop": {
+    "open": {
+      "railHidden": false,
+      "x": 883.66,
+      "width": 365.34,
+      "direction": "rtl",
+      "ariaExpanded": "true"
+    },
+    "exitSample": {
+      "railHidden": false,
+      "opacity": 0.0492,
+      "translateXPx": 17.1149,
+      "gridTracks": "17.9531px 1214.14px"
+    },
+    "closed": {
+      "railHidden": true,
+      "ariaExpanded": "false",
+      "resultsWidth": 1248
+    },
+    "reopen": { "railHidden": false, "ariaExpanded": "true" }
+  },
+  "mobile": {
+    "triggerVisible": true,
+    "open": {
+      "x": 16,
+      "y": 44,
+      "width": 358,
+      "height": 756,
+      "modal": "true",
+      "bodyOverflow": "hidden",
+      "triggerExpanded": "true",
+      "overlayColor": "rgba(26, 18, 14, 0.42)",
+      "initialFocus": "بستن فیلترها",
+      "closeTarget": { "width": 44, "height": 44 },
+      "applyTargetHeight": 44,
+      "resetTarget": { "width": 326, "height": 44 }
+    },
+    "focusTrap": {
+      "shiftTabFromCloseWrappedToReset": true,
+      "focusedElementRemainedInsideDialog": true
+    },
+    "closeButtonExitSample": {
+      "dialogMounted": true,
+      "bodyOverflow": "hidden",
+      "overlayOpacity": 0.0967,
+      "translateYPx": 12.6461
+    },
+    "backdropExitSample": {
+      "dialogMounted": true,
+      "bodyOverflow": "hidden",
+      "focusRemainedInsideDialog": true
+    },
+    "dismissals": {
+      "escape": { "hidden": true, "bodyOverflow": "visible", "focusReturned": true },
+      "backdrop": { "hidden": true, "bodyOverflow": "visible", "focusReturned": true },
+      "closeButton": { "hidden": true, "bodyOverflow": "visible", "focusReturned": true },
+      "apply": { "hidden": true, "bodyOverflow": "visible", "focusReturned": true }
+    },
+    "narrowLayout": {
+      "360x800": {
+        "dialog": { "x": 14, "y": 40, "width": 332, "height": 720 },
+        "closeTarget": { "width": 44, "height": 44 },
+        "applyTargetHeight": 44,
+        "resetTargetHeight": 44,
+        "horizontalOverflow": false
+      },
+      "320x568": {
+        "dialog": { "x": 14, "y": 28.41, "width": 292, "height": 511.19 },
+        "closeTarget": { "width": 44, "height": 44 },
+        "applyTargetHeight": 44,
+        "resetTargetHeight": 44,
+        "filterBodyScrollsInternally": true,
+        "horizontalOverflow": false
+      }
+    }
+  },
+  "reducedMotion": {
+    "preference": "reduce",
+    "open": { "hidden": false, "overlayOpacity": 1, "sheetTransform": "none" },
+    "escapeClose": { "hidden": true, "bodyOverflow": "visible", "focusReturned": true }
+  },
+  "runtimeCapture": "runtime-mobile-open.png",
+  "catalogData": "The local product API did not return data; runtime checks cover the dialog and do not assert live catalog results."
+}

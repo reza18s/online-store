@@ -1,0 +1,945 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "design-spec.schema.json",
+  "title": "Catalog filter rail and mobile dialog design contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "componentId",
+    "title",
+    "locale",
+    "direction",
+    "owner",
+    "purpose",
+    "sourceIndex",
+    "authorityDecisions",
+    "layout",
+    "typography",
+    "states",
+    "motion",
+    "tokens",
+    "tokenEvidence",
+    "frames",
+    "nodes",
+    "assets",
+    "sceneGraph",
+    "interactions",
+    "artifactIndex",
+    "qaResult",
+    "preservedBehavior",
+    "implementationContract",
+    "evidence",
+    "limitations"
+  ],
+  "$defs": {
+    "sourceRef": {
+      "type": "string",
+      "pattern": "^S[1-9][0-9]*$"
+    },
+    "evidenceStatus": {
+      "enum": [
+        "SOURCE_DEFINED",
+        "CALCULATED",
+        "MEASURED",
+        "INFERRED",
+        "PROPOSED",
+        "NOT_SPECIFIED",
+        "UNVERIFIED"
+      ]
+    },
+    "qaStatus": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_WARNINGS",
+        "FAIL",
+        "BLOCKED",
+        "UNVERIFIED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "widthPx",
+        "heightPx",
+        "deviceScaleFactor"
+      ],
+      "properties": {
+        "widthPx": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "heightPx": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "deviceScaleFactor": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "artifactStatus": {
+      "enum": [
+        "REQUIRED",
+        "GENERATED",
+        "VERIFIED",
+        "BLOCKED",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "state",
+        "viewport",
+        "evidenceStatus",
+        "sourceRefs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "viewport": {
+          "$ref": "#/$defs/viewport"
+        },
+        "evidenceStatus": {
+          "$ref": "#/$defs/evidenceStatus"
+        },
+        "sourceRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sourceRef"
+          }
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "parentId",
+        "role",
+        "children",
+        "frameIds",
+        "sourceRefs",
+        "tokenRefs",
+        "assetRefs",
+        "interactionRefs",
+        "content"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "parentId": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/id"
+            }
+          ]
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "children": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "frameIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "sourceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sourceRef"
+          }
+        },
+        "tokenRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "assetRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "interactionRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "trigger",
+        "event",
+        "fromState",
+        "toState",
+        "evidenceStatus",
+        "sourceRefs",
+        "motion"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "event": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fromState": {
+          "type": "string",
+          "minLength": 1
+        },
+        "toState": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceStatus": {
+          "$ref": "#/$defs/evidenceStatus"
+        },
+        "sourceRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sourceRef"
+          }
+        },
+        "motion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "engine",
+            "durationMs",
+            "ease",
+            "properties",
+            "valuesEvidenceStatus"
+          ],
+          "properties": {
+            "engine": {
+              "enum": [
+                "GSAP",
+                "none"
+              ]
+            },
+            "durationMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "ease": {
+              "type": "string",
+              "minLength": 1
+            },
+            "properties": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "valuesEvidenceStatus": {
+              "$ref": "#/$defs/evidenceStatus"
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "$schema": {
+      "const": "https://json-schema.org/draft/2020-12/schema"
+    },
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "componentId": {
+      "const": "catalog-filter-sidebar-gsap"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locale": {
+      "const": "fa-IR"
+    },
+    "direction": {
+      "const": "rtl"
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "componentPath",
+        "stylePath",
+        "dependencyPath",
+        "lockPath"
+      ],
+      "properties": {
+        "componentPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stylePath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dependencyPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lockPath": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 20
+    },
+    "sourceIndex": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sourceIds"
+      ],
+      "properties": {
+        "path": {
+          "const": "source-index.json"
+        },
+        "sourceIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sourceRef"
+          }
+        }
+      }
+    },
+    "authorityDecisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "resolvedConflictIds"
+      ],
+      "properties": {
+        "path": {
+          "const": "authority-map.json"
+        },
+        "resolvedConflictIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "layout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "desktop",
+        "mobile"
+      ],
+      "properties": {
+        "desktop": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "viewportWidthPx",
+            "viewportHeightPx",
+            "shellMaxWidthPx",
+            "railMinWidthPx",
+            "railFraction",
+            "resultsFraction",
+            "columnGapPx",
+            "railStickyTopExpression",
+            "railMaxHeightExpression",
+            "railSide"
+          ],
+          "properties": {
+            "viewportWidthPx": {
+              "type": "integer",
+              "minimum": 768
+            },
+            "viewportHeightPx": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "shellMaxWidthPx": {
+              "type": "number",
+              "minimum": 1
+            },
+            "railMinWidthPx": {
+              "type": "number",
+              "minimum": 1
+            },
+            "railFraction": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "resultsFraction": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "columnGapPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "railStickyTopExpression": {
+              "type": "string",
+              "minLength": 1
+            },
+            "railMaxHeightExpression": {
+              "type": "string",
+              "minLength": 1
+            },
+            "railSide": {
+              "const": "right"
+            }
+          }
+        },
+        "mobile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "breakpointMaxWidthPx",
+            "viewportWidthPx",
+            "viewportHeightPx",
+            "dialogWidthPx",
+            "dialogHeightPx",
+            "dialogLeftPx",
+            "dialogTopPx",
+            "dialogCornerRadiusPx",
+            "overlayColor",
+            "dialogAlignment",
+            "closeButtonTargetPx",
+            "resetLinkTargetHeightPx"
+          ],
+          "properties": {
+            "breakpointMaxWidthPx": {
+              "type": "integer",
+              "maximum": 767
+            },
+            "viewportWidthPx": {
+              "type": "integer",
+              "maximum": 767
+            },
+            "viewportHeightPx": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "dialogWidthPx": {
+              "type": "number",
+              "minimum": 1
+            },
+            "dialogHeightPx": {
+              "type": "number",
+              "minimum": 1
+            },
+            "dialogLeftPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "dialogTopPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "dialogCornerRadiusPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "overlayColor": {
+              "type": "string",
+              "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+            },
+            "dialogAlignment": {
+              "const": "center"
+            },
+            "closeButtonTargetPx": {
+              "type": "integer",
+              "minimum": 44
+            },
+            "resetLinkTargetHeightPx": {
+              "type": "integer",
+              "minimum": 44
+            }
+          }
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storefrontStack",
+        "referenceFallbackUsed",
+        "locale",
+        "direction"
+      ],
+      "properties": {
+        "storefrontStack": {
+          "type": "string",
+          "minLength": 1
+        },
+        "referenceFallbackUsed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locale": {
+          "const": "fa-IR"
+        },
+        "direction": {
+          "const": "rtl"
+        }
+      }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "desktop-open",
+          "desktop-closing",
+          "desktop-closed",
+          "mobile-open",
+          "mobile-closing",
+          "mobile-closed",
+          "reduced-motion"
+        ]
+      }
+    },
+    "motion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine",
+        "reactIntegration",
+        "durationsStatus",
+        "desktop",
+        "mobile",
+        "reducedMotion",
+        "lifecycle"
+      ],
+      "properties": {
+        "engine": {
+          "const": "GSAP"
+        },
+        "reactIntegration": {
+          "const": "@gsap/react useGSAP"
+        },
+        "durationsStatus": {
+          "const": "PROPOSED"
+        },
+        "desktop": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "durationMs",
+            "enterEase",
+            "exitEase",
+            "railEnterOffsetXPx",
+            "railExitOffsetXPx",
+            "layoutBehavior"
+          ],
+          "properties": {
+            "durationMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "enterEase": {
+              "type": "string",
+              "minLength": 1
+            },
+            "exitEase": {
+              "type": "string",
+              "minLength": 1
+            },
+            "railEnterOffsetXPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "railExitOffsetXPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "layoutBehavior": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "mobile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "durationMs",
+            "ease",
+            "dialogEnterOffsetYPx",
+            "dialogExitOffsetYPx",
+            "dialogEnterScale",
+            "overlayBehavior"
+          ],
+          "properties": {
+            "durationMs": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            },
+            "ease": {
+              "type": "string",
+              "minLength": 1
+            },
+            "dialogEnterOffsetYPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "dialogExitOffsetYPx": {
+              "type": "number",
+              "minimum": 0
+            },
+            "dialogEnterScale": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1
+            },
+            "overlayBehavior": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "reducedMotion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lifecycle": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "tokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "page",
+        "surface",
+        "surfaceSoft",
+        "ink",
+        "muted",
+        "rosewood",
+        "rosewoodDark",
+        "rosewoodSoft",
+        "line",
+        "shadow",
+        "overlay"
+      ],
+      "properties": {
+        "page": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "surface": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "surfaceSoft": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "ink": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "muted": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "rosewood": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "rosewoodDark": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "rosewoodSoft": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "line": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        },
+        "shadow": {
+          "type": "string",
+          "minLength": 1
+        },
+        "overlay": {
+          "type": "string",
+          "pattern": "^(#[0-9a-fA-F]{3,8}|rgba?\\(.+\\))$"
+        }
+      }
+    },
+    "tokenEvidence": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "value",
+          "evidenceStatus",
+          "sourceRefs"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidenceStatus": {
+            "$ref": "#/$defs/evidenceStatus"
+          },
+          "sourceRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/sourceRef"
+            }
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "$ref": "#/$defs/frame"
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "registryPath"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "registryPath": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "sceneGraph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "file",
+        "frameIds",
+        "nodeIds"
+      ],
+      "properties": {
+        "file": {
+          "const": "scene-graph.json"
+        },
+        "frameIds": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "nodeIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      }
+    },
+    "interactions": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "$ref": "#/$defs/interaction"
+      }
+    },
+    "artifactIndex": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "path",
+          "kind",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/id"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "visual-board",
+              "clean-reference",
+              "clean-mobile-reference",
+              "source-model",
+              "schema",
+              "qa-report",
+              "render-source",
+              "runtime-capture"
+            ]
+          },
+          "status": {
+            "$ref": "#/$defs/artifactStatus"
+          }
+        }
+      }
+    },
+    "qaResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reportPath",
+        "status",
+        "designPackageStatus",
+        "implementationStatus"
+      ],
+      "properties": {
+        "reportPath": {
+          "const": "qa-report.json"
+        },
+        "status": {
+          "$ref": "#/$defs/qaStatus"
+        },
+        "designPackageStatus": {
+          "$ref": "#/$defs/qaStatus"
+        },
+        "implementationStatus": {
+          "$ref": "#/$defs/qaStatus"
+        }
+      }
+    },
+    "preservedBehavior": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "implementationContract": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/sourceRef"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

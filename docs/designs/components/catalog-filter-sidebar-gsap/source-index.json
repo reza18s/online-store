@@ -1,0 +1,134 @@
+{
+  "sourceIndexVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "sources": [
+    {
+      "id": "S1",
+      "kind": "application_source",
+      "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+      "lines": "47-342",
+      "authority": "implementation",
+      "supports": [
+        "desktop and mobile open and mounted state",
+        "GSAP enter and exit lifecycles",
+        "mobile focus containment through exit",
+        "body scroll lock through exit",
+        "focus restoration",
+        "reduced-motion handling",
+        "RTL-safe query behavior ownership"
+      ],
+      "sha256": "0bfe90b13266d1ae88d3b48e20fe6ccd96fb4faa5a53b8482f9efebf73f0df64"
+    },
+    {
+      "id": "S2",
+      "kind": "application_source",
+      "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+      "lines": "502-515, 642-661, 676-785",
+      "authority": "implementation",
+      "supports": [
+        "desktop toggle semantics",
+        "mobile trigger semantics",
+        "desktop rail hierarchy and responsive layout",
+        "RTL-safe results track expansion"
+      ],
+      "sha256": "0bfe90b13266d1ae88d3b48e20fe6ccd96fb4faa5a53b8482f9efebf73f0df64"
+    },
+    {
+      "id": "S3",
+      "kind": "application_source",
+      "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+      "lines": "745-785",
+      "authority": "implementation",
+      "supports": [
+        "mobile dialog semantics",
+        "Escape, backdrop, close, and apply actions"
+      ],
+      "sha256": "0bfe90b13266d1ae88d3b48e20fe6ccd96fb4faa5a53b8482f9efebf73f0df64"
+    },
+    {
+      "id": "S4",
+      "kind": "stylesheet",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "lines": "2978-2985, 3523-3534, 3610-3612, 3675-3684",
+      "authority": "effective_component_styles",
+      "supports": [
+        "RTL right-side rail",
+        "rail sizing",
+        "rail hiding",
+        "closed layout",
+        "mobile breakpoint"
+      ],
+      "sha256": "69f8601835f0692df8195574d40b9ca35bfe2ce2a95375cb460cf538a3ef306a"
+    },
+    {
+      "id": "S5",
+      "kind": "stylesheet",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "lines": "2549-2573, 1042-1045, 1173",
+      "authority": "effective_component_styles",
+      "supports": [
+        "centered mobile dialog geometry",
+        "overlay color",
+        "dialog rows and overflow",
+        "390x844 reference geometry"
+      ],
+      "sha256": "69f8601835f0692df8195574d40b9ca35bfe2ce2a95375cb460cf538a3ef306a"
+    },
+    {
+      "id": "S6",
+      "kind": "stylesheet",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "lines": "4-19, 3523-3532",
+      "authority": "design_tokens",
+      "supports": [
+        "warm page and surface tokens",
+        "rosewood action colors",
+        "line opacity",
+        "rail radius and padding"
+      ],
+      "sha256": "69f8601835f0692df8195574d40b9ca35bfe2ce2a95375cb460cf538a3ef306a"
+    },
+    {
+      "id": "S7",
+      "kind": "application_source",
+      "path": "apps/web/src/styles.css",
+      "lines": "49-52, 59-64, 159-163, 1150-1159",
+      "authority": "base_styles_with_later_overrides",
+      "supports": [
+        "preferred type stack",
+        "document RTL",
+        "1280px shell width",
+        "base listing grid rule superseded by S4"
+      ],
+      "sha256": "bc27bac0bd1b019a9af873be610b2d33b16b23ae1696db048050a54dad590459"
+    },
+    {
+      "id": "S8",
+      "kind": "official_documentation",
+      "url": "https://gsap.com/resources/React/",
+      "retrievedOn": "2026-10-24",
+      "authority": "integration_documentation",
+      "supports": [
+        "useGSAP React integration",
+        "gsap.context lifecycle cleanup",
+        "reduced-motion-capable effect design"
+      ]
+    },
+    {
+      "id": "S9",
+      "kind": "design_contract",
+      "path": "docs/designs/nova-atelier-editorial.md",
+      "lines": "89-92",
+      "authority": "customer_mobile_accessibility_contract",
+      "supports": [
+        "customer mobile controls use at least 44 by 44 CSS-pixel targets",
+        "mobile dialog close controls return focus to the originating trigger"
+      ],
+      "sha256": "a60d4bc66e6c2ebcdeb7464073cc607f8c1330d2c58119038af6a18d08135265"
+    }
+  ],
+  "sourceCoverage": {
+    "sourceBackedValues": "Source paths and current line spans were inspected directly in the task worktree; source hashes are refreshed by the renderer. Customer control targets are governed by S9; the current close and reset rules are corrected to its 44px minimum.",
+    "dynamicValues": "GSAP durations and travel distances are labeled PROPOSED in the canonical specification and board."
+  }
+}

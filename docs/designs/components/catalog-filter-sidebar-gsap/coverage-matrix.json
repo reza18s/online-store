@@ -1,0 +1,68 @@
+{
+  "coverageMatrixVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "criteria": [
+    {
+      "id": "desktop-rtl-side",
+      "criterion": "Rail appears on the right for the Persian RTL listing.",
+      "evidence": [
+        "S4",
+        "design-spec.json#/layout/desktop/railSide",
+        "runtime-review.json#/desktop/open"
+      ],
+      "status": "runtime_verified"
+    },
+    {
+      "id": "desktop-exit",
+      "criterion": "Close animates the rail away while the results track expands, then hides the rail.",
+      "evidence": [
+        "design-spec.json#/motion/desktop",
+        "component-handoff.md#desktop-transition",
+        "runtime-review.json#/desktop/exitSample"
+      ],
+      "status": "runtime_verified"
+    },
+    {
+      "id": "mobile-center",
+      "criterion": "Mobile dialog is centered at the source-defined 358 by 756 geometry for a 390 by 844 viewport.",
+      "evidence": [
+        "S5",
+        "design-spec.json#/layout/mobile",
+        "runtime-review.json#/mobile/open"
+      ],
+      "status": "runtime_verified"
+    },
+    {
+      "id": "mobile-exit-lifecycle",
+      "criterion": "Backdrop, Escape, close, and apply finish the same exit lifecycle while focus containment and scroll lock remain active.",
+      "evidence": [
+        "S1",
+        "S3",
+        "design-spec.json#/motion/lifecycle",
+        "runtime-review.json#/mobile/dismissals"
+      ],
+      "status": "runtime_verified"
+    },
+    {
+      "id": "reduced-motion",
+      "criterion": "Reduced-motion preference skips translation and scaling.",
+      "evidence": [
+        "design-spec.json#/motion/reducedMotion",
+        "component-handoff.md#reduced-motion",
+        "runtime-review.json#/reducedMotion"
+      ],
+      "status": "runtime_verified"
+    },
+    {
+      "id": "filter-contract",
+      "criterion": "Existing URL filters, results actions, and Persian labels remain intact.",
+      "evidence": [
+        "S1",
+        "S2",
+        "S3",
+        "component-handoff.md#preserved-contract"
+      ],
+      "status": "preserved_in_plan"
+    }
+  ]
+}

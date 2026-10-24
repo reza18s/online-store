@@ -26,3 +26,25 @@ Correct both Select controls on `/category/men`: the visible sort control and th
 - Category page styles differ from `.listing-page` rules; selectors must target the category filter wrapper without changing listing behavior.
 - The mobile filter sheet uses a separate overlay cascade; keep its layout and open/close behavior intact.
 - The local products API has previously returned an unavailable error, so UI geometry can be verified independently but live catalog data may remain unverified.
+
+## Follow-up: shared Select keyboard focus
+
+### Finding
+The supplied `/category/men` and `/category/women` screenshots show two visible focus borders around the native sort Select. The shared component adds a four-pixel focus ring while the storefront focus style adds an outline and soft box-shadow.
+
+### Scope and decision
+- Update only `packages/ui/src/select.tsx` focus styling. Keep its native select, props, value, options, dimensions, RTL placement, and query behavior unchanged.
+- Replace the box-shadow focus ring with one two-pixel primary-colored `:focus-visible` outline at a two-pixel offset, and suppress the storefront box-shadow for this control. Keep the primary border on focus.
+- Keep the separate catalog `FilterSelect` board and its radio-based behavior unchanged; it is a different component.
+
+### Acceptance and validation
+- Keyboard focus shows one clear brand-colored outline; pointer focus does not add a second ring.
+- Existing sort values and URL updates still work on men and women category pages.
+- Check `@nova/ui`, web, and admin typechecks/builds, then inspect the affected storefront pages at phone and desktop widths.
+
+### Validation results (2026-10-24)
+- PASS: `@nova/ui`, storefront, and admin typechecks.
+- PASS: Storefront and admin production builds. The storefront build retains existing Vite CJS deprecation and chunk-size warnings.
+- PASS: Browser inspection at 1200 × 900 on `/category/women` and 560 × 874 on `/category/men` and `/products/men`; keyboard focus shows one 2px brand outline with a 2px offset and no extra shadow.
+- PASS: Keyboard sorting on `/products/men` selected `price_asc` and updated the URL to `?sort=price_asc`; the preview was restored to the default route.
+- LIMITATION: The local catalog API is unavailable, so product data remained in its loading/error state during visual inspection.

@@ -25,14 +25,8 @@ const ALL_STAFF_ROLES: AdminStaffRole[] = ['support', 'operations', 'admin'];
 const ADMIN_ONLY: AdminStaffRole[] = ['admin'];
 const OPERATIONS_OR_ADMIN: AdminStaffRole[] = ['operations', 'admin'];
 
-let gsapModulePromise: Promise<typeof import('gsap')> | null = null;
-
-function loadGsapModule(): Promise<typeof import('gsap')> {
-  gsapModulePromise ??= import('gsap').catch((error: unknown) => {
-    gsapModulePromise = null;
-    throw error;
-  });
-  return gsapModulePromise;
+function loadGsapModule() {
+  return import('gsap');
 }
 
 const ADMIN_NAVIGATION_DEFINITIONS: Array<[string, string, IconName, AdminStaffRole[]]> = [

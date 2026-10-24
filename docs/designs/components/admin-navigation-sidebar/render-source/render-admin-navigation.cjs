@@ -1,3 +1,5 @@
+/* global console, document, getComputedStyle, process, URL, window */
+
 const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');

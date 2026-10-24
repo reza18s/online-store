@@ -43,4 +43,10 @@ The earlier plan and desktop reference disagree about which side of the page con
 
 See qa-report.json. Web typecheck and build passed; the build has existing Vite deprecation and chunk-size warnings. Static reference images, image dimensions, the authored schema keywords, and the patch whitespace check passed. No tests were run.
 
-A full third-party JSON Schema validator could not be installed because DNS lookup for the package host failed. The local keyword validator checked the schema structure and the design spec against the keywords used. A live browser review was blocked by the local-file URL policy and remains unverified.
+A full third-party JSON Schema validator could not be installed because DNS lookup for the package host failed. The local keyword validator checked the schema structure and the design spec against the keywords used. During initial board creation, browser review was blocked by the local-file URL policy; the category integration follow-up has since been reviewed through an isolated localhost preview. Populated facet options remain unverified because the local API was unavailable.
+
+## Category page integration extension — 2026-10-24
+
+The board originally isolated the catalog FilterSelect from page composition. The `/category/:audience` page now reuses its variants for the size and color facets, with category-scoped styling that follows the same 52px trigger, 44px list and size targets, 36px size chip, and 58×62px swatch-cell contract. The category sort keeps the shared native Select and its existing URL update behavior; only its page-scoped presentation changes, with a 48px target and RTL chevron. The mobile filter sheet keeps its existing accordion and results action.
+
+Implementation owners: `apps/web/src/features/catalog/components/category-discovery.tsx` and `apps/web/src/styles/storefront-reference.css`. See `docs/refactoring/category-page-select-polish-plan.md` and `qa-report.json` for the extension scope and current validation evidence.

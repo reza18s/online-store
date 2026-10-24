@@ -115,6 +115,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
       />
       <FilterSelect
         label="سایز"
+        appearance="size"
         isLoading={facetsQuery.isPending}
         value={state.size}
         options={sizeOptions}
@@ -122,6 +123,7 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
       />
       <FilterSelect
         label="رنگ"
+        appearance="swatches"
         isLoading={facetsQuery.isPending}
         value={state.color}
         options={colorOptions}
@@ -212,17 +214,22 @@ export function CategoryDiscovery({ props }: { props: StorefrontDiscoveryPagePro
           ) : null}
           <label className="category-sort">
             <span>مرتب‌سازی</span>
-            <UiSelect
-              value={state.sort}
-              onChange={(event) => update({ sort: event.target.value })}
-              aria-label="مرتب‌سازی محصولات"
-            >
-              {sortLabels.map(([value, label]) => (
-                <option value={value} key={value}>
-                  {label}
-                </option>
-              ))}
-            </UiSelect>
+            <span className="category-sort__control">
+              <UiSelect
+                value={state.sort}
+                onChange={(event) => update({ sort: event.target.value })}
+                aria-label="مرتب‌سازی محصولات"
+              >
+                {sortLabels.map(([value, label]) => (
+                  <option value={value} key={value}>
+                    {label}
+                  </option>
+                ))}
+              </UiSelect>
+              <span className="category-sort__chevron" aria-hidden="true">
+                <Icon name="chevron-down" size={15} />
+              </span>
+            </span>
           </label>
           <div className="category-toolbar__desktop-filters">{renderFilters(true)}</div>
         </div>

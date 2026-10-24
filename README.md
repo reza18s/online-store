@@ -140,20 +140,18 @@ bun run test:e2e:browser
 
 تست‌های live مانند PostgreSQL/Redis/MinIO، browser authenticated flow، provider sandbox و backup/restore فقط وقتی معتبرند که dependencyهای مربوطه واقعاً در حال اجرا باشند.
 
-## وضعیت baseline فعلی
+## وضعیت پروژه — 2026-10-24
 
-در baseline آماده‌شده:
+خلاصه‌ی وضعیت implementation، شواهد CI و gateهای انتشار در
+[docs/project-status.md](docs/project-status.md) نگهداری می‌شود.
 
-- bun run typecheck موفق است.
-- bun run lint موفق است.
-- bun run test موفق است؛ ۴۷۴ تست pass و یک تست اختیاری MinIO skip شده است.
-- bun run test:local-providers با 56/56 موفق است.
-- bun run build موفق است؛ اجرای build در محیط sandbox به مجوز خارج از sandbox برای esbuild نیاز داشت.
-- bun run docker:config موفق است.
-- bun run format:check هنوز به‌دلیل debt formatting موجود در چندین فایل fail می‌شود؛ برای جلوگیری از formatting churn گسترده، formatter سراسری اجرا نشده است.
+آخرین اجرای CI روی `main` در commit `aac8b5f` با run **#112** موفق بوده است؛ این
+اجرا شامل typecheck، lint، workflow formatting، تست‌ها، integration، build و
+اعتبارسنجی Compose است. سبز بودن CI به‌تنهایی به معنی بسته‌شدن Demo یا Production
+Release Gate نیست.
 
-اگر Docker Desktop Linux engine در دسترس نباشد، تست‌های database-backed، worker runtime، authenticated browser و media live قابل اعتبارسنجی نیستند. ابتدا Docker را اجرا کنید و سپس bun run dev:api:local را دوباره اجرا کنید.
-
+آخرین گزارش تفصیلی runtime محلی در [plan.md](plan.md) مربوط به **2026-09-19**
+است. تعداد تست‌ها و شواهد آن گزارش تاریخی‌اند و نباید baseline فعلی تلقی شوند.
 ## مسیر اجرای کار
 
 ترتیب کار از plan.md:

@@ -1,0 +1,105 @@
+{
+  "componentId": "admin-navigation-sidebar",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "tokens": {
+    "page": {
+      "value": "#f5f1eb",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "surface": {
+      "value": "#fffdf9",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "surfaceSoft": {
+      "value": "#faf6f0",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "ink": {
+      "value": "#1a1715",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "muted": {
+      "value": "#756c65",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "line": {
+      "value": "rgba(64, 50, 41, 0.12)",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "charcoal": {
+      "value": "#1c1c1d",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "charcoalRaised": {
+      "value": "#252526",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "wine": {
+      "value": "#7d1f2d",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "wineDark": {
+      "value": "#5f151f",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "wineSoft": {
+      "value": "#f2e4e3",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "overlay": {
+      "value": "rgb(16 16 17 / 44%)",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    "bodyFont": {
+      "value": "Vazirmatn, Tahoma, sans-serif",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S3"
+      ]
+    },
+    "displayFont": {
+      "value": "Estedad, Vazirmatn, Tahoma, sans-serif",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S3"
+      ]
+    }
+  }
+}

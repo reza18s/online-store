@@ -1,0 +1,8 @@
+{
+  "componentId": "admin-navigation-sidebar",
+  "assets": [],
+  "notes": [
+    "No external or generated images are required for the board.",
+    "The clean reference uses an illustrative initial badge; production retains the existing admin profile image."
+  ]
+}

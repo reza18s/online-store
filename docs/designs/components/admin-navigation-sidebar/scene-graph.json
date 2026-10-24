@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "1.0.0",
+  "componentId": "admin-navigation-sidebar",
+  "coordinateSystem": "CSS pixels; top-left origin; physical X increases right",
+  "frameIds": [
+    "desktop-expanded",
+    "tablet-compact",
+    "phone-closed",
+    "phone-open"
+  ],
+  "nodeIds": [
+    "desktop-shell",
+    "desktop-sidebar",
+    "desktop-content",
+    "tablet-shell",
+    "tablet-sidebar",
+    "tablet-content",
+    "phone-shell",
+    "phone-header",
+    "phone-menu-trigger",
+    "phone-bottom-navigation",
+    "phone-overlay",
+    "phone-drawer",
+    "phone-drawer-header"
+  ],
+  "hierarchy": [
+    {
+      "id": "desktop-shell",
+      "parentId": null,
+      "children": [
+        "desktop-sidebar",
+        "desktop-content"
+      ]
+    },
+    {
+      "id": "desktop-sidebar",
+      "parentId": "desktop-shell",
+      "children": []
+    },
+    {
+      "id": "desktop-content",
+      "parentId": "desktop-shell",
+      "children": []
+    },
+    {
+      "id": "tablet-shell",
+      "parentId": null,
+      "children": [
+        "tablet-sidebar",
+        "tablet-content"
+      ]
+    },
+    {
+      "id": "tablet-sidebar",
+      "parentId": "tablet-shell",
+      "children": []
+    },
+    {
+      "id": "tablet-content",
+      "parentId": "tablet-shell",
+      "children": []
+    },
+    {
+      "id": "phone-shell",
+      "parentId": null,
+      "children": [
+        "phone-header",
+        "phone-bottom-navigation"
+      ]
+    },
+    {
+      "id": "phone-header",
+      "parentId": "phone-shell",
+      "children": [
+        "phone-menu-trigger"
+      ]
+    },
+    {
+      "id": "phone-menu-trigger",
+      "parentId": "phone-header",
+      "children": []
+    },
+    {
+      "id": "phone-bottom-navigation",
+      "parentId": "phone-shell",
+      "children": []
+    },
+    {
+      "id": "phone-overlay",
+      "parentId": null,
+      "children": [
+        "phone-drawer"
+      ]
+    },
+    {
+      "id": "phone-drawer",
+      "parentId": "phone-overlay",
+      "children": [
+        "phone-drawer-header"
+      ]
+    },
+    {
+      "id": "phone-drawer-header",
+      "parentId": "phone-drawer",
+      "children": []
+    }
+  ]
+}

@@ -1,0 +1,1000 @@
+{
+  "schemaVersion": "1.0.0",
+  "componentId": "admin-navigation-sidebar",
+  "title": "NOVA admin navigation rail and phone drawer",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "owner": {
+    "componentPath": "apps/admin/src/app/layouts/AdminWorkspaceLayout.tsx",
+    "stylePath": "apps/admin/src/styles/admin-reference.css",
+    "dependencyPath": "apps/admin/package.json",
+    "lockPath": "bun.lock"
+  },
+  "purpose": "Give staff clear access to permitted admin destinations across desktop, tablet, and phone while preserving existing routes, role rules, and quick navigation.",
+  "sourceIndex": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9",
+    "S10",
+    "S11",
+    "S12",
+    "S13"
+  ],
+  "authorityDecisions": [
+    {
+      "property": "appearance.palette",
+      "selected": "Current target-specific admin reference palette: warm neutral canvas, charcoal rail, oxblood active state.",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ],
+      "rationale": "The active admin target stylesheet is more specific than older architecture-level descriptions."
+    },
+    {
+      "property": "layout.desktop.railSide",
+      "selected": "right",
+      "evidenceStatus": "INFERRED",
+      "sourceRefs": [
+        "S1",
+        "S2",
+        "S11"
+      ],
+      "rationale": "The app and navigation are Persian RTL; the rail border marks its content-facing left edge."
+    },
+    {
+      "property": "layout.tablet.railWidth",
+      "selected": "72px",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S3"
+      ],
+      "rationale": "The shared admin responsive rule already defines a 72px icon rail through 1024px."
+    },
+    {
+      "property": "layout.phone.breakpoint",
+      "selected": "max-width: 767px",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2",
+        "S3"
+      ],
+      "rationale": "The target-specific reference stylesheet changes to the phone shell below 768px."
+    },
+    {
+      "property": "layout.phone.drawerWidth",
+      "selected": "min(320px, calc(100vw - 32px))",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "rationale": "No staff drawer width exists; the cap keeps Persian labels readable and leaves a visible margin."
+    },
+    {
+      "property": "interaction.phone.motion",
+      "selected": "GSAP side-panel enter and exit; immediate final states for reduced motion.",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S9",
+        "S10",
+        "S12"
+      ],
+      "rationale": "Use the existing GSAP dependency version and React cleanup pattern."
+    }
+  ],
+  "layout": {
+    "desktop": {
+      "viewport": {
+        "widthPx": 1440,
+        "heightPx": 900
+      },
+      "railWidthPx": 194,
+      "railSide": "right",
+      "railPosition": "sticky",
+      "railHeightExpression": "100svh",
+      "navRowMinHeightPx": 46
+    },
+    "tablet": {
+      "viewport": {
+        "widthPx": 1024,
+        "heightPx": 768
+      },
+      "breakpointMinWidthPx": 768,
+      "breakpointMaxWidthPx": 1024,
+      "railWidthPx": 72,
+      "railSide": "right",
+      "labels": "Visually hidden; aria-label and title retained.",
+      "navTargetMinHeightPx": 44
+    },
+    "phone": {
+      "breakpointMaxWidthPx": 767,
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844
+      },
+      "headerHeightPx": 64,
+      "drawerWidthExpression": "min(320px, calc(100vw - 32px))",
+      "drawerSide": "right",
+      "drawerHeightExpression": "100dvh",
+      "bottomNavigationMinHeightPx": 66,
+      "minimumControlTargetPx": 44
+    },
+    "narrowPhone": {
+      "viewport": {
+        "widthPx": 320,
+        "heightPx": 568
+      },
+      "drawerWidthPx": 288,
+      "drawerOutsideMarginPx": 16
+    }
+  },
+  "typography": {
+    "bodyFontStack": "Vazirmatn, Tahoma, sans-serif",
+    "displayFontStack": "Estedad, Vazirmatn, Tahoma, sans-serif",
+    "locale": "fa-IR",
+    "direction": "rtl",
+    "navigationFontSizePx": 12,
+    "navigationWeight": 500
+  },
+  "states": [
+    "desktop-expanded",
+    "tablet-compact",
+    "phone-closed",
+    "phone-opening",
+    "phone-open",
+    "phone-closing",
+    "reduced-motion"
+  ],
+  "motion": {
+    "engine": "GSAP",
+    "reactIntegration": "GSAP is loaded on menu interaction; useEffect cleanup releases the modal and scroll lock.",
+    "durationsStatus": "SOURCE_DEFINED",
+    "openDurationMs": 260,
+    "closeDurationMs": 220,
+    "openEase": "power2.out",
+    "closeEase": "power2.in",
+    "backdropTargetOpacity": 0.48,
+    "linkStaggerMs": 18,
+    "reducedMotion": "Set final states immediately without translation, opacity fade, or stagger.",
+    "lifecycle": "Keep the dialog modal and body scroll locked through exit; close and restore focus before route navigation.",
+    "panelEnterOffsetXPercent": 100,
+    "panelExitOffsetXPercent": 100
+  },
+  "tokens": {
+    "page": "#f5f1eb",
+    "surface": "#fffdf9",
+    "surfaceSoft": "#faf6f0",
+    "ink": "#1a1715",
+    "muted": "#756c65",
+    "line": "rgba(64, 50, 41, 0.12)",
+    "charcoal": "#1c1c1d",
+    "charcoalRaised": "#252526",
+    "wine": "#7d1f2d",
+    "wineDark": "#5f151f",
+    "wineSoft": "#f2e4e3",
+    "overlay": "rgb(16 16 17 / 44%)",
+    "sidebarText": "#f7f1eb"
+  },
+  "tokenEvidence": [
+    {
+      "name": "page",
+      "value": "#f5f1eb",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "surface",
+      "value": "#fffdf9",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "surfaceSoft",
+      "value": "#faf6f0",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "ink",
+      "value": "#1a1715",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "muted",
+      "value": "#756c65",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "line",
+      "value": "rgba(64, 50, 41, 0.12)",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "charcoal",
+      "value": "#1c1c1d",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "wine",
+      "value": "#7d1f2d",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ]
+    },
+    {
+      "name": "overlay",
+      "value": "rgb(16 16 17 / 44%)",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": []
+    }
+  ],
+  "frames": [
+    {
+      "id": "desktop-expanded",
+      "state": "desktop-expanded",
+      "viewport": {
+        "widthPx": 1440,
+        "heightPx": 900,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "VERIFIED",
+      "sourceRefs": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "nodes": [
+        {
+          "nodeId": "desktop-shell",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 900
+          },
+          "evidenceStatus": "SOURCE_DEFINED",
+          "sourceRefs": [
+            "S2"
+          ]
+        },
+        {
+          "nodeId": "desktop-sidebar",
+          "rect": {
+            "x": 1246,
+            "y": 0,
+            "width": 194,
+            "height": 900
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S2",
+            "S3"
+          ]
+        },
+        {
+          "nodeId": "desktop-content",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1246,
+            "height": 955
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tablet-compact",
+      "state": "tablet-compact",
+      "viewport": {
+        "widthPx": 1024,
+        "heightPx": 768,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "VERIFIED",
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "nodes": [
+        {
+          "nodeId": "tablet-shell",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 1024,
+            "height": 768
+          },
+          "evidenceStatus": "SOURCE_DEFINED",
+          "sourceRefs": [
+            "S3"
+          ]
+        },
+        {
+          "nodeId": "tablet-sidebar",
+          "rect": {
+            "x": 952,
+            "y": 0,
+            "width": 72,
+            "height": 768
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S3"
+          ]
+        },
+        {
+          "nodeId": "tablet-content",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 952,
+            "height": 823
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S3"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phone-closed",
+      "state": "phone-closed",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "VERIFIED",
+      "sourceRefs": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "nodes": [
+        {
+          "nodeId": "phone-shell",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 844
+          },
+          "evidenceStatus": "SOURCE_DEFINED",
+          "sourceRefs": [
+            "S2"
+          ]
+        },
+        {
+          "nodeId": "phone-header",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 64
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S2"
+          ]
+        },
+        {
+          "nodeId": "phone-menu-trigger",
+          "rect": {
+            "x": 336,
+            "y": 9.5,
+            "width": 44,
+            "height": 44
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S2"
+          ]
+        },
+        {
+          "nodeId": "phone-bottom-navigation",
+          "rect": {
+            "x": 0,
+            "y": 776,
+            "width": 390,
+            "height": 68
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phone-open",
+      "state": "phone-open",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "VERIFIED",
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "nodes": [
+        {
+          "nodeId": "phone-overlay",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 844
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": []
+        },
+        {
+          "nodeId": "phone-drawer",
+          "rect": {
+            "x": 46.8,
+            "y": 0,
+            "width": 343.2,
+            "height": 844
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S2"
+          ]
+        },
+        {
+          "nodeId": "phone-drawer-header",
+          "rect": {
+            "x": 62.8,
+            "y": 14,
+            "width": 311.2,
+            "height": 48
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "phone-open-320",
+      "state": "phone-open",
+      "viewport": {
+        "widthPx": 320,
+        "heightPx": 568,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "VERIFIED",
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "nodes": [
+        {
+          "nodeId": "phone-overlay",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 320,
+            "height": 568
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": []
+        },
+        {
+          "nodeId": "phone-drawer",
+          "rect": {
+            "x": 38.4,
+            "y": 0,
+            "width": 281.6,
+            "height": 568
+          },
+          "evidenceStatus": "MEASURED",
+          "sourceRefs": [
+            "S1",
+            "S2"
+          ]
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "desktop-shell",
+      "parentId": null,
+      "role": "application",
+      "children": [
+        "desktop-sidebar",
+        "desktop-content"
+      ],
+      "frameIds": [
+        "desktop-expanded"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "tokenRefs": [
+        "page"
+      ]
+    },
+    {
+      "id": "desktop-sidebar",
+      "parentId": "desktop-shell",
+      "role": "navigation",
+      "children": [],
+      "frameIds": [
+        "desktop-expanded"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "tokenRefs": [
+        "charcoal",
+        "sidebarText",
+        "wine"
+      ]
+    },
+    {
+      "id": "desktop-content",
+      "parentId": "desktop-shell",
+      "role": "main",
+      "children": [],
+      "frameIds": [
+        "desktop-expanded"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "tokenRefs": [
+        "page",
+        "surface"
+      ]
+    },
+    {
+      "id": "tablet-shell",
+      "parentId": null,
+      "role": "application",
+      "children": [
+        "tablet-sidebar",
+        "tablet-content"
+      ],
+      "frameIds": [
+        "tablet-compact"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "tokenRefs": [
+        "page"
+      ]
+    },
+    {
+      "id": "tablet-sidebar",
+      "parentId": "tablet-shell",
+      "role": "navigation",
+      "children": [],
+      "frameIds": [
+        "tablet-compact"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "tokenRefs": [
+        "charcoal",
+        "sidebarText",
+        "wine"
+      ]
+    },
+    {
+      "id": "tablet-content",
+      "parentId": "tablet-shell",
+      "role": "main",
+      "children": [],
+      "frameIds": [
+        "tablet-compact"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "tokenRefs": [
+        "page",
+        "surface"
+      ]
+    },
+    {
+      "id": "phone-shell",
+      "parentId": null,
+      "role": "application",
+      "children": [
+        "phone-header",
+        "phone-bottom-navigation"
+      ],
+      "frameIds": [
+        "phone-closed",
+        "phone-open"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "tokenRefs": [
+        "page"
+      ]
+    },
+    {
+      "id": "phone-header",
+      "parentId": "phone-shell",
+      "role": "banner",
+      "children": [
+        "phone-menu-trigger"
+      ],
+      "frameIds": [
+        "phone-closed",
+        "phone-open"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "tokenRefs": [
+        "surface",
+        "line"
+      ]
+    },
+    {
+      "id": "phone-menu-trigger",
+      "parentId": "phone-header",
+      "role": "button",
+      "children": [],
+      "frameIds": [
+        "phone-closed"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S6"
+      ],
+      "tokenRefs": [
+        "ink"
+      ]
+    },
+    {
+      "id": "phone-bottom-navigation",
+      "parentId": "phone-shell",
+      "role": "navigation",
+      "children": [],
+      "frameIds": [
+        "phone-closed",
+        "phone-open"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "tokenRefs": [
+        "surface",
+        "muted",
+        "wine"
+      ]
+    },
+    {
+      "id": "phone-overlay",
+      "parentId": null,
+      "role": "dialog-backdrop",
+      "children": [
+        "phone-drawer"
+      ],
+      "frameIds": [
+        "phone-open",
+        "phone-open-320"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "tokenRefs": [
+        "overlay"
+      ]
+    },
+    {
+      "id": "phone-drawer",
+      "parentId": "phone-overlay",
+      "role": "dialog",
+      "children": [
+        "phone-drawer-header"
+      ],
+      "frameIds": [
+        "phone-open",
+        "phone-open-320"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "tokenRefs": [
+        "charcoal",
+        "sidebarText",
+        "wine"
+      ]
+    },
+    {
+      "id": "phone-drawer-header",
+      "parentId": "phone-drawer",
+      "role": "header",
+      "children": [],
+      "frameIds": [
+        "phone-open"
+      ],
+      "sourceRefs": [
+        "S1",
+        "S2",
+        "S7"
+      ],
+      "tokenRefs": [
+        "charcoal",
+        "sidebarText"
+      ]
+    }
+  ],
+  "assets": [],
+  "interactions": [
+    {
+      "id": "open-phone-menu",
+      "trigger": "Activate the phone menu button.",
+      "result": "Show full role-filtered native modal dialog and animate from the physical right edge with GSAP.",
+      "sourceRefs": [
+        "S1",
+        "S9",
+        "S10"
+      ],
+      "evidenceStatus": "PROPOSED"
+    },
+    {
+      "id": "close-phone-menu-button",
+      "trigger": "Activate the close button.",
+      "result": "Animate out, close the dialog, unlock body scroll, and return focus to the menu button.",
+      "sourceRefs": [
+        "S1",
+        "S12"
+      ],
+      "evidenceStatus": "PROPOSED"
+    },
+    {
+      "id": "close-phone-menu-backdrop",
+      "trigger": "Activate outside the drawer.",
+      "result": "Run the same close sequence while modal focus remains contained.",
+      "sourceRefs": [
+        "S1",
+        "S12"
+      ],
+      "evidenceStatus": "PROPOSED"
+    },
+    {
+      "id": "close-phone-menu-escape",
+      "trigger": "Press Escape while open.",
+      "result": "Prevent immediate native dismissal, animate out, close, and restore focus.",
+      "sourceRefs": [
+        "S1",
+        "S12"
+      ],
+      "evidenceStatus": "PROPOSED"
+    },
+    {
+      "id": "navigate-from-phone-menu",
+      "trigger": "Activate a permitted destination.",
+      "result": "Finish closing, then use navigateToRoute with the existing href.",
+      "sourceRefs": [
+        "S1",
+        "S5"
+      ],
+      "evidenceStatus": "PROPOSED"
+    }
+  ],
+  "sceneGraph": {
+    "path": "scene-graph.json",
+    "frameIds": [
+      "desktop-expanded",
+      "tablet-compact",
+      "phone-closed",
+      "phone-open",
+      "phone-open-320"
+    ],
+    "nodeIds": [
+      "desktop-shell",
+      "desktop-sidebar",
+      "desktop-content",
+      "tablet-shell",
+      "tablet-sidebar",
+      "tablet-content",
+      "phone-shell",
+      "phone-header",
+      "phone-menu-trigger",
+      "phone-bottom-navigation",
+      "phone-overlay",
+      "phone-drawer",
+      "phone-drawer-header"
+    ],
+    "coordinateSystem": "CSS pixels; top-left origin; physical X increases right"
+  },
+  "artifactIndex": [
+    {
+      "path": "01-Visual-Design-Board.png",
+      "kind": "board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "02-Clean-Reference.png",
+      "kind": "desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "03-Clean-Reference-Mobile.png",
+      "kind": "mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "design-spec.json",
+      "kind": "canonical-model",
+      "status": "GENERATED"
+    },
+    {
+      "path": "scene-graph.json",
+      "kind": "scene-graph",
+      "status": "GENERATED"
+    },
+    {
+      "path": "render-source",
+      "kind": "renderer-source",
+      "status": "GENERATED"
+    },
+    {
+      "path": "renders/qa-report.json",
+      "kind": "runtime-qa-report",
+      "status": "GENERATED"
+    }
+  ],
+  "qaResult": {
+    "status": "PASS_WITH_LIMITATIONS",
+    "checks": [
+      {
+        "id": "source-coverage",
+        "status": "PASS",
+        "method": "Manual source-to-model review.",
+        "evidence": "Role rules, RTL shell, breakpoints, icons, route helper, and admin reference tokens were traced to their source owners."
+      },
+      {
+        "id": "schema-validation",
+        "status": "PASS",
+        "method": "Ajv Draft 2020-12 validation.",
+        "evidence": "Canonical design spec validated before rendering."
+      },
+      {
+        "id": "scene-graph-integrity",
+        "status": "PASS",
+        "method": "ID and reference validation.",
+        "evidence": "Scene IDs are unique and parent, child, frame references resolve."
+      },
+      {
+        "id": "responsive-rendering",
+        "status": "PASS",
+        "method": "Playwright local runtime capture and visual review.",
+        "evidence": "1440, 1024, 768, 390 and 320px layouts; no page errors or horizontal overflow."
+      },
+      {
+        "id": "drawer-interactions",
+        "status": "PASS",
+        "method": "Live browser interactions.",
+        "evidence": "Escape, close button, backdrop, and resize to tablet all dismiss the modal, restore body scroll, and return focus where applicable."
+      },
+      {
+        "id": "narrow-drawer-scroll",
+        "status": "PASS",
+        "method": "Live browser scroll measurement.",
+        "evidence": "At 320px, the drawer scrolls vertically and its final permitted destination can be brought fully into view."
+      },
+      {
+        "id": "role-filtering",
+        "status": "PASS",
+        "method": "Live browser role previews.",
+        "evidence": "Support sees four allowed sections; operations sees six allowed sections; neither role receives admin-only links and both logos return to catalog."
+      },
+      {
+        "id": "route-selection",
+        "status": "PASS",
+        "method": "Live browser navigation.",
+        "evidence": "Selecting an allowed drawer destination completes one existing route-helper navigation after the drawer closes, restores scroll, and marks the new route active."
+      },
+      {
+        "id": "reduced-motion",
+        "status": "PASS",
+        "method": "Playwright reduced-motion emulation.",
+        "evidence": "Modal opens and closes immediately with reduced motion enabled."
+      },
+      {
+        "id": "keyboard-focus",
+        "status": "PASS",
+        "method": "Native modal keyboard behavior and focus measurement.",
+        "evidence": "Tab and Shift+Tab remain within the modal; Escape returns focus to the menu trigger."
+      }
+    ]
+  },
+  "preservedBehavior": [
+    "Existing admin routes and navigateToRoute behavior.",
+    "Existing support, operations, and admin role filtering.",
+    "Existing role-filtered mobile quick navigation.",
+    "Existing admin logout flow.",
+    "RTL page content and current Atelier Editorial admin styling."
+  ],
+  "implementationContract": [
+    "Build full navigation views from getAdminWorkspaceNavigation; do not duplicate permission lists.",
+    "Expose active links with aria-current=page and keep visible active styling.",
+    "Keep dashboard shortcuts admin-only; route brand links to a section allowed for the current role.",
+    "Keep compact tablet item names available through aria-label and title.",
+    "Keep dialog modality, focus containment, and scroll lock active through exit.",
+    "When reduced motion is requested, render final states without animated offsets, fades, or stagger."
+  ],
+  "evidence": {
+    "sourceRevision": "aac8b5f9e7aa3c62ac83e1ebcfa3a9d9297e0910",
+    "baselineViewports": [
+      "1440x900",
+      "1024x768",
+      "768x900",
+      "390x844",
+      "320x568"
+    ],
+    "baselineObserved": [
+      "Desktop sidebar x=0 and width=194px on physical left.",
+      "Phone sidebar hidden; mobile header height=120px.",
+      "Support phone quick nav has two links while the dashboard header shortcut remains visible."
+    ],
+    "runtimeVerification": "PASS after implementation: Playwright captured 1440, 1024, 768, 390, and 320px layouts; exercised route selection, role filtering, modal close paths, focus containment, scroll restoration, resize dismissal, and reduced motion. See renders/qa-report.json."
+  },
+  "limitations": [
+    "The live shell uses its neutral unavailable-route page to avoid unrelated dashboard data dependencies."
+  ]
+}

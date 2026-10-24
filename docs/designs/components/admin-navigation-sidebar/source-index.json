@@ -1,0 +1,136 @@
+{
+  "componentId": "admin-navigation-sidebar",
+  "sourceRevision": "aac8b5f9e7aa3c62ac83e1ebcfa3a9d9297e0910",
+  "sources": [
+    {
+      "id": "S1",
+      "path": "apps/admin/src/app/layouts/AdminWorkspaceLayout.tsx",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "25-80",
+        "83-208"
+      ],
+      "relevance": "Role-filtered navigation definitions and authenticated workspace shell."
+    },
+    {
+      "id": "S2",
+      "path": "apps/admin/src/styles/admin-reference.css",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "4-52",
+        "64-112",
+        "135-165",
+        "1538-1611"
+      ],
+      "relevance": "Current admin reference palette, rail dimensions, phone breakpoint, and page spacing."
+    },
+    {
+      "id": "S3",
+      "path": "apps/admin/src/styles.css",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "2646-2728",
+        "3387-3410",
+        "3831-3895"
+      ],
+      "relevance": "Base RTL shell, compact rail, phone hiding, and fixed bottom navigation."
+    },
+    {
+      "id": "S4",
+      "path": "apps/admin/src/app/routes/AdminRouter.tsx",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "28-55"
+      ],
+      "relevance": "Authenticated role data passed to the workspace layout."
+    },
+    {
+      "id": "S5",
+      "path": "apps/admin/src/app/routing/navigate-to-route.ts",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "1-12"
+      ],
+      "relevance": "Existing client-side route transition."
+    },
+    {
+      "id": "S6",
+      "path": "apps/admin/src/shared/ui/icon.tsx",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "3-18",
+        "75-85",
+        "144-148"
+      ],
+      "relevance": "Existing menu, close, and navigation icon names."
+    },
+    {
+      "id": "S7",
+      "path": "apps/admin/src/shared/ui/logo.tsx",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "1-11"
+      ],
+      "relevance": "NOVA brand link and accessible label."
+    },
+    {
+      "id": "S8",
+      "path": "apps/admin/src/features/auth/components/AdminLogoutButton.tsx",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "1-44"
+      ],
+      "relevance": "Existing logout action for the drawer footer."
+    },
+    {
+      "id": "S9",
+      "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "1-4",
+        "45-46",
+        "254-280"
+      ],
+      "relevance": "Existing GSAP React integration pattern."
+    },
+    {
+      "id": "S10",
+      "path": "apps/web/package.json",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "13-19"
+      ],
+      "relevance": "Existing GSAP dependency version."
+    },
+    {
+      "id": "S11",
+      "path": "arch.md",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "20-36",
+        "119-145"
+      ],
+      "relevance": "Admin app boundary, staff journey, and fixed roles."
+    },
+    {
+      "id": "S12",
+      "path": "docs/designs/components/catalog-filter-sidebar-gsap/design-spec.json",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "57-79"
+      ],
+      "relevance": "Existing GSAP drawer lifecycle and reduced-motion guidance."
+    },
+    {
+      "id": "S13",
+      "path": "docs/designs/nova-atelier-editorial.md",
+      "revision": "aac8b5f9",
+      "anchors": [
+        "19-22",
+        "65-67",
+        "79-91"
+      ],
+      "relevance": "RTL, admin function-first design, and accessibility guidance."
+    }
+  ]
+}

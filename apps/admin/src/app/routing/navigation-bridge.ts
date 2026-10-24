@@ -22,6 +22,7 @@ export function AdminNavigationBridge(): null {
       if (
         !anchor ||
         !href ||
+        anchor.hasAttribute('data-manual-navigation') ||
         !isAdminRoute(href) ||
         anchor.target === '_blank' ||
         anchor.hasAttribute('download')

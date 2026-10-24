@@ -1,0 +1,46 @@
+{
+  "componentId": "catalog-filter-select",
+  "orderedSources": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S8",
+    "S9",
+    "S10"
+  ],
+  "rules": [
+    {
+      "property": "interaction-contract",
+      "winner": "S1",
+      "reason": "The current component source defines the value shape, native radio semantics, and state transitions."
+    },
+    {
+      "property": "facet-query-integration",
+      "winner": "S2",
+      "reason": "The listing composition passes scalar values into the existing query update flow."
+    },
+    {
+      "property": "effective-geometry-and-style",
+      "winner": "S3",
+      "reason": "Use the last matching listing-scoped CSS declarations after resolving the cascade."
+    },
+    {
+      "property": "palette-shape-and-pointer-targets",
+      "winner": "S4",
+      "reason": "Atelier Section 18 is the canonical design source for refreshed palette, corners, type range, and minimum target."
+    },
+    {
+      "property": "component-and-responsive-intent",
+      "winner": "S5",
+      "reason": "The target-specific plan establishes the size/color variants and reference viewports."
+    },
+    {
+      "property": "composition",
+      "winner": "S8",
+      "reason": "Use only as a visual reference; do not treat its sample catalog as live data."
+    }
+  ],
+  "implementationBoundary": "Update only the listing-scoped FilterSelect styles. Leave query logic, component API, category-page styles, admin controls, and panel placement unchanged."
+}

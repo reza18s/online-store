@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FilterSelect — clean mobile reference</title><link rel="stylesheet" href="select.css"><link rel="stylesheet" href="clean-reference.css"><style>
+*{box-sizing:border-box}
+html,body{width:390px!important;height:844px!important;min-width:0!important;overflow:hidden!important}
+body{background:#ece7e3!important}
+.mobile-ref{width:390px!important;height:844px!important;position:relative!important;overflow:hidden!important;background:#ece7e3!important}
+.mobile-ref .clean-header{display:none!important}
+.mobile-ref .behind-header{position:absolute;inset:0 0 auto;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;color:#4c4541;font-size:12px}
+.mobile-ref .behind-grid{position:absolute;inset:70px 14px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;opacity:.38}
+.mobile-ref .behind-card{border-radius:12px;background:linear-gradient(145deg,#d4cbc3,#f8f4ef)}
+.mobile-ref .scrim{position:absolute;inset:0;background:rgb(48 43 41 / 42%)}
+.mobile-ref .clean-stage{display:block;height:auto}
+.mobile-ref .filter-rail{position:absolute;top:44px;left:16px;right:auto;width:358px;height:756px;min-height:0;border-radius:17px;padding:18px 16px 14px;display:flex;flex-direction:column}
+.mobile-ref .rail-heading{flex:0 0 38px;margin-bottom:5px}.mobile-ref .rail-heading h1{font-size:17px}
+.mobile-ref .mobile-category{min-height:0;flex:1 1 auto;overflow:hidden}
+.mobile-ref .filter-select__trigger{min-height:52px}
+.mobile-ref .filter-select__group{gap:0;padding-bottom:0}
+.mobile-ref .filter-select__option{min-height:44px;padding:2px 5px}
+.mobile-ref .filter-select__indicator{width:20px;height:20px}
+.mobile-ref .mobile-collapsed{flex:0 0 auto;border-top:1px solid var(--line)}
+.mobile-ref .mobile-collapsed .clean-subsection__heading{min-height:46px}
+.mobile-ref .mobile-settings{border-top:1px solid var(--line);padding:7px 0 0}
+.mobile-ref .mobile-setting{display:flex;min-height:34px;align-items:center;justify-content:space-between;color:var(--ink);font-size:11px}
+.mobile-ref .mobile-check{width:18px;height:18px;border:1px solid #bdb3ac;border-radius:3px;background:white}
+.mobile-ref .clean-apply{flex:0 0 46px;min-height:46px;margin-top:7px}
+</style></head>
+<body><div class="clean-page mobile-ref">
+  <header class="behind-header"><span>☰</span><strong>NOVA</strong><span>♡</span></header>
+  <div class="behind-grid" aria-hidden="true"><div class="behind-card"></div><div class="behind-card"></div><div class="behind-card"></div><div class="behind-card"></div></div>
+  <div class="scrim" aria-hidden="true"></div>
+  <aside class="filter-rail" aria-label="فیلترهای فروشگاه">
+    <div class="rail-heading"><h1>فیلترها</h1><button type="button" aria-label="بستن">×</button></div>
+    <section class="mobile-category">
+      <div class="filter-select filter-select--list is-open">
+        <button class="filter-select__trigger" type="button" aria-expanded="true">
+          <span class="filter-select__label">دسته‌بندی</span><span class="filter-select__selected">همه</span><span class="filter-select__chevron"><i class="chevron"></i></span>
+        </button>
+        <div class="filter-select__options">
+          <fieldset class="filter-select__group" aria-label="دسته‌بندی">
+            <legend hidden>دسته‌بندی</legend>
+            <label class="filter-select__option is-selected"><input type="radio" name="mob-category" checked><span class="filter-select__indicator"><i class="checkmark"></i></span><span class="filter-select__option-label">همه</span></label>
+            <label class="filter-select__option"><input type="radio" name="mob-category"><span class="filter-select__indicator"></span><span class="filter-select__option-label">اکسسوری</span></label>
+            <label class="filter-select__option"><input type="radio" name="mob-category"><span class="filter-select__indicator"></span><span class="filter-select__option-label">بافت</span></label>
+            <label class="filter-select__option"><input type="radio" name="mob-category"><span class="filter-select__indicator"></span><span class="filter-select__option-label">پیراهن</span></label>
+            <label class="filter-select__option"><input type="radio" name="mob-category"><span class="filter-select__indicator"></span><span class="filter-select__option-label">شلوار</span></label>
+            <label class="filter-select__option"><input type="radio" name="mob-category"><span class="filter-select__indicator"></span><span class="filter-select__option-label">مانتو و رویه</span></label>
+            <label class="filter-select__option"><input type="radio" name="mob-category"><span class="filter-select__indicator"></span><span class="filter-select__option-label">لباس کودک</span></label>
+          </fieldset>
+          <button class="filter-select__more" type="button">مشاهدهٔ بیشتر</button>
+        </div>
+      </div>
+    </section>
+    <section class="mobile-collapsed"><div class="clean-subsection__heading"><span>اندازه</span><span aria-hidden="true" class="chevron"></span></div></section>
+    <section class="mobile-collapsed"><div class="clean-subsection__heading"><span>رنگ</span><span aria-hidden="true" class="chevron"></span></div></section>
+    <section class="mobile-collapsed"><div class="clean-subsection__heading"><span>متریال</span><span aria-hidden="true" class="chevron"></span></div></section>
+    <div class="mobile-settings">
+      <div class="mobile-setting"><span>فقط موجود</span><span class="mobile-check"></span></div>
+      <div class="mobile-setting"><span>تخفیف ویژه</span><span class="mobile-check"></span></div>
+    </div>
+    <button class="clean-apply" type="button">نمایش نتایج</button>
+  </aside>
+</div></body></html>

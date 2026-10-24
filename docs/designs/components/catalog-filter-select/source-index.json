@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "1.0.0",
+  "sources": [
+    {
+      "id": "S1",
+      "path": "apps/web/src/features/catalog/components/filter-select.tsx",
+      "range": "11-202",
+      "kind": "source",
+      "authority": "Behavior and markup authority",
+      "facts": [
+        "string value",
+        "native radio group",
+        "open/close",
+        "loading/empty/disabled",
+        "show-more control"
+      ]
+    },
+    {
+      "id": "S2",
+      "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+      "range": "199-247",
+      "kind": "source",
+      "authority": "Consumer and URL/query integration authority",
+      "facts": [
+        "list/size/swatches consumers",
+        "onChange delegates to listing update"
+      ]
+    },
+    {
+      "id": "S3",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "range": "4-30, 2802-3035, 3393-3400",
+      "kind": "source",
+      "authority": "Effective listing styling and CSS token authority",
+      "facts": [
+        "Atelier variables",
+        "final listing component rules",
+        "later 44px/20px override"
+      ]
+    },
+    {
+      "id": "S4",
+      "path": "docs/designs/atelier-editorial.md",
+      "range": "1306-1353",
+      "kind": "design-source",
+      "authority": "Canonical Atelier design direction and accessibility minimums",
+      "facts": [
+        "approved palette",
+        "10-12px control radii",
+        "12-15px UI type",
+        "44px minimum pointer targets"
+      ]
+    },
+    {
+      "id": "S5",
+      "path": "docs/refactoring/filter-select-editorial-plan.md",
+      "range": "1-17, 38-43",
+      "kind": "design-source",
+      "authority": "Target-specific FilterSelect and responsive guidance",
+      "facts": [
+        "single choice",
+        "36px visible controls",
+        "44px hit target",
+        "desktop/mobile review sizes"
+      ]
+    },
+    {
+      "id": "S6",
+      "path": "apps/web/src/styles.css",
+      "range": "49-70",
+      "kind": "source",
+      "authority": "Storefront font stack and RTL document setup",
+      "facts": [
+        "Vazirmatn/Tahoma stack",
+        "RTL root direction"
+      ]
+    },
+    {
+      "id": "S7",
+      "path": "apps/web/src/shared/ui/icon.tsx",
+      "range": "75-76",
+      "kind": "source",
+      "authority": "Check and chevron icon definitions",
+      "facts": [
+        "check mark",
+        "down chevron"
+      ]
+    },
+    {
+      "id": "S8",
+      "path": "docs/refactoring/filter-select-editorial-desktop.png",
+      "range": null,
+      "kind": "reference-image",
+      "authority": "Prior visual context only; not a live screenshot"
+    },
+    {
+      "id": "S9",
+      "path": "docs/refactoring/filter-select-editorial-mobile-open.png",
+      "range": null,
+      "kind": "reference-image",
+      "authority": "Prior mobile composition reference only"
+    },
+    {
+      "id": "S10",
+      "path": "docs/designs/components/catalog-filter-select/render-source/",
+      "range": null,
+      "kind": "renderer-source",
+      "authority": "Static reference board and component illustration source"
+    }
+  ]
+}

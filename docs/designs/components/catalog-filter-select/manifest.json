@@ -1,0 +1,125 @@
+{
+  "manifestVersion": "1.0.0",
+  "componentId": "catalog-filter-select",
+  "createdOn": "2026-10-23",
+  "branch": "codex/select-filter-design-board",
+  "baseCommit": "f915e089d131ce512ef4eb29784cd3a863af1d1e",
+  "productionChange": "apps/web/src/styles/storefront-reference.css",
+  "assets": [
+    {
+      "path": "01-Visual-Design-Board.png",
+      "sizeBytes": 147906,
+      "sha256": "47dd4eb926b06a050c9bc5ae403818896947cd95c9b36303747086929e950436"
+    },
+    {
+      "path": "02-Clean-Reference.png",
+      "sizeBytes": 32391,
+      "sha256": "8479461ee9bcdb8ada6939955d05181ae745fd56241f01fdf7176bde554e8837"
+    },
+    {
+      "path": "03-Clean-Reference-Mobile.png",
+      "sizeBytes": 19550,
+      "sha256": "99afdb37eed5a2ef69bb19833c72a8413b403b596d27d7972e52aaa5f9339a97"
+    },
+    {
+      "path": "design-spec.json",
+      "sizeBytes": 3532,
+      "sha256": "2e21c5aab2efe50518304c2d7099879d693b489484e9a802b868f7d68873bdc4"
+    },
+    {
+      "path": "design-spec.schema.json",
+      "sizeBytes": 8203,
+      "sha256": "97078fc2b4d56bf4a541d4a9a94cc732a1dd61fecee5b4eea2a0eeb55019bb0d"
+    },
+    {
+      "path": "scene-graph.json",
+      "sizeBytes": 2020,
+      "sha256": "cf49876dbd23670d99983a288abce37953b55a95a77616d17db6755e2d9acd94"
+    },
+    {
+      "path": "source-index.json",
+      "sizeBytes": 3100,
+      "sha256": "95c7e009d8c84d45d7be883e146605179a621f556243e1dc164648423737e6db"
+    },
+    {
+      "path": "authority-map.json",
+      "sizeBytes": 1495,
+      "sha256": "058a2c2bb3ec844fbe99151e53b837fe33fc05d11388e79e42ec43265d225300"
+    },
+    {
+      "path": "conflicts.json",
+      "sizeBytes": 1595,
+      "sha256": "153d885a7dfe6584545b0b1984780ff520e8f307cdfeee7e25b0b7a87d091966"
+    },
+    {
+      "path": "design-tokens.json",
+      "sizeBytes": 1933,
+      "sha256": "3fb5dc0052c7bb7825879c743e83d2d3f60be3362ead2c85b5c497be137debea"
+    },
+    {
+      "path": "asset-registry.json",
+      "sizeBytes": 1865,
+      "sha256": "b3ee4a674bcdcf98bbf709b579c71310d72f042e95085807bfb900d0748163d8"
+    },
+    {
+      "path": "coverage-matrix.json",
+      "sizeBytes": 2523,
+      "sha256": "20e0731bbf2bb0896a452066bf085be3f0077250f9656d1ea5bb77300d2b2ef8"
+    },
+    {
+      "path": "qa-report.json",
+      "sizeBytes": 2720,
+      "sha256": "0a8c861803fe61e272b10cd4a2fbaa9e441f1b2b401f688ede28ec1245deebe8"
+    },
+    {
+      "path": "component-handoff.md",
+      "sizeBytes": 2836,
+      "sha256": "71b0bff36113cf5f459aeb7b32dba6c128c8105e27e6bf18ff7d50da695ae988"
+    },
+    {
+      "path": "render-source/README.md",
+      "sizeBytes": 1710,
+      "sha256": "7f93aa6a62b881a5523b274785c2d9da5791431526fe749ae75447c48d924daa"
+    },
+    {
+      "path": "render-source/select.css",
+      "sizeBytes": 5387,
+      "sha256": "5038f931ebdf1680e9fca200742ce21c7756e9f9a1fb2d58a3926e0fb06d9e3b"
+    },
+    {
+      "path": "render-source/board.css",
+      "sizeBytes": 6386,
+      "sha256": "996745c3ad5f094804d3c718fe00b12eac04577b07402c5cf659046265c6a9d6"
+    },
+    {
+      "path": "render-source/clean-reference.css",
+      "sizeBytes": 3761,
+      "sha256": "1345b805bfab8b220e4ef20f9d748b4a1bdc0b7c70858f6434cec37232fa9de6"
+    },
+    {
+      "path": "render-source/board.html",
+      "sizeBytes": 14310,
+      "sha256": "c036eb2344166681946b05ae9c233beea71eb959c3a25d078df93cbc4fcf9833"
+    },
+    {
+      "path": "render-source/clean-reference-desktop.html",
+      "sizeBytes": 5000,
+      "sha256": "8e5671d6db610e138db043f85e263fcbab07f0648fed8136644306eb48bbf50c"
+    },
+    {
+      "path": "render-source/clean-reference-mobile.html",
+      "sizeBytes": 5983,
+      "sha256": "a145bf3eae7c2ea9f8380ca6436bb60644abb01eb26d9ef611589b5041cb08f0"
+    },
+    {
+      "path": "render-source/render-mobile-reference.py",
+      "sizeBytes": 5028,
+      "sha256": "e5b6fe50b1aa5ea14f8988554278da0466e989a7adfb9c5bd6e1e9a3aae0f818"
+    }
+  ],
+  "verification": {
+    "designSpecSchema": "PASS_LOCAL_KEYWORD_VALIDATOR",
+    "referenceDimensions": "1536x1024, 1536x1024, 390x844",
+    "liveRuntimeVisualReview": "UNVERIFIED"
+  }
+}

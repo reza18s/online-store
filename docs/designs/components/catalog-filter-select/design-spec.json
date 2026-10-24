@@ -1,0 +1,119 @@
+{
+  "schemaVersion": "1.0.0",
+  "componentId": "catalog-filter-select",
+  "title": "Catalog FilterSelect · فیلتر انتخابی کاتالوگ",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "owner": {
+    "componentPath": "apps/web/src/features/catalog/components/filter-select.tsx",
+    "consumerPath": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+    "stylePath": "apps/web/src/styles/storefront-reference.css"
+  },
+  "contract": {
+    "valueType": "string",
+    "selection": "single",
+    "inputSemantics": "native-radio",
+    "valueFlow": "Each facet keeps its scalar value and calls onChange with one selected value; listing URL/query behavior remains owned by ListingDiscovery."
+  },
+  "geometry": {
+    "triggerMinHeightPx": 52,
+    "listRowMinHeightPx": 44,
+    "listIndicatorSizePx": 20,
+    "moreButtonMinHeightPx": 44,
+    "focusRingWidthPx": 2
+  },
+  "typography": {
+    "storefrontStack": "Vazirmatn, Tahoma, sans-serif",
+    "countFontSizePx": 12,
+    "swatchLabelFontSizePx": 12,
+    "uiRangePx": [
+      12,
+      15
+    ]
+  },
+  "variants": {
+    "list": {
+      "rowMinHeightPx": 44,
+      "indicatorSizePx": 20,
+      "moreButtonMinHeightPx": 44
+    },
+    "size": {
+      "targetMinWidthPx": 44,
+      "targetMinHeightPx": 44,
+      "visualChipSizePx": 36,
+      "cornerRadiusPx": 10
+    },
+    "swatches": {
+      "targetMinWidthPx": 58,
+      "targetMinHeightPx": 62,
+      "visualCircleSizePx": 36,
+      "labelFontSizePx": 12
+    }
+  },
+  "states": [
+    "default",
+    "open",
+    "selected",
+    "focus",
+    "hover",
+    "disabled",
+    "loading",
+    "empty",
+    "reduced-motion"
+  ],
+  "tokens": {
+    "page": "#F7F4F0",
+    "surface": "#FFFCF9",
+    "surfaceSoft": "#F1ECE7",
+    "ink": "#302B29",
+    "muted": "#6F6560",
+    "rosewood": "#7B4B59",
+    "rosewoodDark": "#633D49",
+    "rosewoodSoft": "#F2E8EB",
+    "line": "#E4DCD5"
+  },
+  "responsive": {
+    "desktopViewport": {
+      "widthPx": 1536,
+      "heightPx": 1024
+    },
+    "mobileViewport": {
+      "widthPx": 390,
+      "heightPx": 844
+    },
+    "mobileSheet": {
+      "widthPx": 358,
+      "heightPx": 756,
+      "leftPx": 16,
+      "topPx": 44
+    }
+  },
+  "preservedBehavior": [
+    "Keep the existing scalar string value and onChange contract.",
+    "Keep one native radio group per facet; do not imply multi-select.",
+    "Keep category, size, color, and material query behavior in ListingDiscovery.",
+    "Keep Persian RTL labels and existing loading, empty, disabled, keyboard, and Escape behavior."
+  ],
+  "implementationChanges": [
+    "Keep the final listing cascade at 44px rows with 20px indicators; those effective values were already present.",
+    "Use the Atelier line/200 token for the facet divider and indicator borders, and 10px corners for listing option rows and swatch cells.",
+    "Make size options at least 44x44px targets while retaining the 36x36px visible chip inside the label.",
+    "Raise the list show-more target to 44px.",
+    "Use 12px text for small facet counts and swatch labels; use muted Atelier ink for counts."
+  ],
+  "evidence": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S8",
+    "S9"
+  ],
+  "limitations": [
+    "Reference options and swatch values are illustrative and do not represent live catalog data.",
+    "Board and clean references are static design artifacts, not captures of the running storefront.",
+    "Live application visual inspection is unverified because the browser safety gate blocked local-file preview URLs."
+  ]
+}

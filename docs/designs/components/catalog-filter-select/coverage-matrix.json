@@ -1,0 +1,92 @@
+{
+  "criteria": [
+    {
+      "id": "AC1",
+      "criterion": "Preserve Persian RTL and scalar native-radio selection semantics.",
+      "status": "PASS_SOURCE_REVIEW",
+      "evidence": [
+        "S1",
+        "S2"
+      ],
+      "artifact": "component-handoff.md"
+    },
+    {
+      "id": "AC2",
+      "criterion": "Represent list rows at 44px with 20px indicators and a 44px show-more target.",
+      "status": "PASS_SOURCE_REVIEW",
+      "evidence": [
+        "S3",
+        "01-Visual-Design-Board.png"
+      ],
+      "artifact": "design-spec.json"
+    },
+    {
+      "id": "AC3",
+      "criterion": "Keep size chips visually 36px while each target is at least 44×44px.",
+      "status": "PASS_SOURCE_REVIEW",
+      "evidence": [
+        "S3",
+        "01-Visual-Design-Board.png"
+      ],
+      "artifact": "design-spec.json"
+    },
+    {
+      "id": "AC4",
+      "criterion": "Show 36px named swatches with hit areas no smaller than 44px.",
+      "status": "PASS_SOURCE_REVIEW",
+      "evidence": [
+        "S3",
+        "01-Visual-Design-Board.png"
+      ],
+      "artifact": "design-spec.json"
+    },
+    {
+      "id": "AC5",
+      "criterion": "Cover selected, focus, disabled, loading, and empty states.",
+      "status": "PASS_STATIC_REFERENCE",
+      "evidence": [
+        "S1",
+        "01-Visual-Design-Board.png"
+      ],
+      "artifact": "render-source/board.html"
+    },
+    {
+      "id": "AC6",
+      "criterion": "Provide desktop and 390×844 mobile reference views.",
+      "status": "PASS_STATIC_REFERENCE",
+      "evidence": [
+        "02-Clean-Reference.png",
+        "03-Clean-Reference-Mobile.png"
+      ],
+      "artifact": "asset-registry.json"
+    },
+    {
+      "id": "AC7",
+      "criterion": "Keep listing queries, component API, category-page styles, and admin controls unchanged.",
+      "status": "PASS_DIFF_REVIEW",
+      "evidence": [
+        "S1",
+        "S2"
+      ],
+      "artifact": "component-handoff.md"
+    },
+    {
+      "id": "AC8",
+      "criterion": "Make small counts and swatch labels legible at 12px.",
+      "status": "PASS_SOURCE_REVIEW",
+      "evidence": [
+        "S3",
+        "S4"
+      ],
+      "artifact": "design-spec.json"
+    },
+    {
+      "id": "AC9",
+      "criterion": "Inspect the running listing visually at desktop and mobile breakpoints.",
+      "status": "UNVERIFIED",
+      "evidence": [],
+      "artifact": "qa-report.json",
+      "reason": "The browser policy refused local-file preview URLs; no runtime page was opened or claimed."
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "assets": [
+    {
+      "id": "A1",
+      "path": "01-Visual-Design-Board.png",
+      "role": "annotated design board",
+      "format": "PNG",
+      "dimensionsPx": [
+        1536,
+        1024
+      ],
+      "origin": "board.html + board.css + select.css"
+    },
+    {
+      "id": "A2",
+      "path": "02-Clean-Reference.png",
+      "role": "clean desktop reference",
+      "format": "PNG",
+      "dimensionsPx": [
+        1536,
+        1024
+      ],
+      "origin": "clean-reference-desktop.html + clean-reference.css + select.css"
+    },
+    {
+      "id": "A3",
+      "path": "03-Clean-Reference-Mobile.png",
+      "role": "clean mobile reference",
+      "format": "PNG",
+      "dimensionsPx": [
+        390,
+        844
+      ],
+      "origin": "render-mobile-reference.py"
+    },
+    {
+      "id": "A4",
+      "path": "render-source/",
+      "role": "editable static renderer sources",
+      "format": "HTML/CSS/Python",
+      "dimensionsPx": null,
+      "origin": "created for this design package"
+    },
+    {
+      "id": "A5",
+      "path": "apps/web/src/styles.css",
+      "role": "preferred storefront font stack",
+      "format": "source reference",
+      "dimensionsPx": null,
+      "origin": "Vazirmatn with Tahoma fallback"
+    }
+  ],
+  "externalAssets": [],
+  "fonts": [
+    {
+      "family": "Vazirmatn",
+      "status": "preferred-webfont-not-verified-in-static-renders"
+    },
+    {
+      "family": "Tahoma",
+      "status": "used-by-offline-mobile-renderer"
+    }
+  ],
+  "sourceReferences": [
+    {
+      "path": "docs/refactoring/filter-select-editorial-desktop.png",
+      "licenseStatus": "internal-repository-reference; no redistribution copy created"
+    },
+    {
+      "path": "docs/refactoring/filter-select-editorial-mobile-open.png",
+      "licenseStatus": "internal-repository-reference; no redistribution copy created"
+    }
+  ]
+}

@@ -1,0 +1,389 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "design-spec.schema.json",
+  "title": "Catalog FilterSelect design contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "componentId",
+    "title",
+    "locale",
+    "direction",
+    "owner",
+    "contract",
+    "geometry",
+    "typography",
+    "variants",
+    "states",
+    "tokens",
+    "responsive",
+    "preservedBehavior",
+    "implementationChanges",
+    "evidence",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0.0"
+    },
+    "componentId": {
+      "const": "catalog-filter-select"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locale": {
+      "const": "fa-IR"
+    },
+    "direction": {
+      "const": "rtl"
+    },
+    "owner": {
+      "type": "object",
+      "required": [
+        "componentPath",
+        "consumerPath",
+        "stylePath"
+      ],
+      "properties": {
+        "componentPath": {
+          "type": "string"
+        },
+        "consumerPath": {
+          "type": "string"
+        },
+        "stylePath": {
+          "type": "string"
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "valueType",
+        "selection",
+        "inputSemantics",
+        "valueFlow"
+      ],
+      "properties": {
+        "valueType": {
+          "const": "string"
+        },
+        "selection": {
+          "const": "single"
+        },
+        "inputSemantics": {
+          "const": "native-radio"
+        },
+        "valueFlow": {
+          "type": "string"
+        }
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "required": [
+        "triggerMinHeightPx",
+        "listRowMinHeightPx",
+        "listIndicatorSizePx",
+        "moreButtonMinHeightPx",
+        "focusRingWidthPx"
+      ],
+      "properties": {
+        "triggerMinHeightPx": {
+          "type": "number",
+          "minimum": 44
+        },
+        "listRowMinHeightPx": {
+          "type": "number",
+          "minimum": 44
+        },
+        "listIndicatorSizePx": {
+          "type": "number",
+          "minimum": 20
+        },
+        "moreButtonMinHeightPx": {
+          "type": "number",
+          "minimum": 44
+        },
+        "focusRingWidthPx": {
+          "type": "number",
+          "minimum": 2
+        }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "required": [
+        "storefrontStack",
+        "countFontSizePx",
+        "swatchLabelFontSizePx",
+        "uiRangePx"
+      ],
+      "properties": {
+        "storefrontStack": {
+          "type": "string"
+        },
+        "countFontSizePx": {
+          "type": "number",
+          "minimum": 12
+        },
+        "swatchLabelFontSizePx": {
+          "type": "number",
+          "minimum": 12
+        },
+        "uiRangePx": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "number",
+              "minimum": 12
+            },
+            {
+              "type": "number",
+              "maximum": 15
+            }
+          ],
+          "minItems": 2,
+          "maxItems": 2
+        }
+      }
+    },
+    "variants": {
+      "type": "object",
+      "required": [
+        "list",
+        "size",
+        "swatches"
+      ],
+      "properties": {
+        "list": {
+          "type": "object",
+          "required": [
+            "rowMinHeightPx",
+            "indicatorSizePx",
+            "moreButtonMinHeightPx"
+          ],
+          "properties": {
+            "rowMinHeightPx": {
+              "type": "number",
+              "minimum": 44
+            },
+            "indicatorSizePx": {
+              "type": "number",
+              "minimum": 20
+            },
+            "moreButtonMinHeightPx": {
+              "type": "number",
+              "minimum": 44
+            }
+          }
+        },
+        "size": {
+          "type": "object",
+          "required": [
+            "targetMinWidthPx",
+            "targetMinHeightPx",
+            "visualChipSizePx",
+            "cornerRadiusPx"
+          ],
+          "properties": {
+            "targetMinWidthPx": {
+              "type": "number",
+              "minimum": 44
+            },
+            "targetMinHeightPx": {
+              "type": "number",
+              "minimum": 44
+            },
+            "visualChipSizePx": {
+              "type": "number",
+              "maximum": 36
+            },
+            "cornerRadiusPx": {
+              "type": "number",
+              "minimum": 10,
+              "maximum": 12
+            }
+          }
+        },
+        "swatches": {
+          "type": "object",
+          "required": [
+            "targetMinWidthPx",
+            "targetMinHeightPx",
+            "visualCircleSizePx",
+            "labelFontSizePx"
+          ],
+          "properties": {
+            "targetMinWidthPx": {
+              "type": "number",
+              "minimum": 44
+            },
+            "targetMinHeightPx": {
+              "type": "number",
+              "minimum": 44
+            },
+            "visualCircleSizePx": {
+              "type": "number",
+              "maximum": 36
+            },
+            "labelFontSizePx": {
+              "type": "number",
+              "minimum": 12
+            }
+          }
+        }
+      }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "enum": [
+          "default",
+          "open",
+          "selected",
+          "focus",
+          "hover",
+          "disabled",
+          "loading",
+          "empty",
+          "reduced-motion"
+        ]
+      }
+    },
+    "tokens": {
+      "type": "object",
+      "required": [
+        "page",
+        "surface",
+        "surfaceSoft",
+        "ink",
+        "muted",
+        "rosewood",
+        "rosewoodDark",
+        "rosewoodSoft",
+        "line"
+      ],
+      "properties": {
+        "page": {
+          "type": "string"
+        },
+        "surface": {
+          "type": "string"
+        },
+        "surfaceSoft": {
+          "type": "string"
+        },
+        "ink": {
+          "type": "string"
+        },
+        "muted": {
+          "type": "string"
+        },
+        "rosewood": {
+          "type": "string"
+        },
+        "rosewoodDark": {
+          "type": "string"
+        },
+        "rosewoodSoft": {
+          "type": "string"
+        },
+        "line": {
+          "type": "string"
+        }
+      }
+    },
+    "responsive": {
+      "type": "object",
+      "required": [
+        "desktopViewport",
+        "mobileViewport",
+        "mobileSheet"
+      ],
+      "properties": {
+        "desktopViewport": {
+          "type": "object",
+          "required": [
+            "widthPx",
+            "heightPx"
+          ],
+          "properties": {
+            "widthPx": {
+              "type": "number"
+            },
+            "heightPx": {
+              "type": "number"
+            }
+          }
+        },
+        "mobileViewport": {
+          "type": "object",
+          "required": [
+            "widthPx",
+            "heightPx"
+          ],
+          "properties": {
+            "widthPx": {
+              "type": "number"
+            },
+            "heightPx": {
+              "type": "number"
+            }
+          }
+        },
+        "mobileSheet": {
+          "type": "object",
+          "required": [
+            "widthPx",
+            "heightPx",
+            "leftPx",
+            "topPx"
+          ],
+          "properties": {
+            "widthPx": {
+              "type": "number"
+            },
+            "heightPx": {
+              "type": "number"
+            },
+            "leftPx": {
+              "type": "number"
+            },
+            "topPx": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "preservedBehavior": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "implementationChanges": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

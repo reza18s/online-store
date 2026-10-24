@@ -2799,6 +2799,9 @@ body {
   font-size: 12px;
   font-weight: 500;
 }
+.listing-page .filter-select {
+  border-bottom-color: #E4DCD5;
+}
 .listing-page .filter-select__trigger,
 .listing-page .listing-price-filter__trigger {
   display: flex;
@@ -2878,7 +2881,7 @@ body {
   grid-template-columns: 18px minmax(0, 1fr) auto;
   align-items: center;
   gap: 9px;
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 4px 7px;
   color: #574c45;
   font-size: 12px;
@@ -2907,7 +2910,7 @@ body {
   width: 18px;
   height: 18px;
   place-items: center;
-  border: 1px solid var(--nova-ref-line-strong);
+  border: 1px solid #E4DCD5;
   border-radius: 4px;
   background: #fff;
   color: #fff;
@@ -2925,8 +2928,8 @@ body {
   outline-offset: 2px;
 }
 .listing-page .filter-select__count {
-  color: #9b8d82;
-  font-size: 11px;
+  color: var(--nova-ref-muted);
+  font-size: 12px;
   font-weight: 500;
 }
 .listing-page .filter-select__group--size {
@@ -2937,14 +2940,14 @@ body {
 }
 .listing-page .filter-select__option--size {
   display: grid;
-  min-width: 36px;
-  min-height: 36px;
+  min-width: 44px;
+  min-height: 44px;
   grid-template-columns: 1fr;
   justify-items: center;
-  border: 1px solid var(--nova-ref-line);
-  border-radius: 7px;
-  padding: 0 8px;
-  background: var(--nova-ref-surface);
+  border: 0;
+  border-radius: 10px;
+  padding: 0;
+  background: transparent;
   color: #574c45;
   font-size: 12px;
   font-weight: 600;
@@ -2953,7 +2956,17 @@ body {
 .listing-page .filter-select__option--size .filter-select__count {
   display: none;
 }
-.listing-page .filter-select__option--size.is-selected {
+.listing-page .filter-select__option--size .filter-select__option-label {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid #E4DCD5;
+  border-radius: 10px;
+  padding: 0 8px;
+  background: var(--nova-ref-surface);
+}
+.listing-page .filter-select__option--size.is-selected .filter-select__option-label {
   border-color: var(--nova-ref-wine);
   background: var(--nova-ref-wine);
   color: #fff;
@@ -2970,7 +2983,7 @@ body {
   grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: 5px;
-  border-radius: 7px;
+  border-radius: 10px;
   padding: 4px 2px;
   text-align: center;
 }
@@ -2989,7 +3002,7 @@ body {
     0 0 0 3px var(--nova-ref-wine);
 }
 .listing-page .filter-select__option--swatches .filter-select__option-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
 }
 .listing-page .filter-select__option--swatches .filter-select__count {
@@ -2997,7 +3010,7 @@ body {
 }
 .listing-page .filter-select__more {
   display: inline-flex;
-  min-height: 32px;
+  min-height: 44px;
   align-items: center;
   gap: 5px;
   margin: 0 6px 7px;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "status": "PASS_WITH_WARNINGS",
-  "scope": "catalog FilterSelect listing styles and the design reference package",
+  "scope": "catalog FilterSelect listing styles and category-page integration, category sort presentation, and the design reference package",
   "checks": [
     {
       "name": "annotated-board",
@@ -50,18 +50,23 @@
     },
     {
       "name": "live-runtime-visual-review",
-      "status": "UNVERIFIED",
-      "evidence": "The browser policy rejected file:// preview URLs. No localhost workaround or other browser path was used."
+      "status": "PASS_WITH_WARNINGS",
+      "evidence": "Inspected the dedicated-worktree Vite preview at /category/men on desktop (1258x714) and the existing mobile viewport (560x874). The sort control remains exposed as a native select and its options expand; the mobile filter sheet opens without overlap. The local catalog API was unavailable, so live size/color facet options were not loaded."
     },
     {
       "name": "count-text-contrast",
       "status": "PASS_CALCULATED",
       "evidence": "12px #6F6560 on #FFFCF9 calculates to 5.54:1; prior #9B8D82 calculated to 3.15:1."
+    },
+    {
+      "name": "category-page-select-integration",
+      "status": "PASS_WITH_WARNINGS",
+      "evidence": "CategoryDiscovery now applies the size and swatch variants and category-scoped board geometry; runtime mobile sheet layout was visible and intact. API unavailability prevented visual review of populated size and color options."
     }
   ],
   "limitations": [
-    "The static reference images do not prove the running page layout, live catalog data, or the network-loaded Vazirmatn font.",
-    "The application could not be opened in a browser because the local-file URL was rejected by the browser safety gate.",
+    "The static reference images do not prove live catalog data or the network-loaded Vazirmatn font; the local runtime review verified page and control layout only.",
+    "The local catalog API was unavailable during browser review, so product results and populated category, size, and color options remain unverified.",
     "A standards-library JSON Schema validator was unavailable offline; the local checker validated the subset of Draft 2020-12 keywords used by this schema."
   ]
 }

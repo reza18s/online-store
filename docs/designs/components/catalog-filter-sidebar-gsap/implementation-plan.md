@@ -41,3 +41,11 @@ The effective listing cascade sets the desktop grid to RTL with a flexible 280px
 - Worktree-specific Git configuration currently requires an explicit `core.bare=false` and `core.worktree` setting; keep that metadata isolated to this task worktree.
 - The remote `main` advanced after worktree creation. The task branch was inspected and fast-forwarded to the fetched `origin/main` before source edits.
 - Motion durations and distances are not source-defined; mark them PROPOSED and keep reduced-motion behavior explicit.
+
+## Merge-readiness follow-up
+
+- CI runs the root test command from the repository root. Web and admin tests rely on the same `@/` alias with different app-local `tsconfig.json` mappings. Running each test suite from its app directory resolves those aliases; preserve that ownership in the root test orchestration instead of adding conflicting root aliases or rewriting test imports.
+- The coupon status test uses a fixed active window that expired before the current CI date. Anchor that fixture window to its own test clock so the asserted ACTIVE status remains time-stable.
+- The deterministic integration manifest still referenced transport tests from the previous app layout. Point it at the current feature-owned tests and execute each app group from its package root so each `@/` alias uses the correct app config.
+- Validate focused app suites and the coupon test, then rerun the full test suite, typecheck, lint, build, and PR checks before merging.
+- Risk: tests that were previously stopped at import resolution may now execute and expose additional existing failures; keep any unrelated production behavior out of this follow-up.

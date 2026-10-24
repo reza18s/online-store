@@ -46,7 +46,12 @@ function printOutput(output: string | null | undefined, stream: 'stdout' | 'stde
 }
 
 function runSuite(suite: CommerceIntegrationSuite): boolean {
-  const missing = suite.files.filter((file) => !existsSync(resolve(repositoryRoot, file)));
+  const groups = suite.testGroups ?? [{ cwd: '.', files: 'files' in suite ? suite.files : [] }];
+  const missing = groups.flatMap(({ cwd, files }) =>
+    files
+      .filter((file) => !existsSync(resolve(repositoryRoot, cwd, file)))
+      .map((file) => resolve(cwd, file)),
+  );
   if (missing.length) {
     console.error(`[FAIL] ${suite.id}: manifest file(s) missing: ${missing.join(', ')}`);
     return false;
@@ -55,23 +60,26 @@ function runSuite(suite: CommerceIntegrationSuite): boolean {
   console.log(`\n[integration] ${suite.id}: ${suite.label}`);
   console.log(`[integration] capabilities: ${suite.capabilities.join('; ')}`);
 
-  const result = spawnSync(process.execPath, ['test', ...suite.files], {
-    cwd: repositoryRoot,
-    stdio: 'pipe',
-    encoding: 'utf8',
-  });
-  printOutput(result.stdout, 'stdout');
-  printOutput(result.stderr, 'stderr');
+  let passed = true;
+  for (const group of groups) {
+    const result = spawnSync(process.execPath, ['test', ...group.files], {
+      cwd: resolve(repositoryRoot, group.cwd),
+      stdio: 'pipe',
+      encoding: 'utf8',
+    });
+    printOutput(result.stdout, 'stdout');
+    printOutput(result.stderr, 'stderr');
 
-  if (result.error) {
-    console.error(`[FAIL] ${suite.id}: could not start Bun test: ${result.error.message}.`);
-    return false;
-  }
-  if (result.status !== 0) {
-    console.error(`[FAIL] ${suite.id}: Bun test exited with ${result.status ?? 'unknown'}.`);
-    return false;
+    if (result.error) {
+      console.error(`[FAIL] ${suite.id}: could not start Bun test: ${result.error.message}.`);
+      passed = false;
+    } else if (result.status !== 0) {
+      console.error(`[FAIL] ${suite.id}: Bun test exited with ${result.status ?? 'unknown'}.`);
+      passed = false;
+    }
   }
 
+  if (!passed) return false;
   console.log(`[PASS] ${suite.id}`);
   return true;
 }

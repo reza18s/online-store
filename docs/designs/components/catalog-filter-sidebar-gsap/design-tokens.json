@@ -1,0 +1,104 @@
+{
+  "tokenSetVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "authority": "apps/web/src/styles/storefront-reference.css",
+  "tokens": [
+    {
+      "name": "page",
+      "cssVariable": "--nova-ref-page",
+      "value": "#f7f4f0",
+      "evidence": "S6"
+    },
+    {
+      "name": "surface",
+      "cssVariable": "--nova-ref-surface",
+      "value": "#fffcf9",
+      "evidence": "S6"
+    },
+    {
+      "name": "surface-soft",
+      "cssVariable": "--nova-ref-surface-soft",
+      "value": "#f1ece7",
+      "evidence": "S6"
+    },
+    {
+      "name": "ink",
+      "cssVariable": "--nova-ref-ink",
+      "value": "#302b29",
+      "evidence": "S6"
+    },
+    {
+      "name": "muted",
+      "cssVariable": "--nova-ref-muted",
+      "value": "#6f6560",
+      "evidence": "S6"
+    },
+    {
+      "name": "rosewood",
+      "cssVariable": "--nova-ref-wine",
+      "value": "#7b4b59",
+      "evidence": "S6"
+    },
+    {
+      "name": "rosewood-dark",
+      "cssVariable": "--nova-ref-wine-dark",
+      "value": "#633d49",
+      "evidence": "S6"
+    },
+    {
+      "name": "rosewood-soft",
+      "cssVariable": "--nova-ref-wine-soft",
+      "value": "#f2e8eb",
+      "evidence": "S6"
+    },
+    {
+      "name": "line",
+      "cssVariable": "--nova-ref-line",
+      "value": "rgb(83 61 46 / 13%)",
+      "evidence": "S6"
+    },
+    {
+      "name": "shadow",
+      "cssVariable": "--nova-ref-shadow",
+      "value": "0 10px 30px rgb(58 38 24 / 6.5%)",
+      "evidence": "S6"
+    },
+    {
+      "name": "font-body",
+      "cssVariable": "--font-body",
+      "value": "'Vazirmatn', Tahoma, sans-serif",
+      "evidence": "S7"
+    },
+    {
+      "name": "overlay",
+      "cssVariable": "listing-filter-overlay background",
+      "value": "rgb(26 18 14 / 42%)",
+      "evidence": "S5"
+    }
+  ],
+  "motionValues": {
+    "status": "PROPOSED",
+    "desktopDurationMs": 240,
+    "desktopRailTravelPx": 18,
+    "mobileDurationMs": 240,
+    "mobileDialogTravelPx": 14,
+    "mobileDialogEnterScale": 0.985,
+    "easing": [
+      "power2.out",
+      "power2.in"
+    ],
+    "evidence": "No motion values exist in the source CSS or component. These values are interaction proposals, not measurements."
+  },
+  "accessibility": {
+    "minimumMobilePointerTarget": {
+      "widthPx": 44,
+      "heightPx": 44,
+      "evidence": "S9",
+      "status": "SOURCE_DEFINED"
+    },
+    "focusReturn": {
+      "target": "mobile filter trigger",
+      "evidence": "S1"
+    }
+  }
+}

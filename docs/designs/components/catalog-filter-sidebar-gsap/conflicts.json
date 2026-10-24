@@ -1,0 +1,74 @@
+{
+  "conflictsVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "conflicts": [
+    {
+      "id": "rail-side",
+      "question": "Which side owns the listing rail?",
+      "evidence": [
+        {
+          "source": "S7",
+          "claim": "The base listing grid has direction:ltr and first column 240px; this rule is superseded for the target listing."
+        },
+        {
+          "source": "S4",
+          "claim": "The later .listing-page .listing-layout rule sets direction:rtl and the effective flexible rail columns."
+        },
+        {
+          "source": "docs/designs/components/catalog-filter-select/component-handoff.md:40",
+          "claim": "The prior FilterSelect board deliberately left page-level rail placement out of scope."
+        }
+      ],
+      "resolution": "Follow S4: in the Persian RTL listing, the first grid column and filter rail occupy the right side.",
+      "status": "resolved"
+    },
+    {
+      "id": "mobile-dialog-shape",
+      "question": "Is the mobile filter surface a bottom sheet or centered dialog?",
+      "evidence": [
+        {
+          "source": "S5",
+          "claim": "The final overlay aligns items and content at the center; the dialog is width 358px and height 756px at 390x844."
+        },
+        {
+          "source": "S5:460-475",
+          "claim": "Earlier base declarations described bottom alignment; later rules override them."
+        }
+      ],
+      "resolution": "Preserve the effective centered dialog and animate a small vertical lift with a fading backdrop.",
+      "status": "resolved"
+    },
+    {
+      "id": "line-token",
+      "question": "Which separator token should the rail reference use?",
+      "evidence": [
+        {
+          "source": "S6",
+          "claim": "The current listing rail uses --nova-ref-line: rgb(83 61 46 / 13%)."
+        },
+        {
+          "source": "docs/designs/components/catalog-filter-select/design-tokens.json",
+          "claim": "The prior FilterSelect handoff normalized line/200 to #E4DCD5."
+        }
+      ],
+      "resolution": "Use the live component token value rgb(83 61 46 / 13%) because it is directly consumed by the current rail.",
+      "status": "resolved"
+    },
+    {
+      "id": "mobile-control-targets",
+      "question": "How large must the mobile dialog close and reset controls be?",
+      "evidence": [
+        {
+          "source": "S5",
+          "claim": "The late mobile dialog rule sets the close icon target to 32px and the listing reset link to 27px."
+        },
+        {
+          "source": "S9",
+          "claim": "Customer mobile controls require at least 44 by 44 CSS-pixel targets."
+        }
+      ],
+      "resolution": "Use 44 by 44 CSS pixels for the close control and at least 44px height for the reset link; keep the visible close glyph compact.",
+      "status": "resolved"
+    }
+  ]
+}

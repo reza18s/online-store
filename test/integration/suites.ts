@@ -1,8 +1,18 @@
-export interface CommerceIntegrationSuite {
+interface CommerceIntegrationSuiteMetadata {
   readonly id: string;
   readonly label: string;
-  readonly files: readonly string[];
   readonly capabilities: readonly string[];
+}
+
+export type CommerceIntegrationSuite = CommerceIntegrationSuiteMetadata &
+  (
+    | { readonly files: readonly string[]; readonly testGroups?: never }
+    | { readonly files?: never; readonly testGroups: readonly IntegrationTestGroup[] }
+  );
+
+export interface IntegrationTestGroup {
+  readonly cwd: string;
+  readonly files: readonly string[];
 }
 
 /**
@@ -95,23 +105,36 @@ export const commerceIntegrationSuites: readonly CommerceIntegrationSuite[] = [
   {
     id: 'web-transport',
     label: 'browser transport paths, CSRF-aware client behavior, and query contracts',
-    files: [
-      'packages/api-client/src/client.test.ts',
-      'apps/web/src/lib/auth/auth-api.test.ts',
-      'apps/web/src/lib/cart/cart-api.test.ts',
-      'apps/web/src/lib/catalog/catalog-api.test.ts',
-      'apps/web/src/lib/checkout/checkout-api.test.ts',
-      'apps/web/src/lib/orders/orders-api.test.ts',
-      'apps/web/src/lib/addresses/addresses-api.test.ts',
-      'apps/web/src/lib/content/content-api.test.ts',
-      'apps/admin/src/lib/admin/admin-catalog-api.test.ts',
-      'apps/admin/src/lib/admin/admin-inventory-api.test.ts',
-      'apps/admin/src/lib/admin/admin-orders-api.test.ts',
-      'apps/admin/src/lib/admin/admin-payments-api.test.ts',
-      'apps/admin/src/lib/admin/admin-notifications-api.test.ts',
-      'apps/admin/src/lib/admin/admin-audit-api.test.ts',
-      'apps/admin/src/lib/admin/admin-customers-api.test.ts',
-      'apps/admin/src/lib/admin/admin-coupons-api.test.ts',
+    testGroups: [
+      {
+        cwd: 'packages/api-client',
+        files: ['src/client.test.ts'],
+      },
+      {
+        cwd: 'apps/web',
+        files: [
+          'src/features/auth/api/auth-api.test.ts',
+          'src/features/cart/api/cart-api.test.ts',
+          'src/features/catalog/api/catalog-api.test.ts',
+          'src/features/checkout/api/checkout-api.test.ts',
+          'src/features/orders/api/orders-api.test.ts',
+          'src/features/account/api/addresses-api.test.ts',
+          'src/features/content/api/content-api.test.ts',
+        ],
+      },
+      {
+        cwd: 'apps/admin',
+        files: [
+          'src/features/catalog/api/catalog/admin-catalog-api.test.ts',
+          'src/features/catalog/api/inventory/admin-inventory-api.test.ts',
+          'src/features/orders/api/admin-orders-api.test.ts',
+          'src/features/support/api/payments/admin-payments-api.test.ts',
+          'src/features/support/api/notifications/admin-notifications-api.test.ts',
+          'src/features/support/api/audit/admin-audit-api.test.ts',
+          'src/features/support/api/customers/admin-customers-api.test.ts',
+          'src/features/catalog/api/coupons/admin-coupons-api.test.ts',
+        ],
+      },
     ],
     capabilities: ['web/API transport', 'browser CSRF header mirroring', 'admin transport paths'],
   },

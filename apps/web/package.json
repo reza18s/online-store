@@ -7,12 +7,15 @@
     "build": "vite build && vite build --ssr src/app/ssr/server.ts --outDir dist/ssr",
     "start": "node dist/ssr/server.mjs",
     "preview": "vite preview",
+    "test": "bun test ./src",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@nova/api-client": "workspace:*",
     "@nova/ui": "workspace:*",
     "@tanstack/react-query": "^5.62.0",
+    "gsap": "^3.15.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
     "react-router-dom": "^7.1.1",

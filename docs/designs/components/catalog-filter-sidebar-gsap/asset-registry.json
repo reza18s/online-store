@@ -1,0 +1,10 @@
+{
+  "assetRegistryVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "assets": [],
+  "renderingNotes": [
+    "Production component uses existing NOVA text, icon, and UI components; no new visual assets are required.",
+    "Clean references draw small garment placeholders from CSS gradients. They are illustrative and must not be mistaken for catalog photography.",
+    "Reference renderer uses local Tahoma fallback and makes no network font or image requests."
+  ]
+}

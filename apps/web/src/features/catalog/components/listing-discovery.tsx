@@ -1,4 +1,6 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 import { Button, Checkbox, Input as UiInput, Select as UiSelect } from '@nova/ui';
 import { Icon } from '@/shared/ui/icon';
@@ -40,6 +42,11 @@ import { routeTo } from '@/features/catalog/components/route-to';
 import { useProductAdder } from '@/features/catalog/components/use-product-adder';
 import { trackAnalyticsEvent } from '@/shared/analytics/analytics';
 
+gsap.registerPlugin(useGSAP);
+
+const mobileFocusSelector =
+  'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProps }) {
   const state = useMemo(
     () => parseDiscoveryQuery(props.queryString, props.mode),
@@ -59,9 +66,24 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     trackAnalyticsEvent({ name: 'search', properties: { queryLength: state.q.length } });
   }, [state.q]);
   const [desktopFiltersOpen, setDesktopFiltersOpen] = useState(true);
+  const [desktopFilterRailMounted, setDesktopFilterRailMounted] = useState(true);
   const desktopFilterToggleRef = useRef<HTMLButtonElement>(null);
+  const desktopListingLayoutRef = useRef<HTMLDivElement>(null);
+  const desktopFilterRailRef = useRef<HTMLElement>(null);
+  const desktopHasExitedRef = useRef(false);
+  const desktopMotionIntentRef = useRef(0);
+  const previousDesktopFiltersOpenRef = useRef(desktopFiltersOpen);
+  const desktopAnimationRef = useRef<ReturnType<typeof gsap.timeline> | null>(null);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [mobileFilterSheetMounted, setMobileFilterSheetMounted] = useState(false);
+  const [mobileFiltersClosing, setMobileFiltersClosing] = useState(false);
+  const mobileFilterTriggerRef = useRef<HTMLButtonElement>(null);
+  const mobileFilterOverlayRef = useRef<HTMLDivElement>(null);
   const mobileFilterSheetRef = useRef<HTMLElement>(null);
+  const mobileHasExitedRef = useRef(true);
+  const mobileMotionIntentRef = useRef(0);
+  const mobileAnimationRef = useRef<ReturnType<typeof gsap.timeline> | null>(null);
+  const closeMobileFiltersRef = useRef<() => void>(() => undefined);
   const listingContentRef = useRef<HTMLElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [searchDraft, setSearchDraft] = useState(state.q ?? '');
@@ -100,13 +122,15 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     const previousActiveElement =
       document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousBodyOverflow = document.body.style.overflow;
-    const focusableSelector =
-      'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
     const getFocusableElements = () =>
-      Array.from(sheet.querySelectorAll<HTMLElement>(focusableSelector)).filter(
+      Array.from(sheet.querySelectorAll<HTMLElement>(mobileFocusSelector)).filter(
         (element) => element.getClientRects().length > 0,
       );
     const handleTabKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeMobileFiltersRef.current();
+        return;
+      }
       if (event.key !== 'Tab') return;
 
       const focusableElements = getFocusableElements();
@@ -127,22 +151,196 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
     };
 
     document.body.style.overflow = 'hidden';
-    getFocusableElements()[0]?.focus();
+    const initialFocusFrame = window.requestAnimationFrame(() => {
+      getFocusableElements()[0]?.focus({ preventScroll: true });
+    });
     document.addEventListener('keydown', handleTabKey);
 
     return () => {
+      window.cancelAnimationFrame(initialFocusFrame);
       document.body.style.overflow = previousBodyOverflow;
       document.removeEventListener('keydown', handleTabKey);
       if (previousActiveElement?.isConnected) previousActiveElement.focus();
+      else mobileFilterTriggerRef.current?.focus();
     };
   }, [mobileFiltersOpen]);
+
+  useGSAP(
+    () => {
+      const layout = desktopListingLayoutRef.current;
+      const rail = desktopFilterRailRef.current;
+      if (!desktopFilterRailMounted || !layout || !rail) return;
+
+      const previousOpen = previousDesktopFiltersOpenRef.current;
+      previousDesktopFiltersOpenRef.current = desktopFiltersOpen;
+      if (previousOpen === desktopFiltersOpen && !desktopHasExitedRef.current) return;
+
+      desktopAnimationRef.current?.kill();
+      const motionIntent = desktopMotionIntentRef.current;
+      const wantsOpen = desktopFiltersOpen;
+      const currentColumns = layout.style.gridTemplateColumns;
+      const currentGap = layout.style.columnGap;
+      layout.style.removeProperty('grid-template-columns');
+      layout.style.removeProperty('column-gap');
+      const openStyle = window.getComputedStyle(layout);
+      const openTrackSizes = openStyle.gridTemplateColumns.split(/\s+/).map(Number.parseFloat);
+      const openGap = Number.parseFloat(openStyle.columnGap || '0');
+      if (currentColumns) layout.style.gridTemplateColumns = currentColumns;
+      if (currentGap) layout.style.columnGap = currentGap;
+
+      const [railWidth = 0, resultsWidth = 0] = openTrackSizes;
+      const openColumns = `${railWidth}px ${resultsWidth}px`;
+      const targetColumns = wantsOpen ? openColumns : `0px ${layout.clientWidth}px`;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (wantsOpen && desktopHasExitedRef.current) {
+        gsap.set(layout, { gridTemplateColumns: `0px ${layout.clientWidth}px`, columnGap: 0 });
+        gsap.set(rail, { autoAlpha: 0, x: 18 });
+        desktopHasExitedRef.current = false;
+      }
+
+      const finishTransition = () => {
+        if (motionIntent !== desktopMotionIntentRef.current) return;
+        if (!wantsOpen) {
+          desktopHasExitedRef.current = true;
+          setDesktopFilterRailMounted(false);
+          return;
+        }
+        gsap.set(layout, { clearProps: 'all' });
+        gsap.set(rail, { clearProps: 'all' });
+      };
+
+      if (reducedMotion) {
+        gsap.set(layout, { gridTemplateColumns: targetColumns, columnGap: wantsOpen ? openGap : 0 });
+        gsap.set(rail, { autoAlpha: wantsOpen ? 1 : 0, x: wantsOpen ? 0 : 18 });
+        finishTransition();
+        return;
+      }
+
+      const transition = gsap.timeline({ onComplete: finishTransition });
+      desktopAnimationRef.current = transition;
+      const ease = wantsOpen ? 'power2.out' : 'power2.in';
+      transition
+        .to(layout, {
+          gridTemplateColumns: targetColumns,
+          columnGap: wantsOpen ? openGap : 0,
+          duration: 0.24,
+          ease,
+          overwrite: 'auto',
+        }, 0)
+        .to(rail, {
+          autoAlpha: wantsOpen ? 1 : 0,
+          x: wantsOpen ? 0 : 18,
+          duration: 0.24,
+          ease,
+          overwrite: 'auto',
+        }, 0);
+    },
+    { dependencies: [desktopFiltersOpen, desktopFilterRailMounted], scope: desktopListingLayoutRef },
+  );
+
+  useGSAP(
+    () => {
+      const overlay = mobileFilterOverlayRef.current;
+      const sheet = mobileFilterSheetRef.current;
+      if (!mobileFilterSheetMounted || !overlay || !sheet) return;
+
+      mobileAnimationRef.current?.kill();
+      const motionIntent = mobileMotionIntentRef.current;
+      const isClosing = mobileFiltersClosing;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!isClosing && mobileHasExitedRef.current) {
+        gsap.set(overlay, { autoAlpha: 0 });
+        gsap.set(sheet, { y: 14, scale: 0.985 });
+        mobileHasExitedRef.current = false;
+      }
+
+      const finishTransition = () => {
+        if (motionIntent !== mobileMotionIntentRef.current) return;
+        if (isClosing) {
+          mobileHasExitedRef.current = true;
+          setMobileFiltersOpen(false);
+          setMobileFilterSheetMounted(false);
+          setMobileFiltersClosing(false);
+          return;
+        }
+        gsap.set([overlay, sheet], { clearProps: 'all' });
+      };
+
+      if (reducedMotion) {
+        gsap.set(overlay, { autoAlpha: isClosing ? 0 : 1 });
+        gsap.set(sheet, { y: isClosing ? 14 : 0, scale: isClosing ? 0.985 : 1 });
+        finishTransition();
+        return;
+      }
+
+      const transition = gsap.timeline({ onComplete: finishTransition });
+      mobileAnimationRef.current = transition;
+      const ease = isClosing ? 'power2.in' : 'power2.out';
+      transition
+        .to(overlay, {
+          autoAlpha: isClosing ? 0 : 1,
+          duration: 0.24,
+          ease,
+          overwrite: 'auto',
+        }, 0)
+        .to(sheet, {
+          y: isClosing ? 14 : 0,
+          scale: isClosing ? 0.985 : 1,
+          duration: 0.24,
+          ease,
+          overwrite: 'auto',
+        }, 0);
+    },
+    { dependencies: [mobileFilterSheetMounted, mobileFiltersClosing], scope: mobileFilterOverlayRef },
+  );
+
+  useLayoutEffect(() => {
+    if (desktopFilterRailMounted) return;
+    const layout = desktopListingLayoutRef.current;
+    const rail = desktopFilterRailRef.current;
+    if (!layout || !rail) return;
+    gsap.set(layout, { clearProps: 'all' });
+    gsap.set(rail, { clearProps: 'all' });
+  }, [desktopFilterRailMounted]);
+
   const adder = useProductAdder();
   const update = (changes: Record<string, string | undefined>) =>
     routeTo(buildDiscoveryHref(baseRoute, props.queryString ?? '', changes));
+  const openDesktopFilters = () => {
+    desktopMotionIntentRef.current += 1;
+    setDesktopFilterRailMounted(true);
+    setDesktopFiltersOpen(true);
+  };
   const closeDesktopFilters = () => {
+    if (!desktopFiltersOpen) return;
+    desktopMotionIntentRef.current += 1;
     setDesktopFiltersOpen(false);
     desktopFilterToggleRef.current?.focus();
   };
+  const toggleDesktopFilters = () => {
+    if (desktopFiltersOpen) {
+      closeDesktopFilters();
+      return;
+    }
+    openDesktopFilters();
+  };
+  const openMobileFilters = () => {
+    if (mobileFiltersOpen && !mobileFiltersClosing) return;
+    mobileMotionIntentRef.current += 1;
+    setMobileFilterSheetMounted(true);
+    setMobileFiltersClosing(false);
+    setMobileFiltersOpen(true);
+  };
+  const closeMobileFilters = () => {
+    if (!mobileFiltersOpen || mobileFiltersClosing) return;
+    mobileMotionIntentRef.current += 1;
+    setMobileFiltersClosing(true);
+  };
+  useLayoutEffect(() => {
+    closeMobileFiltersRef.current = closeMobileFilters;
+  });
   const showResults = () => {
     listingContentRef.current?.scrollIntoView({
       behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
@@ -306,7 +504,7 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
             variant="outline"
             aria-expanded={desktopFiltersOpen}
             aria-controls="listing-filter-rail"
-            onClick={() => setDesktopFiltersOpen((open) => !open)}
+            onClick={toggleDesktopFilters}
           >
             <Icon name="filter" size={16} />
             <span>فیلترها</span>
@@ -444,10 +642,13 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
       ) : null}
       <div className="mobile-filter-bar">
         <Button
+          ref={mobileFilterTriggerRef}
           className="mobile-filter-bar__button"
           type="button"
           variant="outline"
-          onClick={() => setMobileFiltersOpen(true)}
+          aria-expanded={mobileFiltersOpen}
+          aria-controls="listing-filter-sheet"
+          onClick={openMobileFilters}
         >
           <Icon name="filter" size={16} />
           <span>فیلترها</span>
@@ -472,10 +673,12 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
         </label>
       </div>
       <div
-        className={'listing-layout' + (desktopFiltersOpen ? '' : ' listing-layout--filters-closed')}
+        ref={desktopListingLayoutRef}
+        className={'listing-layout' + (desktopFilterRailMounted ? '' : ' listing-layout--filters-closed')}
       >
         <aside
-          hidden={!desktopFiltersOpen}
+          ref={desktopFilterRailRef}
+          hidden={!desktopFilterRailMounted}
           id="listing-filter-rail"
           className="filter-rail"
           aria-label="فیلتر محصولات"
@@ -534,53 +737,56 @@ export function ListingDiscovery({ props }: { props: StorefrontDiscoveryPageProp
           {adder.feedback ? <AddToCartFeedback {...adder.feedback} /> : null}
         </section>
       </div>
-      {mobileFiltersOpen ? (
-        <div
-          className="listing-filter-overlay"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setMobileFiltersOpen(false);
-          }}
+      <div
+        ref={mobileFilterOverlayRef}
+        hidden={!mobileFilterSheetMounted}
+        className="listing-filter-overlay"
+        role="presentation"
+        onMouseDown={(event) => {
+          if (event.target !== event.currentTarget) return;
+          event.preventDefault();
+          mobileFilterSheetRef.current
+            ?.querySelector<HTMLElement>(mobileFocusSelector)
+            ?.focus({ preventScroll: true });
+          closeMobileFilters();
+        }}
+      >
+        <section
+          ref={mobileFilterSheetRef}
+          id="listing-filter-sheet"
+          className="listing-filter-sheet"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="mobile-discovery-filters-title"
         >
-          <section
-            ref={mobileFilterSheetRef}
-            className="listing-filter-sheet"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="mobile-discovery-filters-title"
-            onKeyDown={(event) => {
-              if (event.key === 'Escape') setMobileFiltersOpen(false);
-            }}
-          >
-            <div className="listing-filter-sheet__heading">
-              <h2 className="text-lg" id="mobile-discovery-filters-title">
-                فیلترها
-              </h2>
-              <Button
-                className="icon-button"
-                type="button"
-                onClick={() => setMobileFiltersOpen(false)}
-                aria-label="بستن فیلترها"
-              >
-                <Icon name="close" />
-              </Button>
-            </div>
-            {renderFilters(true)}
-            <div className="listing-filter-sheet__footer">
-              <Button
-                className="listing-filter-sheet__apply"
-                type="button"
-                onClick={() => setMobileFiltersOpen(false)}
-              >
-                اعمال فیلتر ({formatPersianNumber(productsQuery.data?.total ?? 0)} نتیجه)
-              </Button>
-              <a className="listing-filter-sheet__reset" href={baseRoute}>
-                حذف همه فیلترها
-              </a>
-            </div>
-          </section>
-        </div>
-      ) : null}
+          <div className="listing-filter-sheet__heading">
+            <h2 className="text-lg" id="mobile-discovery-filters-title">
+              فیلترها
+            </h2>
+            <Button
+              className="icon-button"
+              type="button"
+              onClick={closeMobileFilters}
+              aria-label="بستن فیلترها"
+            >
+              <Icon name="close" />
+            </Button>
+          </div>
+          {renderFilters(true)}
+          <div className="listing-filter-sheet__footer">
+            <Button
+              className="listing-filter-sheet__apply"
+              type="button"
+              onClick={closeMobileFilters}
+            >
+              اعمال فیلتر ({formatPersianNumber(productsQuery.data?.total ?? 0)} نتیجه)
+            </Button>
+            <a className="listing-filter-sheet__reset" href={baseRoute}>
+              حذف همه فیلترها
+            </a>
+          </div>
+        </section>
+      </div>
     </main>
   );
 }

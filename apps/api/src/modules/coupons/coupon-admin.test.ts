@@ -33,7 +33,7 @@ function createStaff(roles: string[]): AuthenticatedStaff {
 }
 
 function createFixture() {
-  const now = new Date('2026-09-09T10:00:00.000Z');
+  const now = new Date();
   const state: { coupon: FakeCoupon | null; audits: Array<Record<string, unknown>> } = {
     coupon: {
       id: 'coupon-1',
@@ -41,8 +41,8 @@ function createFixture() {
       type: 'PERCENTAGE',
       amount: 10,
       minimumOrderToman: 200_000,
-      activeFrom: new Date('2026-09-01T00:00:00.000Z'),
-      activeUntil: new Date('2026-10-01T00:00:00.000Z'),
+      activeFrom: new Date(now.getTime() - 86_400_000),
+      activeUntil: new Date(now.getTime() + 86_400_000),
       maxRedemptions: 100,
       perUserLimit: 1,
       isActive: true,
@@ -114,7 +114,10 @@ function createFixture() {
 
 test('staff can list coupon status and admins can create audited coupons', async () => {
   const fixture = createFixture();
-  const page = await fixture.service.listForStaff(createStaff(['support']), new AdminCouponListQueryDto());
+  const page = await fixture.service.listForStaff(
+    createStaff(['support']),
+    new AdminCouponListQueryDto(),
+  );
   assert.equal(page.total, 1);
   assert.equal(page.items[0]?.status, 'ACTIVE');
 

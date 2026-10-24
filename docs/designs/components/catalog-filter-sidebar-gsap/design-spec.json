@@ -1,0 +1,1126 @@
+{
+  "schemaVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "title": "Catalog filter rail and mobile dialog",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "owner": {
+    "componentPath": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+    "stylePath": "apps/web/src/styles/storefront-reference.css",
+    "dependencyPath": "apps/web/package.json",
+    "lockPath": "bun.lock"
+  },
+  "purpose": "Let shoppers refine a Persian RTL product listing on desktop and mobile without losing the results context or changing filter query behavior.",
+  "layout": {
+    "desktop": {
+      "viewportWidthPx": 1440,
+      "viewportHeightPx": 900,
+      "shellMaxWidthPx": 1280,
+      "railMinWidthPx": 280,
+      "railFraction": 0.43,
+      "resultsFraction": 1,
+      "columnGapPx": 18,
+      "railStickyTopExpression": "calc(var(--header-height) + 14px)",
+      "railMaxHeightExpression": "min(600px, calc(100vh - 325px))",
+      "railSide": "right"
+    },
+    "mobile": {
+      "breakpointMaxWidthPx": 767,
+      "viewportWidthPx": 390,
+      "viewportHeightPx": 844,
+      "dialogWidthPx": 358,
+      "dialogHeightPx": 756,
+      "dialogLeftPx": 16,
+      "dialogTopPx": 44,
+      "dialogCornerRadiusPx": 15,
+      "overlayColor": "rgb(26 18 14 / 42%)",
+      "dialogAlignment": "center",
+      "closeButtonTargetPx": 44,
+      "resetLinkTargetHeightPx": 44
+    }
+  },
+  "typography": {
+    "storefrontStack": "Vazirmatn, Tahoma, sans-serif",
+    "referenceFallbackUsed": "Tahoma, sans-serif",
+    "locale": "fa-IR",
+    "direction": "rtl"
+  },
+  "states": [
+    "desktop-open",
+    "desktop-closing",
+    "desktop-closed",
+    "mobile-open",
+    "mobile-closing",
+    "mobile-closed",
+    "reduced-motion"
+  ],
+  "motion": {
+    "engine": "GSAP",
+    "reactIntegration": "@gsap/react useGSAP",
+    "durationsStatus": "PROPOSED",
+    "desktop": {
+      "durationMs": 240,
+      "enterEase": "power2.out",
+      "exitEase": "power2.in",
+      "railEnterOffsetXPx": 18,
+      "railExitOffsetXPx": 18,
+      "layoutBehavior": "Animate the RTL rail grid track to zero while the results track grows; hide the rail after exit completes."
+    },
+    "mobile": {
+      "durationMs": 240,
+      "ease": "power2.out",
+      "dialogEnterOffsetYPx": 14,
+      "dialogExitOffsetYPx": 14,
+      "dialogEnterScale": 0.985,
+      "overlayBehavior": "Fade the backdrop in and out with the dialog."
+    },
+    "reducedMotion": "Apply the final visual state immediately with no translation or scaling.",
+    "lifecycle": "Keep the dialog mounted, modal focus containment active, and body scroll locked until its exit animation finishes."
+  },
+  "tokens": {
+    "page": "#f7f4f0",
+    "surface": "#fffcf9",
+    "surfaceSoft": "#f1ece7",
+    "ink": "#302b29",
+    "muted": "#6f6560",
+    "rosewood": "#7b4b59",
+    "rosewoodDark": "#633d49",
+    "rosewoodSoft": "#f2e8eb",
+    "line": "rgb(83 61 46 / 13%)",
+    "shadow": "0 10px 30px rgb(58 38 24 / 6.5%)",
+    "overlay": "rgb(26 18 14 / 42%)"
+  },
+  "preservedBehavior": [
+    "Keep the existing category, size, color, material, price, stock, and sale URL/query behavior.",
+    "Keep desktop aria-expanded state and the listing-filter-rail control relationship.",
+    "Keep the mobile dialog role, aria-modal semantics, Escape dismissal, focus trap, body scroll lock, and focus restoration.",
+    "Keep backdrop, close, and apply actions connected to the same mobile close lifecycle.",
+    "Keep the mobile dialog at the centered shape defined by the effective stylesheet.",
+    "Keep reduced-motion preference usable without motion.",
+    "Keep the rail on the right side of the Persian RTL desktop listing and hide it on mobile."
+  ],
+  "implementationContract": [
+    "Use GSAP and the official @gsap/react integration for React lifecycle cleanup.",
+    "Separate desired visibility from mounted presence so exit motion completes before hidden state is applied.",
+    "Animate the desktop grid track and rail together; allow the results column to reclaim the available width.",
+    "Animate the mobile backdrop and centered dialog together; retain modal focus and body scroll lock through exit.",
+    "Use 240ms and the listed distances as proposed interaction values; keep them easy to tune.",
+    "Use no image assets in the component; static reference garment shapes and counts are labeled illustrative."
+  ],
+  "evidence": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "S6",
+    "S7",
+    "S8",
+    "S9"
+  ],
+  "limitations": [
+    "The clean references are controlled static recreations and not captures of the running storefront.",
+    "Illustrative product names, cards, counts, and selected facet values are not live catalog data.",
+    "Motion distance and duration are proposed because the source defines no animation values.",
+    "The static references use a local Tahoma fallback; the application prefers Vazirmatn when available."
+  ],
+  "sourceIndex": {
+    "path": "source-index.json",
+    "sourceIds": [
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "S5",
+      "S6",
+      "S7",
+      "S8",
+      "S9"
+    ]
+  },
+  "authorityDecisions": {
+    "path": "authority-map.json",
+    "resolvedConflictIds": [
+      "rail-side",
+      "mobile-dialog-shape",
+      "line-token",
+      "mobile-control-targets"
+    ]
+  },
+  "tokenEvidence": [
+    {
+      "id": "page",
+      "value": "#f7f4f0",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "surface",
+      "value": "#fffcf9",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "surface-soft",
+      "value": "#f1ece7",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "ink",
+      "value": "#302b29",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "muted",
+      "value": "#6f6560",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "rosewood",
+      "value": "#7b4b59",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "rosewood-dark",
+      "value": "#633d49",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "rosewood-soft",
+      "value": "#f2e8eb",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "line",
+      "value": "rgb(83 61 46 / 13%)",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "shadow",
+      "value": "0 10px 30px rgb(58 38 24 / 6.5%)",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S6"
+      ]
+    },
+    {
+      "id": "font-body",
+      "value": "'Vazirmatn', Tahoma, sans-serif",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S7"
+      ]
+    },
+    {
+      "id": "overlay",
+      "value": "rgb(26 18 14 / 42%)",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S5"
+      ]
+    },
+    {
+      "id": "desktop-motion-duration",
+      "value": "240ms",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [],
+      "rationale": "The source defines no animation duration."
+    },
+    {
+      "id": "mobile-motion-distance",
+      "value": "14px",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [],
+      "rationale": "The source defines no animation distance."
+    },
+    {
+      "id": "mobile-motion-scale",
+      "value": "0.985",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [],
+      "rationale": "The source defines no animation scale."
+    }
+  ],
+  "sceneGraph": {
+    "file": "scene-graph.json",
+    "frameIds": [
+      "desktop-open",
+      "desktop-closed",
+      "mobile-open",
+      "mobile-closed"
+    ],
+    "nodeIds": [
+      "desktop-page",
+      "desktop-header",
+      "desktop-listing-header",
+      "desktop-filter-toggle",
+      "desktop-listing-layout",
+      "desktop-filter-rail",
+      "desktop-close-button",
+      "desktop-apply-button",
+      "desktop-reset-link",
+      "desktop-listing-content",
+      "desktop-product-grid",
+      "mobile-page",
+      "mobile-header",
+      "mobile-listing-header",
+      "mobile-filter-trigger",
+      "mobile-product-grid",
+      "mobile-overlay",
+      "mobile-filter-sheet",
+      "mobile-close-button",
+      "mobile-apply-button",
+      "mobile-reset-link"
+    ]
+  },
+  "frames": [
+    {
+      "id": "desktop-open",
+      "state": "open",
+      "viewport": {
+        "widthPx": 1440,
+        "heightPx": 900,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "MEASURED",
+      "sourceRefs": [
+        "S2",
+        "S7",
+        "S4",
+        "S6"
+      ]
+    },
+    {
+      "id": "desktop-closed",
+      "state": "closed",
+      "viewport": {
+        "widthPx": 1440,
+        "heightPx": 900,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "MEASURED",
+      "sourceRefs": [
+        "S2",
+        "S7",
+        "S4",
+        "S6"
+      ]
+    },
+    {
+      "id": "mobile-open",
+      "state": "open",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "MEASURED",
+      "sourceRefs": [
+        "S2",
+        "S7",
+        "S9",
+        "S5",
+        "S3",
+        "S6"
+      ]
+    },
+    {
+      "id": "mobile-closed",
+      "state": "closed",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844,
+        "deviceScaleFactor": 1
+      },
+      "evidenceStatus": "MEASURED",
+      "sourceRefs": [
+        "S2",
+        "S7",
+        "S9",
+        "S5",
+        "S3",
+        "S6"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "desktop-page",
+      "parentId": null,
+      "role": "main",
+      "children": [
+        "desktop-header",
+        "desktop-listing-header",
+        "desktop-listing-layout"
+      ],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [
+        "page"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "خانه / فروشگاه / لباس روزمره NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها مرتب‌سازی جدیدترین⌄ فیلترها حذف همه × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه)حذف همه فیلترها ۱۲۸ نتیجه ارسال رایگان برای خرید بالای ۲ میلیون تومان NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان کارت‌ها و شمارش‌ها نمونهٔ نمایشی هستند؛ هندسهٔ فیلتر از CSS فعال صفحه گرفته شده است."
+    },
+    {
+      "id": "desktop-header",
+      "parentId": "desktop-page",
+      "role": "header",
+      "children": [],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S7"
+      ],
+      "tokenRefs": [
+        "surface",
+        "line"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "NOVA ATELIER EDITORIAL زنانه مردانه دسته‌بندی‌ها راهنما جست‌وجو ♡ سبد خرید"
+    },
+    {
+      "id": "desktop-listing-header",
+      "parentId": "desktop-page",
+      "role": "listing-header",
+      "children": [
+        "desktop-filter-toggle"
+      ],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها مرتب‌سازی جدیدترین⌄"
+    },
+    {
+      "id": "desktop-filter-toggle",
+      "parentId": "desktop-listing-header",
+      "role": "button",
+      "children": [],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [
+        "rosewood"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "desktop-open",
+        "desktop-close"
+      ],
+      "content": "☷ فیلترها"
+    },
+    {
+      "id": "desktop-listing-layout",
+      "parentId": "desktop-page",
+      "role": "desktop-grid",
+      "children": [
+        "desktop-filter-rail",
+        "desktop-listing-content"
+      ],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S4"
+      ],
+      "tokenRefs": [],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "فیلترها حذف همه × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه)حذف همه فیلترها ۱۲۸ نتیجه ارسال رایگان برای خرید بالای ۲ میلیون تومان NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان"
+    },
+    {
+      "id": "desktop-filter-rail",
+      "parentId": "desktop-listing-layout",
+      "role": "filter-rail",
+      "children": [
+        "desktop-close-button",
+        "desktop-apply-button",
+        "desktop-reset-link"
+      ],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2",
+        "S4",
+        "S6"
+      ],
+      "tokenRefs": [
+        "surface",
+        "line",
+        "shadow"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "فیلتر محصولات"
+    },
+    {
+      "id": "desktop-close-button",
+      "parentId": "desktop-filter-rail",
+      "role": "button",
+      "children": [],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [],
+      "assetRefs": [],
+      "interactionRefs": [
+        "desktop-close"
+      ],
+      "content": "بستن"
+    },
+    {
+      "id": "desktop-apply-button",
+      "parentId": "desktop-filter-rail",
+      "role": "button",
+      "children": [],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [
+        "rosewood"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "desktop-apply"
+      ],
+      "content": "اعمال فیلتر (۱۲۸ نتیجه)"
+    },
+    {
+      "id": "desktop-reset-link",
+      "parentId": "desktop-filter-rail",
+      "role": "link",
+      "children": [],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [
+        "rosewood"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "desktop-reset"
+      ],
+      "content": "حذف همه فیلترها"
+    },
+    {
+      "id": "desktop-listing-content",
+      "parentId": "desktop-listing-layout",
+      "role": "results-region",
+      "children": [
+        "desktop-product-grid"
+      ],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S2",
+        "S4"
+      ],
+      "tokenRefs": [],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "نتایج محصولات"
+    },
+    {
+      "id": "desktop-product-grid",
+      "parentId": "desktop-listing-content",
+      "role": "product-grid",
+      "children": [],
+      "frameIds": [
+        "desktop-open",
+        "desktop-closed"
+      ],
+      "sourceRefs": [
+        "S4"
+      ],
+      "tokenRefs": [],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان"
+    },
+    {
+      "id": "mobile-page",
+      "parentId": null,
+      "role": "main",
+      "children": [
+        "mobile-header",
+        "mobile-listing-header",
+        "mobile-filter-trigger",
+        "mobile-product-grid",
+        "mobile-overlay"
+      ],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [
+        "page"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها ۳ مرتب‌سازی جدیدترین⌄ NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان فیلترها × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه) حذف همه فیلترها"
+    },
+    {
+      "id": "mobile-header",
+      "parentId": "mobile-page",
+      "role": "header",
+      "children": [],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S7"
+      ],
+      "tokenRefs": [
+        "surface",
+        "line"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "NOVA ATELIER EDITORIAL ♡ سبد خرید"
+    },
+    {
+      "id": "mobile-listing-header",
+      "parentId": "mobile-page",
+      "role": "listing-header",
+      "children": [],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S2"
+      ],
+      "tokenRefs": [],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما"
+    },
+    {
+      "id": "mobile-filter-trigger",
+      "parentId": "mobile-page",
+      "role": "button",
+      "children": [],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S2",
+        "S9"
+      ],
+      "tokenRefs": [
+        "rosewood"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "mobile-open"
+      ],
+      "content": "☷ فیلترها ۳"
+    },
+    {
+      "id": "mobile-product-grid",
+      "parentId": "mobile-page",
+      "role": "product-grid",
+      "children": [],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S5"
+      ],
+      "tokenRefs": [],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان"
+    },
+    {
+      "id": "mobile-overlay",
+      "parentId": "mobile-page",
+      "role": "modal-backdrop",
+      "children": [
+        "mobile-filter-sheet"
+      ],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S3",
+        "S5"
+      ],
+      "tokenRefs": [
+        "overlay"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "mobile-backdrop-close"
+      ],
+      "content": "فیلترها × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه) حذف همه فیلترها"
+    },
+    {
+      "id": "mobile-filter-sheet",
+      "parentId": "mobile-overlay",
+      "role": "modal-dialog",
+      "children": [
+        "mobile-close-button",
+        "mobile-apply-button",
+        "mobile-reset-link"
+      ],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S3",
+        "S5",
+        "S6"
+      ],
+      "tokenRefs": [
+        "surface",
+        "line",
+        "shadow"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [],
+      "content": "فیلترها × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه) حذف همه فیلترها"
+    },
+    {
+      "id": "mobile-close-button",
+      "parentId": "mobile-filter-sheet",
+      "role": "button",
+      "children": [],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S3",
+        "S9"
+      ],
+      "tokenRefs": [
+        "surface-soft",
+        "ink"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "mobile-close-button"
+      ],
+      "content": "بستن فیلترها"
+    },
+    {
+      "id": "mobile-apply-button",
+      "parentId": "mobile-filter-sheet",
+      "role": "button",
+      "children": [],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S3",
+        "S9"
+      ],
+      "tokenRefs": [
+        "rosewood"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "mobile-apply-close"
+      ],
+      "content": "اعمال فیلتر (۱۲۸ نتیجه)"
+    },
+    {
+      "id": "mobile-reset-link",
+      "parentId": "mobile-filter-sheet",
+      "role": "link",
+      "children": [],
+      "frameIds": [
+        "mobile-open",
+        "mobile-closed"
+      ],
+      "sourceRefs": [
+        "S3",
+        "S9"
+      ],
+      "tokenRefs": [
+        "rosewood"
+      ],
+      "assetRefs": [],
+      "interactionRefs": [
+        "mobile-reset"
+      ],
+      "content": "حذف همه فیلترها"
+    }
+  ],
+  "assets": [],
+  "interactions": [
+    {
+      "id": "desktop-open",
+      "trigger": "desktop filter button",
+      "event": "click",
+      "fromState": "desktop-closed",
+      "toState": "desktop-open",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "motion": {
+        "engine": "GSAP",
+        "durationMs": 240,
+        "ease": "power2.out",
+        "properties": [
+          "gridTemplateColumns",
+          "columnGap",
+          "autoAlpha",
+          "x"
+        ],
+        "valuesEvidenceStatus": "PROPOSED"
+      }
+    },
+    {
+      "id": "desktop-close",
+      "trigger": "desktop close button or toggle",
+      "event": "click",
+      "fromState": "desktop-open",
+      "toState": "desktop-closed",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S2"
+      ],
+      "motion": {
+        "engine": "GSAP",
+        "durationMs": 240,
+        "ease": "power2.in",
+        "properties": [
+          "gridTemplateColumns",
+          "columnGap",
+          "autoAlpha",
+          "x"
+        ],
+        "valuesEvidenceStatus": "PROPOSED"
+      }
+    },
+    {
+      "id": "desktop-apply",
+      "trigger": "desktop apply button",
+      "event": "click",
+      "fromState": "desktop-open",
+      "toState": "desktop-open",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ],
+      "motion": {
+        "engine": "none",
+        "durationMs": 0,
+        "ease": "none",
+        "properties": [
+          "scrollIntoView"
+        ],
+        "valuesEvidenceStatus": "NOT_SPECIFIED"
+      }
+    },
+    {
+      "id": "desktop-reset",
+      "trigger": "desktop reset link",
+      "event": "navigate",
+      "fromState": "desktop-open",
+      "toState": "desktop-open",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S2"
+      ],
+      "motion": {
+        "engine": "none",
+        "durationMs": 0,
+        "ease": "none",
+        "properties": [
+          "queryNavigation"
+        ],
+        "valuesEvidenceStatus": "NOT_SPECIFIED"
+      }
+    },
+    {
+      "id": "mobile-open",
+      "trigger": "mobile filter trigger",
+      "event": "click",
+      "fromState": "mobile-closed",
+      "toState": "mobile-open",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "motion": {
+        "engine": "GSAP",
+        "durationMs": 240,
+        "ease": "power2.out",
+        "properties": [
+          "autoAlpha",
+          "y",
+          "scale"
+        ],
+        "valuesEvidenceStatus": "PROPOSED"
+      }
+    },
+    {
+      "id": "mobile-close-button",
+      "trigger": "mobile close button",
+      "event": "click",
+      "fromState": "mobile-open",
+      "toState": "mobile-closed",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "motion": {
+        "engine": "GSAP",
+        "durationMs": 240,
+        "ease": "power2.in",
+        "properties": [
+          "autoAlpha",
+          "y",
+          "scale"
+        ],
+        "valuesEvidenceStatus": "PROPOSED"
+      }
+    },
+    {
+      "id": "mobile-escape-close",
+      "trigger": "Escape key",
+      "event": "keydown",
+      "fromState": "mobile-open",
+      "toState": "mobile-closed",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "motion": {
+        "engine": "GSAP",
+        "durationMs": 240,
+        "ease": "power2.in",
+        "properties": [
+          "autoAlpha",
+          "y",
+          "scale"
+        ],
+        "valuesEvidenceStatus": "PROPOSED"
+      }
+    },
+    {
+      "id": "mobile-backdrop-close",
+      "trigger": "backdrop press",
+      "event": "mousedown",
+      "fromState": "mobile-open",
+      "toState": "mobile-closed",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "motion": {
+        "engine": "GSAP",
+        "durationMs": 240,
+        "ease": "power2.in",
+        "properties": [
+          "autoAlpha",
+          "y",
+          "scale"
+        ],
+        "valuesEvidenceStatus": "PROPOSED"
+      }
+    },
+    {
+      "id": "mobile-apply-close",
+      "trigger": "apply filters button",
+      "event": "click",
+      "fromState": "mobile-open",
+      "toState": "mobile-closed",
+      "evidenceStatus": "PROPOSED",
+      "sourceRefs": [
+        "S1",
+        "S3"
+      ],
+      "motion": {
+        "engine": "GSAP",
+        "durationMs": 240,
+        "ease": "power2.in",
+        "properties": [
+          "autoAlpha",
+          "y",
+          "scale"
+        ],
+        "valuesEvidenceStatus": "PROPOSED"
+      }
+    },
+    {
+      "id": "mobile-reset",
+      "trigger": "reset filters link",
+      "event": "navigate",
+      "fromState": "mobile-open",
+      "toState": "mobile-open",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S3"
+      ],
+      "motion": {
+        "engine": "none",
+        "durationMs": 0,
+        "ease": "none",
+        "properties": [
+          "queryNavigation"
+        ],
+        "valuesEvidenceStatus": "NOT_SPECIFIED"
+      }
+    },
+    {
+      "id": "reduced-motion",
+      "trigger": "prefers-reduced-motion media query",
+      "event": "change",
+      "fromState": "any-motion-state",
+      "toState": "final-state",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "sourceRefs": [
+        "S1"
+      ],
+      "motion": {
+        "engine": "none",
+        "durationMs": 0,
+        "ease": "none",
+        "properties": [
+          "opacity",
+          "transform",
+          "gridTemplateColumns"
+        ],
+        "valuesEvidenceStatus": "SOURCE_DEFINED"
+      }
+    }
+  ],
+  "artifactIndex": [
+    {
+      "id": "visual-board",
+      "path": "01-Visual-Design-Board.png",
+      "kind": "visual-board",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "desktop-reference",
+      "path": "02-Clean-Reference.png",
+      "kind": "clean-reference",
+      "status": "GENERATED"
+    },
+    {
+      "id": "mobile-reference",
+      "path": "03-Clean-Reference-Mobile.png",
+      "kind": "clean-mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "id": "canonical-model",
+      "path": "design-spec.json",
+      "kind": "source-model",
+      "status": "GENERATED"
+    },
+    {
+      "id": "model-schema",
+      "path": "design-spec.schema.json",
+      "kind": "schema",
+      "status": "VERIFIED"
+    },
+    {
+      "id": "quality-report",
+      "path": "qa-report.json",
+      "kind": "qa-report",
+      "status": "GENERATED"
+    },
+    {
+      "id": "render-source",
+      "path": "render-source/README.md",
+      "kind": "render-source",
+      "status": "GENERATED"
+    },
+    {
+      "id": "runtime-mobile-capture",
+      "path": "runtime-mobile-open.png",
+      "kind": "runtime-capture",
+      "status": "VERIFIED"
+    }
+  ],
+  "qaResult": {
+    "reportPath": "qa-report.json",
+    "status": "PASS_WITH_WARNINGS",
+    "designPackageStatus": "PASS",
+    "implementationStatus": "PASS_WITH_WARNINGS"
+  }
+}

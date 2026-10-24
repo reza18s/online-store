@@ -21,7 +21,7 @@
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "bun test ./apps/api/src ./apps/web/src ./apps/admin/src ./apps/worker/src ./packages/api-client/src ./packages/config/src ./packages/db/src ./packages/ui/src ./test",
+    "test": "bun test ./apps/api/src && bun run --cwd apps/web test && bun run --cwd apps/admin test && bun test ./apps/worker/src ./packages/api-client/src ./packages/config/src ./packages/db/src ./packages/ui/src ./test",
     "typecheck:test": "tsc -p test/tsconfig.json --noEmit",
     "test:integration": "bun run test/integration/run.ts",
     "test:local-providers": "bun test packages/config/src/env.test.ts apps/api/src/modules/auth/auth.test.ts apps/api/src/modules/auth/otp-delivery.test.ts apps/api/src/modules/checkout/shipping.provider.test.ts apps/api/src/modules/payments/local.payment.gateway.test.ts apps/api/src/modules/payments/payments.module.test.ts apps/api/src/modules/staff-auth/staff-auth.test.ts apps/worker/src/notification-sender.test.ts",

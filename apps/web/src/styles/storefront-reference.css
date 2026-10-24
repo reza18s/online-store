@@ -465,6 +465,7 @@ body {
   align-items: end;
   background: rgb(26 18 14 / 42%);
 }
+.listing-filter-overlay[hidden] { display: none !important; }
 .listing-filter-sheet {
   width: 100%;
   max-height: 88svh;
@@ -2628,9 +2629,10 @@ body {
 }
 
 .listing-filter-sheet .listing-filter-sheet__heading .icon-button {
-  width: 32px;
-  min-width: 32px;
-  min-height: 32px;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
   border: 0 !important;
   border-radius: 8px !important;
   padding: 0 !important;
@@ -3503,7 +3505,7 @@ body {
 }
 .listing-page .listing-filter-sheet__reset {
   display: inline-flex;
-  min-height: 27px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
   color: var(--nova-ref-wine);
@@ -3572,6 +3574,7 @@ body {
   position: sticky;
   top: calc(var(--header-height) + 14px);
   display: flex;
+  min-width: 0;
   max-height: min(600px, calc(100vh - 325px));
   flex-direction: column;
   overflow: hidden;

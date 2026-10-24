@@ -1,0 +1,798 @@
+{
+  "renderer": {
+    "browser": "Google Chrome via Playwright",
+    "browserVersion": "156.0.8078.47",
+    "deviceScaleFactor": 1,
+    "fontPolicy": "No remote fonts; local browser/system fonts only.",
+    "screenshots": {
+      "board": {
+        "widthPx": 1536,
+        "heightPx": 1024,
+        "file": "01-Visual-Design-Board.png"
+      },
+      "desktop": {
+        "widthPx": 1440,
+        "heightPx": 900,
+        "file": "02-Clean-Reference.png"
+      },
+      "mobile": {
+        "widthPx": 390,
+        "heightPx": 844,
+        "file": "03-Clean-Reference-Mobile.png"
+      }
+    }
+  },
+  "frames": [
+    {
+      "id": "desktop-open",
+      "state": "open",
+      "viewport": {
+        "widthPx": 1440,
+        "heightPx": 900,
+        "deviceScaleFactor": 1
+      },
+      "nodes": [
+        {
+          "id": "desktop-page",
+          "visible": true,
+          "content": "خانه / فروشگاه / لباس روزمره NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها مرتب‌سازی جدیدترین⌄ فیلترها حذف همه × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه)حذف همه فیلترها ۱۲۸ نتیجه ارسال رایگان برای خرید بالای ۲ میلیون تومان NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان کارت‌ها و شمارش‌ها نمونهٔ نمایشی هستند؛ هندسهٔ فیلتر از CSS فعال صفحه گرفته شده است.",
+          "bounds": {
+            "x": 80,
+            "y": 68,
+            "width": 1280,
+            "height": 849.97
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-header",
+          "visible": true,
+          "content": "NOVA ATELIER EDITORIAL زنانه مردانه دسته‌بندی‌ها راهنما جست‌وجو ♡ سبد خرید",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 68
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-listing-header",
+          "visible": true,
+          "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها مرتب‌سازی جدیدترین⌄",
+          "bounds": {
+            "x": 80,
+            "y": 123.14,
+            "width": 1280,
+            "height": 97.98
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-filter-toggle",
+          "visible": true,
+          "content": "☷ فیلترها",
+          "bounds": {
+            "x": 228.66,
+            "y": 164.13,
+            "width": 80.61,
+            "height": 42
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-listing-layout",
+          "visible": true,
+          "content": "فیلترها حذف همه × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه)حذف همه فیلترها ۱۲۸ نتیجه ارسال رایگان برای خرید بالای ۲ میلیون تومان NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان",
+          "bounds": {
+            "x": 80,
+            "y": 236.13,
+            "width": 1280,
+            "height": 575
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-filter-rail",
+          "visible": true,
+          "content": "فیلتر محصولات",
+          "bounds": {
+            "x": 980.53,
+            "y": 236.13,
+            "width": 379.47,
+            "height": 575
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "sticky",
+            "borderRadius": "13px",
+            "maxHeight": "575px"
+          }
+        },
+        {
+          "id": "desktop-close-button",
+          "visible": true,
+          "content": "بستن",
+          "bounds": {
+            "x": 995.53,
+            "y": 249.13,
+            "width": 28,
+            "height": 28
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "7px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-apply-button",
+          "visible": true,
+          "content": "اعمال فیلتر (۱۲۸ نتیجه)",
+          "bounds": {
+            "x": 995.53,
+            "y": 734.69,
+            "width": 349.47,
+            "height": 44
+          },
+          "computed": {
+            "display": "inline-block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-reset-link",
+          "visible": true,
+          "content": "حذف همه فیلترها",
+          "bounds": {
+            "x": 1136.95,
+            "y": 783.69,
+            "width": 66.63,
+            "height": 14.84
+          },
+          "computed": {
+            "display": "inline-block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-listing-content",
+          "visible": true,
+          "content": "نتایج محصولات",
+          "bounds": {
+            "x": 80,
+            "y": 236.13,
+            "width": 882.53,
+            "height": 354.98
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-product-grid",
+          "visible": true,
+          "content": "NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان",
+          "bounds": {
+            "x": 80,
+            "y": 266.27,
+            "width": 882.53,
+            "height": 324.84
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        }
+      ],
+      "fonts": {
+        "tahoma": true,
+        "vazirmatn": true
+      }
+    },
+    {
+      "id": "desktop-closed",
+      "state": "closed",
+      "viewport": {
+        "widthPx": 1440,
+        "heightPx": 900,
+        "deviceScaleFactor": 1
+      },
+      "nodes": [
+        {
+          "id": "desktop-page",
+          "visible": true,
+          "content": "خانه / فروشگاه / لباس روزمره NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها مرتب‌سازی جدیدترین⌄ ۱۲۸ نتیجه ارسال رایگان برای خرید بالای ۲ میلیون تومان NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان کارت‌ها و شمارش‌ها نمونهٔ نمایشی هستند؛ هندسهٔ فیلتر از CSS فعال صفحه گرفته شده است.",
+          "bounds": {
+            "x": 80,
+            "y": 68,
+            "width": 1280,
+            "height": 629.95
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-header",
+          "visible": true,
+          "content": "NOVA ATELIER EDITORIAL زنانه مردانه دسته‌بندی‌ها راهنما جست‌وجو ♡ سبد خرید",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 1440,
+            "height": 68
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-listing-header",
+          "visible": true,
+          "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها مرتب‌سازی جدیدترین⌄",
+          "bounds": {
+            "x": 80,
+            "y": 123.14,
+            "width": 1280,
+            "height": 97.98
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-filter-toggle",
+          "visible": true,
+          "content": "☷ فیلترها",
+          "bounds": {
+            "x": 228.66,
+            "y": 164.13,
+            "width": 80.61,
+            "height": 42
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-listing-layout",
+          "visible": true,
+          "content": "۱۲۸ نتیجه ارسال رایگان برای خرید بالای ۲ میلیون تومان NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان",
+          "bounds": {
+            "x": 80,
+            "y": 236.13,
+            "width": 1280,
+            "height": 354.98
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-filter-rail",
+          "visible": false,
+          "content": "فیلتر محصولات",
+          "bounds": null,
+          "computed": {
+            "display": "none",
+            "direction": "rtl",
+            "position": "sticky",
+            "borderRadius": "13px",
+            "maxHeight": "575px"
+          }
+        },
+        {
+          "id": "desktop-close-button",
+          "visible": false,
+          "content": "بستن",
+          "bounds": null,
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "7px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-apply-button",
+          "visible": false,
+          "content": "اعمال فیلتر (۱۲۸ نتیجه)",
+          "bounds": null,
+          "computed": {
+            "display": "inline-block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-reset-link",
+          "visible": false,
+          "content": "حذف همه فیلترها",
+          "bounds": null,
+          "computed": {
+            "display": "inline-block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-listing-content",
+          "visible": true,
+          "content": "نتایج محصولات",
+          "bounds": {
+            "x": 80,
+            "y": 236.13,
+            "width": 1280,
+            "height": 354.98
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "desktop-product-grid",
+          "visible": true,
+          "content": "NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان ۱۵٪ پیراهن پیراهن نخی لیانا ۸۴۰٬۰۰۰ تومان",
+          "bounds": {
+            "x": 80,
+            "y": 266.27,
+            "width": 1280,
+            "height": 324.84
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        }
+      ],
+      "fonts": {
+        "tahoma": true,
+        "vazirmatn": true
+      }
+    },
+    {
+      "id": "mobile-open",
+      "state": "open",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844,
+        "deviceScaleFactor": 1
+      },
+      "nodes": [
+        {
+          "id": "mobile-page",
+          "visible": true,
+          "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها ۳ مرتب‌سازی جدیدترین⌄ NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان فیلترها × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه) حذف همه فیلترها",
+          "bounds": {
+            "x": 10,
+            "y": 58,
+            "width": 370,
+            "height": 499.45
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-header",
+          "visible": true,
+          "content": "NOVA ATELIER EDITORIAL ♡ سبد خرید",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 58
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-listing-header",
+          "visible": true,
+          "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما",
+          "bounds": {
+            "x": 10,
+            "y": 68,
+            "width": 370,
+            "height": 73.92
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-filter-trigger",
+          "visible": true,
+          "content": "☷ فیلترها ۳",
+          "bounds": {
+            "x": 198.5,
+            "y": 151.92,
+            "width": 181.5,
+            "height": 44
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-product-grid",
+          "visible": true,
+          "content": "NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان",
+          "bounds": {
+            "x": 10,
+            "y": 205.92,
+            "width": 370,
+            "height": 269.53
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-overlay",
+          "visible": true,
+          "content": "فیلترها × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه) حذف همه فیلترها",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 844
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "fixed",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-filter-sheet",
+          "visible": true,
+          "content": "فیلترها × دسته‌بندی ⌄ لباس روزمره ۱۸ بافت و پلیور ۸ پیراهن ۶ قیمت ⌄ از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄ XS S M L XL رنگ ⌄ جنس پارچه ⌄ پنبه ۱۲ کتان ۷ اعمال فیلتر (۱۲۸ نتیجه) حذف همه فیلترها",
+          "bounds": {
+            "x": 16,
+            "y": 44,
+            "width": 358,
+            "height": 756
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "15px",
+            "maxHeight": "816px"
+          }
+        },
+        {
+          "id": "mobile-close-button",
+          "visible": true,
+          "content": "بستن فیلترها",
+          "bounds": {
+            "x": 33,
+            "y": 61,
+            "width": 44,
+            "height": 44
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "8px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-apply-button",
+          "visible": true,
+          "content": "اعمال فیلتر (۱۲۸ نتیجه)",
+          "bounds": {
+            "x": 33,
+            "y": 695,
+            "width": 324,
+            "height": 44
+          },
+          "computed": {
+            "display": "inline-block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-reset-link",
+          "visible": true,
+          "content": "حذف همه فیلترها",
+          "bounds": {
+            "x": 33,
+            "y": 739,
+            "width": 324,
+            "height": 44
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        }
+      ],
+      "fonts": {
+        "tahoma": true,
+        "vazirmatn": true
+      }
+    },
+    {
+      "id": "mobile-closed",
+      "state": "closed",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844,
+        "deviceScaleFactor": 1
+      },
+      "nodes": [
+        {
+          "id": "mobile-page",
+          "visible": true,
+          "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما ☷ فیلترها ۳ مرتب‌سازی جدیدترین⌄ NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان",
+          "bounds": {
+            "x": 10,
+            "y": 58,
+            "width": 370,
+            "height": 499.45
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-header",
+          "visible": true,
+          "content": "NOVA ATELIER EDITORIAL ♡ سبد خرید",
+          "bounds": {
+            "x": 0,
+            "y": 0,
+            "width": 390,
+            "height": 58
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-listing-header",
+          "visible": true,
+          "content": "NOVA / CATALOG لباس‌های روزمره ۱۲۸ مدل برای انتخاب شما",
+          "bounds": {
+            "x": 10,
+            "y": 68,
+            "width": 370,
+            "height": 73.92
+          },
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-filter-trigger",
+          "visible": true,
+          "content": "☷ فیلترها ۳",
+          "bounds": {
+            "x": 198.5,
+            "y": 151.92,
+            "width": 181.5,
+            "height": 44
+          },
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-product-grid",
+          "visible": true,
+          "content": "NEW لباس روزمره مانتو لینن آوین ۱٬۲۸۰٬۰۰۰ تومان پرفروش بافت و پلیور بافت یقه‌گرد بهار ۹۸۰٬۰۰۰ تومان",
+          "bounds": {
+            "x": 10,
+            "y": 205.92,
+            "width": 370,
+            "height": 269.53
+          },
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-overlay",
+          "visible": false,
+          "content": "فیلترها× دسته‌بندی ⌄لباس روزمره ۱۸بافت و پلیور ۸پیراهن ۶ قیمت ⌄از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄XSSMLXL رنگ ⌄ جنس پارچه ⌄پنبه ۱۲کتان ۷ اعمال فیلتر (۱۲۸ نتیجه)حذف همه فیلترها",
+          "bounds": null,
+          "computed": {
+            "display": "none",
+            "direction": "rtl",
+            "position": "fixed",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-filter-sheet",
+          "visible": false,
+          "content": "فیلترها× دسته‌بندی ⌄لباس روزمره ۱۸بافت و پلیور ۸پیراهن ۶ قیمت ⌄از ۲۵۰٬۰۰۰ تا ۲٬۸۰۰٬۰۰۰ تومان سایز ⌄XSSMLXL رنگ ⌄ جنس پارچه ⌄پنبه ۱۲کتان ۷ اعمال فیلتر (۱۲۸ نتیجه)حذف همه فیلترها",
+          "bounds": null,
+          "computed": {
+            "display": "grid",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "15px",
+            "maxHeight": "816px"
+          }
+        },
+        {
+          "id": "mobile-close-button",
+          "visible": false,
+          "content": "بستن فیلترها",
+          "bounds": null,
+          "computed": {
+            "display": "block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "8px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-apply-button",
+          "visible": false,
+          "content": "اعمال فیلتر (۱۲۸ نتیجه)",
+          "bounds": null,
+          "computed": {
+            "display": "inline-block",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "9px",
+            "maxHeight": "none"
+          }
+        },
+        {
+          "id": "mobile-reset-link",
+          "visible": false,
+          "content": "حذف همه فیلترها",
+          "bounds": null,
+          "computed": {
+            "display": "flex",
+            "direction": "rtl",
+            "position": "static",
+            "borderRadius": "0px",
+            "maxHeight": "none"
+          }
+        }
+      ],
+      "fonts": {
+        "tahoma": true,
+        "vazirmatn": true
+      }
+    }
+  ]
+}

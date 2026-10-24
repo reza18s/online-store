@@ -1,0 +1,73 @@
+{
+  "authorityMapVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "tiers": [
+    {
+      "tier": 1,
+      "name": "Runtime behavior owner",
+      "sources": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "controls": [
+        "React state",
+        "ARIA relationships",
+        "focus and scroll lifecycle",
+        "filter actions",
+        "query behavior"
+      ]
+    },
+    {
+      "tier": 2,
+      "name": "Customer accessibility contract",
+      "sources": [
+        "S9"
+      ],
+      "controls": [
+        "minimum mobile control targets",
+        "accessible labels",
+        "focus return"
+      ]
+    },
+    {
+      "tier": 3,
+      "name": "Effective page styling",
+      "sources": [
+        "S4",
+        "S5",
+        "S6"
+      ],
+      "controls": [
+        "final cascade after legacy styles",
+        "desktop rail side and sizing",
+        "mobile dialog alignment and dimensions",
+        "current palette"
+      ]
+    },
+    {
+      "tier": 4,
+      "name": "Base application styles",
+      "sources": [
+        "S7"
+      ],
+      "controls": [
+        "global type stack",
+        "document direction",
+        "shell max width",
+        "base styles only where not overridden"
+      ]
+    },
+    {
+      "tier": 5,
+      "name": "Motion integration reference",
+      "sources": [
+        "S8"
+      ],
+      "controls": [
+        "React GSAP hook lifecycle and cleanup guidance"
+      ]
+    }
+  ],
+  "designDecision": "Use the latest listing-specific CSS cascade as the visual authority. Keep historic component-board ambiguity and base layout defaults subordinate to current target styles. S9 governs the minimum 44px mobile pointer target even where the older component CSS used smaller close or reset bounds."
+}

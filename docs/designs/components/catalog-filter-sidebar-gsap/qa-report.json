@@ -1,0 +1,50 @@
+{
+  "qaReportVersion": "1.0.0",
+  "componentId": "catalog-filter-sidebar-gsap",
+  "generatedOn": "2026-10-24",
+  "designPackage": {
+    "schemaValidation": "PASS_AJV_DRAFT_2020_12",
+    "semanticValidation": "PASS",
+    "screenshotDimensions": "PASS",
+    "sourceMeasurements": "PASS_BROWSER_MEASURED",
+    "visualReview": "PASS_MANUAL_INSPECTION",
+    "errors": []
+  },
+  "implementation": {
+    "typecheck": "PASS",
+    "lint": "PASS",
+    "build": "PASS_WITH_WARNINGS",
+    "runtimeVisualReview": "PASS_MANUAL_INTERACTION",
+    "tests": "NOT_RUN_BY_REQUEST_SCOPE"
+  },
+  "limitations": [
+    "The local product API did not return catalog data, so runtime review covers the filter UI and transitions only.",
+    "The production build completed with a Vite CommonJS API deprecation and a client chunk size advisory."
+  ],
+  "acceptanceCoverage": [
+    {
+      "id": "desktop-rtl-side",
+      "status": "runtime_verified"
+    },
+    {
+      "id": "desktop-exit",
+      "status": "runtime_verified"
+    },
+    {
+      "id": "mobile-center",
+      "status": "runtime_verified"
+    },
+    {
+      "id": "mobile-exit-lifecycle",
+      "status": "runtime_verified"
+    },
+    {
+      "id": "reduced-motion",
+      "status": "runtime_verified"
+    },
+    {
+      "id": "filter-contract",
+      "status": "preserved_in_plan"
+    }
+  ]
+}

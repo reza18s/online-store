@@ -1,0 +1,70 @@
+{
+  "renderer": {
+    "name": "Playwright Chromium",
+    "version": "1.59.1",
+    "browserVersion": "147.0.7727.15",
+    "font": "Tahoma"
+  },
+  "captures": [
+    {
+      "file": "01-Visual-Design-Board.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "7f58c711e4f63b55c3776a9a7fe0837b0889d15592962ab048ab51d23eb495bc",
+      "state": {
+        "open": true,
+        "value": "newest",
+        "appearance": "base-select",
+        "pickerBackground": "rgb(255, 252, 249)",
+        "pickerBorderRadius": "10px",
+        "pickerMinInlineSize": "176px",
+        "selectedBackground": "rgb(123, 75, 89)",
+        "selectedColor": "rgb(255, 252, 249)",
+        "selectedHeightPx": 44,
+        "selectedFocused": true,
+        "selectedFocusOutline": "rgb(99, 61, 73)",
+        "support": true
+      }
+    },
+    {
+      "file": "02-Clean-Reference.png",
+      "width": 560,
+      "height": 420,
+      "sha256": "b405647a9fc80645c4508c4a2bbb8a7d4d3019843b75cc0692428bc94e843314",
+      "state": {
+        "open": true,
+        "value": "newest",
+        "appearance": "base-select",
+        "pickerBackground": "rgb(255, 252, 249)",
+        "pickerBorderRadius": "10px",
+        "pickerMinInlineSize": "176px",
+        "selectedBackground": "rgb(123, 75, 89)",
+        "selectedColor": "rgb(255, 252, 249)",
+        "selectedHeightPx": 44,
+        "selectedFocused": true,
+        "selectedFocusOutline": "rgb(99, 61, 73)",
+        "support": true
+      }
+    },
+    {
+      "file": "03-Clean-Reference-Mobile.png",
+      "width": 390,
+      "height": 460,
+      "sha256": "91f499320252d03c208701ed7ceae71747c0f7ac36cabb97628b1e425d9752bb",
+      "state": {
+        "open": true,
+        "value": "newest",
+        "appearance": "base-select",
+        "pickerBackground": "rgb(255, 252, 249)",
+        "pickerBorderRadius": "10px",
+        "pickerMinInlineSize": "176px",
+        "selectedBackground": "rgb(123, 75, 89)",
+        "selectedColor": "rgb(255, 252, 249)",
+        "selectedHeightPx": 44,
+        "selectedFocused": true,
+        "selectedFocusOutline": "rgb(99, 61, 73)",
+        "support": true
+      }
+    }
+  ]
+}

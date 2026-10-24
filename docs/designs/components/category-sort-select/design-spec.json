@@ -1,0 +1,240 @@
+{
+  "$schema": "design-spec.schema.json",
+  "schemaVersion": "1.0.0",
+  "componentId": "category-sort-select",
+  "title": "NOVA Atelier Editorial — Category Sort Select",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "owner": {
+    "componentPath": "packages/ui/src/select.tsx",
+    "consumerPath": "apps/web/src/features/catalog/components/category-discovery.tsx",
+    "stylePath": "apps/web/src/styles/storefront-reference.css"
+  },
+  "contract": {
+    "element": "native-select",
+    "selection": "single",
+    "valueType": "string",
+    "valueFlow": "Selected option updates category state and the sort query parameter.",
+    "options": [
+      {
+        "value": "newest",
+        "label": "جدیدترین"
+      },
+      {
+        "value": "price_asc",
+        "label": "ارزان‌ترین"
+      },
+      {
+        "value": "price_desc",
+        "label": "گران‌ترین"
+      },
+      {
+        "value": "name",
+        "label": "الفبایی"
+      }
+    ],
+    "defaultValue": "newest"
+  },
+  "frames": [
+    {
+      "id": "annotated-board",
+      "widthPx": 1536,
+      "heightPx": 1024,
+      "state": "open-selected"
+    },
+    {
+      "id": "clean-desktop-open",
+      "widthPx": 560,
+      "heightPx": 420,
+      "state": "open-selected"
+    },
+    {
+      "id": "clean-mobile-open",
+      "widthPx": 390,
+      "heightPx": 460,
+      "state": "open-selected"
+    }
+  ],
+  "geometry": {
+    "closedMinWidthPx": {
+      "value": 120,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "category-sort-css"
+    },
+    "closedMinHeightPx": {
+      "value": 48,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "category-sort-css"
+    },
+    "focusOutlineWidthPx": {
+      "value": 2,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "shared-select"
+    },
+    "focusOutlineOffsetPx": {
+      "value": 2,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "shared-select"
+    },
+    "openOptionMinHeightPx": {
+      "value": 44,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "category-sort-css"
+    },
+    "openPickerMinWidthPx": {
+      "value": 176,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "category-sort-css"
+    },
+    "openPickerPaddingPx": {
+      "value": 4,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "category-sort-css"
+    },
+    "openPickerCornerRadiusPx": {
+      "value": 10,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "category-sort-css"
+    }
+  },
+  "typography": {
+    "productionFont": {
+      "value": "Inherited from the web app",
+      "evidence": "UNVERIFIED"
+    },
+    "boardFont": {
+      "value": "Tahoma",
+      "evidence": "MEASURED"
+    },
+    "fontSizePx": {
+      "value": 12,
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "category-sort-css"
+    },
+    "textAlign": "start",
+    "direction": "rtl"
+  },
+  "states": [
+    {
+      "id": "closed-default",
+      "evidence": "SOURCE_DEFINED",
+      "description": "Native select with the current sort value and decorative RTL chevron."
+    },
+    {
+      "id": "keyboard-focus",
+      "evidence": "SOURCE_DEFINED",
+      "description": "One 2px wine outline with a 2px offset."
+    },
+    {
+      "id": "open-selected",
+      "evidence": "SOURCE_DEFINED",
+      "description": "Customizable native picker; selected row uses wine and the surface text color."
+    },
+    {
+      "id": "open-hover",
+      "evidence": "SOURCE_DEFINED",
+      "description": "An unselected hovered or focused option uses soft wine."
+    }
+  ],
+  "tokens": [
+    {
+      "id": "page",
+      "value": "#f7f4f0",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    },
+    {
+      "id": "surface",
+      "value": "#fffcf9",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    },
+    {
+      "id": "ink",
+      "value": "#302b29",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    },
+    {
+      "id": "muted",
+      "value": "#6f6560",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    },
+    {
+      "id": "wine",
+      "value": "#7b4b59",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    },
+    {
+      "id": "wine-soft",
+      "value": "#f2e8eb",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    },
+    {
+      "id": "line",
+      "value": "rgb(83 61 46 / 13%)",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    },
+    {
+      "id": "shadow-float",
+      "value": "0 18px 50px rgb(58 38 24 / 10%)",
+      "evidence": "SOURCE_DEFINED",
+      "sourceId": "storefront-tokens"
+    }
+  ],
+  "responsive": {
+    "desktop": "48px closed target; picker stays anchored to the select and can extend above or below when space requires.",
+    "mobile": "Keep the 48px control and RTL order. Let the browser place the picker within the viewport.",
+    "evidence": "The 48px control and open-picker styling are source-defined. Picker placement was visually checked in Chromium at desktop and mobile sizes."
+  },
+  "preservedBehavior": [
+    "Keep the HTML select and option elements.",
+    "Keep all four sort values and the category URL query update.",
+    "Preserve native keyboard, touch, and assistive-technology interaction.",
+    "Keep the RTL label and decorative inline-start chevron."
+  ],
+  "implementationChanges": [
+    "Scope the customizable-select CSS to the category sorter.",
+    "Use appearance: base-select only where supported.",
+    "Keep the platform-native popup as the fallback for browsers without customizable-select support."
+  ],
+  "evidence": [
+    {
+      "id": "shared-select",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "category-sort",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "category-sort-css",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "storefront-tokens",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "user-open-state",
+      "status": "MEASURED"
+    },
+    {
+      "id": "open-menu-proposal",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "customizable-select-docs",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "limitations": [
+    "The supplied screenshot shows the legacy native popup blue selected row; it records the original behavior, not the target style.",
+    "Older browsers without customizable-select support keep the operating-system picker and its system highlight; no older browser runtime was available in this task.",
+    "The local catalog API was unavailable during runtime review, so product cards stayed in their loading state; this did not affect the sort control."
+  ]
+}

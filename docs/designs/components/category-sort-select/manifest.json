@@ -1,0 +1,170 @@
+{
+  "schemaVersion": "1.0.0",
+  "componentId": "category-sort-select",
+  "sourceCommit": "3052c45d8269f76892584136a30cc08e0defb3c6",
+  "target": "apps/web /category/:audience category toolbar sort select",
+  "renderer": {
+    "name": "Playwright Chromium",
+    "version": "1.59.1",
+    "browserVersion": "147.0.7727.15",
+    "font": "Tahoma"
+  },
+  "generatedArtifacts": [
+    {
+      "path": "01-Visual-Design-Board.png",
+      "bytes": 274758,
+      "sha256": "7f58c711e4f63b55c3776a9a7fe0837b0889d15592962ab048ab51d23eb495bc",
+      "widthPx": 1536,
+      "heightPx": 1024
+    },
+    {
+      "path": "02-Clean-Reference.png",
+      "bytes": 19314,
+      "sha256": "b405647a9fc80645c4508c4a2bbb8a7d4d3019843b75cc0692428bc94e843314",
+      "widthPx": 560,
+      "heightPx": 420
+    },
+    {
+      "path": "03-Clean-Reference-Mobile.png",
+      "bytes": 19178,
+      "sha256": "91f499320252d03c208701ed7ceae71747c0f7ac36cabb97628b1e425d9752bb",
+      "widthPx": 390,
+      "heightPx": 460
+    },
+    {
+      "path": "04-Live-Open-State-desktop.png",
+      "bytes": 589456,
+      "sha256": "b4591a24e14efd51afcb10c07fc6e2281f0b1d5cbadf08ac1e6cf3ff20b8ed60",
+      "widthPx": 1365,
+      "heightPx": 900
+    },
+    {
+      "path": "04-Live-Open-State-mobile.png",
+      "bytes": 145399,
+      "sha256": "990c8469c5348f33bb4aac35417720a9e7f57e4d8696d0d971ab3a9f51704bfc",
+      "widthPx": 390,
+      "heightPx": 844
+    }
+  ],
+  "packageFiles": [
+    {
+      "path": "01-Visual-Design-Board.png",
+      "bytes": 274758,
+      "sha256": "7f58c711e4f63b55c3776a9a7fe0837b0889d15592962ab048ab51d23eb495bc"
+    },
+    {
+      "path": "02-Clean-Reference.png",
+      "bytes": 19314,
+      "sha256": "b405647a9fc80645c4508c4a2bbb8a7d4d3019843b75cc0692428bc94e843314"
+    },
+    {
+      "path": "03-Clean-Reference-Mobile.png",
+      "bytes": 19178,
+      "sha256": "91f499320252d03c208701ed7ceae71747c0f7ac36cabb97628b1e425d9752bb"
+    },
+    {
+      "path": "04-Live-Open-State-desktop.png",
+      "bytes": 589456,
+      "sha256": "b4591a24e14efd51afcb10c07fc6e2281f0b1d5cbadf08ac1e6cf3ff20b8ed60"
+    },
+    {
+      "path": "04-Live-Open-State-mobile.png",
+      "bytes": 145399,
+      "sha256": "990c8469c5348f33bb4aac35417720a9e7f57e4d8696d0d971ab3a9f51704bfc"
+    },
+    {
+      "path": "asset-registry.json",
+      "bytes": 1466,
+      "sha256": "44e72309f32786affd28e456fb06dbecf8db036aa20cae683dc571a34f57039c"
+    },
+    {
+      "path": "authority-map.json",
+      "bytes": 1703,
+      "sha256": "9ecf39005e9855064ee6bf1e260b2d916830f10308303197dd40b829ef12823f"
+    },
+    {
+      "path": "component-handoff.md",
+      "bytes": 3303,
+      "sha256": "b841a146ae34d6c34ae0f2c7e16d98e60626e8f25860133cca889dd65f0eb202"
+    },
+    {
+      "path": "conflicts.json",
+      "bytes": 921,
+      "sha256": "8b1e3ffcd278969b1cfc2754d71850db887eca250f4556eb8c2016d10516c1c3"
+    },
+    {
+      "path": "coverage-matrix.json",
+      "bytes": 3582,
+      "sha256": "bd4c3f484142a8acaa34752762b7623e428b1b4831428f79c8c9c2d7cb064d34"
+    },
+    {
+      "path": "design-spec.json",
+      "bytes": 6629,
+      "sha256": "bdd7404017f2140caae8fee4e4db98c827c51271cafbd6a93a3a96cfa480208e"
+    },
+    {
+      "path": "design-spec.schema.json",
+      "bytes": 6910,
+      "sha256": "1a369afa3146f94f9e6b04373a946608eab1613109ddd0e45d9a2441b8e1beb6"
+    },
+    {
+      "path": "design-tokens.json",
+      "bytes": 1068,
+      "sha256": "4897ef9c4ebd16f7a028383d09972e7c94fba6a2ff29aac5ab1bbbf02df7a87d"
+    },
+    {
+      "path": "qa-report.json",
+      "bytes": 2451,
+      "sha256": "37d087f180a29990e336888576e27ebea382a0c1e3bd90d772ba51859c723131"
+    },
+    {
+      "path": "render-source/README.md",
+      "bytes": 2357,
+      "sha256": "ee7cbd7f7260015b113ade8d4ae1cab79c5fdbc2198dd8e196ebabb4b85d1791"
+    },
+    {
+      "path": "render-source/board.css",
+      "bytes": 12174,
+      "sha256": "72430a5147180ed2174e58aaecff42ae75832f40f743cc9850acb79ed0414911"
+    },
+    {
+      "path": "render-source/board.html",
+      "bytes": 6786,
+      "sha256": "f8647c29f3b0a975e36b71b54cdd991072419f1840d8d4c009768e8c2abd3a76"
+    },
+    {
+      "path": "render-source/render-board.mjs",
+      "bytes": 3292,
+      "sha256": "2e59389924dca03e27f9517f7e6c36124f58bdb97e1b952e91f6905666a7ae7f"
+    },
+    {
+      "path": "render-source/render-report.json",
+      "bytes": 2139,
+      "sha256": "f8c56d4881a8332533ede10cb1e9bf9013c71247084dd0ada922a4f8ca971de7"
+    },
+    {
+      "path": "render-source/select.css",
+      "bytes": 2630,
+      "sha256": "4c5001f7776fe0773c47ef8f6e1b681fb88dc723791a13cebe3286e04bc0f3f7"
+    },
+    {
+      "path": "scene-graph.json",
+      "bytes": 6250,
+      "sha256": "fe4ad690a5f14d3717d578924297f5a869214ba2c9e8c46050717c617b92be3a"
+    },
+    {
+      "path": "source-index.json",
+      "bytes": 2406,
+      "sha256": "381ddfe5dc2f700db5fbaa4391e5aba97642bfd65f4df96644bb5397eb1c87aa"
+    }
+  ],
+  "verification": {
+    "designSpecSchema": "PASS — validated with Ajv CLI 5, JSON Schema draft 2020-12.",
+    "referenceDimensions": "PASS — all 5 PNG outputs match their declared frame dimensions.",
+    "boardRenderer": "PASS — the three design board captures match render-source/render-report.json.",
+    "liveOpenState": "PASS — Chromium 147, men/women/children routes, desktop/mobile, selected and hover states.",
+    "sortQuery": "PASS — newest, price_asc, price_desc, and name each update the query.",
+    "fallbackCompatibility": "UNVERIFIED — older browser/system picker not available.",
+    "repositoryLint": "PASS — bun run lint at the repository root."
+  }
+}

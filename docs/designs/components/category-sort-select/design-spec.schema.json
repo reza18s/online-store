@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "design-spec.schema.json",
+  "title": "Category Sort Select design contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "componentId", "title", "locale", "direction", "owner", "contract", "frames", "geometry", "typography", "states", "tokens", "responsive", "preservedBehavior", "implementationChanges", "evidence", "limitations"],
+  "properties": {
+    "$schema": { "const": "design-spec.schema.json" },
+    "schemaVersion": { "const": "1.0.0" },
+    "componentId": { "const": "category-sort-select" },
+    "title": { "type": "string", "minLength": 1 },
+    "locale": { "const": "fa-IR" },
+    "direction": { "const": "rtl" },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["componentPath", "consumerPath", "stylePath"],
+      "properties": {
+        "componentPath": { "type": "string", "minLength": 1 },
+        "consumerPath": { "type": "string", "minLength": 1 },
+        "stylePath": { "type": "string", "minLength": 1 }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["element", "selection", "valueType", "valueFlow", "options", "defaultValue"],
+      "properties": {
+        "element": { "const": "native-select" },
+        "selection": { "const": "single" },
+        "valueType": { "const": "string" },
+        "valueFlow": { "type": "string", "minLength": 1 },
+        "options": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["value", "label"],
+            "properties": {
+              "value": { "enum": ["newest", "price_asc", "price_desc", "name"] },
+              "label": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "defaultValue": { "const": "newest" }
+      }
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "widthPx", "heightPx", "state"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "widthPx": { "type": "integer", "minimum": 320 },
+          "heightPx": { "type": "integer", "minimum": 300 },
+          "state": { "const": "open-selected" }
+        }
+      }
+    },
+    "geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["closedMinWidthPx", "closedMinHeightPx", "focusOutlineWidthPx", "focusOutlineOffsetPx", "openOptionMinHeightPx", "openPickerMinWidthPx", "openPickerPaddingPx", "openPickerCornerRadiusPx"],
+      "patternProperties": {
+        "^(closedMinWidthPx|closedMinHeightPx|focusOutlineWidthPx|focusOutlineOffsetPx|openOptionMinHeightPx|openPickerMinWidthPx|openPickerPaddingPx|openPickerCornerRadiusPx)$": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "evidence", "sourceId"],
+          "properties": {
+            "value": { "type": "number", "exclusiveMinimum": 0 },
+            "evidence": { "enum": ["SOURCE_DEFINED", "CALCULATED", "MEASURED", "INFERRED", "PROPOSED", "NOT_SPECIFIED", "UNVERIFIED"] },
+            "sourceId": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["productionFont", "boardFont", "fontSizePx", "textAlign", "direction"],
+      "properties": {
+        "productionFont": { "$ref": "#/$defs/evidenceText" },
+        "boardFont": { "$ref": "#/$defs/evidenceText" },
+        "fontSizePx": { "$ref": "#/$defs/evidenceNumber" },
+        "textAlign": { "const": "start" },
+        "direction": { "const": "rtl" }
+      }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "evidence", "description"],
+        "properties": {
+          "id": { "enum": ["closed-default", "keyboard-focus", "open-selected", "open-hover"] },
+          "evidence": { "enum": ["SOURCE_DEFINED", "CALCULATED", "MEASURED", "INFERRED", "PROPOSED", "NOT_SPECIFIED", "UNVERIFIED"] },
+          "description": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "tokens": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "value", "evidence", "sourceId"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "value": { "type": "string", "minLength": 1 },
+          "evidence": { "enum": ["SOURCE_DEFINED", "CALCULATED", "MEASURED", "INFERRED", "PROPOSED", "NOT_SPECIFIED", "UNVERIFIED"] },
+          "sourceId": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "responsive": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["desktop", "mobile", "evidence"],
+      "properties": {
+        "desktop": { "type": "string", "minLength": 1 },
+        "mobile": { "type": "string", "minLength": 1 },
+        "evidence": { "type": "string", "minLength": 1 }
+      }
+    },
+    "preservedBehavior": { "type": "array", "minItems": 4, "items": { "type": "string", "minLength": 1 } },
+    "implementationChanges": { "type": "array", "minItems": 3, "items": { "type": "string", "minLength": 1 } },
+    "evidence": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["SOURCE_DEFINED", "CALCULATED", "MEASURED", "INFERRED", "PROPOSED", "NOT_SPECIFIED", "UNVERIFIED"] }
+        }
+      }
+    },
+    "limitations": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 1 } }
+  },
+  "$defs": {
+    "evidenceText": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "evidence"],
+      "properties": {
+        "value": { "type": "string", "minLength": 1 },
+        "evidence": { "enum": ["SOURCE_DEFINED", "CALCULATED", "MEASURED", "INFERRED", "PROPOSED", "NOT_SPECIFIED", "UNVERIFIED"] }
+      }
+    },
+    "evidenceNumber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "evidence", "sourceId"],
+      "properties": {
+        "value": { "type": "number", "exclusiveMinimum": 0 },
+        "evidence": { "enum": ["SOURCE_DEFINED", "CALCULATED", "MEASURED", "INFERRED", "PROPOSED", "NOT_SPECIFIED", "UNVERIFIED"] },
+        "sourceId": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

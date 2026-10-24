@@ -1,0 +1,253 @@
+{
+  "schemaVersion": "1.0.0",
+  "componentId": "category-sort-select",
+  "coordinateSystem": {
+    "unit": "px",
+    "origin": "top-left",
+    "canvasTextDirection": "rtl"
+  },
+  "nodes": [
+    {
+      "id": "board-canvas",
+      "role": "board",
+      "source": "render-source/board.html .board",
+      "children": [
+        "board-header",
+        "board-intro",
+        "board-content",
+        "board-footer"
+      ]
+    },
+    {
+      "id": "board-header",
+      "role": "identity-and-index",
+      "parent": "board-canvas",
+      "source": ".board-header",
+      "children": []
+    },
+    {
+      "id": "board-intro",
+      "role": "component-title-and-scope",
+      "parent": "board-canvas",
+      "source": ".board-intro",
+      "children": []
+    },
+    {
+      "id": "board-content",
+      "role": "two-column-design-review",
+      "parent": "board-canvas",
+      "source": ".board-grid",
+      "children": [
+        "component-preview",
+        "state-and-token-reference"
+      ]
+    },
+    {
+      "id": "component-preview",
+      "role": "storefront-context-and-open-control",
+      "parent": "board-content",
+      "source": ".preview-card .store-window",
+      "children": [
+        "sort-control",
+        "category-and-product-context"
+      ]
+    },
+    {
+      "id": "sort-control",
+      "role": "native-select",
+      "parent": "component-preview",
+      "source": ".category-sort__control #sort-select",
+      "children": [
+        "closed-control",
+        "open-picker",
+        "selected-option",
+        "unselected-options"
+      ]
+    },
+    {
+      "id": "state-and-token-reference",
+      "role": "state-gallery-and-token-reference",
+      "parent": "board-content",
+      "source": ".details-column",
+      "children": [
+        "keyboard-focus-state",
+        "selected-state",
+        "hover-state",
+        "fallback-note",
+        "atelier-tokens"
+      ]
+    },
+    {
+      "id": "board-footer",
+      "role": "behavior-responsive-and-source-summary",
+      "parent": "board-canvas",
+      "source": ".board-footer",
+      "children": []
+    },
+    {
+      "id": "category-and-product-context",
+      "role": "supporting-storefront-context",
+      "parent": "component-preview",
+      "source": ".store-topbar .store-intro .product-skeletons",
+      "children": []
+    },
+    {
+      "id": "closed-control",
+      "role": "control-state",
+      "parent": "sort-control",
+      "state": "closed-default",
+      "source": ".category-sort select"
+    },
+    {
+      "id": "open-picker",
+      "role": "popup-state",
+      "parent": "sort-control",
+      "state": "open-selected",
+      "source": ".category-sort select::picker(select)"
+    },
+    {
+      "id": "selected-option",
+      "role": "selected-option-state",
+      "parent": "sort-control",
+      "state": "open-selected",
+      "source": "option:checked"
+    },
+    {
+      "id": "unselected-options",
+      "role": "hoverable-option-state",
+      "parent": "sort-control",
+      "state": "open-hover",
+      "source": "option:not(:checked):hover"
+    },
+    {
+      "id": "keyboard-focus-state",
+      "role": "focus-state",
+      "parent": "state-and-token-reference",
+      "state": "keyboard-focus",
+      "source": ".focus-control"
+    },
+    {
+      "id": "selected-state",
+      "role": "selected-state-sample",
+      "parent": "state-and-token-reference",
+      "state": "open-selected",
+      "source": ".option-sample"
+    },
+    {
+      "id": "hover-state",
+      "role": "hover-state-sample",
+      "parent": "state-and-token-reference",
+      "state": "open-hover",
+      "source": ".option-sample--hover"
+    },
+    {
+      "id": "fallback-note",
+      "role": "compatibility-note",
+      "parent": "state-and-token-reference",
+      "source": ".fallback-copy .fallback-badge"
+    },
+    {
+      "id": "atelier-tokens",
+      "role": "design-token-reference",
+      "parent": "state-and-token-reference",
+      "source": ".token-card"
+    }
+  ],
+  "frames": [
+    {
+      "id": "annotated-board",
+      "viewport": {
+        "widthPx": 1536,
+        "heightPx": 1024
+      },
+      "state": "open-selected",
+      "artifact": "01-Visual-Design-Board.png",
+      "includedNodes": [
+        "board-canvas",
+        "board-header",
+        "board-intro",
+        "board-content",
+        "component-preview",
+        "sort-control",
+        "state-and-token-reference",
+        "board-footer"
+      ]
+    },
+    {
+      "id": "clean-desktop-open",
+      "viewport": {
+        "widthPx": 560,
+        "heightPx": 420
+      },
+      "state": "open-selected",
+      "artifact": "02-Clean-Reference.png",
+      "includedNodes": [
+        "board-canvas",
+        "board-header",
+        "board-intro",
+        "board-content",
+        "component-preview",
+        "sort-control",
+        "state-and-token-reference",
+        "board-footer"
+      ]
+    },
+    {
+      "id": "clean-mobile-open",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 460
+      },
+      "state": "open-selected",
+      "artifact": "03-Clean-Reference-Mobile.png",
+      "includedNodes": [
+        "board-canvas",
+        "board-header",
+        "board-intro",
+        "board-content",
+        "component-preview",
+        "sort-control",
+        "state-and-token-reference",
+        "board-footer"
+      ]
+    },
+    {
+      "id": "runtime-women-desktop",
+      "viewport": {
+        "widthPx": 1365,
+        "heightPx": 900
+      },
+      "state": "open-selected",
+      "evidence": "live-production-runtime",
+      "route": "/category/women",
+      "artifact": "04-Live-Open-State-desktop.png",
+      "includedNodes": [
+        "sort-control",
+        "open-picker",
+        "selected-option"
+      ]
+    },
+    {
+      "id": "runtime-women-mobile",
+      "viewport": {
+        "widthPx": 390,
+        "heightPx": 844
+      },
+      "state": "open-selected",
+      "evidence": "live-production-runtime",
+      "route": "/category/women",
+      "artifact": "04-Live-Open-State-mobile.png",
+      "includedNodes": [
+        "sort-control",
+        "open-picker",
+        "selected-option"
+      ]
+    }
+  ],
+  "renderEnvironment": {
+    "name": "Playwright Chromium",
+    "version": "1.59.1",
+    "browserVersion": "147.0.7727.15",
+    "font": "Tahoma"
+  }
+}

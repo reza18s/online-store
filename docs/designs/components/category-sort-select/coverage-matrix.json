@@ -1,0 +1,143 @@
+{
+  "componentId": "category-sort-select",
+  "frames": [
+    {
+      "id": "annotated-board",
+      "status": "PASS",
+      "artifacts": [
+        "01-Visual-Design-Board.png"
+      ]
+    },
+    {
+      "id": "clean-desktop-open",
+      "status": "PASS",
+      "artifacts": [
+        "02-Clean-Reference.png"
+      ]
+    },
+    {
+      "id": "clean-mobile-open",
+      "status": "PASS",
+      "artifacts": [
+        "03-Clean-Reference-Mobile.png"
+      ]
+    },
+    {
+      "id": "runtime-women-desktop",
+      "status": "PASS",
+      "artifacts": [
+        "04-Live-Open-State-desktop.png"
+      ]
+    },
+    {
+      "id": "runtime-women-mobile",
+      "status": "PASS",
+      "artifacts": [
+        "04-Live-Open-State-mobile.png"
+      ]
+    }
+  ],
+  "states": [
+    {
+      "id": "closed-default",
+      "status": "PASS",
+      "evidence": "Production select value newest and 48px min-height checked."
+    },
+    {
+      "id": "keyboard-focus",
+      "status": "PASS",
+      "evidence": "Source outline is 2px with a 2px offset; keyboard-open interaction checked."
+    },
+    {
+      "id": "open-selected",
+      "status": "PASS",
+      "evidence": "Live wine selected row and surface text checked in Chromium 147."
+    },
+    {
+      "id": "open-hover",
+      "status": "PASS",
+      "evidence": "Live pointer hover uses wine-soft background and dark-wine text without changing the selected value."
+    }
+  ],
+  "responsive": [
+    {
+      "id": "desktop",
+      "viewport": "1365x900",
+      "status": "PASS",
+      "routes": [
+        "/category/men",
+        "/category/women",
+        "/category/children"
+      ]
+    },
+    {
+      "id": "mobile",
+      "viewport": "390x844",
+      "status": "PASS",
+      "routes": [
+        "/category/men",
+        "/category/women",
+        "/category/children"
+      ]
+    },
+    {
+      "id": "clean-desktop-reference",
+      "viewport": "560x420",
+      "status": "PASS",
+      "artifact": "02-Clean-Reference.png"
+    },
+    {
+      "id": "clean-mobile-reference",
+      "viewport": "390x460",
+      "status": "PASS",
+      "artifact": "03-Clean-Reference-Mobile.png"
+    }
+  ],
+  "validation": [
+    {
+      "id": "schema",
+      "status": "PASS",
+      "evidence": "Ajv CLI 5 JSON Schema draft 2020-12 validation."
+    },
+    {
+      "id": "referential-integrity",
+      "status": "PASS",
+      "evidence": "Source, token, node, frame, artifact, dimension, and SHA-256 references verified."
+    },
+    {
+      "id": "board-render",
+      "status": "PASS",
+      "evidence": "Playwright Chromium renderer produced three screenshots at their declared pixel dimensions."
+    },
+    {
+      "id": "production-runtime-open-state",
+      "status": "PASS",
+      "evidence": "Open picker inspected on three category routes at desktop and mobile viewport sizes."
+    },
+    {
+      "id": "sort-query-contract",
+      "status": "PASS",
+      "evidence": "newest, price_asc, price_desc, and name each updated the sort query."
+    },
+    {
+      "id": "fallback-compatibility",
+      "status": "UNVERIFIED",
+      "evidence": "No older browser or operating-system picker runtime was available."
+    },
+    {
+      "id": "web-typecheck",
+      "status": "PASS",
+      "evidence": "bun run typecheck in apps/web."
+    },
+    {
+      "id": "web-production-build",
+      "status": "PASS_WITH_WARNINGS",
+      "evidence": "bun run build in apps/web; emitted Vite CJS API deprecation and bundle-size warnings."
+    },
+    {
+      "id": "repository-lint",
+      "status": "PASS",
+      "evidence": "bun run lint at repository root."
+    }
+  ]
+}

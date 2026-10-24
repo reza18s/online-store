@@ -1,0 +1,47 @@
+{
+  "componentId": "category-sort-select",
+  "assets": [],
+  "generatedOutputs": [
+    {
+      "id": "annotated-board",
+      "path": "01-Visual-Design-Board.png",
+      "mediaType": "image/png",
+      "widthPx": 1536,
+      "heightPx": 1024,
+      "description": "Annotated component design and behavior board."
+    },
+    {
+      "id": "clean-desktop-open",
+      "path": "02-Clean-Reference.png",
+      "mediaType": "image/png",
+      "widthPx": 560,
+      "heightPx": 420,
+      "description": "Clean desktop open-state reference."
+    },
+    {
+      "id": "clean-mobile-open",
+      "path": "03-Clean-Reference-Mobile.png",
+      "mediaType": "image/png",
+      "widthPx": 390,
+      "heightPx": 460,
+      "description": "Clean mobile open-state reference."
+    },
+    {
+      "id": "runtime-women-desktop",
+      "path": "04-Live-Open-State-desktop.png",
+      "mediaType": "image/png",
+      "widthPx": 1365,
+      "heightPx": 900,
+      "description": "Production category page open state at desktop size."
+    },
+    {
+      "id": "runtime-women-mobile",
+      "path": "04-Live-Open-State-mobile.png",
+      "mediaType": "image/png",
+      "widthPx": 390,
+      "heightPx": 844,
+      "description": "Production category page open state at mobile size."
+    }
+  ],
+  "notes": "No external product images, logos, or generated artwork are used inside the component board; NOVA branding and the visual examples are rendered from the local HTML/CSS source."
+}

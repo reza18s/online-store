@@ -1,0 +1,41 @@
+:root {
+  --nova-ref-page: #f7f4f0;
+  --nova-ref-surface: #fffcf9;
+  --nova-ref-ink: #302b29;
+  --nova-ref-muted: #6f6560;
+  --nova-ref-wine: #7b4b59;
+  --nova-ref-wine-dark: #633d49;
+  --nova-ref-wine-soft: #f2e8eb;
+  --nova-ref-line: rgb(83 61 46 / 13%);
+  --nova-ref-line-strong: rgb(83 61 46 / 20%);
+  --nova-ref-shadow-float: 0 18px 50px rgb(58 38 24 / 10%);
+}
+.category-sort { display:flex; align-items:center; gap:7px; color:var(--nova-ref-muted); font:12px Tahoma,sans-serif; white-space:nowrap; }
+.category-sort__control { position:relative; display:inline-flex; align-items:center; flex:0 0 auto; }
+.category-sort select {
+  width:auto; min-width:120px; min-height:48px; appearance:none;
+  border:1px solid var(--nova-ref-line); border-radius:10px; padding-inline:10px 32px;
+  background:var(--nova-ref-surface); color:var(--nova-ref-ink);
+  font:12px Tahoma,sans-serif; text-align:start; cursor:pointer;
+}
+.category-sort select:focus-visible { outline:2px solid var(--nova-ref-wine); outline-offset:2px; }
+.category-sort__chevron { position:absolute; inset-inline-end:10px; top:50%; display:grid; place-items:center; width:15px; height:15px; color:var(--nova-ref-muted); pointer-events:none; transform:translateY(-50%); }
+.category-sort__chevron i { width:7px; height:7px; border-right:1.5px solid currentColor; border-bottom:1.5px solid currentColor; transform:translateY(-2px) rotate(45deg); }
+@supports (appearance: base-select) {
+  .category-sort select, .category-sort select::picker(select) { appearance:base-select; }
+  .category-sort select:open { border-color:var(--nova-ref-wine); }
+  .category-sort select::picker(select) {
+    min-inline-size:176px; max-block-size:min(18rem,60vh); overflow-y:auto; margin-block-start:6px;
+    border:1px solid var(--nova-ref-line-strong); border-radius:10px; padding:4px;
+    background:var(--nova-ref-surface); color:var(--nova-ref-ink); box-shadow:var(--nova-ref-shadow-float);
+  }
+  .category-sort select option {
+    min-block-size:44px; border-radius:7px; padding-block:10px; padding-inline:10px;
+    background:transparent; color:var(--nova-ref-ink); text-align:start; white-space:nowrap;
+  }
+  .category-sort select option:checked { background:var(--nova-ref-wine); color:var(--nova-ref-surface); }
+  .category-sort select option:focus { outline:2px solid var(--nova-ref-wine-dark); outline-offset:-2px; }
+  .category-sort select option:not(:checked):hover { background:var(--nova-ref-wine-soft); color:var(--nova-ref-wine-dark); }
+  .category-sort select option::checkmark { color:var(--nova-ref-surface); }
+  .category-sort select::picker-icon { display:none; }
+}

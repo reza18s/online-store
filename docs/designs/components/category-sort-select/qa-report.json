@@ -1,0 +1,66 @@
+{
+  "componentId": "category-sort-select",
+  "status": "PASS_WITH_LIMITATIONS",
+  "checks": [
+    {
+      "id": "source-and-authority",
+      "status": "PASS",
+      "method": "Repository source, graph relationships, and supplied user open-state reference reviewed."
+    },
+    {
+      "id": "schema-validation",
+      "status": "PASS",
+      "method": "Ajv CLI 5 validated design-spec.json against design-spec.schema.json using JSON Schema draft 2020-12."
+    },
+    {
+      "id": "referential-integrity",
+      "status": "PASS",
+      "method": "Verified source IDs, design tokens, scene-graph IDs and parents, output references, image dimensions, and manifest SHA-256 hashes."
+    },
+    {
+      "id": "board-render",
+      "status": "PASS",
+      "method": "Rendered the board and both clean references with Playwright 1.59.1 and Chromium 147.0.7727.15."
+    },
+    {
+      "id": "production-open-state",
+      "status": "PASS",
+      "method": "Opened and visually inspected live category sorter at desktop and mobile sizes on men, women, and children category routes."
+    },
+    {
+      "id": "sort-query",
+      "status": "PASS",
+      "method": "Selected all four values; each wrote the matching sort query."
+    },
+    {
+      "id": "hover-state",
+      "status": "PASS",
+      "method": "Hovered an unselected option; wine-soft background and dark-wine text appeared, and the selected value stayed newest."
+    },
+    {
+      "id": "web-typecheck",
+      "status": "PASS",
+      "method": "bun run typecheck in apps/web."
+    },
+    {
+      "id": "repository-lint",
+      "status": "PASS",
+      "method": "bun run lint at repository root after fixing renderer browser-global declarations."
+    },
+    {
+      "id": "web-production-build",
+      "status": "PASS_WITH_WARNINGS",
+      "method": "bun run build in apps/web; Vite reported a CJS Node API deprecation and a chunk above 500 kB."
+    },
+    {
+      "id": "fallback-compatibility",
+      "status": "UNVERIFIED",
+      "method": "No older browser or operating-system native picker runtime was available."
+    }
+  ],
+  "warnings": [
+    "Browsers without customizable-select support retain their system popup and system selection color.",
+    "The local catalog API was unavailable during runtime review; the page retained product loading placeholders, while the sorter remained interactive.",
+    "The web build passed with Vite CJS API deprecation and bundle-size warnings."
+  ]
+}

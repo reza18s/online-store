@@ -109,7 +109,7 @@ async function measure(page, selector) {
     await save('runtime-phone-390-closed.png', page, false);
     await page.getByRole('button', { name: 'باز کردن ناوبری مدیریت' }).click();
     await page.locator('#admin-mobile-navigation[open]').waitFor();
-    await page.waitForTimeout(330);
+    await page.waitForTimeout(450);
     results.runtime.phone390Open = {
       overlay: await measure(page, '#admin-mobile-navigation'),
       panel: await measure(page, '.admin-reference-mobile-dialog__panel'),
@@ -142,7 +142,7 @@ async function measure(page, selector) {
     };
     await page.getByRole('button', { name: 'باز کردن ناوبری مدیریت' }).click();
     await page.locator('#admin-mobile-navigation[open]').waitFor();
-    await page.waitForTimeout(330);
+    await page.waitForTimeout(450);
     await page.locator('.admin-reference-mobile-dialog__scrim').click({ position: { x: 6, y: 400 } });
     await page.waitForFunction(() => !document.querySelector('#admin-mobile-navigation').open, null, { timeout: 1500 });
     results.runtime.backdropClose = {
@@ -159,7 +159,7 @@ async function measure(page, selector) {
     await save('runtime-phone-320-closed.png', page, false);
     await page.getByRole('button', { name: 'باز کردن ناوبری مدیریت' }).click();
     await page.locator('#admin-mobile-navigation[open]').waitFor();
-    await page.waitForTimeout(330);
+    await page.waitForTimeout(450);
     const phone320Panel = page.locator('.admin-reference-mobile-dialog__panel');
     const phone320PanelSizes = await phone320Panel.evaluate((panel) => ({
       clientHeight: panel.clientHeight,
@@ -194,7 +194,7 @@ async function measure(page, selector) {
     await signIn(supportPage, ['support']);
     await supportPage.getByRole('button', { name: 'باز کردن ناوبری مدیریت' }).click();
     await supportPage.locator('#admin-mobile-navigation[open]').waitFor();
-    await supportPage.waitForTimeout(330);
+    await supportPage.waitForTimeout(450);
     results.runtime.supportDrawer = {
       links: await supportPage.locator('.admin-reference-mobile-dialog__nav a').allTextContents(),
       restrictedDashboardShortcutCount: await supportPage.locator('.admin-reference-mobile-head a[href="/admin"], .admin-reference-mobile-dialog__nav a[href="/admin"]').count(),
@@ -235,7 +235,7 @@ async function measure(page, selector) {
     await signIn(operationsPage, ['operations']);
     await operationsPage.getByRole('button', { name: 'باز کردن ناوبری مدیریت' }).click();
     await operationsPage.locator('#admin-mobile-navigation[open]').waitFor();
-    await operationsPage.waitForTimeout(330);
+    await operationsPage.waitForTimeout(450);
     results.runtime.operationsDrawer = {
       links: await operationsPage.locator('.admin-reference-mobile-dialog__nav a').allTextContents(),
       adminOnlyDestinationCount: await operationsPage.locator('.admin-reference-mobile-dialog__nav a[href="/admin"], .admin-reference-mobile-dialog__nav a[href="/admin/payments"], .admin-reference-mobile-dialog__nav a[href="/admin/content"], .admin-reference-mobile-dialog__nav a[href="/admin/audit"]').count(),

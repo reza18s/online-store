@@ -1,0 +1,14 @@
+{
+  "componentId": "category-sort-select",
+  "tokens": [
+    { "id": "page", "value": "#f7f4f0", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "surface", "value": "#fffcf9", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "surface-soft", "value": "#f1ece7", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "ink", "value": "#302b29", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "muted", "value": "#6f6560", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "wine", "value": "#7b4b59", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "wine-soft", "value": "#f2e8eb", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "line", "value": "rgb(83 61 46 / 13%)", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" },
+    { "id": "shadow-float", "value": "0 18px 50px rgb(58 38 24 / 10%)", "sourceId": "storefront-tokens", "evidence": "SOURCE_DEFINED" }
+  ]
+}

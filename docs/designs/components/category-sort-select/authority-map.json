@@ -1,0 +1,37 @@
+{
+  "componentId": "category-sort-select",
+  "decisions": [
+    {
+      "property": "element and interaction semantics",
+      "candidate": "native HTML select",
+      "winner": "Keep native HTML select and option elements.",
+      "evidence": "SOURCE_DEFINED",
+      "sourceIds": ["shared-select", "category-sort"],
+      "rationale": "The shared Select is a forwardRef native select and the category page already relies on its value and onChange contract."
+    },
+    {
+      "property": "closed control geometry",
+      "candidate": "48px minimum height, 120px minimum width, 10px radius",
+      "winner": "Keep the existing category sort dimensions.",
+      "evidence": "SOURCE_DEFINED",
+      "sourceIds": ["category-sort-css"],
+      "rationale": "The current storefront stylesheet already defines these values."
+    },
+    {
+      "property": "selected option color when open",
+      "candidate": "System blue in supplied current screenshot; Atelier wine in proposed design",
+      "winner": "Use Atelier wine only in browsers supporting customizable native select.",
+      "evidence": "PROPOSED",
+      "sourceIds": ["user-open-state", "storefront-tokens", "customizable-select-docs"],
+      "rationale": "Keep the current browser-native fallback where the picker cannot be styled."
+    },
+    {
+      "property": "option row height and picker corners",
+      "candidate": "No production source value; 44px rows and 10px picker radius proposed",
+      "winner": "44px rows, 10px corners, 4px inner padding",
+      "evidence": "PROPOSED",
+      "sourceIds": ["open-menu-proposal"],
+      "rationale": "Use a touch-friendly target and repeat the established category control corner."
+    }
+  ]
+}

@@ -48,3 +48,33 @@ The supplied `/category/men` and `/category/women` screenshots show two visible 
 - PASS: Browser inspection at 1200 × 900 on `/category/women` and 560 × 874 on `/category/men` and `/products/men`; keyboard focus shows one 2px brand outline with a 2px offset and no extra shadow.
 - PASS: Keyboard sorting on `/products/men` selected `price_asc` and updated the URL to `?sort=price_asc`; the preview was restored to the default route.
 - LIMITATION: The local catalog API is unavailable, so product data remained in its loading/error state during visual inspection.
+
+## Follow-up: category sort Select open state
+
+### User evidence and finding
+- The supplied open-state screenshot shows the category sort control's selected option using the browser or operating system's default blue highlight. The existing category sort remains a native <select> and the prior change only addressed its closed-state focus outline.
+- The category FilterSelect design board covers radio-based facets, not this native sorter. Its contract cannot be reused as the sort menu's authority.
+
+### Decision and tradeoffs
+- Keep the native <select>, current options, label, value contract, and query updates.
+- Native appearance preserves platform keyboard, touch, and assistive-technology behavior, but its open picker and selected highlight are controlled by the browser or OS and do not reliably take CSS styling.
+- A custom React listbox would give full visual control but would require a separate keyboard, focus, dismissal, and screen-reader implementation, and would depart from the established native-select contract.
+- Chosen: progressively enhance only the category sorter with CSS appearance: base-select and a styled picker inside @supports; retain the existing native control as the fallback where that feature is unavailable. Style option rows from the existing Atelier palette and keep the RTL chevron behavior.
+
+### Acceptance criteria
+- On browsers that support customizable select, opening by pointer and keyboard shows the Atelier surface, fine line border, wine selected row, readable RTL options, a 176px minimum picker width, and 44px minimum option targets. The browser keeps the picker visible at the viewport edge.
+- On unsupported browsers, the native select and its current operating-system menu continue to work without losing any option or sort query behavior.
+- The closed control remains 48px tall with the existing focus outline and custom chevron; other pages and admin selects remain unchanged.
+
+### Validation
+- Check appearance: base-select support in the target runtime by opening the live menu and capturing the rendered picker.
+- Run the web typecheck and production build; inspect the open and closed states at desktop and phone widths, and verify each option still updates the sort query.
+- Report the browser fallback limitation if the available runtime does not support customizable select.
+
+
+#### Follow-up verification
+- PASS: Live Chromium 147 open-state review at desktop (1365 × 900) and mobile (390 × 844) on `/category/men`, `/category/women`, and `/category/children`; selected row and hover row use the Atelier colors, and option hover preserves the current value.
+- PASS: All four sort values (`newest`, `price_asc`, `price_desc`, and `name`) updated the URL query in the production page.
+- PASS: `bun run typecheck` and `bun run build` in `apps/web`; build emitted a Vite CJS API deprecation and a large-chunk warning.
+- LIMITATION: The local catalog API did not return product data during review, so product cards showed loading placeholders.
+- UNVERIFIED: An older browser was unavailable; its native system popup may keep the system highlight color.

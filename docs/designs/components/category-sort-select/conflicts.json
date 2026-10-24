@@ -1,0 +1,20 @@
+{
+  "componentId": "category-sort-select",
+  "conflicts": [
+    {
+      "id": "native-highlight-vs-brand",
+      "status": "RESOLVED_WITH_FALLBACK",
+      "property": "selected option background",
+      "evidence": "The supplied screenshot shows system blue; the storefront token is wine.",
+      "resolution": "Use wine on supporting customizable-select browsers. Preserve native behavior and system color on unsupported browsers.",
+      "remainingLimitation": "Brand color cannot be guaranteed in legacy operating-system pickers."
+    },
+    {
+      "id": "design-board-scope",
+      "status": "RESOLVED",
+      "property": "reuse of catalog FilterSelect board",
+      "evidence": "The existing board explicitly targets radio-based catalog facets and excludes the base Select and category composition.",
+      "resolution": "Keep that board unchanged and create a separate category-sort Select contract."
+    }
+  ]
+}

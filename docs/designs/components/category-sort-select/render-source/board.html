@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA — Category Sort Select reference</title>
+<link rel="stylesheet" href="select.css">
+<link rel="stylesheet" href="board.css">
+</head>
+<body>
+<div class="board">
+  <header class="board-header">
+    <div class="brand-lockup"><span class="brand-mark">N</span><span class="brand-copy"><strong>NOVA</strong><small>ATELIER EDITORIAL</small></span></div>
+    <div class="board-stamp"><strong>COMPONENT REF</strong><span>CATEGORY SORT SELECT</span><span>01 / 01</span></div>
+  </header>
+  <section class="board-intro">
+    <div><p class="eyebrow">CATEGORY CONTROLS · FA-IR · RTL</p><h1>مرتب‌سازی محصولات</h1><p class="intro-copy">منوی انتخاب بومی با حالت باز هماهنگ با رنگ‌های آتلیه؛ همان کنترل صفحهٔ دسته‌بندی.</p></div>
+    <span class="scope-pill">فقط نوار مرتب‌سازی دسته‌بندی</span>
+  </section>
+  <main class="board-grid">
+    <section class="preview-card">
+      <div class="preview-kicker"><span>01</span><b>OPEN STATE · SELECTED</b><small>native select · single choice</small></div>
+      <div class="store-window">
+        <header class="store-topbar">
+          <div class="store-brand"><strong>NOVA</strong><small>ATELIER EDITORIAL</small></div>
+          <nav class="store-nav" aria-label="ناوبری نمونه"><span>زنانه</span><span>مردانه</span><span>جدیدترین‌ها</span><span>کالکشن‌ها</span></nav>
+          <span class="store-bag" aria-hidden="true">♡</span>
+        </header>
+        <section class="store-intro"><div><span class="store-kicker">NOVA WOMEN</span><h2>زنانه</h2></div><p>مجموعه‌ای از لباس‌ها و استایل‌های زنانه برای روزهای واقعی شما.</p></section>
+        <div class="store-toolbar">
+          <div class="toolbar-result"><strong>محصولات زنانه</strong><span>مشاهدهٔ ۲۴ محصول</span></div>
+          <label class="category-sort">
+            <span>مرتب‌سازی</span>
+            <span class="category-sort__control">
+              <select id="sort-select" aria-label="مرتب‌سازی محصولات">
+                <option value="newest" selected>جدیدترین</option>
+                <option value="price_asc">ارزان‌ترین</option>
+                <option value="price_desc">گران‌ترین</option>
+                <option value="name">الفبایی</option>
+              </select>
+              <span class="category-sort__chevron" aria-hidden="true"><i></i></span>
+            </span>
+          </label>
+          <button class="filter-button" type="button">فیلترها <span aria-hidden="true">☷</span></button>
+        </div>
+        <div class="listing-heading"><strong>انتخاب‌های محبوب</strong><span>مرتب‌سازی با تازه‌ترین‌ها آغاز می‌شود</span></div>
+        <div class="product-skeletons" aria-hidden="true">
+          <div class="product-card"><div class="product-image"></div><i></i><i></i></div>
+          <div class="product-card"><div class="product-image"></div><i></i><i></i></div>
+          <div class="product-card"><div class="product-image"></div><i></i><i></i></div>
+        </div>
+        <div class="preview-caption"><span class="caption-dot"></span><span>گزینهٔ فعال با زرشکی مشخص است؛ ردیف‌های دیگر روی زمینهٔ گرم می‌مانند.</span></div>
+      </div>
+    </section>
+    <aside class="details-column">
+      <section class="detail-card">
+        <div class="detail-heading"><span>02</span><h2>قرارداد بصری</h2></div>
+        <div class="state-sample">
+          <div class="sample-label"><strong>حالت فوکوس</strong><small>KEYBOARD</small></div>
+          <div class="focus-control"><span>جدیدترین</span><i aria-hidden="true"></i></div>
+          <p>یک حلقهٔ ۲ پیکسلی با فاصلهٔ ۲ پیکسل؛ بدون سایهٔ اضافه.</p>
+        </div>
+        <div class="state-sample">
+          <div class="sample-label"><strong>گزینهٔ فعال</strong><small>SELECTED</small></div>
+          <div class="option-sample"><span>جدیدترین</span><b aria-hidden="true">✓</b></div>
+          <p>رنگ شرابی روی سطح روشن، همراه با نشانهٔ متنی انتخاب.</p>
+        </div>
+        <div class="state-sample">
+          <div class="sample-label"><strong>گزینهٔ زیر اشاره‌گر</strong><small>HOVER</small></div>
+          <div class="option-sample option-sample--hover"><span>ارزان‌ترین</span></div>
+          <p>زمینهٔ شرابیِ روشن کمک می‌کند گزینهٔ در حال مرور پیدا باشد.</p>
+        </div>
+      </section>
+      <section class="detail-card compact-card">
+        <div class="detail-heading"><span>03</span><h2>مرز پشتیبانی</h2></div>
+        <p class="fallback-copy">در مرورگرهای دارای customizable select، منوی باز رنگ‌پذیر است. مرورگرهای قدیمی همان منوی سیستم خود را نگه می‌دارند.</p>
+        <div class="fallback-badge"><span class="fallback-swatch"></span><span>FALLBACK · native system picker</span></div>
+        <div class="scope-note"><strong>دامنهٔ تغییر</strong><span>فقط Select مرتب‌سازی در صفحهٔ دسته‌بندی؛ Selectهای پنل ادمین و صفحات دیگر دست‌نخورده می‌مانند.</span></div>
+      </section>
+      <section class="detail-card token-card">
+        <div class="detail-heading"><span>04</span><h2>توکن‌های آتلیه</h2></div>
+        <div class="token-row"><i class="token-page"></i><span>PAGE</span><code>#F7F4F0</code></div>
+        <div class="token-row"><i class="token-surface"></i><span>SURFACE</span><code>#FFFCF9</code></div>
+        <div class="token-row"><i class="token-wine"></i><span>WINE</span><code>#7B4B59</code></div>
+        <div class="token-row"><i class="token-soft"></i><span>WINE SOFT</span><code>#F2E8EB</code></div>
+      </section>
+    </aside>
+  </main>
+  <footer class="board-footer">
+    <div><strong>BEHAVIOR PRESERVED</strong><span>HTML select · ۴ مقدار فعلی · query URL · صفحه‌کلید · لمس · RTL</span></div>
+    <div><strong>RESPONSIVE TARGET</strong><span>DESKTOP 560 × 420 · MOBILE 390 × 460 · بدون بریدگی</span></div>
+    <div><strong>SOURCE OF TRUTH</strong><span>category-discovery.tsx + storefront-reference.css</span></div>
+  </footer>
+</div>
+</body>
+</html>

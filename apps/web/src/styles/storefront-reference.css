@@ -1921,7 +1921,7 @@ body {
   width: auto !important;
   min-width: 120px;
   min-height: 48px !important;
-  appearance: none !important;
+  appearance: none;
   border: 1px solid var(--nova-ref-line) !important;
   border-radius: 10px !important;
   padding-inline: 10px 32px !important;
@@ -1934,6 +1934,55 @@ body {
 .category-sort select:focus-visible {
   outline: 2px solid var(--nova-ref-wine);
   outline-offset: 2px;
+}
+@supports (appearance: base-select) {
+  .category-sort select,
+  .category-sort select::picker(select) {
+    appearance: base-select;
+  }
+  .category-sort select:open {
+    border-color: var(--nova-ref-wine) !important;
+  }
+  .category-sort select::picker(select) {
+    min-inline-size: 176px;
+    max-block-size: min(18rem, 60vh);
+    overflow-y: auto;
+    margin-block-start: 6px;
+    border: 1px solid var(--nova-ref-line-strong);
+    border-radius: 10px;
+    padding: 4px;
+    background: var(--nova-ref-surface);
+    color: var(--nova-ref-ink);
+    box-shadow: var(--nova-ref-shadow-float);
+  }
+  .category-sort select option {
+    min-block-size: 44px;
+    border-radius: 7px;
+    padding-block: 10px;
+    padding-inline: 10px;
+    background: transparent;
+    color: var(--nova-ref-ink);
+    text-align: start;
+    white-space: nowrap;
+  }
+  .category-sort select option:checked {
+    background: var(--nova-ref-wine);
+    color: var(--nova-ref-surface);
+  }
+  .category-sort select option:focus {
+    outline: 2px solid var(--nova-ref-wine-dark);
+    outline-offset: -2px;
+  }
+  .category-sort select option:not(:checked):hover {
+    background: var(--nova-ref-wine-soft);
+    color: var(--nova-ref-wine-dark);
+  }
+  .category-sort select option::checkmark {
+    color: var(--nova-ref-surface);
+  }
+  .category-sort select::picker-icon {
+    display: none;
+  }
 }
 .category-sort__chevron {
   position: absolute;

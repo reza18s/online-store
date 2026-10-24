@@ -1,0 +1,54 @@
+{
+  "componentId": "category-sort-select",
+  "sources": [
+    {
+      "id": "shared-select",
+      "type": "repository-source",
+      "path": "packages/ui/src/select.tsx",
+      "anchor": "Select forwardRef and native select element, lines 8-17",
+      "authority": "Native element, React props, focus styling, disabled styling"
+    },
+    {
+      "id": "category-sort",
+      "type": "repository-source",
+      "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+      "anchor": "sortLabels and category sort UiSelect usage, lines 56-61 and 215-230",
+      "authority": "Sort values, Persian labels, selected value and URL update"
+    },
+    {
+      "id": "category-sort-css",
+      "type": "repository-source",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "anchor": "Category sort control and customizable picker styles, lines 1914-1985",
+      "authority": "Closed control height, minimum width, radius, focus outline, RTL chevron"
+    },
+    {
+      "id": "storefront-tokens",
+      "type": "repository-source",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "anchor": "Atelier root tokens, lines 5-18",
+      "authority": "Page, surface, ink, wine, wine-soft, line, and floating shadow colors"
+    },
+    {
+      "id": "user-open-state",
+      "type": "user-reference",
+      "path": "User attachment 1000115815.jpg (not copied into package)",
+      "anchor": "The open menu shows the selected newest option in system blue.",
+      "authority": "Observed current appearance only; not a target style instruction."
+    },
+    {
+      "id": "customizable-select-docs",
+      "type": "external-documentation",
+      "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select",
+      "anchor": "Limited availability; appearance: base-select and ::picker(select) are required for fully custom picker styling.",
+      "authority": "Browser support and native picker styling limits"
+    },
+    {
+      "id": "open-menu-proposal",
+      "type": "design-decision",
+      "path": "docs/refactoring/category-page-select-polish-plan.md",
+      "anchor": "Follow-up decision and acceptance criteria for open picker geometry and behavior.",
+      "authority": "Proposed 176px picker minimum, 44px option targets, warm surface and wine selection before the implementation was checked in."
+    }
+  ]
+}

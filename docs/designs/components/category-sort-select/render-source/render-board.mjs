@@ -1,8 +1,10 @@
+/* global CSS, document, getComputedStyle */
 import { chromium } from '@playwright/test';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import process from 'node:process';
 
 const sourceDir = dirname(fileURLToPath(import.meta.url));
 const packageDir = resolve(sourceDir, '..');

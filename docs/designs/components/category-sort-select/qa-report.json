@@ -43,6 +43,11 @@
       "method": "bun run typecheck in apps/web."
     },
     {
+      "id": "repository-lint",
+      "status": "PASS",
+      "method": "bun run lint at repository root after fixing renderer browser-global declarations."
+    },
+    {
       "id": "web-production-build",
       "status": "PASS_WITH_WARNINGS",
       "method": "bun run build in apps/web; Vite reported a CJS Node API deprecation and a chunk above 500 kB."

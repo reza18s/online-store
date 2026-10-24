@@ -94,8 +94,8 @@
     },
     {
       "path": "coverage-matrix.json",
-      "bytes": 3461,
-      "sha256": "902c0004bc0c7bc1cce1b63d9c91110440afd03cec4ad83fcff439d2c0228108"
+      "bytes": 3582,
+      "sha256": "bd4c3f484142a8acaa34752762b7623e428b1b4831428f79c8c9c2d7cb064d34"
     },
     {
       "path": "design-spec.json",
@@ -114,8 +114,8 @@
     },
     {
       "path": "qa-report.json",
-      "bytes": 2282,
-      "sha256": "a2df46b612d7f31339a6258331fc372fa1cf025c733aa74327fbfdbdebf97ad2"
+      "bytes": 2451,
+      "sha256": "37d087f180a29990e336888576e27ebea382a0c1e3bd90d772ba51859c723131"
     },
     {
       "path": "render-source/README.md",
@@ -134,8 +134,8 @@
     },
     {
       "path": "render-source/render-board.mjs",
-      "bytes": 3209,
-      "sha256": "8866b2a96bad3dc1d32bc17b3e825914432ab16bd289c66d144735043153cfa1"
+      "bytes": 3292,
+      "sha256": "2e59389924dca03e27f9517f7e6c36124f58bdb97e1b952e91f6905666a7ae7f"
     },
     {
       "path": "render-source/render-report.json",
@@ -164,6 +164,7 @@
     "boardRenderer": "PASS — the three design board captures match render-source/render-report.json.",
     "liveOpenState": "PASS — Chromium 147, men/women/children routes, desktop/mobile, selected and hover states.",
     "sortQuery": "PASS — newest, price_asc, price_desc, and name each update the query.",
-    "fallbackCompatibility": "UNVERIFIED — older browser/system picker not available."
+    "fallbackCompatibility": "UNVERIFIED — older browser/system picker not available.",
+    "repositoryLint": "PASS — bun run lint at the repository root."
   }
 }

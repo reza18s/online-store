@@ -133,6 +133,11 @@
       "id": "web-production-build",
       "status": "PASS_WITH_WARNINGS",
       "evidence": "bun run build in apps/web; emitted Vite CJS API deprecation and bundle-size warnings."
+    },
+    {
+      "id": "repository-lint",
+      "status": "PASS",
+      "evidence": "bun run lint at repository root."
     }
   ]
 }

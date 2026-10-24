@@ -1,0 +1,64 @@
+{
+  "sources": [
+    {
+      "id": "design-authority",
+      "path": "docs/designs/atelier-editorial.md",
+      "locator": "Section 18: Soft Modern refresh",
+      "role": "canonical visual authority"
+    },
+    {
+      "id": "runtime-tokens-css",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "locator": "root tokens, listing rules, and mobile search overrides",
+      "role": "runtime visual authority"
+    },
+    {
+      "id": "listing-discovery-owner",
+      "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+      "locator": "query state, search form, filters, and result composition",
+      "role": "behavior owner"
+    },
+    {
+      "id": "query-url-builder",
+      "path": "apps/web/src/features/catalog/components/build-discovery-href.tsx",
+      "locator": "query updates and page reset",
+      "role": "URL-state contract"
+    },
+    {
+      "id": "suggestion-query-hook",
+      "path": "apps/web/src/features/catalog/api/use-catalog-suggestions.ts",
+      "locator": "query-key and suggestion fetch behavior",
+      "role": "suggestion data flow"
+    },
+    {
+      "id": "product-grid",
+      "path": "apps/web/src/features/catalog/components/product-grid.tsx",
+      "locator": "shared listing product grid",
+      "role": "result layout owner"
+    },
+    {
+      "id": "product-card",
+      "path": "apps/web/src/features/catalog/components/product-card.tsx",
+      "locator": "wishlist and add-to-cart controls",
+      "role": "result card behavior"
+    },
+    {
+      "id": "mobile-navigation-css",
+      "path": "apps/web/src/styles/storefront-reference.css",
+      "locator": "mobile bottom navigation and search-scoped mobile rules",
+      "role": "responsive chrome and touch target owner"
+    },
+    {
+      "id": "search-entry-dialog",
+      "path": "apps/web/src/shared/ui/search-dialog.tsx",
+      "locator": "mobile and desktop search entry flow",
+      "role": "search entry route owner"
+    },
+    {
+      "id": "dev-fixtures",
+      "path": "apps/web/src/shared/fixtures/dev-store-fixtures-shared.ts",
+      "locator": "search result products and local image URLs",
+      "role": "development-only rendered content"
+    }
+  ]
+}

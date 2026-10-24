@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nova.invalid/designs/mobile-search/mobile-search-design.schema.json",
+  "title": "NOVA mobile search design model",
+  "type": "object",
+  "required": [
+    "$schema",
+    "modelVersion",
+    "id",
+    "title",
+    "titleFa",
+    "status",
+    "audience",
+    "primaryAction",
+    "language",
+    "direction",
+    "route",
+    "viewport",
+    "layout",
+    "components",
+    "states",
+    "accessibility",
+    "renderedAssets",
+    "sourceIds",
+    "assetIds"
+  ],
+  "properties": {
+    "$schema": { "const": "./mobile-search-design.schema.json" },
+    "modelVersion": { "const": "1.0.0" },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "titleFa": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["draft", "implementation-review", "approved"] },
+    "audience": { "type": "string", "minLength": 1 },
+    "primaryAction": { "type": "string", "minLength": 1 },
+    "language": { "const": "fa-IR" },
+    "direction": { "const": "rtl" },
+    "route": {
+      "type": "object",
+      "required": ["entry", "results", "queryParameter", "filterAndSortState", "pageState"],
+      "properties": {
+        "entry": { "type": "string", "minLength": 1 },
+        "results": { "type": "string", "minLength": 1 },
+        "queryParameter": { "type": "string", "minLength": 1 },
+        "filterAndSortState": { "type": "string", "minLength": 1 },
+        "pageState": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "viewport": {
+      "type": "object",
+      "required": [
+        "primary",
+        "minimum",
+        "maximumWidth",
+        "mobileBreakpointMaxWidth",
+        "deviceScaleFactor"
+      ],
+      "properties": {
+        "primary": { "$ref": "#/$defs/size" },
+        "minimum": { "$ref": "#/$defs/size" },
+        "maximumWidth": { "type": "integer", "minimum": 1 },
+        "mobileBreakpointMaxWidth": { "type": "integer", "minimum": 1 },
+        "deviceScaleFactor": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "layout": {
+      "type": "object",
+      "required": [
+        "contentGutter",
+        "headerHeight",
+        "queryPanel",
+        "suggestionStrip",
+        "productColumns",
+        "bottomNavigation"
+      ],
+      "properties": {
+        "contentGutter": { "type": "integer", "minimum": 0 },
+        "headerHeight": { "type": "integer", "minimum": 1 },
+        "queryPanel": { "type": "string" },
+        "suggestionStrip": { "type": "string" },
+        "productColumns": { "type": "integer", "minimum": 1 },
+        "bottomNavigation": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/component" }
+    },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "accessibility": {
+      "type": "object",
+      "required": [
+        "touchTargetMinimumPx",
+        "preserveRtlReadingOrder",
+        "queryFieldHasPersistentLabel",
+        "clearAndSubmitHaveAccessibleNames",
+        "suggestionStripIsKeyboardFocusableWhenOverflowing",
+        "visibleFocusStyles",
+        "respectReducedMotion"
+      ],
+      "properties": {
+        "touchTargetMinimumPx": { "const": 44 },
+        "preserveRtlReadingOrder": { "type": "boolean" },
+        "queryFieldHasPersistentLabel": { "type": "boolean" },
+        "clearAndSubmitHaveAccessibleNames": { "type": "boolean" },
+        "suggestionStripIsKeyboardFocusableWhenOverflowing": { "type": "boolean" },
+        "visibleFocusStyles": { "type": "boolean" },
+        "respectReducedMotion": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "renderedAssets": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "sourceIds": { "$ref": "#/$defs/idArray" },
+    "assetIds": { "$ref": "#/$defs/idArray" }
+  },
+  "$defs": {
+    "size": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      },
+      "additionalProperties": false
+    },
+    "idArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "component": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "role",
+        "order",
+        "placement",
+        "tokenRefs",
+        "sourceIds",
+        "assetIds"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "role": { "type": "string", "minLength": 1 },
+        "order": { "type": "integer", "minimum": 1 },
+        "placement": { "type": "string", "minLength": 1 },
+        "behavior": { "type": "string" },
+        "overflow": { "type": "string" },
+        "touchTargetMin": { "type": "integer", "minimum": 44 },
+        "tokenRefs": { "$ref": "#/$defs/idArray" },
+        "sourceIds": { "$ref": "#/$defs/idArray" },
+        "assetIds": { "$ref": "#/$defs/idArray" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

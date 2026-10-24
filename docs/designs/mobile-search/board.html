@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920, initial-scale=1" />
+    <title>NOVA mobile search design board</title>
+    <style>
+      :root {
+        --page: #f7f4f0;
+        --surface: #fffcf9;
+        --surface-soft: #f1ece7;
+        --ink: #302b29;
+        --muted: #6f6560;
+        --wine: #7b4b59;
+        --line: #e4dcd5;
+        --clay: #b98f86;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1360px;
+        margin: 0;
+        overflow: hidden;
+      }
+      body {
+        padding: 54px 64px;
+        background:
+          radial-gradient(circle at 8% 1%, rgb(255 255 255 / 84%), transparent 420px), var(--page);
+        color: var(--ink);
+        font-family: 'Segoe UI', Arial, sans-serif;
+      }
+      .topline {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        height: 82px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 22px;
+      }
+      .eyebrow {
+        color: var(--wine);
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 0.22em;
+      }
+      h1 {
+        margin: 7px 0 0;
+        font-size: 42px;
+        letter-spacing: -0.03em;
+      }
+      .version {
+        color: var(--muted);
+        font-size: 15px;
+        text-align: right;
+        line-height: 1.7;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 520px 1fr;
+        gap: 56px;
+        height: 1070px;
+        padding-top: 34px;
+      }
+      .phone-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .phone-caption {
+        width: 440px;
+        display: flex;
+        justify-content: space-between;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .phone-shell {
+        position: relative;
+        width: 422px;
+        height: 894px;
+        border: 9px solid #302b29;
+        border-radius: 35px;
+        padding: 0;
+        overflow: hidden;
+        background: #302b29;
+        box-shadow: 0 24px 55px rgb(47 34 25 / 18%);
+      }
+      .phone-shell img {
+        display: block;
+        width: 390px;
+        height: 844px;
+        object-fit: cover;
+      }
+      .number {
+        position: absolute;
+        z-index: 2;
+        display: grid;
+        width: 34px;
+        height: 34px;
+        place-items: center;
+        border: 2px solid white;
+        border-radius: 50%;
+        background: var(--wine);
+        box-shadow: 0 3px 10px rgb(48 43 41 / 25%);
+        color: white;
+        font-size: 15px;
+        font-weight: 800;
+      }
+      .n1 {
+        top: 182px;
+        left: 3px;
+      }
+      .n2 {
+        top: 246px;
+        left: 3px;
+      }
+      .n3 {
+        top: 398px;
+        right: 3px;
+      }
+      .n4 {
+        bottom: 112px;
+        right: 7px;
+      }
+      .phone-note {
+        max-width: 430px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.65;
+        text-align: center;
+      }
+      .right-column {
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: 22px;
+      }
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 24px 28px;
+        background: rgb(255 252 249 / 92%);
+        box-shadow: 0 10px 28px rgb(58 38 24 / 5%);
+      }
+      .panel h2 {
+        margin: 0 0 15px;
+        font-size: 22px;
+      }
+      .intro {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 34px;
+      }
+      .intro p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.75;
+      }
+      .persian {
+        font-size: 18px !important;
+        color: var(--ink) !important;
+        text-align: right;
+        direction: rtl;
+      }
+      .annotations {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .annotation {
+        display: grid;
+        grid-template-columns: 38px 1fr;
+        gap: 12px;
+        min-height: 116px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px;
+        background: var(--surface);
+      }
+      .badge {
+        display: grid;
+        width: 32px;
+        height: 32px;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--wine);
+        color: white;
+        font-weight: 800;
+      }
+      .annotation h3 {
+        margin: 0 0 7px;
+        font-size: 17px;
+      }
+      .annotation p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.55;
+      }
+      .tokens {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 12px;
+      }
+      .swatch {
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--surface);
+      }
+      .swatch-color {
+        height: 72px;
+      }
+      .swatch-label {
+        padding: 10px 12px;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .swatch-label b {
+        display: block;
+        font-size: 13px;
+      }
+      .flow {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 8px;
+      }
+      .flow-step {
+        position: relative;
+        min-height: 105px;
+        border-radius: 12px;
+        padding: 14px;
+        background: var(--surface-soft);
+      }
+      .flow-step:not(:last-child)::after {
+        position: absolute;
+        top: 40px;
+        right: -18px;
+        color: var(--wine);
+        content: '←';
+        font-size: 23px;
+        font-weight: 700;
+      }
+      .flow-step b {
+        display: block;
+        margin-bottom: 7px;
+        font-size: 14px;
+      }
+      .flow-step span {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.45;
+      }
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        border-top: 1px solid var(--line);
+        padding-top: 16px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .footer strong {
+        color: var(--wine);
+      }
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        border-radius: 999px;
+        padding: 0 11px;
+        background: #f2e8eb;
+        color: var(--wine);
+        font-size: 12px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topline">
+      <div>
+        <div class="eyebrow">NOVA · ATELIER EDITORIAL · MOBILE SEARCH</div>
+        <h1 id="board-title">Mobile product search</h1>
+      </div>
+      <div class="version">SOFT MODERN · DESIGN HANDOFF<br />390 × 844 CSS px · RTL · fa-IR</div>
+    </header>
+    <main class="layout">
+      <section class="phone-column" aria-label="Clean mobile reference">
+        <div class="phone-caption">
+          <span>LIVE APP REFERENCE</span><span>01 / SEARCH RESULTS</span>
+        </div>
+        <div class="phone-shell">
+          <img src="02-Clean-Reference.png" alt="NOVA mobile product search results screen" />
+          <span class="number n1">1</span>
+          <span class="number n2">2</span>
+          <span class="number n3">3</span>
+          <span class="number n4">4</span>
+        </div>
+        <div class="phone-note">
+          Development fixture products are shown for layout review. Their artwork is not an approval
+          for production use.
+        </div>
+      </section>
+      <section class="right-column">
+        <article class="panel intro">
+          <div>
+            <span class="tag">ONE FLOW · EXISTING ROUTES</span>
+            <h2>Search first, compare quickly</h2>
+            <p>
+              Keep the query easy to edit, reserve the page height for merchandise, and let the
+              shopper scan two product cards before the fixed navigation.
+            </p>
+          </div>
+          <p class="persian">
+            نوار پیشنهادها در یک ردیف افقی می‌ماند. دکمه‌های پاک‌کردن، جست‌وجو، علاقه‌مندی و افزودن
+            به سبد، هدف لمسی ۴۴ پیکسلی دارند.
+          </p>
+        </article>
+        <article class="panel">
+          <h2>Mobile behavior and layout</h2>
+          <div class="annotations" id="annotation-list"></div>
+        </article>
+        <article class="panel">
+          <h2>Soft Modern tokens</h2>
+          <div class="tokens" id="token-list"></div>
+          <h2 style="margin-top: 22px">Interaction path</h2>
+          <div class="flow">
+            <div class="flow-step">
+              <b>01 · Enter search</b
+              ><span>Open the existing search dialog from the storefront.</span>
+            </div>
+            <div class="flow-step">
+              <b>02 · Edit draft</b
+              ><span>Clear or replace the query without changing results yet.</span>
+            </div>
+            <div class="flow-step">
+              <b>03 · Submit</b
+              ><span>Update `q`; preserve sort and filters; reset the page number.</span>
+            </div>
+            <div class="flow-step">
+              <b>04 · Choose</b
+              ><span>Compare products, adjust filters, then open or add an item.</span>
+            </div>
+          </div>
+          <div class="footer">
+            <span
+              >Source: app route, catalog owner, current CSS tokens, and local development
+              fixtures.</span
+            ><strong>Board 01 · Source-grounded reference</strong>
+          </div>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

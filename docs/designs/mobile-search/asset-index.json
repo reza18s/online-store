@@ -1,0 +1,44 @@
+{
+  "assets": [
+    {
+      "id": "fixture-oxford-shirt",
+      "path": "apps/web/public/assets/nova-product-oxford-shirt.webp",
+      "sourceId": "dev-fixtures",
+      "kind": "development fixture product image",
+      "licenseStatus": "unknown",
+      "usage": "shown only in the local reference capture"
+    },
+    {
+      "id": "fixture-linen-look",
+      "path": "apps/web/public/assets/nova-women-lifestyle.webp",
+      "sourceId": "dev-fixtures",
+      "kind": "development fixture product image",
+      "licenseStatus": "unknown",
+      "usage": "shown only in the local reference capture"
+    },
+    {
+      "id": "fixture-kids-set",
+      "path": "apps/web/public/assets/nova-product-kids-set.webp",
+      "sourceId": "dev-fixtures",
+      "kind": "development fixture product image",
+      "licenseStatus": "unknown",
+      "usage": "shown only in the local reference capture"
+    },
+    {
+      "id": "clean-reference-390",
+      "path": "02-Clean-Reference.png",
+      "sourceId": "listing-discovery-owner",
+      "kind": "local runtime screenshot",
+      "licenseStatus": "project-owned screenshot",
+      "usage": "unannotated 390 × 844 mobile reference"
+    },
+    {
+      "id": "runtime-reference-360",
+      "path": "evidence/after-results-360x800.png",
+      "sourceId": "listing-discovery-owner",
+      "kind": "local runtime screenshot",
+      "licenseStatus": "project-owned screenshot",
+      "usage": "minimum mobile viewport QA"
+    }
+  ]
+}

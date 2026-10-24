@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "componentId": "category-sort-select",
-  "sourceCommit": "c70876df1e6155c2808ee0eafa7872625ccb9291",
+  "sourceCommit": "3052c45d8269f76892584136a30cc08e0defb3c6",
   "target": "apps/web /category/:audience category toolbar sort select",
   "renderer": {
     "name": "Playwright Chromium",
@@ -33,15 +33,15 @@
     },
     {
       "path": "04-Live-Open-State-desktop.png",
-      "bytes": 589457,
-      "sha256": "260b9e4ec7cc8107f56be3d5a14c362e0cc668cffa80894d2fa76e25e7d45521",
+      "bytes": 589456,
+      "sha256": "b4591a24e14efd51afcb10c07fc6e2281f0b1d5cbadf08ac1e6cf3ff20b8ed60",
       "widthPx": 1365,
       "heightPx": 900
     },
     {
       "path": "04-Live-Open-State-mobile.png",
-      "bytes": 145396,
-      "sha256": "9098b50e08e496e280bc009176d464a4f2d8e8a6b22be878101481a2522874bd",
+      "bytes": 145399,
+      "sha256": "990c8469c5348f33bb4aac35417720a9e7f57e4d8696d0d971ab3a9f51704bfc",
       "widthPx": 390,
       "heightPx": 844
     }
@@ -64,13 +64,13 @@
     },
     {
       "path": "04-Live-Open-State-desktop.png",
-      "bytes": 589457,
-      "sha256": "260b9e4ec7cc8107f56be3d5a14c362e0cc668cffa80894d2fa76e25e7d45521"
+      "bytes": 589456,
+      "sha256": "b4591a24e14efd51afcb10c07fc6e2281f0b1d5cbadf08ac1e6cf3ff20b8ed60"
     },
     {
       "path": "04-Live-Open-State-mobile.png",
-      "bytes": 145396,
-      "sha256": "9098b50e08e496e280bc009176d464a4f2d8e8a6b22be878101481a2522874bd"
+      "bytes": 145399,
+      "sha256": "990c8469c5348f33bb4aac35417720a9e7f57e4d8696d0d971ab3a9f51704bfc"
     },
     {
       "path": "asset-registry.json",
@@ -155,12 +155,12 @@
     {
       "path": "source-index.json",
       "bytes": 2406,
-      "sha256": "3ad468e9c0c82f0018a67775ffdf34b22402b3fd3feec180c0891e228e404a0d"
+      "sha256": "381ddfe5dc2f700db5fbaa4391e5aba97642bfd65f4df96644bb5397eb1c87aa"
     }
   ],
   "verification": {
     "designSpecSchema": "PASS — validated with Ajv CLI 5, JSON Schema draft 2020-12.",
-    "referenceDimensions": "PASS — all five PNG output dimensions match their declared frames.",
+    "referenceDimensions": "PASS — all 5 PNG outputs match their declared frame dimensions.",
     "boardRenderer": "PASS — the three design board captures match render-source/render-report.json.",
     "liveOpenState": "PASS — Chromium 147, men/women/children routes, desktop/mobile, selected and hover states.",
     "sortQuery": "PASS — newest, price_asc, price_desc, and name each update the query.",

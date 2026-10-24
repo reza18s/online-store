@@ -1,0 +1,47 @@
+{
+  "componentId": "admin-navigation-sidebar",
+  "coverage": [
+    {
+      "target": "desktop-expanded",
+      "breakpoint": "min-width:1025px",
+      "state": "right-side full rail",
+      "artifact": "board and clean reference",
+      "status": "VERIFIED"
+    },
+    {
+      "target": "tablet-compact",
+      "breakpoint": "768px to 1024px",
+      "state": "72px icon rail on right",
+      "artifact": "board",
+      "status": "VERIFIED"
+    },
+    {
+      "target": "phone-closed",
+      "breakpoint": "max-width:767px",
+      "state": "header, bottom nav, role-safe menu trigger",
+      "artifact": "mobile clean reference",
+      "status": "VERIFIED"
+    },
+    {
+      "target": "phone-open",
+      "breakpoint": "max-width:767px",
+      "state": "full role-filtered drawer",
+      "artifact": "board and mobile clean reference",
+      "status": "VERIFIED"
+    },
+    {
+      "target": "phone-motion",
+      "breakpoint": "max-width:767px",
+      "state": "open/close and reduced motion",
+      "artifact": "handoff and runtime review",
+      "status": "VERIFIED"
+    },
+    {
+      "target": "staff-roles",
+      "breakpoint": "all",
+      "state": "support, operations, admin permissions",
+      "artifact": "source and runtime review",
+      "status": "VERIFIED"
+    }
+  ]
+}

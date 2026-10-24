@@ -1,0 +1,71 @@
+{
+  "componentId": "admin-navigation-sidebar",
+  "conflicts": [
+    {
+      "id": "admin-palette-document-vs-runtime",
+      "property": "admin.colors",
+      "candidates": [
+        {
+          "value": "Dark-green rail and pale-mint work area",
+          "sourceRefs": [
+            "S11",
+            "S13"
+          ],
+          "evidenceStatus": "SOURCE_DEFINED"
+        },
+        {
+          "value": "Charcoal rail, warm neutral canvas, oxblood active item",
+          "sourceRefs": [
+            "S2"
+          ],
+          "evidenceStatus": "SOURCE_DEFINED"
+        }
+      ],
+      "winner": "Current target-specific admin-reference.css colors",
+      "rationale": "The active implementation target is more specific than broad architecture descriptions."
+    },
+    {
+      "id": "mobile-breakpoint-edge",
+      "property": "admin.navigation.mobileBreakpoint",
+      "candidates": [
+        {
+          "value": "max-width: 768px",
+          "sourceRefs": [
+            "S3"
+          ],
+          "evidenceStatus": "SOURCE_DEFINED"
+        },
+        {
+          "value": "max-width: 767px",
+          "sourceRefs": [
+            "S2"
+          ],
+          "evidenceStatus": "SOURCE_DEFINED"
+        }
+      ],
+      "winner": "max-width: 767px; 768px remains compact tablet",
+      "rationale": "The target-specific reference stylesheet changes to the phone shell below 768px."
+    },
+    {
+      "id": "staff-drawer-dimensions",
+      "property": "admin.navigation.phoneDrawer",
+      "candidates": [
+        {
+          "value": "Not specified in existing admin code",
+          "sourceRefs": [
+            "S1",
+            "S2"
+          ],
+          "evidenceStatus": "NOT_SPECIFIED"
+        },
+        {
+          "value": "320px capped by viewport minus 32px",
+          "sourceRefs": [],
+          "evidenceStatus": "PROPOSED"
+        }
+      ],
+      "winner": "Proposed capped 320px panel",
+      "rationale": "The drawer provides room for Persian labels and leaves a visible outside margin."
+    }
+  ]
+}

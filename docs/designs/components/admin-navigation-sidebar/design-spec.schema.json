@@ -1,0 +1,243 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nova.local/design-reference-board.schema.json",
+  "title": "NOVA component design reference board",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "componentId",
+    "title",
+    "locale",
+    "direction",
+    "owner",
+    "purpose",
+    "sourceIndex",
+    "authorityDecisions",
+    "layout",
+    "typography",
+    "states",
+    "motion",
+    "tokens",
+    "tokenEvidence",
+    "frames",
+    "nodes",
+    "assets",
+    "interactions",
+    "sceneGraph",
+    "artifactIndex",
+    "qaResult",
+    "preservedBehavior",
+    "implementationContract",
+    "evidence",
+    "limitations"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "componentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locale": {
+      "type": "string"
+    },
+    "direction": {
+      "enum": [
+        "ltr",
+        "rtl"
+      ]
+    },
+    "owner": { "type": "object", "required": ["componentPath", "stylePath", "dependencyPath", "lockPath"], "properties": { "componentPath": { "type": "string" }, "stylePath": { "type": "string" }, "dependencyPath": { "type": "string" }, "lockPath": { "type": "string" } } },
+    "purpose": {
+      "type": "string"
+    },
+    "sourceIndex": { "type": "array", "items": { "type": "string" } },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "state",
+          "viewport",
+          "evidenceStatus",
+          "sourceRefs",
+          "nodes"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "evidenceStatus": {
+            "$ref": "#/$defs/evidenceStatus"
+          },
+          "sourceRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "viewport": {
+            "type": "object",
+            "required": [
+              "widthPx",
+              "heightPx"
+            ],
+            "properties": {
+              "widthPx": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "heightPx": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "deviceScaleFactor": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              }
+            },
+            "additionalProperties": true
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/frameNode"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sceneNode"
+      }
+    }
+  },
+  "$defs": {
+    "evidenceStatus": {
+      "enum": [
+        "PROPOSED",
+        "SOURCE_DEFINED",
+        "MEASURED",
+        "CALCULATED",
+        "RENDERED",
+        "VERIFIED",
+        "UNVERIFIED"
+      ]
+    },
+    "frameNode": {
+      "type": "object",
+      "required": [
+        "nodeId",
+        "rect",
+        "evidenceStatus",
+        "sourceRefs"
+      ],
+      "properties": {
+        "nodeId": {
+          "type": "string"
+        },
+        "rect": {
+          "type": "object",
+          "required": [
+            "x",
+            "y",
+            "width",
+            "height"
+          ],
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "width": {
+              "type": "number",
+              "minimum": 0
+            },
+            "height": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "evidenceStatus": {
+          "$ref": "#/$defs/evidenceStatus"
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "sceneNode": {
+      "type": "object",
+      "required": [
+        "id",
+        "parentId",
+        "role",
+        "children",
+        "frameIds",
+        "sourceRefs",
+        "tokenRefs"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "role": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "frameIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sourceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tokenRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

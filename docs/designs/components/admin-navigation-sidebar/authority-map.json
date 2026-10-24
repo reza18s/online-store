@@ -1,0 +1,110 @@
+{
+  "authorityMapVersion": "1.0.0",
+  "componentId": "admin-navigation-sidebar",
+  "tiers": [
+    {
+      "tier": 1,
+      "name": "Authenticated navigation owner",
+      "sources": [
+        "S1",
+        "S4"
+      ],
+      "controls": [
+        "existing routes",
+        "role-filtered destinations",
+        "active state",
+        "quick navigation"
+      ]
+    },
+    {
+      "tier": 2,
+      "name": "Current target-specific admin design",
+      "sources": [
+        "S2"
+      ],
+      "controls": [
+        "current palette",
+        "194px full rail",
+        "phone header breakpoint",
+        "drawer visual treatment"
+      ]
+    },
+    {
+      "tier": 3,
+      "name": "Base application responsive and RTL rules",
+      "sources": [
+        "S3",
+        "S11"
+      ],
+      "controls": [
+        "RTL shell direction",
+        "72px compact rail",
+        "bottom navigation"
+      ]
+    },
+    {
+      "tier": 4,
+      "name": "Existing component and motion integration",
+      "sources": [
+        "S5",
+        "S6",
+        "S7",
+        "S8",
+        "S9",
+        "S10",
+        "S12"
+      ],
+      "controls": [
+        "routing",
+        "icons",
+        "brand link",
+        "logout",
+        "GSAP lifecycle pattern"
+      ]
+    },
+    {
+      "tier": 5,
+      "name": "General visual guidance",
+      "sources": [
+        "S13"
+      ],
+      "controls": [
+        "Persian RTL",
+        "function-first admin",
+        "responsive and keyboard rules"
+      ]
+    }
+  ],
+  "decisions": [
+    {
+      "property": "admin palette",
+      "winner": "S2 current target stylesheet",
+      "status": "SOURCE_DEFINED",
+      "reason": "The active admin target is more specific than older broad architecture descriptions."
+    },
+    {
+      "property": "sidebar physical side",
+      "winner": "RTL right side",
+      "status": "INFERRED",
+      "reason": "The app is Persian RTL; the rail border and active inset indicate the content-facing left edge."
+    },
+    {
+      "property": "tablet width",
+      "winner": "72px compact rail",
+      "status": "SOURCE_DEFINED",
+      "reason": "A base responsive rule already defines this width; the reference override is the conflict to correct."
+    },
+    {
+      "property": "phone drawer width",
+      "winner": "min(320px, calc(100vw - 32px))",
+      "status": "PROPOSED",
+      "reason": "No staff drawer width exists; the choice preserves label room and a visible narrow-screen backdrop."
+    },
+    {
+      "property": "motion",
+      "winner": "GSAP",
+      "status": "USER_DIRECTED",
+      "reason": "Reuse the installed repository version and established React motion cleanup pattern."
+    }
+  ]
+}

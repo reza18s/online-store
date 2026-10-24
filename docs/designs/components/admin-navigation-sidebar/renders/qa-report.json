@@ -1,0 +1,205 @@
+{
+  "schema": "PASS",
+  "sceneGraph": "PASS",
+  "runtime": {
+    "desktop1440": {
+      "rail": {
+        "x": 1246,
+        "y": 0,
+        "width": 194,
+        "height": 900,
+        "display": "flex"
+      },
+      "content": {
+        "x": 0,
+        "y": 0,
+        "width": 1246,
+        "height": 955,
+        "display": "block"
+      },
+      "homeHref": "/admin"
+    },
+    "tablet1024": {
+      "rail": {
+        "x": 952,
+        "y": 0,
+        "width": 72,
+        "height": 768,
+        "display": "flex"
+      },
+      "content": {
+        "x": 0,
+        "y": 0,
+        "width": 952,
+        "height": 823,
+        "display": "block"
+      }
+    },
+    "tablet768": {
+      "rail": {
+        "x": 696,
+        "y": 0,
+        "width": 72,
+        "height": 900,
+        "display": "flex"
+      },
+      "content": {
+        "x": 0,
+        "y": 0,
+        "width": 696,
+        "height": 937,
+        "display": "block"
+      }
+    },
+    "phone390Closed": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 64,
+        "display": "flex"
+      },
+      "menuButton": {
+        "x": 336,
+        "y": 9.5,
+        "width": 44,
+        "height": 44,
+        "display": "flex"
+      },
+      "bottomNavigation": {
+        "x": 0,
+        "y": 776,
+        "width": 390,
+        "height": 68,
+        "display": "flex"
+      },
+      "horizontalOverflow": false,
+      "dashboardLinksInHeader": 1
+    },
+    "phone390Open": {
+      "overlay": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "display": "block"
+      },
+      "panel": {
+        "x": 46.8,
+        "y": 0,
+        "width": 343.2,
+        "height": 844,
+        "display": "flex"
+      },
+      "drawerHeader": {
+        "x": 62.8,
+        "y": 14,
+        "width": 311.2,
+        "height": 48,
+        "display": "flex"
+      },
+      "roleNavigationLinks": 10,
+      "bodyScrollLocked": true,
+      "isModal": true
+    },
+    "focusContainment": {
+      "shiftTabRemainedInDialog": true,
+      "tabRemainedInDialog": true
+    },
+    "escapeClose": {
+      "focusReturned": true,
+      "bodyScrollRestored": true
+    },
+    "closeButton": {
+      "dialogClosed": true,
+      "bodyScrollRestored": true
+    },
+    "backdropClose": {
+      "dialogClosed": true,
+      "bodyScrollRestored": true
+    },
+    "phone320Closed": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 64,
+        "display": "flex"
+      },
+      "horizontalOverflow": false
+    },
+    "phone320Open": {
+      "overlay": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "display": "block"
+      },
+      "panel": {
+        "x": 38.4,
+        "y": 0,
+        "width": 281.6,
+        "height": 568,
+        "display": "flex"
+      },
+      "horizontalOverflow": false,
+      "roleNavigationLinks": 10,
+      "drawerScrollable": true,
+      "lastDestinationVisibleAfterScroll": true
+    },
+    "phoneToTabletResize": {
+      "dialogClosed": true,
+      "bodyScrollRestored": true
+    },
+    "pageErrors": [],
+    "supportDrawer": {
+      "links": [
+        "محصولات",
+        "دسته‌بندی‌ها",
+        "سفارش‌ها",
+        "مشتریان"
+      ],
+      "restrictedDashboardShortcutCount": 0,
+      "logoHref": "/admin/catalog"
+    },
+    "supportRouteSelection": {
+      "path": "/admin/orders",
+      "bodyScrollRestored": true,
+      "dialogOpen": false,
+      "activeBottomNavRoute": "page",
+      "navigationPushStates": [
+        {
+          "path": "/admin/orders",
+          "dialogOpen": false
+        }
+      ]
+    },
+    "operationsDrawer": {
+      "links": [
+        "محصولات",
+        "دسته‌بندی‌ها",
+        "سفارش‌ها",
+        "مشتریان",
+        "اعلان‌ها",
+        "موجودی"
+      ],
+      "adminOnlyDestinationCount": 0,
+      "logoHref": "/admin/catalog"
+    },
+    "reducedMotion": {
+      "dialogOpenedImmediately": true,
+      "panelWidth": {
+        "x": 46.8,
+        "y": 0,
+        "width": 343.2,
+        "height": 844,
+        "display": "flex"
+      },
+      "closeWasImmediate": true
+    }
+  },
+  "limitations": [
+    "The live shell uses its neutral unavailable-route page to avoid unrelated dashboard data dependencies."
+  ]
+}

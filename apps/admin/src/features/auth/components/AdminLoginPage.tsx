@@ -101,7 +101,7 @@ export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: bo
                 <Icon
                   name="mail"
                   size={18}
-                  className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 />
               </span>
               {fieldError?.field === 'email' ? (
@@ -139,7 +139,7 @@ export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: bo
                 <Icon
                   name="eye"
                   size={18}
-                  className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 />
               </span>
               {fieldError?.field === 'password' ? (
@@ -178,7 +178,7 @@ export function AdminLoginPage({ sessionExpired = false }: { sessionExpired?: bo
                 <Icon
                   name="shield"
                   size={18}
-                  className="pointer-events-none absolute inset-inline-end-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 />
               </span>
               {fieldError?.field === 'factor' ? (

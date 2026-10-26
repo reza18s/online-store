@@ -1,0 +1,58 @@
+{
+  "decisions": [
+    {
+      "property": "public and admin routes, aliases, page owners",
+      "winner": "current route source",
+      "status": "SOURCE_DEFINED",
+      "rationale": "The page list follows the current router and rendering owners."
+    },
+    {
+      "property": "Atelier palette, shapes and visual type scale",
+      "winner": "atelier-editorial.md Section 18",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Section 18 explicitly supersedes earlier appearance values."
+    },
+    {
+      "property": "home hero composition, category rail and product card ratio",
+      "winner": "atelier-editorial.md Section 3.6 Applied Atelier update",
+      "status": "SOURCE_DEFINED",
+      "rationale": "The target-specific home update applies where Section 18 is silent."
+    },
+    {
+      "property": "customer page layouts and states",
+      "winner": "atelier-editorial.md Sections 10-11 and 16",
+      "status": "SOURCE_DEFINED",
+      "rationale": "The design contract retains routes, commerce behavior, RTL and responsive states."
+    },
+    {
+      "property": "admin content layout",
+      "winner": "atelier-editorial.md Sections 12 and 16",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Admin remains an independent staff shell with role-filtered data/actions."
+    },
+    {
+      "property": "admin colors",
+      "winner": "atelier-editorial.md Section 18",
+      "status": "SOURCE_DEFINED",
+      "rationale": "The existing dark reference CSS is historical appearance; Section 18 explicitly specifies the light Admin palette."
+    },
+    {
+      "property": "Persian font actually rendered in this environment",
+      "winner": "Tahoma system fallback",
+      "status": "UNVERIFIED",
+      "rationale": "Peyda and Vazirmatn font files were not found in repository assets or the checked Windows font folder; preserve their design roles and disclose render fallback."
+    },
+    {
+      "property": "sample product and customer values",
+      "winner": "illustrative data",
+      "status": "PROPOSED",
+      "rationale": "Screens are visual design references; examples are explicitly marked mock data."
+    },
+    {
+      "property": "asset production rights",
+      "winner": "UNKNOWN",
+      "status": "UNVERIFIED",
+      "rationale": "Local asset presence does not establish license or production approval."
+    }
+  ]
+}

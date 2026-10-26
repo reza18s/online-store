@@ -1,0 +1,20 @@
+{
+  "targetId": "admin-order-action-panel",
+  "app": "admin",
+  "owner": "OrderDetailView action dialog",
+  "routes": [
+    "/admin/orders/:orderNumber"
+  ],
+  "sourcePaths": [
+    "apps/admin/src/features/orders/components/order-management/OrderDetailView.tsx",
+    "apps/admin/src/features/orders/components/order-management/order-action-title.tsx"
+  ],
+  "stateIds": [
+    "overview",
+    "status-form",
+    "shipment-form",
+    "validation",
+    "submitting",
+    "success"
+  ]
+}

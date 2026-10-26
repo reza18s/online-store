@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-cart-line-item",
+  "states": [
+    {
+      "stateId": "default",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/default-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/default-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "minimum",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/minimum-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/minimum-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "updating",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/updating-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/updating-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "conflict",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/conflict-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/conflict-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "unavailable",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/unavailable-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/unavailable-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

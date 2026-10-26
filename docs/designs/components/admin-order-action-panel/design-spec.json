@@ -1,0 +1,972 @@
+{
+  "schemaVersion": "1.0.0",
+  "target": {
+    "id": "admin-order-action-panel",
+    "app": "admin",
+    "title": "پنل اقدام سفارش",
+    "owner": "OrderDetailView action dialog",
+    "routes": [
+      "/admin/orders/:orderNumber"
+    ]
+  },
+  "sourceRevision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "direction": "Atelier Editorial / Soft Modern; admin staff surface keeps its independent shell/palette rules.",
+  "purpose": "گروه‌بندی اقدام‌های عملیات سفارش و فرم تأیید هر اقدام با ثبت خطا و موفقیت.",
+  "actions": [
+    "تغییر وضعیت سفارش",
+    "ثبت روش و کد ارسال",
+    "ثبت بررسی مرجوعی",
+    "تأیید/لغو اقدام"
+  ],
+  "states": [
+    {
+      "id": "overview",
+      "label": "اقدام‌های قابل انتخاب",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "status-form",
+      "label": "فرم وضعیت",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "shipment-form",
+      "label": "فرم ارسال",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "validation",
+      "label": "دلیل یا فیلد نامعتبر",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "submitting",
+      "label": "در حال ثبت",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "success",
+      "label": "ثبت موفق",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/OrderDetailView.tsx",
+      "anchor": "OrderDetailView, lines 65-537",
+      "scope": "Status, shipment and return action flows, validation, submit and feedback",
+      "sha256": "c25914463c5da586f4dfd7260a43c4a29d2fb999f3531bba164fd40c7787d365",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/order-action-title.tsx",
+      "anchor": "orderActionTitle",
+      "scope": "Action-dialog title mapping",
+      "sha256": "73b5e5469fb79299d0feefff079f2c17413ca5423ede295211c48a0e9a74bf03",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/sage",
+      "value": "#E8ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "clay/600",
+      "value": "#A88F78",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "assets": [],
+  "frames": [
+    {
+      "id": "admin-order-action-panel-overview",
+      "stateId": "overview",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/overview-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 310,
+              "y": 316.796875,
+              "width": 820,
+              "height": 266.40625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 855,
+              "y": 457.875,
+              "width": 250,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 595,
+              "y": 457.875,
+              "width": 250,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 335,
+              "y": 457.875,
+              "width": 250,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/overview-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 169.265625,
+              "width": 366,
+              "height": 501.453125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 353.828125,
+              "width": 328,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 441.0625,
+              "width": 328,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 528.296875,
+              "width": 328,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-order-action-panel-status-form",
+      "stateId": "status-form",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/status-form-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 310,
+              "y": 206.53125,
+              "width": 820,
+              "height": 486.921875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 1042.5,
+              "y": 585.359375,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 351,
+              "y": 585.359375,
+              "width": 84.359375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/status-form-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 146.25,
+              "width": 366,
+              "height": 547.5,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 296.5,
+              "y": 568.5625,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 47,
+              "y": 568.5625,
+              "width": 84.359375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-order-action-panel-shipment-form",
+      "stateId": "shipment-form",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/shipment-form-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 310,
+              "y": 122.734375,
+              "width": 820,
+              "height": 654.515625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 1042.5,
+              "y": 669.15625,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 351,
+              "y": 669.15625,
+              "width": 84.359375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/shipment-form-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 62.453125,
+              "width": 366,
+              "height": 715.09375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 296.5,
+              "y": 652.359375,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 47,
+              "y": 652.359375,
+              "width": 84.359375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-order-action-panel-validation",
+      "stateId": "validation",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/validation-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 310,
+              "y": 168.640625,
+              "width": 820,
+              "height": 562.71875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 1042.5,
+              "y": 623.265625,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 351,
+              "y": 623.265625,
+              "width": 84.359375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/validation-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 98.453125,
+              "width": 366,
+              "height": 643.09375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 296.5,
+              "y": 616.359375,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 47,
+              "y": 616.359375,
+              "width": 84.359375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-order-action-panel-submitting",
+      "stateId": "submitting",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/submitting-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 310,
+              "y": 186.640625,
+              "width": 820,
+              "height": 526.71875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 1042.5,
+              "y": 605.265625,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 351,
+              "y": 605.265625,
+              "width": 97.3125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/submitting-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 126.34375,
+              "width": 366,
+              "height": 587.296875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 296.5,
+              "y": 588.453125,
+              "width": 46.5,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 47,
+              "y": 588.453125,
+              "width": 97.3125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "admin-order-action-panel-success",
+      "stateId": "success",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/success-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 310,
+              "y": 292.890625,
+              "width": 820,
+              "height": 314.203125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 855,
+              "y": 433.96875,
+              "width": 250,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 595,
+              "y": 433.96875,
+              "width": 250,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 335,
+              "y": 433.96875,
+              "width": 250,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/admin-order-action-panel/states/success-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 145.375,
+              "width": 366,
+              "height": 549.25,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 329.9375,
+              "width": 328,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 417.171875,
+              "width": 328,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "action-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 504.40625,
+              "width": 328,
+              "height": 77.234375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/admin-order-action-panel/02-Clean-Reference.png",
+      "artifactType": "desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/overview-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/03-Clean-Reference-Mobile.png",
+      "artifactType": "mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/overview-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/status-form-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/status-form-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/shipment-form-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/shipment-form-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/validation-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/validation-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/submitting-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/submitting-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/success-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/states/success-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/01-Visual-Design-Board.png",
+      "artifactType": "board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/design-spec.json",
+      "artifactType": "model",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/design-spec.schema.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/scene-graph.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/source-index.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/authority-map.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/conflicts.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/design-tokens.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/asset-registry.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/coverage-matrix.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/qa-report.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/manifest.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/component-handoff.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/render-source/target.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-order-action-panel/render-source/README.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-actions-and-states",
+        "status": "PASS",
+        "method": "Direct source review of primary component owners and named validators",
+        "evidence": "2 source file(s) mapped; 6 behavior states documented."
+      },
+      {
+        "id": "desktop-mobile-render",
+        "status": "PASS",
+        "method": "Independent Chromium captures at 1440x900 and 390x844",
+        "evidence": "6 state(s) rendered at both viewports; 0 overflow/direction/missing-image/target issue(s)."
+      },
+      {
+        "id": "minimum-targets",
+        "status": "PASS",
+        "method": "Static measurement of every explicitly interactive element",
+        "evidence": "Minimum target size: 44x44 CSS px where checked; this is a rendered-reference check, not a keyboard test."
+      },
+      {
+        "id": "font-fidelity",
+        "status": "UNVERIFIED",
+        "method": "Local renderer font availability check",
+        "evidence": "Peyda/Vazirmatn are unavailable here; Tahoma is capture-only."
+      },
+      {
+        "id": "asset-license",
+        "status": "NOT_APPLICABLE",
+        "method": "Local repository asset inventory",
+        "evidence": "No raster asset is used by this component board."
+      },
+      {
+        "id": "interactive-runtime",
+        "status": "UNVERIFIED",
+        "method": "Static design reference; production React component not operated",
+        "evidence": "The board documents visual state and action contracts; it does not claim live application interaction."
+      },
+      {
+        "id": "schema",
+        "status": "PASS",
+        "method": "AJV CLI 5.0.0 with JSON Schema Draft 2020-12",
+        "evidence": "Generated design-spec.json validated against the co-located design-spec.schema.json."
+      },
+      {
+        "id": "semantic-integrity",
+        "status": "PASS",
+        "method": "Unique state/node/frame and parent reference checks",
+        "evidence": "6 frames, 40 nodes and parent links verified."
+      }
+    ],
+    "warnings": [
+      "Form values and records are illustrative and must not be copied as real customer data.",
+      "Tahoma is a visual capture fallback only; verify with approved Peyda/Vazirmatn font files.",
+      "Any local image asset has license UNKNOWN.",
+      "Admin controls remain within the existing role and route contract."
+    ]
+  }
+}

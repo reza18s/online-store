@@ -1,0 +1,104 @@
+{
+  "source": "docs/designs/atelier-editorial.md Section 18",
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/sage",
+      "value": "#E8ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "clay/600",
+      "value": "#A88F78",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "typography": {
+    "display": {
+      "family": "Peyda Variable",
+      "status": "SOURCE_DEFINED"
+    },
+    "body": {
+      "family": "Vazirmatn",
+      "status": "SOURCE_DEFINED"
+    },
+    "fallback": {
+      "family": "Tahoma",
+      "status": "RENDER_ONLY"
+    },
+    "browserResolved": "UNVERIFIED"
+  },
+  "shapes": {
+    "controlRadiusPx": [
+      10,
+      12
+    ],
+    "cardRadiusPx": 14,
+    "editorialMediaRadiusPx": [
+      16,
+      18
+    ],
+    "minimumInteractiveTargetPx": 44
+  }
+}

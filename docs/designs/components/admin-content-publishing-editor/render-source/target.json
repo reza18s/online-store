@@ -1,0 +1,21 @@
+{
+  "targetId": "admin-content-publishing-editor",
+  "app": "admin",
+  "owner": "ContentEditor",
+  "routes": [
+    "/admin/content/pages/:id"
+  ],
+  "sourcePaths": [
+    "apps/admin/src/features/content/components/content-seo/content-editor.tsx",
+    "apps/admin/src/features/content/components/content-seo/validate-content-draft.tsx",
+    "apps/admin/src/features/content/components/content-seo/get-publish-readiness.tsx",
+    "apps/admin/src/features/content/components/content-seo/is-content-publish-action-disabled.tsx"
+  ],
+  "stateIds": [
+    "draft",
+    "dirty",
+    "publish-blocked",
+    "saving",
+    "error"
+  ]
+}

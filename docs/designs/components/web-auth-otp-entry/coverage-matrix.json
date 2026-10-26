@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-auth-otp-entry",
+  "states": [
+    {
+      "stateId": "phone",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/phone-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/phone-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "code",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/code-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/code-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "invalid",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/invalid-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/invalid-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "sending",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/sending-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/sending-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "resent",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/resent-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/resent-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

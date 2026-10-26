@@ -1,0 +1,28 @@
+{
+  "targetId": "admin-redirect-editor",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/redirect-editor.tsx",
+      "anchor": "RedirectEditor, complete component",
+      "scope": "Create/edit, status code, save/delete and dirty/busy states",
+      "sha256": "9a0354066510d5eedc0157f6593ea9a527f49dff05c842a9f48a7aa235a5ac8a",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/validate-redirect-draft.tsx",
+      "anchor": "validateRedirectDraft",
+      "scope": "Path validation and uniqueness",
+      "sha256": "3546c8f5d0a1bea6ce5cfbf2a79cdeae662466f25cb58d2003d00bb8963695bd",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/would-create-redirect-cycle.tsx",
+      "anchor": "wouldCreateRedirectCycle",
+      "scope": "Cycle prevention",
+      "sha256": "d47a8934e3b4e4c9de51a14211dd48cb270c3e49f222a8ac1a071ed7e7673eb1",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

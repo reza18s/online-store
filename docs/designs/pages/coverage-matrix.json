@@ -1,0 +1,1766 @@
+{
+  "version": "1.0.0",
+  "status": "GENERATED",
+  "targets": [
+    {
+      "targetId": "web-home",
+      "app": "web",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "web-home-default",
+          "route": "/",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-search-dialog",
+      "app": "web",
+      "routeCount": 2,
+      "frames": [
+        {
+          "frameId": "web-search-dialog-empty",
+          "route": "/search",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-search-dialog-typing",
+          "route": "/search?q=مانتو",
+          "state": "loading",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-search-dialog-suggestions",
+          "route": "/search?q=کت",
+          "state": "success",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-search-dialog-no-results",
+          "route": "/search?q=ناموجود",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-search-dialog-error",
+          "route": "/search?q=خطا",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-search-results",
+      "app": "web",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "web-search-results-results",
+          "route": "/products?q=کت لینن",
+          "state": "success",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-search-results-no-results",
+          "route": "/products?q=بدون-نتیجه",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-category",
+      "app": "web",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "web-category-generic",
+          "route": "/category/:slug",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-category-women",
+          "route": "/category/women",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-category-men",
+          "route": "/category/men",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-category-children",
+          "route": "/category/children",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-listing",
+      "app": "web",
+      "routeCount": 5,
+      "frames": [
+        {
+          "frameId": "web-listing-all",
+          "route": "/products",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-listing-new",
+          "route": "/products/new",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-listing-sale",
+          "route": "/products/sale",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-listing-accessories",
+          "route": "/products/accessories",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-listing-audience",
+          "route": "/products/men",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-product-detail",
+      "app": "web",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "web-product-detail-available",
+          "route": "/product/linen-overshirt",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-product-detail-size-required",
+          "route": "/product/linen-overshirt",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-product-detail-sold-out",
+          "route": "/product/linen-overshirt",
+          "state": "disabled",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "768x1024"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-cart",
+      "app": "web",
+      "routeCount": 3,
+      "frames": [
+        {
+          "frameId": "web-cart-populated",
+          "route": "/cart",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-cart-empty",
+          "route": "/cart/empty",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-cart-conflict",
+          "route": "/cart/conflict",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "768x1024"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-auth",
+      "app": "web",
+      "routeCount": 3,
+      "frames": [
+        {
+          "frameId": "web-auth-request",
+          "route": "/auth/request",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-auth-verify",
+          "route": "/auth/verify",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-auth-invalid-code",
+          "route": "/auth/verify",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-auth-expired",
+          "route": "/auth/verify",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-checkout",
+      "app": "web",
+      "routeCount": 2,
+      "frames": [
+        {
+          "frameId": "web-checkout-address",
+          "route": "/checkout/address",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-checkout-shipping",
+          "route": "/checkout/shipping",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-checkout-payment",
+          "route": "/checkout/payment",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "768x1024"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-payment-outcomes",
+      "app": "web",
+      "routeCount": 5,
+      "frames": [
+        {
+          "frameId": "web-payment-outcomes-local",
+          "route": "/checkout/local-payment",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-payment-outcomes-pending",
+          "route": "/checkout/payment-pending",
+          "state": "loading",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-payment-outcomes-failed",
+          "route": "/checkout/payment-failed",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-payment-outcomes-recovery",
+          "route": "/checkout/payment-recovery",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-payment-outcomes-confirmation",
+          "route": "/checkout/confirmation",
+          "state": "success",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-account",
+      "app": "web",
+      "routeCount": 2,
+      "frames": [
+        {
+          "frameId": "web-account-dashboard",
+          "route": "/account",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-account-profile",
+          "route": "/account/profile",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-account-orders",
+          "route": "/account/orders",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-account-empty-orders",
+          "route": "/account/orders",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "768x1024"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-address-book",
+      "app": "web",
+      "routeCount": 3,
+      "frames": [
+        {
+          "frameId": "web-address-book-list",
+          "route": "/account/addresses",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-address-book-create",
+          "route": "/account/addresses/create",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-address-book-edit",
+          "route": "/account/addresses/edit/:id",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-address-book-delete-confirm",
+          "route": "/account/addresses",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-order-detail",
+      "app": "web",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "web-order-detail-active",
+          "route": "/order/:orderNumber",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-order-detail-delivered",
+          "route": "/order/:orderNumber",
+          "state": "success",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "768x1024"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-returns",
+      "app": "web",
+      "routeCount": 3,
+      "frames": [
+        {
+          "frameId": "web-returns-request",
+          "route": "/return/request",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-returns-invalid",
+          "route": "/return/request",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-returns-status",
+          "route": "/return/status",
+          "state": "success",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-editorial",
+      "app": "web",
+      "routeCount": 6,
+      "frames": [
+        {
+          "frameId": "web-editorial-campaign",
+          "route": "/campaign",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-editorial-guide",
+          "route": "/guide",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-editorial-article",
+          "route": "/article",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-editorial-lookbook",
+          "route": "/lookbook",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-editorial-about",
+          "route": "/about",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-editorial-trust",
+          "route": "/trust",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-service-pages",
+      "app": "web",
+      "routeCount": 9,
+      "frames": [
+        {
+          "frameId": "web-service-pages-size-guide",
+          "route": "/size-guide",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-care-guide",
+          "route": "/care-guide",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-shipping-policy",
+          "route": "/shipping-policy",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-returns-policy",
+          "route": "/returns-policy",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-faq",
+          "route": "/faq",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-contact",
+          "route": "/contact",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-privacy",
+          "route": "/privacy",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-terms",
+          "route": "/terms",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-service-pages-support",
+          "route": "/support",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-published-content",
+      "app": "web",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "web-published-content-published",
+          "route": "/content/:slug",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-published-content-long-form",
+          "route": "/content/:slug",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-system-states",
+      "app": "web",
+      "routeCount": 3,
+      "frames": [
+        {
+          "frameId": "web-system-states-offline",
+          "route": "/state/offline",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-system-states-error",
+          "route": "/state/error",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "web-system-states-maintenance",
+          "route": "/state/maintenance",
+          "state": "loading",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "web-not-found",
+      "app": "web",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "web-not-found-not-found",
+          "route": "/this-page-does-not-exist",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-login",
+      "app": "admin",
+      "routeCount": 2,
+      "frames": [
+        {
+          "frameId": "admin-login-default",
+          "route": "/admin/login",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-login-expired",
+          "route": "/admin/login?expired=1",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-login-invalid",
+          "route": "/admin/login",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-dashboard",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-dashboard-default",
+          "route": "/admin",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-catalog",
+      "app": "admin",
+      "routeCount": 2,
+      "frames": [
+        {
+          "frameId": "admin-catalog-default",
+          "route": "/admin/catalog/products",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-catalog-empty",
+          "route": "/admin/catalog/products",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-product-editor",
+      "app": "admin",
+      "routeCount": 2,
+      "frames": [
+        {
+          "frameId": "admin-product-editor-create",
+          "route": "/admin/catalog/products/new",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-product-editor-edit",
+          "route": "/admin/catalog/products/:id",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-product-editor-validation",
+          "route": "/admin/catalog/products/new",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-product-editor-saved",
+          "route": "/admin/catalog/products/:id",
+          "state": "success",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "768x1024"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-categories",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-categories-default",
+          "route": "/admin/catalog/categories",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-categories-reorder",
+          "route": "/admin/catalog/categories",
+          "state": "success",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-inventory",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-inventory-list",
+          "route": "/admin/inventory",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-inventory-detail",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-inventory-detail-variant",
+          "route": "/admin/inventory/:variantId",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-inventory-detail-adjustment",
+          "route": "/admin/inventory/:variantId",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-orders",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-orders-default",
+          "route": "/admin/orders",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-orders-empty",
+          "route": "/admin/orders",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-order-detail",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-order-detail-preparing",
+          "route": "/admin/orders/:orderNumber",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-order-detail-payment-mismatch",
+          "route": "/admin/orders/:orderNumber",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844",
+        "768x1024"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-payments",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-payments-default",
+          "route": "/admin/payments",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-payments-mismatch",
+          "route": "/admin/payments",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-customers",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-customers-default",
+          "route": "/admin/customers",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-customers-restricted",
+          "route": "/admin/customers",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-notifications",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-notifications-default",
+          "route": "/admin/notifications",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-notifications-failed",
+          "route": "/admin/notifications",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-audit",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-audit-default",
+          "route": "/admin/audit",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-audit-empty",
+          "route": "/admin/audit",
+          "state": "empty",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-content",
+      "app": "admin",
+      "routeCount": 2,
+      "frames": [
+        {
+          "frameId": "admin-content-list",
+          "route": "/admin/content",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-content-editor",
+          "route": "/admin/content/pages/:id",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-content-unsaved",
+          "route": "/admin/content/pages/:id",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-seo",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-seo-default",
+          "route": "/admin/content/seo",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-seo-validation",
+          "route": "/admin/content/seo",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-redirects",
+      "app": "admin",
+      "routeCount": 1,
+      "frames": [
+        {
+          "frameId": "admin-redirects-default",
+          "route": "/admin/content/redirects",
+          "state": "default",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-redirects-invalid",
+          "route": "/admin/content/redirects",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    },
+    {
+      "targetId": "admin-access-and-unavailable",
+      "app": "admin",
+      "routeCount": 4,
+      "frames": [
+        {
+          "frameId": "admin-access-and-unavailable-loading",
+          "route": "session pending",
+          "state": "loading",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-access-and-unavailable-denied",
+          "route": "/admin",
+          "state": "error",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-access-and-unavailable-unavailable",
+          "route": "/admin/operations",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        },
+        {
+          "frameId": "admin-access-and-unavailable-promotions",
+          "route": "/admin/promotions",
+          "state": "warning",
+          "artifacts": [
+            "desktop-clean",
+            "mobile-clean",
+            "page-board"
+          ],
+          "status": "GENERATED"
+        }
+      ],
+      "viewports": [
+        "1440x900",
+        "390x844"
+      ],
+      "artifacts": {
+        "board": "GENERATED",
+        "desktop": "GENERATED",
+        "mobile": "GENERATED"
+      }
+    }
+  ]
+}

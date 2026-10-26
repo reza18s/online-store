@@ -1,0 +1,14 @@
+{
+  "targetId": "web-auth-otp-entry",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/auth/components/auth-page.tsx",
+      "anchor": "AuthPage, complete component",
+      "scope": "Phone/code input, request/verify, missing challenge, resend and busy states",
+      "sha256": "3916b17da53f4d1c42879903d0462da27b7b46dd3615bc3cbc204247d601aacf",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

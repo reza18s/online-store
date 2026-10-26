@@ -1,0 +1,744 @@
+{
+  "schemaVersion": "1.0.0",
+  "target": {
+    "id": "web-product-variant-picker",
+    "app": "web",
+    "title": "انتخاب تنوع کالا",
+    "owner": "ProductDiscovery product-detail section",
+    "routes": [
+      "/product/:slug"
+    ]
+  },
+  "sourceRevision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "direction": "Atelier Editorial / Soft Modern; admin staff surface keeps its independent shell/palette rules.",
+  "purpose": "انتخاب ویژگی‌های کالا و اعلام وضعیت واقعی ترکیب انتخاب‌شده پیش از افزودن.",
+  "actions": [
+    "انتخاب رنگ/ویژگی",
+    "انتخاب اندازه",
+    "افزودن به سبد",
+    "خواندن وضعیت موجودی"
+  ],
+  "states": [
+    {
+      "id": "required",
+      "label": "انتخاب لازم است",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "selected",
+      "label": "ترکیب موجود",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "unavailable",
+      "label": "ترکیب ناموجود",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "adding",
+      "label": "در حال افزودن",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "added",
+      "label": "افزوده شد",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/product-discovery.tsx",
+      "anchor": "ProductDiscovery, lines 39-346",
+      "scope": "Option, legacy size/color, availability, add and feedback states",
+      "sha256": "235f03c5bc1eeb228971e5ce12c6938092ce6de489e1ce1c26b08adf1243fb40",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/structured-variant-options.tsx",
+      "anchor": "structuredVariantOptions",
+      "scope": "Option/value availability source",
+      "sha256": "1b8208010cb57f35584724c890268af70f86e05a6c21fa35f68f80f7e1ddd218",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/resolve-variant.tsx",
+      "anchor": "resolveVariant",
+      "scope": "Selected variant resolution",
+      "sha256": "0e3de3d0318f77862c5715b1f370dd09ed485693fc2fdf171f0e5337ec656d97",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/product-add-button-label.tsx",
+      "anchor": "productAddButtonLabel",
+      "scope": "Add-action labels",
+      "sha256": "7e78433c96393b036280463bbbc54b05ae40a11a7f94c0ef8f0f022ba8c83a1a",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/add-to-cart-feedback.tsx",
+      "anchor": "AddToCartFeedback",
+      "scope": "Mutation feedback",
+      "sha256": "dfebda1530fceab7166d0c9411b01f3b7d13d3c244bdcddfa0352feb66f10c52",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/sage",
+      "value": "#E8ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "clay/600",
+      "value": "#A88F78",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "assets": [
+    {
+      "assetId": "nova-asset-nova-product-linen-overshirt.webp",
+      "file": "nova-product-linen-overshirt.webp",
+      "path": "apps/web/public/assets/nova-product-linen-overshirt.webp",
+      "source": "local repository asset",
+      "license": "UNKNOWN",
+      "verification": "file-present; license-unverified",
+      "intendedUse": "illustrative component preview only",
+      "altText": "تصویر نمونه برای طراحی؛ محتوای تولیدی یا مجوز نهایی را اثبات نمی‌کند",
+      "fit": "cover",
+      "focalPoint": "NOT_SPECIFIED",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "715526896a5bd52b48803f59db6717485e10b1756eff1dac869fac64b413d915"
+    }
+  ],
+  "frames": [
+    {
+      "id": "web-product-variant-picker-required",
+      "stateId": "required",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/required-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 420,
+              "y": 175.421875,
+              "width": 600,
+              "height": 549.15625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 445,
+              "y": 611.078125,
+              "width": 550,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/required-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 147.296875,
+              "width": 366,
+              "height": 545.40625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 568.703125,
+              "width": 328,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-product-variant-picker-selected",
+      "stateId": "selected",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/selected-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 420,
+              "y": 175.421875,
+              "width": 600,
+              "height": 549.15625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 445,
+              "y": 611.078125,
+              "width": 550,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/selected-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 147.296875,
+              "width": 366,
+              "height": 545.40625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 568.703125,
+              "width": 328,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-product-variant-picker-unavailable",
+      "stateId": "unavailable",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/unavailable-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 420,
+              "y": 175.421875,
+              "width": 600,
+              "height": 549.15625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 445,
+              "y": 611.078125,
+              "width": 550,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/unavailable-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 147.296875,
+              "width": 366,
+              "height": 545.40625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 568.703125,
+              "width": 328,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-product-variant-picker-adding",
+      "stateId": "adding",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/adding-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 420,
+              "y": 175.421875,
+              "width": 600,
+              "height": 549.15625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 445,
+              "y": 611.078125,
+              "width": 550,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/adding-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 147.296875,
+              "width": 366,
+              "height": 545.40625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 568.703125,
+              "width": 328,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-product-variant-picker-added",
+      "stateId": "added",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/added-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 420,
+              "y": 175.421875,
+              "width": 600,
+              "height": 549.15625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 445,
+              "y": 611.078125,
+              "width": 550,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-product-variant-picker/states/added-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 147.296875,
+              "width": 366,
+              "height": 545.40625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 568.703125,
+              "width": 328,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/web-product-variant-picker/02-Clean-Reference.png",
+      "artifactType": "desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/required-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/03-Clean-Reference-Mobile.png",
+      "artifactType": "mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/required-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/selected-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/selected-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/unavailable-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/unavailable-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/adding-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/adding-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/added-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/states/added-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/01-Visual-Design-Board.png",
+      "artifactType": "board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/design-spec.json",
+      "artifactType": "model",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/design-spec.schema.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/scene-graph.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/source-index.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/authority-map.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/conflicts.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/design-tokens.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/asset-registry.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/coverage-matrix.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/qa-report.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/manifest.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/component-handoff.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/render-source/target.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-product-variant-picker/render-source/README.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-actions-and-states",
+        "status": "PASS",
+        "method": "Direct source review of primary component owners and named validators",
+        "evidence": "5 source file(s) mapped; 5 behavior states documented."
+      },
+      {
+        "id": "desktop-mobile-render",
+        "status": "PASS",
+        "method": "Independent Chromium captures at 1440x900 and 390x844",
+        "evidence": "5 state(s) rendered at both viewports; 0 overflow/direction/missing-image/target issue(s)."
+      },
+      {
+        "id": "minimum-targets",
+        "status": "PASS",
+        "method": "Static measurement of every explicitly interactive element",
+        "evidence": "Minimum target size: 44x44 CSS px where checked; this is a rendered-reference check, not a keyboard test."
+      },
+      {
+        "id": "font-fidelity",
+        "status": "UNVERIFIED",
+        "method": "Local renderer font availability check",
+        "evidence": "Peyda/Vazirmatn are unavailable here; Tahoma is capture-only."
+      },
+      {
+        "id": "asset-license",
+        "status": "UNVERIFIED",
+        "method": "Local repository asset inventory",
+        "evidence": "Image file exists; usage rights remain UNKNOWN."
+      },
+      {
+        "id": "interactive-runtime",
+        "status": "UNVERIFIED",
+        "method": "Static design reference; production React component not operated",
+        "evidence": "The board documents visual state and action contracts; it does not claim live application interaction."
+      },
+      {
+        "id": "schema",
+        "status": "PASS",
+        "method": "AJV CLI 5.0.0 with JSON Schema Draft 2020-12",
+        "evidence": "Generated design-spec.json validated against the co-located design-spec.schema.json."
+      },
+      {
+        "id": "semantic-integrity",
+        "status": "PASS",
+        "method": "Unique state/node/frame and parent reference checks",
+        "evidence": "5 frames, 20 nodes and parent links verified."
+      }
+    ],
+    "warnings": [
+      "Form values and records are illustrative and must not be copied as real customer data.",
+      "Tahoma is a visual capture fallback only; verify with approved Peyda/Vazirmatn font files.",
+      "Any local image asset has license UNKNOWN.",
+      "Admin controls remain within the existing role and route contract."
+    ]
+  }
+}

@@ -1,0 +1,771 @@
+{
+  "schemaVersion": "1.0.0",
+  "coordinateSystem": "CSS pixels; origin top-left; X increases right in RTL",
+  "nodes": [
+    {
+      "id": "admin-product-variant-panel-list-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 112.359375,
+      "width": 820,
+      "height": 675.265625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-list-desktop-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-list-desktop-main-component",
+      "x": 335,
+      "y": 328.140625,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-list-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-list-desktop-main-component",
+      "x": 726,
+      "y": 665.53125,
+      "width": 365,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-list-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 22,
+      "width": 366,
+      "height": 955.453125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-list-mobile-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-list-mobile-main-component",
+      "x": 31,
+      "y": 279.125,
+      "width": 160,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-list-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-list-mobile-main-component",
+      "x": 45,
+      "y": 838.265625,
+      "width": 300,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-empty-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 184.359375,
+      "width": 820,
+      "height": 531.265625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-empty",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-empty-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-empty-desktop-main-component",
+      "x": 726,
+      "y": 593.53125,
+      "width": 365,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-empty",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-empty-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 42.0625,
+      "width": 366,
+      "height": 755.859375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-empty",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-empty-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-empty-mobile-main-component",
+      "x": 45,
+      "y": 658.734375,
+      "width": 300,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-empty",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-add-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 112.359375,
+      "width": 820,
+      "height": 675.265625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-add",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-add-desktop-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-add-desktop-main-component",
+      "x": 335,
+      "y": 328.140625,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-add",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-add-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-add-desktop-main-component",
+      "x": 726,
+      "y": 665.53125,
+      "width": 365,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-add",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-add-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 22,
+      "width": 366,
+      "height": 955.453125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-add",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-add-mobile-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-add-mobile-main-component",
+      "x": 31,
+      "y": 279.125,
+      "width": 160,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-add",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-add-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-add-mobile-main-component",
+      "x": 45,
+      "y": 838.265625,
+      "width": 300,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-add",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-invalid-sku-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 84.46875,
+      "width": 820,
+      "height": 731.0625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-invalid-sku",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-invalid-sku-desktop-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-invalid-sku-desktop-main-component",
+      "x": 335,
+      "y": 356.046875,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-invalid-sku",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-invalid-sku-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-invalid-sku-desktop-main-component",
+      "x": 726,
+      "y": 693.4375,
+      "width": 365,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-invalid-sku",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-invalid-sku-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 22,
+      "width": 366,
+      "height": 1011.25,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-invalid-sku",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-invalid-sku-mobile-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-invalid-sku-mobile-main-component",
+      "x": 31,
+      "y": 334.921875,
+      "width": 160,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-invalid-sku",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-invalid-sku-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-invalid-sku-mobile-main-component",
+      "x": 45,
+      "y": 894.0625,
+      "width": 300,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-invalid-sku",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-loading-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 184.359375,
+      "width": 820,
+      "height": 531.265625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-loading",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-loading-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-loading-desktop-main-component",
+      "x": 726,
+      "y": 593.53125,
+      "width": 365,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-loading",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-loading-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 42.0625,
+      "width": 366,
+      "height": 755.859375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-loading",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-loading-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-loading-mobile-main-component",
+      "x": 45,
+      "y": 658.734375,
+      "width": 300,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-loading",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-error-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 84.46875,
+      "width": 820,
+      "height": 731.0625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-error",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-error-desktop-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-error-desktop-main-component",
+      "x": 335,
+      "y": 356.046875,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-error",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-error-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-error-desktop-main-component",
+      "x": 726,
+      "y": 693.4375,
+      "width": 365,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-error",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-error-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 22,
+      "width": 366,
+      "height": 1011.25,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-error",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-error-mobile-edit-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-error-mobile-main-component",
+      "x": 31,
+      "y": 334.921875,
+      "width": 160,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-error",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-error-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-product-variant-panel-error-mobile-main-component",
+      "x": 45,
+      "y": 894.0625,
+      "width": 300,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-error",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-read-only-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 318.453125,
+      "width": 820,
+      "height": 263.078125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-read-only",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-product-variant-panel-read-only-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 259.234375,
+      "width": 366,
+      "height": 321.515625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-product-variant-panel-read-only",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    }
+  ],
+  "frames": [
+    {
+      "frameId": "admin-product-variant-panel-list",
+      "rootIds": [
+        "admin-product-variant-panel-list-desktop-main-component",
+        "admin-product-variant-panel-list-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-product-variant-panel-empty",
+      "rootIds": [
+        "admin-product-variant-panel-empty-desktop-main-component",
+        "admin-product-variant-panel-empty-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-product-variant-panel-add",
+      "rootIds": [
+        "admin-product-variant-panel-add-desktop-main-component",
+        "admin-product-variant-panel-add-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-product-variant-panel-invalid-sku",
+      "rootIds": [
+        "admin-product-variant-panel-invalid-sku-desktop-main-component",
+        "admin-product-variant-panel-invalid-sku-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-product-variant-panel-loading",
+      "rootIds": [
+        "admin-product-variant-panel-loading-desktop-main-component",
+        "admin-product-variant-panel-loading-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-product-variant-panel-error",
+      "rootIds": [
+        "admin-product-variant-panel-error-desktop-main-component",
+        "admin-product-variant-panel-error-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-product-variant-panel-read-only",
+      "rootIds": [
+        "admin-product-variant-panel-read-only-desktop-main-component",
+        "admin-product-variant-panel-read-only-mobile-main-component"
+      ]
+    }
+  ]
+}

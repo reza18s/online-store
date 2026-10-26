@@ -1,0 +1,47 @@
+{
+  "status": "PASS_WITH_WARNINGS",
+  "checks": [
+    {
+      "id": "route-map",
+      "status": "PASS",
+      "method": "Direct source review of PublicApp, parseRoute, AdminRouter and AdminWorkspaceLayout",
+      "evidence": "36 design targets; 107 route/state frames mapped."
+    },
+    {
+      "id": "responsive-renders",
+      "status": "PASS",
+      "method": "Independent Chromium screenshots from desktop/mobile viewport rules",
+      "evidence": "107 frames rendered for 36/36 target families."
+    },
+    {
+      "id": "font-fidelity",
+      "status": "UNVERIFIED",
+      "method": "Checked local font files and Windows font names; design fonts unavailable",
+      "evidence": "Peyda/Vazirmatn absent from checked locations; Tahoma fallback used."
+    },
+    {
+      "id": "asset-license",
+      "status": "UNVERIFIED",
+      "method": "Local asset inventory only",
+      "evidence": "License/ownership status is not established by this design package."
+    },
+    {
+      "id": "schema",
+      "status": "PASS",
+      "method": "AJV CLI 5.0.0 with JSON Schema Draft 2020-12",
+      "evidence": "Generated design-spec.json validated against the co-located design-spec.schema.json."
+    },
+    {
+      "id": "semantic-integrity",
+      "status": "PASS",
+      "method": "Deterministic target/frame/node reference checks",
+      "evidence": "Unique target IDs, frame ownership, scene node references and 36 coverage rows verified."
+    }
+  ],
+  "warnings": [
+    "All example customer, order, price and status values are mock data.",
+    "Page screenshots use licensed-font fallbacks where assets are absent.",
+    "Local illustration license is UNKNOWN.",
+    "Component boards are intentionally deferred until page boards are reviewed."
+  ]
+}

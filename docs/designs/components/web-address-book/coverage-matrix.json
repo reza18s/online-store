@@ -1,0 +1,101 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-address-book",
+  "states": [
+    {
+      "stateId": "list",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/list-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/list-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "create",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/create-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/create-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "edit",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/edit-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/edit-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "validation",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/validation-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/validation-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "saving",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/saving-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/saving-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "delete-confirm",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/delete-confirm-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/delete-confirm-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

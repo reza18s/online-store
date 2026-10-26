@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-search-dialog",
+  "states": [
+    {
+      "stateId": "empty",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/empty-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/empty-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "loading",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/loading-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/loading-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "suggestions",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/suggestions-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/suggestions-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "no-results",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/no-results-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/no-results-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "error",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/error-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/error-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

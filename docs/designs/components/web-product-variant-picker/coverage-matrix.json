@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-product-variant-picker",
+  "states": [
+    {
+      "stateId": "required",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/required-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/required-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "selected",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/selected-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/selected-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "unavailable",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/unavailable-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/unavailable-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "adding",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/adding-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/adding-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "added",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/added-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/added-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

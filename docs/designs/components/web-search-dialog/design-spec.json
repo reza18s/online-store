@@ -1,0 +1,1126 @@
+{
+  "schemaVersion": "1.0.0",
+  "target": {
+    "id": "web-search-dialog",
+    "app": "web",
+    "title": "پنجره‌ی جست‌وجوی سراسری",
+    "owner": "SearchDialog",
+    "routes": [
+      "/search",
+      "/search?q=…"
+    ]
+  },
+  "sourceRevision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "direction": "Atelier Editorial / Soft Modern; admin staff surface keeps its independent shell/palette rules.",
+  "purpose": "یافتن کالا یا دسته‌بندی و رفتن به مقصد درست بدون از دست‌دادن زمینه‌ی صفحه.",
+  "actions": [
+    "بستن پنجره",
+    "پاک‌کردن عبارت",
+    "رفتن به پیشنهاد",
+    "مشاهده‌ی همه‌ی نتایج"
+  ],
+  "states": [
+    {
+      "id": "empty",
+      "label": "شروع جست‌وجو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "loading",
+      "label": "در حال دریافت پیشنهادها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "suggestions",
+      "label": "پیشنهادهای مرتبط",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "no-results",
+      "label": "نتیجه‌ای پیدا نشد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "error",
+      "label": "خطای جست‌وجو",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/web/src/shared/ui/search-dialog.tsx",
+      "anchor": "SearchDialog, complete component",
+      "scope": "Query, suggestions, recent searches, submit and close actions",
+      "sha256": "a1f3594def8ca6238c1283ae06fd4ae9c09dfe634565a150949961c1f1ca8ea8",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/recent-searches.ts",
+      "anchor": "readRecentSearches and rememberRecentSearch",
+      "scope": "Recent search behavior",
+      "sha256": "22b5f390572dcb154d06be8699cd9c2a793c77d463ac0913d52b04696535dc05",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/sage",
+      "value": "#E8ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "clay/600",
+      "value": "#A88F78",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "assets": [],
+  "frames": [
+    {
+      "id": "web-search-dialog-empty",
+      "stateId": "empty",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-search-dialog/states/empty-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 410,
+              "y": 279.8125,
+              "width": 620,
+              "height": 340.375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 315.796875,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 388.796875,
+              "width": 570,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 917.890625,
+              "y": 506.6875,
+              "width": 87.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 829.46875,
+              "y": 506.6875,
+              "width": 80.421875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 735.59375,
+              "y": 506.6875,
+              "width": 85.875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-search-dialog/states/empty-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 22,
+              "width": 366,
+              "height": 820,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 41,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 116.734375,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 271.890625,
+              "y": 234.625,
+              "width": 87.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 183.46875,
+              "y": 234.625,
+              "width": 80.421875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 89.59375,
+              "y": 234.625,
+              "width": 85.875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-search-dialog-loading",
+      "stateId": "loading",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-search-dialog/states/loading-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 410,
+              "y": 327.859375,
+              "width": 620,
+              "height": 244.28125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 363.84375,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 436.84375,
+              "width": 570,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 448,
+              "y": 437.84375,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-search-dialog/states/loading-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 22,
+              "width": 366,
+              "height": 820,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 41,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 116.734375,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 44,
+              "y": 117.734375,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-search-dialog-suggestions",
+      "stateId": "suggestions",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-search-dialog/states/suggestions-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 410,
+              "y": 213.25,
+              "width": 620,
+              "height": 473.484375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 249.234375,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 322.234375,
+              "width": 570,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 448,
+              "y": 323.234375,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "suggestion-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 382.234375,
+              "width": 570,
+              "height": 61,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "suggestion-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 447.234375,
+              "width": 570,
+              "height": 61,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "suggestion-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 512.234375,
+              "width": 570,
+              "height": 61,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 886.4375,
+              "y": 573.234375,
+              "width": 118.5625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-search-dialog/states/suggestions-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 22,
+              "width": 366,
+              "height": 820,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 41,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 116.734375,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 44,
+              "y": 117.734375,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "suggestion-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 176.734375,
+              "width": 328,
+              "height": 61,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "suggestion-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 241.734375,
+              "width": 328,
+              "height": 61,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "suggestion-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 306.734375,
+              "width": 328,
+              "height": 61,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 240.4375,
+              "y": 367.734375,
+              "width": 118.5625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-search-dialog-no-results",
+      "stateId": "no-results",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-search-dialog/states/no-results-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 410,
+              "y": 279.8125,
+              "width": 620,
+              "height": 340.375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 315.796875,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 388.796875,
+              "width": 570,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 448,
+              "y": 389.796875,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 917.890625,
+              "y": 506.6875,
+              "width": 87.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 829.46875,
+              "y": 506.6875,
+              "width": 80.421875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 735.59375,
+              "y": 506.6875,
+              "width": 85.875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-search-dialog/states/no-results-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 22,
+              "width": 366,
+              "height": 820,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 41,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 116.734375,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 44,
+              "y": 117.734375,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-0",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 271.890625,
+              "y": 234.625,
+              "width": 87.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-1",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 183.46875,
+              "y": 234.625,
+              "width": 80.421875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "recent-2",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 89.59375,
+              "y": 234.625,
+              "width": 85.875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-search-dialog-error",
+      "stateId": "error",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-search-dialog/states/error-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 410,
+              "y": 309.859375,
+              "width": 620,
+              "height": 280.28125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 345.84375,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 435,
+              "y": 418.84375,
+              "width": 570,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 448,
+              "y": 419.84375,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-search-dialog/states/error-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 22,
+              "width": 366,
+              "height": 820,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "close-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 41,
+              "width": 44,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "search-field",
+              "tag": "label",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 116.734375,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "clear-action",
+              "tag": "button",
+              "parentId": "search-field",
+              "x": 44,
+              "y": 117.734375,
+              "width": 74.328125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/web-search-dialog/02-Clean-Reference.png",
+      "artifactType": "desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/empty-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/03-Clean-Reference-Mobile.png",
+      "artifactType": "mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/empty-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/loading-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/loading-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/suggestions-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/suggestions-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/no-results-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/no-results-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/error-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/states/error-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/01-Visual-Design-Board.png",
+      "artifactType": "board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/design-spec.json",
+      "artifactType": "model",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/design-spec.schema.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/scene-graph.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/source-index.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/authority-map.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/conflicts.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/design-tokens.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/asset-registry.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/coverage-matrix.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/qa-report.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/manifest.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/component-handoff.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/render-source/target.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-search-dialog/render-source/README.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-actions-and-states",
+        "status": "PASS",
+        "method": "Direct source review of primary component owners and named validators",
+        "evidence": "2 source file(s) mapped; 5 behavior states documented."
+      },
+      {
+        "id": "desktop-mobile-render",
+        "status": "PASS",
+        "method": "Independent Chromium captures at 1440x900 and 390x844",
+        "evidence": "5 state(s) rendered at both viewports; 0 overflow/direction/missing-image/target issue(s)."
+      },
+      {
+        "id": "minimum-targets",
+        "status": "PASS",
+        "method": "Static measurement of every explicitly interactive element",
+        "evidence": "Minimum target size: 44x44 CSS px where checked; this is a rendered-reference check, not a keyboard test."
+      },
+      {
+        "id": "font-fidelity",
+        "status": "UNVERIFIED",
+        "method": "Local renderer font availability check",
+        "evidence": "Peyda/Vazirmatn are unavailable here; Tahoma is capture-only."
+      },
+      {
+        "id": "asset-license",
+        "status": "NOT_APPLICABLE",
+        "method": "Local repository asset inventory",
+        "evidence": "No raster asset is used by this component board."
+      },
+      {
+        "id": "interactive-runtime",
+        "status": "UNVERIFIED",
+        "method": "Static design reference; production React component not operated",
+        "evidence": "The board documents visual state and action contracts; it does not claim live application interaction."
+      },
+      {
+        "id": "schema",
+        "status": "PASS",
+        "method": "AJV CLI 5.0.0 with JSON Schema Draft 2020-12",
+        "evidence": "Generated design-spec.json validated against the co-located design-spec.schema.json."
+      },
+      {
+        "id": "semantic-integrity",
+        "status": "PASS",
+        "method": "Unique state/node/frame and parent reference checks",
+        "evidence": "5 frames, 58 nodes and parent links verified."
+      }
+    ],
+    "warnings": [
+      "Form values and records are illustrative and must not be copied as real customer data.",
+      "Tahoma is a visual capture fallback only; verify with approved Peyda/Vazirmatn font files.",
+      "Any local image asset has license UNKNOWN.",
+      "Admin controls remain within the existing role and route contract."
+    ]
+  }
+}

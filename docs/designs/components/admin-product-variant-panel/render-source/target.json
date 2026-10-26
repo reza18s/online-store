@@ -1,0 +1,21 @@
+{
+  "targetId": "admin-product-variant-panel",
+  "app": "admin",
+  "owner": "VariantsPanel + VariantItem",
+  "routes": [
+    "/admin/catalog/products/:id"
+  ],
+  "sourcePaths": [
+    "apps/admin/src/features/catalog/components/catalog-inventory/variants-panel.tsx",
+    "apps/admin/src/features/catalog/components/catalog-inventory/variant-item.tsx"
+  ],
+  "stateIds": [
+    "list",
+    "empty",
+    "add",
+    "invalid-sku",
+    "loading",
+    "error",
+    "read-only"
+  ]
+}

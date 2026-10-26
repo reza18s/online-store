@@ -1,0 +1,59 @@
+{
+  "status": "PASS_WITH_WARNINGS",
+  "checks": [
+    {
+      "id": "source-actions-and-states",
+      "status": "PASS",
+      "method": "Direct source review of primary component owners and named validators",
+      "evidence": "4 source file(s) mapped; 5 behavior states documented."
+    },
+    {
+      "id": "desktop-mobile-render",
+      "status": "PASS",
+      "method": "Independent Chromium captures at 1440x900 and 390x844",
+      "evidence": "5 state(s) rendered at both viewports; 0 overflow/direction/missing-image/target issue(s)."
+    },
+    {
+      "id": "minimum-targets",
+      "status": "PASS",
+      "method": "Static measurement of every explicitly interactive element",
+      "evidence": "Minimum target size: 44x44 CSS px where checked; this is a rendered-reference check, not a keyboard test."
+    },
+    {
+      "id": "font-fidelity",
+      "status": "UNVERIFIED",
+      "method": "Local renderer font availability check",
+      "evidence": "Peyda/Vazirmatn are unavailable here; Tahoma is capture-only."
+    },
+    {
+      "id": "asset-license",
+      "status": "UNVERIFIED",
+      "method": "Local repository asset inventory",
+      "evidence": "Image file exists; usage rights remain UNKNOWN."
+    },
+    {
+      "id": "interactive-runtime",
+      "status": "UNVERIFIED",
+      "method": "Static design reference; production React component not operated",
+      "evidence": "The board documents visual state and action contracts; it does not claim live application interaction."
+    },
+    {
+      "id": "schema",
+      "status": "PASS",
+      "method": "AJV CLI 5.0.0 with JSON Schema Draft 2020-12",
+      "evidence": "Generated design-spec.json validated against the co-located design-spec.schema.json."
+    },
+    {
+      "id": "semantic-integrity",
+      "status": "PASS",
+      "method": "Unique state/node/frame and parent reference checks",
+      "evidence": "5 frames, 54 nodes and parent links verified."
+    }
+  ],
+  "warnings": [
+    "Form values and records are illustrative and must not be copied as real customer data.",
+    "Tahoma is a visual capture fallback only; verify with approved Peyda/Vazirmatn font files.",
+    "Any local image asset has license UNKNOWN.",
+    "Admin controls remain within the existing role and route contract."
+  ]
+}

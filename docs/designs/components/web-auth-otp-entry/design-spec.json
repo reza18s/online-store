@@ -1,0 +1,899 @@
+{
+  "schemaVersion": "1.0.0",
+  "target": {
+    "id": "web-auth-otp-entry",
+    "app": "web",
+    "title": "ورود با شماره و کد یکبارمصرف",
+    "owner": "AuthPage",
+    "routes": [
+      "/auth/request",
+      "/auth/verify"
+    ]
+  },
+  "sourceRevision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "direction": "Atelier Editorial / Soft Modern; admin staff surface keeps its independent shell/palette rules.",
+  "purpose": "درخواست و تأیید OTP در یک جریان کوتاه با خطای قابل‌بازیابی.",
+  "actions": [
+    "درخواست کد",
+    "تأیید و ورود",
+    "ارسال دوباره‌ی کد",
+    "بازگشت به شماره"
+  ],
+  "states": [
+    {
+      "id": "phone",
+      "label": "ورود شماره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "code",
+      "label": "ورود کد شش‌رقمی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "invalid",
+      "label": "کد/نشست نامعتبر",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "sending",
+      "label": "در حال ارسال یا تأیید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "resent",
+      "label": "کد تازه ارسال شد",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/web/src/features/auth/components/auth-page.tsx",
+      "anchor": "AuthPage, complete component",
+      "scope": "Phone/code input, request/verify, missing challenge, resend and busy states",
+      "sha256": "3916b17da53f4d1c42879903d0462da27b7b46dd3615bc3cbc204247d601aacf",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/sage",
+      "value": "#E8ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "clay/600",
+      "value": "#A88F78",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "assets": [],
+  "frames": [
+    {
+      "id": "web-auth-otp-entry-phone",
+      "stateId": "phone",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/phone-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 470,
+              "y": 291.015625,
+              "width": 500,
+              "height": 317.96875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 452.890625,
+              "width": 450,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 516.890625,
+              "width": 450,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/phone-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 259.59375,
+              "width": 366,
+              "height": 320.8125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 407.21875,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 471.21875,
+              "width": 328,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-auth-otp-entry-code",
+      "stateId": "code",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/code-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 470,
+              "y": 279.46875,
+              "width": 500,
+              "height": 341.0625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 464.4375,
+              "width": 450,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 725,
+              "y": 528.4375,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 528.4375,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/code-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 248.046875,
+              "width": 366,
+              "height": 343.90625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 418.765625,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 200,
+              "y": 482.765625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 482.765625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-auth-otp-entry-invalid",
+      "stateId": "invalid",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/invalid-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 470,
+              "y": 251.5625,
+              "width": 500,
+              "height": 396.859375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 436.53125,
+              "width": 450,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 725,
+              "y": 556.328125,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 556.328125,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/invalid-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 220.140625,
+              "width": 366,
+              "height": 399.703125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 390.859375,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 200,
+              "y": 510.65625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 510.65625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-auth-otp-entry-sending",
+      "stateId": "sending",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/sending-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 470,
+              "y": 279.46875,
+              "width": 500,
+              "height": 341.0625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 464.4375,
+              "width": 450,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 725,
+              "y": 528.4375,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 528.4375,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/sending-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 248.046875,
+              "width": 366,
+              "height": 343.90625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 418.765625,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 200,
+              "y": 482.765625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 482.765625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-auth-otp-entry-resent",
+      "stateId": "resent",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/resent-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 470,
+              "y": 261.5625,
+              "width": 500,
+              "height": 376.859375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 446.53125,
+              "width": 450,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 725,
+              "y": 546.328125,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 495,
+              "y": 546.328125,
+              "width": 220,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-auth-otp-entry/states/resent-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 230.140625,
+              "width": 366,
+              "height": 379.703125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "otp-field",
+              "tag": "input",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 400.859375,
+              "width": 328,
+              "height": 46,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 200,
+              "y": 500.65625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "resend-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 500.65625,
+              "width": 159,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/02-Clean-Reference.png",
+      "artifactType": "desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/phone-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/03-Clean-Reference-Mobile.png",
+      "artifactType": "mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/phone-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/code-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/code-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/invalid-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/invalid-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/sending-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/sending-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/resent-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/states/resent-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/01-Visual-Design-Board.png",
+      "artifactType": "board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/design-spec.json",
+      "artifactType": "model",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/design-spec.schema.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/scene-graph.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/source-index.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/authority-map.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/conflicts.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/design-tokens.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/asset-registry.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/coverage-matrix.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/qa-report.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/manifest.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/component-handoff.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/render-source/target.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-auth-otp-entry/render-source/README.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-actions-and-states",
+        "status": "PASS",
+        "method": "Direct source review of primary component owners and named validators",
+        "evidence": "1 source file(s) mapped; 5 behavior states documented."
+      },
+      {
+        "id": "desktop-mobile-render",
+        "status": "PASS",
+        "method": "Independent Chromium captures at 1440x900 and 390x844",
+        "evidence": "5 state(s) rendered at both viewports; 0 overflow/direction/missing-image/target issue(s)."
+      },
+      {
+        "id": "minimum-targets",
+        "status": "PASS",
+        "method": "Static measurement of every explicitly interactive element",
+        "evidence": "Minimum target size: 44x44 CSS px where checked; this is a rendered-reference check, not a keyboard test."
+      },
+      {
+        "id": "font-fidelity",
+        "status": "UNVERIFIED",
+        "method": "Local renderer font availability check",
+        "evidence": "Peyda/Vazirmatn are unavailable here; Tahoma is capture-only."
+      },
+      {
+        "id": "asset-license",
+        "status": "NOT_APPLICABLE",
+        "method": "Local repository asset inventory",
+        "evidence": "No raster asset is used by this component board."
+      },
+      {
+        "id": "interactive-runtime",
+        "status": "UNVERIFIED",
+        "method": "Static design reference; production React component not operated",
+        "evidence": "The board documents visual state and action contracts; it does not claim live application interaction."
+      },
+      {
+        "id": "schema",
+        "status": "PASS",
+        "method": "AJV CLI 5.0.0 with JSON Schema Draft 2020-12",
+        "evidence": "Generated design-spec.json validated against the co-located design-spec.schema.json."
+      },
+      {
+        "id": "semantic-integrity",
+        "status": "PASS",
+        "method": "Unique state/node/frame and parent reference checks",
+        "evidence": "5 frames, 38 nodes and parent links verified."
+      }
+    ],
+    "warnings": [
+      "Form values and records are illustrative and must not be copied as real customer data.",
+      "Tahoma is a visual capture fallback only; verify with approved Peyda/Vazirmatn font files.",
+      "Any local image asset has license UNKNOWN.",
+      "Admin controls remain within the existing role and route contract."
+    ]
+  }
+}

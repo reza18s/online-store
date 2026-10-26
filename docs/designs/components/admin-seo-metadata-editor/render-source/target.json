@@ -1,0 +1,21 @@
+{
+  "targetId": "admin-seo-metadata-editor",
+  "app": "admin",
+  "owner": "SeoEditor",
+  "routes": [
+    "/admin/content/seo"
+  ],
+  "sourcePaths": [
+    "apps/admin/src/features/content/components/content-seo/seo-editor.tsx",
+    "apps/admin/src/features/content/components/content-seo/validate-seo-draft.tsx",
+    "apps/admin/src/features/content/components/content-seo/is-admin-content-seo-editor-input-disabled.tsx"
+  ],
+  "stateIds": [
+    "list",
+    "create",
+    "edit",
+    "invalid",
+    "saving",
+    "delete-confirm"
+  ]
+}

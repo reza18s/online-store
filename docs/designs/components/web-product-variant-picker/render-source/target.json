@@ -1,0 +1,22 @@
+{
+  "targetId": "web-product-variant-picker",
+  "app": "web",
+  "owner": "ProductDiscovery product-detail section",
+  "routes": [
+    "/product/:slug"
+  ],
+  "sourcePaths": [
+    "apps/web/src/features/catalog/components/product-discovery.tsx",
+    "apps/web/src/features/catalog/components/structured-variant-options.tsx",
+    "apps/web/src/features/catalog/components/resolve-variant.tsx",
+    "apps/web/src/features/catalog/components/product-add-button-label.tsx",
+    "apps/web/src/features/catalog/components/add-to-cart-feedback.tsx"
+  ],
+  "stateIds": [
+    "required",
+    "selected",
+    "unavailable",
+    "adding",
+    "added"
+  ]
+}

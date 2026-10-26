@@ -1,0 +1,35 @@
+{
+  "targetId": "web-cart-line-item",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/cart/components/cart-line-view.tsx",
+      "anchor": "CartLineView, complete component",
+      "scope": "Quantity bounds, disabled controls, remove action and line total",
+      "sha256": "b7a81c5106030ebf82b06148859e2cbfc19db9b465095cf643b6e50fc07477e9",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/cart/components/CartView.tsx",
+      "anchor": "CartView, lines 115-149 and 226-245",
+      "scope": "Mutation busy state, update/remove and merge conflict handoff",
+      "sha256": "727ac75ab74fdd4a52ab36170a17c6a6ff5a86bff945ab671a614e4d93c72a9a",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/cart/components/merge-conflict-notice.tsx",
+      "anchor": "MergeConflictNotice, complete component",
+      "scope": "Conflict options and per-item resolution",
+      "sha256": "724e0b2346de32e7e6cbdde26c491da1109aaf626051acb6487334c4067e14d3",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/cart/components/conflict-quantity.tsx",
+      "anchor": "conflictQuantity",
+      "scope": "Safe resolution quantity",
+      "sha256": "346baa366bb7e7f8421973c04882ea97d968ba2c6dbccf473d1af87bc6a3c93c",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "targetId": "web-search-dialog",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/web/src/shared/ui/search-dialog.tsx",
+      "anchor": "SearchDialog, complete component",
+      "scope": "Query, suggestions, recent searches, submit and close actions",
+      "sha256": "a1f3594def8ca6238c1283ae06fd4ae9c09dfe634565a150949961c1f1ca8ea8",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/recent-searches.ts",
+      "anchor": "readRecentSearches and rememberRecentSearch",
+      "scope": "Recent search behavior",
+      "sha256": "22b5f390572dcb154d06be8699cd9c2a793c77d463ac0913d52b04696535dc05",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

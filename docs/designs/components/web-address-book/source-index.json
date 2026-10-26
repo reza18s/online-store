@@ -1,0 +1,21 @@
+{
+  "targetId": "web-address-book",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/customer-address-form.tsx",
+      "anchor": "CustomerAddressForm, complete component",
+      "scope": "Create/edit fields, default toggle, dirty/save/error states",
+      "sha256": "0613052d30663f520adcf99d70f51226a132194c31138c03bd3c643c2b991439",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/account/pages/customer-address-book-page.tsx",
+      "anchor": "CustomerAddressBookPage, complete page",
+      "scope": "Default card, edit/delete actions and native window.confirm",
+      "sha256": "dd04f7dec5518978e27af7c66fd1dcc3a030c884274bb2c6f54260991132ca70",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

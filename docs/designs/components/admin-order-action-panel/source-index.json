@@ -1,0 +1,21 @@
+{
+  "targetId": "admin-order-action-panel",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/OrderDetailView.tsx",
+      "anchor": "OrderDetailView, lines 65-537",
+      "scope": "Status, shipment and return action flows, validation, submit and feedback",
+      "sha256": "c25914463c5da586f4dfd7260a43c4a29d2fb999f3531bba164fd40c7787d365",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/order-action-title.tsx",
+      "anchor": "orderActionTitle",
+      "scope": "Action-dialog title mapping",
+      "sha256": "73b5e5469fb79299d0feefff079f2c17413ca5423ede295211c48a0e9a74bf03",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

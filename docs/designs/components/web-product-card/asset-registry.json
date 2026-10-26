@@ -1,0 +1,19 @@
+{
+  "assets": [
+    {
+      "assetId": "nova-asset-nova-product-linen-overshirt.webp",
+      "file": "nova-product-linen-overshirt.webp",
+      "path": "apps/web/public/assets/nova-product-linen-overshirt.webp",
+      "source": "local repository asset",
+      "license": "UNKNOWN",
+      "verification": "file-present; license-unverified",
+      "intendedUse": "illustrative component preview only",
+      "altText": "تصویر نمونه برای طراحی؛ محتوای تولیدی یا مجوز نهایی را اثبات نمی‌کند",
+      "fit": "cover",
+      "focalPoint": "NOT_SPECIFIED",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "715526896a5bd52b48803f59db6717485e10b1756eff1dac869fac64b413d915"
+    }
+  ]
+}

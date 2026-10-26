@@ -1,0 +1,19 @@
+{
+  "targetId": "web-auth-otp-entry",
+  "app": "web",
+  "owner": "AuthPage",
+  "routes": [
+    "/auth/request",
+    "/auth/verify"
+  ],
+  "sourcePaths": [
+    "apps/web/src/features/auth/components/auth-page.tsx"
+  ],
+  "stateIds": [
+    "phone",
+    "code",
+    "invalid",
+    "sending",
+    "resent"
+  ]
+}

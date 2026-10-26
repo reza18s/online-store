@@ -1,0 +1,22 @@
+{
+  "targetId": "web-address-book",
+  "app": "web",
+  "owner": "CustomerAddressForm + CustomerAddressBookPage",
+  "routes": [
+    "/account/addresses",
+    "/account/addresses/create",
+    "/account/addresses/edit/:id"
+  ],
+  "sourcePaths": [
+    "apps/web/src/features/account/components/customer-address-form.tsx",
+    "apps/web/src/features/account/pages/customer-address-book-page.tsx"
+  ],
+  "stateIds": [
+    "list",
+    "create",
+    "edit",
+    "validation",
+    "saving",
+    "delete-confirm"
+  ]
+}

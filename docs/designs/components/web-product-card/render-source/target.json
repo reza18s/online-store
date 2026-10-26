@@ -1,0 +1,22 @@
+{
+  "targetId": "web-product-card",
+  "app": "web",
+  "owner": "ProductCard",
+  "routes": [
+    "/",
+    "/products",
+    "/category/:slug",
+    "related products"
+  ],
+  "sourcePaths": [
+    "apps/web/src/features/catalog/components/product-card.tsx",
+    "apps/web/src/features/catalog/components/valid-compare-at.tsx",
+    "apps/web/src/features/catalog/components/availability-label.tsx"
+  ],
+  "stateIds": [
+    "available",
+    "wishlisted",
+    "limited",
+    "sold-out"
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "version": "1.0.0",
+  "targetId": "admin-product-variant-panel",
+  "states": [
+    {
+      "stateId": "list",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/list-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/list-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "empty",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/empty-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/empty-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "add",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/add-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/add-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "invalid-sku",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/invalid-sku-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/invalid-sku-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "loading",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/loading-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/loading-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "error",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/error-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/error-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "read-only",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/read-only-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/read-only-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

@@ -1,0 +1,1352 @@
+{
+  "schemaVersion": "1.0.0",
+  "coordinateSystem": "CSS pixels; origin top-left; X increases right in RTL",
+  "nodes": [
+    {
+      "id": "web-address-book-list-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 340,
+      "y": 201.859375,
+      "width": 760,
+      "height": 496.265625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-list-desktop-main-component",
+      "x": 365,
+      "y": 237.84375,
+      "width": 102.109375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-address-card-0",
+      "tag": "article",
+      "parentId": "web-address-book-list-desktop-main-component",
+      "x": 365,
+      "y": 310.84375,
+      "width": 710,
+      "height": 177.59375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-edit-0",
+      "tag": "button",
+      "parentId": "web-address-book-list-desktop-address-card-0",
+      "x": 990.84375,
+      "y": 427.4375,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-delete-0",
+      "tag": "button",
+      "parentId": "web-address-book-list-desktop-address-card-0",
+      "x": 923.9375,
+      "y": 427.4375,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-address-card-1",
+      "tag": "article",
+      "parentId": "web-address-book-list-desktop-main-component",
+      "x": 365,
+      "y": 500.4375,
+      "width": 710,
+      "height": 172.6875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-default-1",
+      "tag": "button",
+      "parentId": "web-address-book-list-desktop-address-card-1",
+      "x": 954.78125,
+      "y": 612.125,
+      "width": 103.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-edit-1",
+      "tag": "button",
+      "parentId": "web-address-book-list-desktop-address-card-1",
+      "x": 877.625,
+      "y": 612.125,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-desktop-delete-1",
+      "tag": "button",
+      "parentId": "web-address-book-list-desktop-address-card-1",
+      "x": 810.71875,
+      "y": 612.125,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 181.984375,
+      "width": 366,
+      "height": 476.015625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-list-mobile-main-component",
+      "x": 31,
+      "y": 200.984375,
+      "width": 102.109375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-address-card-0",
+      "tag": "article",
+      "parentId": "web-address-book-list-mobile-main-component",
+      "x": 31,
+      "y": 276.71875,
+      "width": 328,
+      "height": 177.59375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-edit-0",
+      "tag": "button",
+      "parentId": "web-address-book-list-mobile-address-card-0",
+      "x": 274.84375,
+      "y": 393.3125,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-delete-0",
+      "tag": "button",
+      "parentId": "web-address-book-list-mobile-address-card-0",
+      "x": 207.9375,
+      "y": 393.3125,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-address-card-1",
+      "tag": "article",
+      "parentId": "web-address-book-list-mobile-main-component",
+      "x": 31,
+      "y": 466.3125,
+      "width": 328,
+      "height": 172.6875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-default-1",
+      "tag": "button",
+      "parentId": "web-address-book-list-mobile-address-card-1",
+      "x": 238.78125,
+      "y": 578,
+      "width": 103.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-edit-1",
+      "tag": "button",
+      "parentId": "web-address-book-list-mobile-address-card-1",
+      "x": 161.625,
+      "y": 578,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-list-mobile-delete-1",
+      "tag": "button",
+      "parentId": "web-address-book-list-mobile-address-card-1",
+      "x": 94.71875,
+      "y": 578,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-create-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 340,
+      "y": 202.3125,
+      "width": 760,
+      "height": 495.375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-create",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-create-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-create-desktop-main-component",
+      "x": 365,
+      "y": 238.296875,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-create",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-create-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-create-desktop-main-component",
+      "x": 965.21875,
+      "y": 628.6875,
+      "width": 109.78125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-create",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-create-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 56.734375,
+      "width": 366,
+      "height": 726.515625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-create",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-create-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-create-mobile-main-component",
+      "x": 31,
+      "y": 75.734375,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-create",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-create-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-create-mobile-main-component",
+      "x": 249.21875,
+      "y": 720.25,
+      "width": 109.78125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-create",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 340,
+      "y": 202.3125,
+      "width": 760,
+      "height": 495.375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-edit-desktop-main-component",
+      "x": 365,
+      "y": 238.296875,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-edit-desktop-main-component",
+      "x": 965.21875,
+      "y": 628.6875,
+      "width": 109.78125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-desktop-delete-action",
+      "tag": "button",
+      "parentId": "web-address-book-edit-desktop-main-component",
+      "x": 365,
+      "y": 628.6875,
+      "width": 95.625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 56.734375,
+      "width": 366,
+      "height": 726.515625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-edit-mobile-main-component",
+      "x": 31,
+      "y": 75.734375,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-edit-mobile-main-component",
+      "x": 249.21875,
+      "y": 720.25,
+      "width": 109.78125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-edit-mobile-delete-action",
+      "tag": "button",
+      "parentId": "web-address-book-edit-mobile-main-component",
+      "x": 31,
+      "y": 720.25,
+      "width": 95.625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-validation-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 340,
+      "y": 174.40625,
+      "width": 760,
+      "height": 551.171875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-validation",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-validation-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-validation-desktop-main-component",
+      "x": 365,
+      "y": 210.390625,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-validation",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-validation-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-validation-desktop-main-component",
+      "x": 965.21875,
+      "y": 656.578125,
+      "width": 109.78125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-validation",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-validation-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 28.84375,
+      "width": 366,
+      "height": 782.3125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-validation",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-validation-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-validation-mobile-main-component",
+      "x": 31,
+      "y": 47.84375,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-validation",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-validation-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-validation-mobile-main-component",
+      "x": 249.21875,
+      "y": 748.15625,
+      "width": 109.78125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-validation",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-saving-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 340,
+      "y": 192.40625,
+      "width": 760,
+      "height": 515.171875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-saving",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-saving-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-saving-desktop-main-component",
+      "x": 365,
+      "y": 228.390625,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-saving",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-saving-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-saving-desktop-main-component",
+      "x": 968.109375,
+      "y": 638.578125,
+      "width": 106.890625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-saving",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-saving-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 46.84375,
+      "width": 366,
+      "height": 746.3125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-saving",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-saving-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "web-address-book-saving-mobile-main-component",
+      "x": 31,
+      "y": 65.84375,
+      "width": 73,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-saving",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-saving-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-saving-mobile-main-component",
+      "x": 252.109375,
+      "y": 730.15625,
+      "width": 106.890625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-saving",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 340,
+      "y": 201.859375,
+      "width": 760,
+      "height": 496.265625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-desktop-main-component",
+      "x": 365,
+      "y": 237.84375,
+      "width": 102.109375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-address-card-0",
+      "tag": "article",
+      "parentId": "web-address-book-delete-confirm-desktop-main-component",
+      "x": 365,
+      "y": 310.84375,
+      "width": 710,
+      "height": 177.59375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-edit-0",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-desktop-address-card-0",
+      "x": 990.84375,
+      "y": 427.4375,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-delete-0",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-desktop-address-card-0",
+      "x": 923.9375,
+      "y": 427.4375,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-address-card-1",
+      "tag": "article",
+      "parentId": "web-address-book-delete-confirm-desktop-main-component",
+      "x": 365,
+      "y": 500.4375,
+      "width": 710,
+      "height": 172.6875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-default-1",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-desktop-address-card-1",
+      "x": 954.78125,
+      "y": 612.125,
+      "width": 103.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-edit-1",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-desktop-address-card-1",
+      "x": 877.625,
+      "y": 612.125,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-desktop-delete-1",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-desktop-address-card-1",
+      "x": 810.71875,
+      "y": 612.125,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 181.984375,
+      "width": 366,
+      "height": 476.015625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-mobile-main-component",
+      "x": 31,
+      "y": 200.984375,
+      "width": 102.109375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-address-card-0",
+      "tag": "article",
+      "parentId": "web-address-book-delete-confirm-mobile-main-component",
+      "x": 31,
+      "y": 276.71875,
+      "width": 328,
+      "height": 177.59375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-edit-0",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-mobile-address-card-0",
+      "x": 274.84375,
+      "y": 393.3125,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-delete-0",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-mobile-address-card-0",
+      "x": 207.9375,
+      "y": 393.3125,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-address-card-1",
+      "tag": "article",
+      "parentId": "web-address-book-delete-confirm-mobile-main-component",
+      "x": 31,
+      "y": 466.3125,
+      "width": 328,
+      "height": 172.6875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-default-1",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-mobile-address-card-1",
+      "x": 238.78125,
+      "y": 578,
+      "width": 103.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-edit-1",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-mobile-address-card-1",
+      "x": 161.625,
+      "y": 578,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-address-book-delete-confirm-mobile-delete-1",
+      "tag": "button",
+      "parentId": "web-address-book-delete-confirm-mobile-address-card-1",
+      "x": 94.71875,
+      "y": 578,
+      "width": 56.90625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-address-book-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    }
+  ],
+  "frames": [
+    {
+      "frameId": "web-address-book-list",
+      "rootIds": [
+        "web-address-book-list-desktop-main-component",
+        "web-address-book-list-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-address-book-create",
+      "rootIds": [
+        "web-address-book-create-desktop-main-component",
+        "web-address-book-create-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-address-book-edit",
+      "rootIds": [
+        "web-address-book-edit-desktop-main-component",
+        "web-address-book-edit-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-address-book-validation",
+      "rootIds": [
+        "web-address-book-validation-desktop-main-component",
+        "web-address-book-validation-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-address-book-saving",
+      "rootIds": [
+        "web-address-book-saving-desktop-main-component",
+        "web-address-book-saving-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-address-book-delete-confirm",
+      "rootIds": [
+        "web-address-book-delete-confirm-desktop-main-component",
+        "web-address-book-delete-confirm-mobile-main-component"
+      ]
+    }
+  ]
+}

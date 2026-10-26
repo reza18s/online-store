@@ -1,0 +1,42 @@
+{
+  "targetId": "web-product-variant-picker",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/product-discovery.tsx",
+      "anchor": "ProductDiscovery, lines 39-346",
+      "scope": "Option, legacy size/color, availability, add and feedback states",
+      "sha256": "235f03c5bc1eeb228971e5ce12c6938092ce6de489e1ce1c26b08adf1243fb40",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/structured-variant-options.tsx",
+      "anchor": "structuredVariantOptions",
+      "scope": "Option/value availability source",
+      "sha256": "1b8208010cb57f35584724c890268af70f86e05a6c21fa35f68f80f7e1ddd218",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/resolve-variant.tsx",
+      "anchor": "resolveVariant",
+      "scope": "Selected variant resolution",
+      "sha256": "0e3de3d0318f77862c5715b1f370dd09ed485693fc2fdf171f0e5337ec656d97",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/product-add-button-label.tsx",
+      "anchor": "productAddButtonLabel",
+      "scope": "Add-action labels",
+      "sha256": "7e78433c96393b036280463bbbc54b05ae40a11a7f94c0ef8f0f022ba8c83a1a",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/add-to-cart-feedback.tsx",
+      "anchor": "AddToCartFeedback",
+      "scope": "Mutation feedback",
+      "sha256": "dfebda1530fceab7166d0c9411b01f3b7d13d3c244bdcddfa0352feb66f10c52",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

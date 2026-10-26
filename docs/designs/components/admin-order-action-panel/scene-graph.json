@@ -1,0 +1,890 @@
+{
+  "schemaVersion": "1.0.0",
+  "coordinateSystem": "CSS pixels; origin top-left; X increases right in RTL",
+  "nodes": [
+    {
+      "id": "admin-order-action-panel-overview-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 316.796875,
+      "width": 820,
+      "height": 266.40625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-overview-desktop-action-0",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-overview-desktop-main-component",
+      "x": 855,
+      "y": 457.875,
+      "width": 250,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-overview-desktop-action-1",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-overview-desktop-main-component",
+      "x": 595,
+      "y": 457.875,
+      "width": 250,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-overview-desktop-action-2",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-overview-desktop-main-component",
+      "x": 335,
+      "y": 457.875,
+      "width": 250,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-overview-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 169.265625,
+      "width": 366,
+      "height": 501.453125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-overview-mobile-action-0",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-overview-mobile-main-component",
+      "x": 31,
+      "y": 353.828125,
+      "width": 328,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-overview-mobile-action-1",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-overview-mobile-main-component",
+      "x": 31,
+      "y": 441.0625,
+      "width": 328,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-overview-mobile-action-2",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-overview-mobile-main-component",
+      "x": 31,
+      "y": 528.296875,
+      "width": 328,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-overview",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-status-form-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 206.53125,
+      "width": 820,
+      "height": 486.921875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-status-form",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-status-form-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-status-form-desktop-main-component",
+      "x": 1042.5,
+      "y": 585.359375,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-status-form",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-status-form-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-status-form-desktop-main-component",
+      "x": 351,
+      "y": 585.359375,
+      "width": 84.359375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-status-form",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-status-form-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 146.25,
+      "width": 366,
+      "height": 547.5,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-status-form",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-status-form-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-status-form-mobile-main-component",
+      "x": 296.5,
+      "y": 568.5625,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-status-form",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-status-form-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-status-form-mobile-main-component",
+      "x": 47,
+      "y": 568.5625,
+      "width": 84.359375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-status-form",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-shipment-form-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 122.734375,
+      "width": 820,
+      "height": 654.515625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-shipment-form",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-shipment-form-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-shipment-form-desktop-main-component",
+      "x": 1042.5,
+      "y": 669.15625,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-shipment-form",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-shipment-form-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-shipment-form-desktop-main-component",
+      "x": 351,
+      "y": 669.15625,
+      "width": 84.359375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-shipment-form",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-shipment-form-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 62.453125,
+      "width": 366,
+      "height": 715.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-shipment-form",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-shipment-form-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-shipment-form-mobile-main-component",
+      "x": 296.5,
+      "y": 652.359375,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-shipment-form",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-shipment-form-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-shipment-form-mobile-main-component",
+      "x": 47,
+      "y": 652.359375,
+      "width": 84.359375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-shipment-form",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-validation-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 168.640625,
+      "width": 820,
+      "height": 562.71875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-validation",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-validation-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-validation-desktop-main-component",
+      "x": 1042.5,
+      "y": 623.265625,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-validation",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-validation-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-validation-desktop-main-component",
+      "x": 351,
+      "y": 623.265625,
+      "width": 84.359375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-validation",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-validation-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 98.453125,
+      "width": 366,
+      "height": 643.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-validation",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-validation-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-validation-mobile-main-component",
+      "x": 296.5,
+      "y": 616.359375,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-validation",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-validation-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-validation-mobile-main-component",
+      "x": 47,
+      "y": 616.359375,
+      "width": 84.359375,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-validation",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-submitting-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 186.640625,
+      "width": 820,
+      "height": 526.71875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-submitting",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-submitting-desktop-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-submitting-desktop-main-component",
+      "x": 1042.5,
+      "y": 605.265625,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-submitting",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-submitting-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-submitting-desktop-main-component",
+      "x": 351,
+      "y": 605.265625,
+      "width": 97.3125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-submitting",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-submitting-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 126.34375,
+      "width": 366,
+      "height": 587.296875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-submitting",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-submitting-mobile-secondary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-submitting-mobile-main-component",
+      "x": 296.5,
+      "y": 588.453125,
+      "width": 46.5,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-submitting",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-submitting-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-submitting-mobile-main-component",
+      "x": 47,
+      "y": 588.453125,
+      "width": 97.3125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-submitting",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 292.890625,
+      "width": 820,
+      "height": 314.203125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-desktop-action-0",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-success-desktop-main-component",
+      "x": 855,
+      "y": 433.96875,
+      "width": 250,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-desktop-action-1",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-success-desktop-main-component",
+      "x": 595,
+      "y": 433.96875,
+      "width": 250,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-desktop-action-2",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-success-desktop-main-component",
+      "x": 335,
+      "y": 433.96875,
+      "width": 250,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 145.375,
+      "width": 366,
+      "height": 549.25,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-mobile-action-0",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-success-mobile-main-component",
+      "x": 31,
+      "y": 329.9375,
+      "width": 328,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-mobile-action-1",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-success-mobile-main-component",
+      "x": 31,
+      "y": 417.171875,
+      "width": 328,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-order-action-panel-success-mobile-action-2",
+      "tag": "button",
+      "parentId": "admin-order-action-panel-success-mobile-main-component",
+      "x": 31,
+      "y": 504.40625,
+      "width": 328,
+      "height": 77.234375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-order-action-panel-success",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    }
+  ],
+  "frames": [
+    {
+      "frameId": "admin-order-action-panel-overview",
+      "rootIds": [
+        "admin-order-action-panel-overview-desktop-main-component",
+        "admin-order-action-panel-overview-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-order-action-panel-status-form",
+      "rootIds": [
+        "admin-order-action-panel-status-form-desktop-main-component",
+        "admin-order-action-panel-status-form-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-order-action-panel-shipment-form",
+      "rootIds": [
+        "admin-order-action-panel-shipment-form-desktop-main-component",
+        "admin-order-action-panel-shipment-form-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-order-action-panel-validation",
+      "rootIds": [
+        "admin-order-action-panel-validation-desktop-main-component",
+        "admin-order-action-panel-validation-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-order-action-panel-submitting",
+      "rootIds": [
+        "admin-order-action-panel-submitting-desktop-main-component",
+        "admin-order-action-panel-submitting-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-order-action-panel-success",
+      "rootIds": [
+        "admin-order-action-panel-success-desktop-main-component",
+        "admin-order-action-panel-success-mobile-main-component"
+      ]
+    }
+  ]
+}

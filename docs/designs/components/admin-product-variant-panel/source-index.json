@@ -1,0 +1,21 @@
+{
+  "targetId": "admin-product-variant-panel",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/variants-panel.tsx",
+      "anchor": "VariantsPanel, complete component",
+      "scope": "Add, SKU validation, loading/error/empty and permission states",
+      "sha256": "ab21d3812fb0a9e53542726cd4225fd4ea6cb98100927ef34027452ecd734269",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/variant-item.tsx",
+      "anchor": "VariantItem, complete component",
+      "scope": "Existing variant edit and guarded update",
+      "sha256": "8bfa2ecb2947d54e6da56b9b2a8d5624ca82faf1ae3cf5e1b5773b4a7910fafb",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "sources": [
+    {
+      "id": "web-route-parser",
+      "path": "apps/web/src/app/routing/parse-route.ts",
+      "anchor": "lines 8-88",
+      "scope": "Public route templates and aliases",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "id": "web-route-types",
+      "path": "apps/web/src/app/routing/route-shared.ts",
+      "anchor": "lines 1-53",
+      "scope": "Route kinds, audiences, editorial route set",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "id": "web-app-shell",
+      "path": "apps/web/src/app/App.tsx",
+      "anchor": "lines 16-94",
+      "scope": "Search overlay opening, query and public shell",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "id": "web-page-router",
+      "path": "apps/web/src/app/PublicApp.tsx",
+      "anchor": "lines 1-145",
+      "scope": "Page owners and state route mapping",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "id": "search-dialog",
+      "path": "apps/web/src/shared/ui/search-dialog.tsx",
+      "anchor": "lines 12-199",
+      "scope": "Search dialog states and actions",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "id": "admin-router",
+      "path": "apps/admin/src/app/routes/AdminRouter.tsx",
+      "anchor": "lines 28-137",
+      "scope": "Admin pages, role gates and fallback",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "id": "admin-shell",
+      "path": "apps/admin/src/app/layouts/AdminWorkspaceLayout.tsx",
+      "anchor": "lines 10-55, 60-90, 190-430",
+      "scope": "Navigation, roles and responsive staff shell",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "id": "atelier-visual",
+      "path": "docs/designs/atelier-editorial.md",
+      "anchor": "Section 18, lines 1306-1357",
+      "scope": "Canonical Soft Modern palette and shape",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "atelier-home",
+      "path": "docs/designs/atelier-editorial.md",
+      "anchor": "Section 3.6, lines 498-540",
+      "scope": "Home hero, category rail, product-card ratio and mobile behavior",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "atelier-storefront",
+      "path": "docs/designs/atelier-editorial.md",
+      "anchor": "Section 10, lines 877-932",
+      "scope": "Customer shopping pages",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "atelier-content",
+      "path": "docs/designs/atelier-editorial.md",
+      "anchor": "Section 11, lines 934-963",
+      "scope": "Account, support and content pages",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "atelier-admin",
+      "path": "docs/designs/atelier-editorial.md",
+      "anchor": "Section 12, lines 964-1004",
+      "scope": "Admin page structure and responsive behavior",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "atelier-responsive",
+      "path": "docs/designs/atelier-editorial.md",
+      "anchor": "Sections 15-16, lines 1039-1204",
+      "scope": "Viewport, responsive, RTL and state requirements",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "architecture",
+      "path": "arch.md",
+      "anchor": "lines 120-142, 227-241",
+      "scope": "Independent web and admin apps; session/data boundaries",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph index used for discovery; source files read directly where index freshness metadata changed."
+}

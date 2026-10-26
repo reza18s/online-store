@@ -1,0 +1,1217 @@
+{
+  "schemaVersion": "1.0.0",
+  "target": {
+    "id": "web-address-book",
+    "app": "web",
+    "title": "کارت نشانی و فرم نشانی",
+    "owner": "CustomerAddressForm + CustomerAddressBookPage",
+    "routes": [
+      "/account/addresses",
+      "/account/addresses/create",
+      "/account/addresses/edit/:id"
+    ]
+  },
+  "sourceRevision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "direction": "Atelier Editorial / Soft Modern; admin staff surface keeps its independent shell/palette rules.",
+  "purpose": "انتخاب نشانی پیش‌فرض و ساخت/ویرایش آن با مسیر روشن برای حذف.",
+  "actions": [
+    "افزودن نشانی",
+    "ویرایش نشانی",
+    "انتخاب پیش‌فرض",
+    "ذخیره",
+    "حذف با تأیید بومی"
+  ],
+  "states": [
+    {
+      "id": "list",
+      "label": "فهرست نشانی‌ها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "create",
+      "label": "نشانی تازه",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "edit",
+      "label": "ویرایش نشانی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "validation",
+      "label": "خطای فیلد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "saving",
+      "label": "در حال ذخیره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "id": "delete-confirm",
+      "label": "تأیید بومی حذف",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/customer-address-form.tsx",
+      "anchor": "CustomerAddressForm, complete component",
+      "scope": "Create/edit fields, default toggle, dirty/save/error states",
+      "sha256": "0613052d30663f520adcf99d70f51226a132194c31138c03bd3c643c2b991439",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/account/pages/customer-address-book-page.tsx",
+      "anchor": "CustomerAddressBookPage, complete page",
+      "scope": "Default card, edit/delete actions and native window.confirm",
+      "sha256": "dd04f7dec5518978e27af7c66fd1dcc3a030c884274bb2c6f54260991132ca70",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/sage",
+      "value": "#E8ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "clay/600",
+      "value": "#A88F78",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "assets": [],
+  "frames": [
+    {
+      "id": "web-address-book-list",
+      "stateId": "list",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-address-book/states/list-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 340,
+              "y": 201.859375,
+              "width": 760,
+              "height": 496.265625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 237.84375,
+              "width": 102.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-0",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 310.84375,
+              "width": 710,
+              "height": 177.59375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 990.84375,
+              "y": 427.4375,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 923.9375,
+              "y": 427.4375,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-1",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 500.4375,
+              "width": 710,
+              "height": 172.6875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "default-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 954.78125,
+              "y": 612.125,
+              "width": 103.21875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 877.625,
+              "y": 612.125,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 810.71875,
+              "y": 612.125,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-address-book/states/list-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 181.984375,
+              "width": 366,
+              "height": 476.015625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 200.984375,
+              "width": 102.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-0",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 276.71875,
+              "width": 328,
+              "height": 177.59375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 274.84375,
+              "y": 393.3125,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 207.9375,
+              "y": 393.3125,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-1",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 466.3125,
+              "width": 328,
+              "height": 172.6875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "default-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 238.78125,
+              "y": 578,
+              "width": 103.21875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 161.625,
+              "y": 578,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 94.71875,
+              "y": 578,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-address-book-create",
+      "stateId": "create",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-address-book/states/create-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 340,
+              "y": 202.3125,
+              "width": 760,
+              "height": 495.375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 238.296875,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 965.21875,
+              "y": 628.6875,
+              "width": 109.78125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-address-book/states/create-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 56.734375,
+              "width": 366,
+              "height": 726.515625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 75.734375,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 249.21875,
+              "y": 720.25,
+              "width": 109.78125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-address-book-edit",
+      "stateId": "edit",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-address-book/states/edit-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 340,
+              "y": 202.3125,
+              "width": 760,
+              "height": 495.375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 238.296875,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 965.21875,
+              "y": 628.6875,
+              "width": 109.78125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 628.6875,
+              "width": 95.625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-address-book/states/edit-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 56.734375,
+              "width": 366,
+              "height": 726.515625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 75.734375,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 249.21875,
+              "y": 720.25,
+              "width": 109.78125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 720.25,
+              "width": 95.625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-address-book-validation",
+      "stateId": "validation",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-address-book/states/validation-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 340,
+              "y": 174.40625,
+              "width": 760,
+              "height": 551.171875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 210.390625,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 965.21875,
+              "y": 656.578125,
+              "width": 109.78125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-address-book/states/validation-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 28.84375,
+              "width": 366,
+              "height": 782.3125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 47.84375,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 249.21875,
+              "y": 748.15625,
+              "width": 109.78125,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-address-book-saving",
+      "stateId": "saving",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-address-book/states/saving-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 340,
+              "y": 192.40625,
+              "width": 760,
+              "height": 515.171875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 228.390625,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 968.109375,
+              "y": 638.578125,
+              "width": 106.890625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-address-book/states/saving-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 46.84375,
+              "width": 366,
+              "height": 746.3125,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "secondary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 65.84375,
+              "width": 73,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 252.109375,
+              "y": 730.15625,
+              "width": 106.890625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    },
+    {
+      "id": "web-address-book-delete-confirm",
+      "stateId": "delete-confirm",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "width": 1440,
+          "height": 900,
+          "screenshot": "docs/designs/components/web-address-book/states/delete-confirm-desktop.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 340,
+              "y": 201.859375,
+              "width": 760,
+              "height": 496.265625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 237.84375,
+              "width": 102.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-0",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 310.84375,
+              "width": 710,
+              "height": 177.59375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 990.84375,
+              "y": 427.4375,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 923.9375,
+              "y": 427.4375,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-1",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 365,
+              "y": 500.4375,
+              "width": 710,
+              "height": 172.6875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "default-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 954.78125,
+              "y": 612.125,
+              "width": 103.21875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 877.625,
+              "y": 612.125,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 810.71875,
+              "y": 612.125,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        },
+        {
+          "viewportId": "mobile",
+          "width": 390,
+          "height": 844,
+          "screenshot": "docs/designs/components/web-address-book/states/delete-confirm-mobile.webp",
+          "measurements": [
+            {
+              "id": "main-component",
+              "tag": "section",
+              "parentId": null,
+              "x": 12,
+              "y": 181.984375,
+              "width": 366,
+              "height": 476.015625,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "primary-action",
+              "tag": "button",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 200.984375,
+              "width": 102.109375,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-0",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 276.71875,
+              "width": 328,
+              "height": 177.59375,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 274.84375,
+              "y": 393.3125,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-0",
+              "tag": "button",
+              "parentId": "address-card-0",
+              "x": 207.9375,
+              "y": 393.3125,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "address-card-1",
+              "tag": "article",
+              "parentId": "main-component",
+              "x": 31,
+              "y": 466.3125,
+              "width": 328,
+              "height": 172.6875,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "default-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 238.78125,
+              "y": 578,
+              "width": 103.21875,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "edit-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 161.625,
+              "y": 578,
+              "width": 67.15625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            },
+            {
+              "id": "delete-1",
+              "tag": "button",
+              "parentId": "address-card-1",
+              "x": 94.71875,
+              "y": 578,
+              "width": 56.90625,
+              "height": 44,
+              "status": "MEASURED",
+              "evidence": "Chromium getBoundingClientRect"
+            }
+          ],
+          "overflowX": false,
+          "smallTargets": 0,
+          "dir": "rtl",
+          "missingImages": 0
+        }
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/web-address-book/02-Clean-Reference.png",
+      "artifactType": "desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/list-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/03-Clean-Reference-Mobile.png",
+      "artifactType": "mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/list-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/create-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/create-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/edit-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/edit-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/validation-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/validation-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/saving-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/saving-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/delete-confirm-desktop.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/states/delete-confirm-mobile.webp",
+      "artifactType": "state-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/01-Visual-Design-Board.png",
+      "artifactType": "board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/design-spec.json",
+      "artifactType": "model",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/design-spec.schema.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/scene-graph.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/source-index.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/authority-map.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/conflicts.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/design-tokens.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/asset-registry.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/coverage-matrix.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/qa-report.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/manifest.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/component-handoff.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/render-source/target.json",
+      "artifactType": "supporting-json",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-address-book/render-source/README.md",
+      "artifactType": "handoff",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-actions-and-states",
+        "status": "PASS",
+        "method": "Direct source review of primary component owners and named validators",
+        "evidence": "2 source file(s) mapped; 6 behavior states documented."
+      },
+      {
+        "id": "desktop-mobile-render",
+        "status": "PASS",
+        "method": "Independent Chromium captures at 1440x900 and 390x844",
+        "evidence": "6 state(s) rendered at both viewports; 0 overflow/direction/missing-image/target issue(s)."
+      },
+      {
+        "id": "minimum-targets",
+        "status": "PASS",
+        "method": "Static measurement of every explicitly interactive element",
+        "evidence": "Minimum target size: 44x44 CSS px where checked; this is a rendered-reference check, not a keyboard test."
+      },
+      {
+        "id": "font-fidelity",
+        "status": "UNVERIFIED",
+        "method": "Local renderer font availability check",
+        "evidence": "Peyda/Vazirmatn are unavailable here; Tahoma is capture-only."
+      },
+      {
+        "id": "asset-license",
+        "status": "NOT_APPLICABLE",
+        "method": "Local repository asset inventory",
+        "evidence": "No raster asset is used by this component board."
+      },
+      {
+        "id": "interactive-runtime",
+        "status": "UNVERIFIED",
+        "method": "Static design reference; production React component not operated",
+        "evidence": "The board documents visual state and action contracts; it does not claim live application interaction."
+      },
+      {
+        "id": "schema",
+        "status": "PASS",
+        "method": "AJV CLI 5.0.0 with JSON Schema Draft 2020-12",
+        "evidence": "Generated design-spec.json validated against the co-located design-spec.schema.json."
+      },
+      {
+        "id": "semantic-integrity",
+        "status": "PASS",
+        "method": "Unique state/node/frame and parent reference checks",
+        "evidence": "6 frames, 62 nodes and parent links verified."
+      }
+    ],
+    "warnings": [
+      "Form values and records are illustrative and must not be copied as real customer data.",
+      "Tahoma is a visual capture fallback only; verify with approved Peyda/Vazirmatn font files.",
+      "Any local image asset has license UNKNOWN.",
+      "Admin controls remain within the existing role and route contract."
+    ]
+  }
+}

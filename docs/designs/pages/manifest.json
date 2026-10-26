@@ -1,0 +1,13 @@
+{
+  "project": "NOVA online store",
+  "targetCount": 36,
+  "renderedTargetCount": 36,
+  "frameCount": 107,
+  "sourceRevision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "renderer": "Playwright/Chromium via Microsoft Edge",
+  "browserVersion": "156.0.4314.42",
+  "renderSource": "docs/designs/pages/render-source/generate-pages.mjs",
+  "schema": "docs/designs/pages/design-spec.schema.json",
+  "generatedOutputs": 484,
+  "qaStatus": "PASS_WITH_WARNINGS"
+}

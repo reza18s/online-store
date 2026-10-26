@@ -1,0 +1,76 @@
+{
+  "conflicts": [
+    {
+      "id": "home-card-ratio",
+      "property": "Home product card media ratio",
+      "candidates": [
+        {
+          "value": "1:1",
+          "source": "atelier-editorial.md lines 785, 845",
+          "status": "OLDER_CONFLICT"
+        },
+        {
+          "value": "4:5",
+          "source": "atelier-editorial.md Section 3.6, lines 534-536",
+          "status": "CURRENT_TARGET_SPEC"
+        }
+      ],
+      "winner": "4:5",
+      "rationale": "The skill adapter prioritizes the newer explicit Home update; keep the ratio scoped to home/listing cards and do not apply it to PDP."
+    },
+    {
+      "id": "admin-palette",
+      "property": "Admin staff shell palette",
+      "candidates": [
+        {
+          "value": "dark charcoal and oxblood",
+          "source": "apps/admin/src/styles/admin-reference.css lines 64-112 and apps/web/public/design-references/atelier-admin-operations.png",
+          "status": "HISTORICAL_REFERENCE"
+        },
+        {
+          "value": "pearl canvas, ink text, rosewood actions",
+          "source": "atelier-editorial.md Section 18 and Section 16.3",
+          "status": "CANONICAL"
+        }
+      ],
+      "winner": "pearl canvas, ink text, rosewood actions",
+      "rationale": "Section 18 is canonical for new/revised Atelier frames; the reference remains structure-only."
+    },
+    {
+      "id": "admin-sidebar-width",
+      "property": "Admin sidebar width",
+      "candidates": [
+        {
+          "value": "194 px",
+          "source": "AdminWorkspaceLayout.tsx class and admin-reference.css",
+          "status": "CURRENT_IMPLEMENTATION_REFERENCE"
+        },
+        {
+          "value": "240 px",
+          "source": "atelier-editorial.md Sections 12 and 16.1",
+          "status": "DESIGN_CONTRACT"
+        }
+      ],
+      "winner": "240 px",
+      "rationale": "This is a design handoff following the page specification; implementation remains out of scope and the measured difference is called out for downstream review."
+    },
+    {
+      "id": "font-rendering",
+      "property": "Persian font availability",
+      "candidates": [
+        {
+          "value": "Peyda Variable and Vazirmatn",
+          "source": "atelier-editorial.md Sections 6 and 18",
+          "status": "CANONICAL_FONTS"
+        },
+        {
+          "value": "Tahoma fallback",
+          "source": "local renderer environment",
+          "status": "RENDER_FALLBACK"
+        }
+      ],
+      "winner": "Tahoma fallback for capture only",
+      "rationale": "Target font files were not available locally. Typography fidelity is unverified until the intended fonts are available."
+    }
+  ]
+}

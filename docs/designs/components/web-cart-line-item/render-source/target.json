@@ -1,0 +1,22 @@
+{
+  "targetId": "web-cart-line-item",
+  "app": "web",
+  "owner": "CartLineView + MergeConflictNotice",
+  "routes": [
+    "/cart",
+    "/cart/conflict"
+  ],
+  "sourcePaths": [
+    "apps/web/src/features/cart/components/cart-line-view.tsx",
+    "apps/web/src/features/cart/components/CartView.tsx",
+    "apps/web/src/features/cart/components/merge-conflict-notice.tsx",
+    "apps/web/src/features/cart/components/conflict-quantity.tsx"
+  ],
+  "stateIds": [
+    "default",
+    "minimum",
+    "updating",
+    "conflict",
+    "unavailable"
+  ]
+}

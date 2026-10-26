@@ -1,0 +1,35 @@
+{
+  "targetId": "admin-content-publishing-editor",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/content-editor.tsx",
+      "anchor": "ContentEditor, complete component",
+      "scope": "Content draft, dirty/save/publish, loading and error states",
+      "sha256": "0050a7e5d6260bf027e926669a4e1cbae05ad04faec2f60d82fc12a56013938a",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/validate-content-draft.tsx",
+      "anchor": "validateContentDraft",
+      "scope": "Content validation",
+      "sha256": "14665e3f50b08197208184e7cf791659cfb2bbdb270d08a0ea6e44278640b116",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/get-publish-readiness.tsx",
+      "anchor": "getPublishReadiness",
+      "scope": "Publish readiness",
+      "sha256": "3d9f3a99f45a6dfc80ff24484ccaab0d2e3922a953a948891275acef2e4c28e6",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/is-content-publish-action-disabled.tsx",
+      "anchor": "isContentPublishActionDisabled",
+      "scope": "Publish guard",
+      "sha256": "dee408a3bc172d900b9e8046211ca8827624a1b48cd3abe2dbc55a63253cc93c",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

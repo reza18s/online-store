@@ -1,0 +1,956 @@
+{
+  "schemaVersion": "1.0.0",
+  "coordinateSystem": "CSS pixels; origin top-left; X increases right in RTL",
+  "nodes": [
+    {
+      "id": "web-product-card-available-desktop-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 565,
+      "y": 161.578125,
+      "width": 310,
+      "height": 576.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-desktop-media",
+      "tag": "div",
+      "parentId": "web-product-card-available-desktop-main-component",
+      "x": 566,
+      "y": 162.578125,
+      "width": 308,
+      "height": 385,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-desktop-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-available-desktop-media",
+      "x": 576,
+      "y": 172.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-desktop-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-available-desktop-main-component",
+      "x": 580,
+      "y": 561.578125,
+      "width": 280,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-available-desktop-main-component",
+      "x": 580,
+      "y": 679.40625,
+      "width": 280,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-mobile-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 30,
+      "y": 123.578125,
+      "width": 330,
+      "height": 592.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-mobile-media",
+      "tag": "div",
+      "parentId": "web-product-card-available-mobile-main-component",
+      "x": 49,
+      "y": 142.578125,
+      "width": 292,
+      "height": 365,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-mobile-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-available-mobile-media",
+      "x": 59,
+      "y": 152.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-mobile-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-available-mobile-main-component",
+      "x": 63,
+      "y": 521.578125,
+      "width": 264,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-available-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-available-mobile-main-component",
+      "x": 63,
+      "y": 639.40625,
+      "width": 264,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-available",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-desktop-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 565,
+      "y": 161.578125,
+      "width": 310,
+      "height": 576.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-desktop-media",
+      "tag": "div",
+      "parentId": "web-product-card-wishlisted-desktop-main-component",
+      "x": 566,
+      "y": 162.578125,
+      "width": 308,
+      "height": 385,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-desktop-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-wishlisted-desktop-media",
+      "x": 576,
+      "y": 172.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-desktop-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-wishlisted-desktop-main-component",
+      "x": 580,
+      "y": 561.578125,
+      "width": 280,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-wishlisted-desktop-main-component",
+      "x": 580,
+      "y": 679.40625,
+      "width": 280,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-mobile-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 30,
+      "y": 123.578125,
+      "width": 330,
+      "height": 592.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-mobile-media",
+      "tag": "div",
+      "parentId": "web-product-card-wishlisted-mobile-main-component",
+      "x": 49,
+      "y": 142.578125,
+      "width": 292,
+      "height": 365,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-mobile-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-wishlisted-mobile-media",
+      "x": 59,
+      "y": 152.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-mobile-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-wishlisted-mobile-main-component",
+      "x": 63,
+      "y": 521.578125,
+      "width": 264,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-wishlisted-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-wishlisted-mobile-main-component",
+      "x": 63,
+      "y": 639.40625,
+      "width": 264,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-wishlisted",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-desktop-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 565,
+      "y": 161.578125,
+      "width": 310,
+      "height": 576.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-desktop-media",
+      "tag": "div",
+      "parentId": "web-product-card-limited-desktop-main-component",
+      "x": 566,
+      "y": 162.578125,
+      "width": 308,
+      "height": 385,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-desktop-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-limited-desktop-media",
+      "x": 576,
+      "y": 172.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-desktop-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-limited-desktop-main-component",
+      "x": 580,
+      "y": 561.578125,
+      "width": 280,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-limited-desktop-main-component",
+      "x": 580,
+      "y": 679.40625,
+      "width": 280,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-mobile-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 30,
+      "y": 123.578125,
+      "width": 330,
+      "height": 592.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-mobile-media",
+      "tag": "div",
+      "parentId": "web-product-card-limited-mobile-main-component",
+      "x": 49,
+      "y": 142.578125,
+      "width": 292,
+      "height": 365,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-mobile-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-limited-mobile-media",
+      "x": 59,
+      "y": 152.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-mobile-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-limited-mobile-main-component",
+      "x": 63,
+      "y": 521.578125,
+      "width": 264,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-limited-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-limited-mobile-main-component",
+      "x": 63,
+      "y": 639.40625,
+      "width": 264,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-limited",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-desktop-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 565,
+      "y": 161.578125,
+      "width": 310,
+      "height": 576.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-desktop-media",
+      "tag": "div",
+      "parentId": "web-product-card-sold-out-desktop-main-component",
+      "x": 566,
+      "y": 162.578125,
+      "width": 308,
+      "height": 385,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-desktop-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-sold-out-desktop-media",
+      "x": 576,
+      "y": 172.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-desktop-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-sold-out-desktop-main-component",
+      "x": 580,
+      "y": 561.578125,
+      "width": 280,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-sold-out-desktop-main-component",
+      "x": 580,
+      "y": 679.40625,
+      "width": 280,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-mobile-main-component",
+      "tag": "article",
+      "parentId": null,
+      "x": 30,
+      "y": 123.578125,
+      "width": 330,
+      "height": 592.828125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-mobile-media",
+      "tag": "div",
+      "parentId": "web-product-card-sold-out-mobile-main-component",
+      "x": 49,
+      "y": 142.578125,
+      "width": 292,
+      "height": 365,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-mobile-wishlist-action",
+      "tag": "button",
+      "parentId": "web-product-card-sold-out-mobile-media",
+      "x": 59,
+      "y": 152.578125,
+      "width": 44,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-mobile-product-link",
+      "tag": "a",
+      "parentId": "web-product-card-sold-out-mobile-main-component",
+      "x": 63,
+      "y": 521.578125,
+      "width": 264,
+      "height": 23.09375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    },
+    {
+      "id": "web-product-card-sold-out-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-product-card-sold-out-mobile-main-component",
+      "x": 63,
+      "y": 639.40625,
+      "width": 264,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-product-card-sold-out",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": [
+        "nova-asset-nova-product-linen-overshirt.webp"
+      ]
+    }
+  ],
+  "frames": [
+    {
+      "frameId": "web-product-card-available",
+      "rootIds": [
+        "web-product-card-available-desktop-main-component",
+        "web-product-card-available-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-product-card-wishlisted",
+      "rootIds": [
+        "web-product-card-wishlisted-desktop-main-component",
+        "web-product-card-wishlisted-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-product-card-limited",
+      "rootIds": [
+        "web-product-card-limited-desktop-main-component",
+        "web-product-card-limited-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-product-card-sold-out",
+      "rootIds": [
+        "web-product-card-sold-out-desktop-main-component",
+        "web-product-card-sold-out-mobile-main-component"
+      ]
+    }
+  ]
+}

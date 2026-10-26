@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-product-card",
+  "states": [
+    {
+      "stateId": "available",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/available-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/available-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "wishlisted",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/wishlisted-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/wishlisted-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "limited",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/limited-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/limited-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "sold-out",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/sold-out-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/sold-out-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

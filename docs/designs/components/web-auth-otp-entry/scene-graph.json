@@ -1,0 +1,841 @@
+{
+  "schemaVersion": "1.0.0",
+  "coordinateSystem": "CSS pixels; origin top-left; X increases right in RTL",
+  "nodes": [
+    {
+      "id": "web-auth-otp-entry-phone-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 470,
+      "y": 291.015625,
+      "width": 500,
+      "height": 317.96875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-phone",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-phone-desktop-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-phone-desktop-main-component",
+      "x": 495,
+      "y": 452.890625,
+      "width": 450,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-phone",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-phone-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-phone-desktop-main-component",
+      "x": 495,
+      "y": 516.890625,
+      "width": 450,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-phone",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-phone-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 259.59375,
+      "width": 366,
+      "height": 320.8125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-phone",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-phone-mobile-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-phone-mobile-main-component",
+      "x": 31,
+      "y": 407.21875,
+      "width": 328,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-phone",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-phone-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-phone-mobile-main-component",
+      "x": 31,
+      "y": 471.21875,
+      "width": 328,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-phone",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 470,
+      "y": 279.46875,
+      "width": 500,
+      "height": 341.0625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-desktop-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-code-desktop-main-component",
+      "x": 495,
+      "y": 464.4375,
+      "width": 450,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-code-desktop-main-component",
+      "x": 725,
+      "y": 528.4375,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-desktop-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-code-desktop-main-component",
+      "x": 495,
+      "y": 528.4375,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 248.046875,
+      "width": 366,
+      "height": 343.90625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-mobile-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-code-mobile-main-component",
+      "x": 31,
+      "y": 418.765625,
+      "width": 328,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-code-mobile-main-component",
+      "x": 200,
+      "y": 482.765625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-code-mobile-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-code-mobile-main-component",
+      "x": 31,
+      "y": 482.765625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-code",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 470,
+      "y": 251.5625,
+      "width": 500,
+      "height": 396.859375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-desktop-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-invalid-desktop-main-component",
+      "x": 495,
+      "y": 436.53125,
+      "width": 450,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-invalid-desktop-main-component",
+      "x": 725,
+      "y": 556.328125,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-desktop-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-invalid-desktop-main-component",
+      "x": 495,
+      "y": 556.328125,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 220.140625,
+      "width": 366,
+      "height": 399.703125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-mobile-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-invalid-mobile-main-component",
+      "x": 31,
+      "y": 390.859375,
+      "width": 328,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-invalid-mobile-main-component",
+      "x": 200,
+      "y": 510.65625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-invalid-mobile-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-invalid-mobile-main-component",
+      "x": 31,
+      "y": 510.65625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 470,
+      "y": 279.46875,
+      "width": 500,
+      "height": 341.0625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-desktop-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-sending-desktop-main-component",
+      "x": 495,
+      "y": 464.4375,
+      "width": 450,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-sending-desktop-main-component",
+      "x": 725,
+      "y": 528.4375,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-desktop-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-sending-desktop-main-component",
+      "x": 495,
+      "y": 528.4375,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 248.046875,
+      "width": 366,
+      "height": 343.90625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-mobile-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-sending-mobile-main-component",
+      "x": 31,
+      "y": 418.765625,
+      "width": 328,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-sending-mobile-main-component",
+      "x": 200,
+      "y": 482.765625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-sending-mobile-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-sending-mobile-main-component",
+      "x": 31,
+      "y": 482.765625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-sending",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 470,
+      "y": 261.5625,
+      "width": 500,
+      "height": 376.859375,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-desktop-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-resent-desktop-main-component",
+      "x": 495,
+      "y": 446.53125,
+      "width": 450,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-desktop-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-resent-desktop-main-component",
+      "x": 725,
+      "y": 546.328125,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-desktop-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-resent-desktop-main-component",
+      "x": 495,
+      "y": 546.328125,
+      "width": 220,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 230.140625,
+      "width": 366,
+      "height": 379.703125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-mobile-otp-field",
+      "tag": "input",
+      "parentId": "web-auth-otp-entry-resent-mobile-main-component",
+      "x": 31,
+      "y": 400.859375,
+      "width": 328,
+      "height": 46,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-mobile-primary-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-resent-mobile-main-component",
+      "x": 200,
+      "y": 500.65625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "web-auth-otp-entry-resent-mobile-resend-action",
+      "tag": "button",
+      "parentId": "web-auth-otp-entry-resent-mobile-main-component",
+      "x": 31,
+      "y": 500.65625,
+      "width": 159,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "web-auth-otp-entry-resent",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    }
+  ],
+  "frames": [
+    {
+      "frameId": "web-auth-otp-entry-phone",
+      "rootIds": [
+        "web-auth-otp-entry-phone-desktop-main-component",
+        "web-auth-otp-entry-phone-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-auth-otp-entry-code",
+      "rootIds": [
+        "web-auth-otp-entry-code-desktop-main-component",
+        "web-auth-otp-entry-code-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-auth-otp-entry-invalid",
+      "rootIds": [
+        "web-auth-otp-entry-invalid-desktop-main-component",
+        "web-auth-otp-entry-invalid-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-auth-otp-entry-sending",
+      "rootIds": [
+        "web-auth-otp-entry-sending-desktop-main-component",
+        "web-auth-otp-entry-sending-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "web-auth-otp-entry-resent",
+      "rootIds": [
+        "web-auth-otp-entry-resent-desktop-main-component",
+        "web-auth-otp-entry-resent-mobile-main-component"
+      ]
+    }
+  ]
+}

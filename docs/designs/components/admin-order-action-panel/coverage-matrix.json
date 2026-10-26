@@ -1,0 +1,101 @@
+{
+  "version": "1.0.0",
+  "targetId": "admin-order-action-panel",
+  "states": [
+    {
+      "stateId": "overview",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/overview-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/overview-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "status-form",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/status-form-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/status-form-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "shipment-form",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/shipment-form-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/shipment-form-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "validation",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/validation-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/validation-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "submitting",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/submitting-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/submitting-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    },
+    {
+      "stateId": "success",
+      "viewports": [
+        {
+          "viewportId": "desktop",
+          "artifact": "states/success-desktop.webp",
+          "status": "GENERATED"
+        },
+        {
+          "viewportId": "mobile",
+          "artifact": "states/success-mobile.webp",
+          "status": "GENERATED"
+        }
+      ]
+    }
+  ],
+  "requiredViewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "status": "GENERATED"
+}

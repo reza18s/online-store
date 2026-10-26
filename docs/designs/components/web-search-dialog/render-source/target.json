@@ -1,0 +1,20 @@
+{
+  "targetId": "web-search-dialog",
+  "app": "web",
+  "owner": "SearchDialog",
+  "routes": [
+    "/search",
+    "/search?q=…"
+  ],
+  "sourcePaths": [
+    "apps/web/src/shared/ui/search-dialog.tsx",
+    "apps/web/src/features/catalog/recent-searches.ts"
+  ],
+  "stateIds": [
+    "empty",
+    "loading",
+    "suggestions",
+    "no-results",
+    "error"
+  ]
+}

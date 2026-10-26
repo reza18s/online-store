@@ -1,0 +1,11 @@
+{
+  "conflicts": [],
+  "proposals": [
+    {
+      "id": "search-snippet-preview",
+      "property": "Search result preview",
+      "status": "PROPOSED",
+      "rationale": "Useful design aid; not implemented in SeoEditor and is visibly labelled proposed."
+    }
+  ]
+}

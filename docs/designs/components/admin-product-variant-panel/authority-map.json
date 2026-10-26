@@ -1,0 +1,34 @@
+{
+  "decisions": [
+    {
+      "property": "Component actions and behavior states",
+      "winner": "current source component and validators",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Document only implemented actions/states; proposed concepts are separately identified."
+    },
+    {
+      "property": "Atelier appearance",
+      "winner": "docs/designs/atelier-editorial.md Section 18",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Canonical Soft Modern palette, typography role and shape."
+    },
+    {
+      "property": "Home/list product-card image ratio",
+      "winner": "docs/designs/atelier-editorial.md Section 3.6",
+      "status": "SOURCE_DEFINED",
+      "rationale": "4:5 applies to Home/list cards; it is not generalized to the PDP gallery."
+    },
+    {
+      "property": "Native confirmation UI",
+      "winner": "current window.confirm call",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Represent as a browser-native confirmation; do not imply a custom modal."
+    },
+    {
+      "property": "Font used by rendered reference",
+      "winner": "Tahoma fallback",
+      "status": "UNVERIFIED",
+      "rationale": "Peyda/Vazirmatn unavailable in checked environment."
+    }
+  ]
+}

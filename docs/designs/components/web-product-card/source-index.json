@@ -1,0 +1,28 @@
+{
+  "targetId": "web-product-card",
+  "revision": "d15eb6c0b54dff3ed789983b6182c876d82cf0fd",
+  "indexing": "Graph search and best-effort coverage were followed by direct source reads where file metadata had changed.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/product-card.tsx",
+      "anchor": "ProductCard, complete component",
+      "scope": "Product details link, wishlist toggle, add action and unavailable state",
+      "sha256": "dc1e380f6427b6365729c1b85a04e412c98a18491357651f113827ed210aa6d5",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/valid-compare-at.tsx",
+      "anchor": "validCompareAt",
+      "scope": "Sale-price display guard",
+      "sha256": "5b3c07ae941f40e46a4653b37b5294cb419993ffeb994c0bda1cc5030e80f23b",
+      "status": "DIRECT_SOURCE_READ"
+    },
+    {
+      "path": "apps/web/src/features/catalog/components/availability-label.tsx",
+      "anchor": "availabilityLabel",
+      "scope": "Availability copy",
+      "sha256": "d67dd7acb7ff440028f36d52caf3f4b3bada6ff766d9562ebfe7b8ad91ac5826",
+      "status": "DIRECT_SOURCE_READ"
+    }
+  ]
+}

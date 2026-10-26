@@ -1,0 +1,21 @@
+{
+  "targetId": "admin-redirect-editor",
+  "app": "admin",
+  "owner": "RedirectEditor",
+  "routes": [
+    "/admin/content/redirects"
+  ],
+  "sourcePaths": [
+    "apps/admin/src/features/content/components/content-seo/redirect-editor.tsx",
+    "apps/admin/src/features/content/components/content-seo/validate-redirect-draft.tsx",
+    "apps/admin/src/features/content/components/content-seo/would-create-redirect-cycle.tsx"
+  ],
+  "stateIds": [
+    "list",
+    "create",
+    "edit",
+    "invalid",
+    "saving",
+    "delete-confirm"
+  ]
+}

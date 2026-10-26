@@ -1,0 +1,1058 @@
+{
+  "schemaVersion": "1.0.0",
+  "coordinateSystem": "CSS pixels; origin top-left; X increases right in RTL",
+  "nodes": [
+    {
+      "id": "admin-redirect-editor-list-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 302.453125,
+      "width": 820,
+      "height": 295.078125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-list-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-list-desktop-main-component",
+      "x": 335,
+      "y": 338.4375,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-list-desktop-edit-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-list-desktop-main-component",
+      "x": 339,
+      "y": 423.4375,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-list-desktop-edit-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-list-desktop-main-component",
+      "x": 339,
+      "y": 492.4375,
+      "width": 67.15625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-list-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 249.484375,
+      "width": 366,
+      "height": 341.015625,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-list-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-list-mobile-main-component",
+      "x": 31,
+      "y": 268.484375,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-list-mobile-edit-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-list-mobile-main-component",
+      "x": 35,
+      "y": 389.3125,
+      "width": 320,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-list-mobile-edit-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-list-mobile-main-component",
+      "x": 35,
+      "y": 491.40625,
+      "width": 320,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-list",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 262.65625,
+      "width": 820,
+      "height": 374.671875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-create-desktop-main-component",
+      "x": 335,
+      "y": 298.640625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-desktop-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-create-desktop-main-component",
+      "x": 446.71875,
+      "y": 545.234375,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-desktop-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-create-desktop-main-component",
+      "x": 335,
+      "y": 545.234375,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 155.015625,
+      "width": 366,
+      "height": 529.953125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-create-mobile-main-component",
+      "x": 31,
+      "y": 174.015625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-mobile-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-create-mobile-main-component",
+      "x": 251.78125,
+      "y": 598.875,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-create-mobile-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-create-mobile-main-component",
+      "x": 140.0625,
+      "y": 598.875,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-create",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 262.65625,
+      "width": 820,
+      "height": 374.671875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-edit-desktop-main-component",
+      "x": 335,
+      "y": 298.640625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-desktop-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-edit-desktop-main-component",
+      "x": 446.71875,
+      "y": 545.234375,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-desktop-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-edit-desktop-main-component",
+      "x": 335,
+      "y": 545.234375,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 155.015625,
+      "width": 366,
+      "height": 529.953125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-edit-mobile-main-component",
+      "x": 31,
+      "y": 174.015625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-mobile-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-edit-mobile-main-component",
+      "x": 251.78125,
+      "y": 598.875,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-edit-mobile-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-edit-mobile-main-component",
+      "x": 140.0625,
+      "y": 598.875,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-edit",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 232.765625,
+      "width": 820,
+      "height": 434.46875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-invalid-desktop-main-component",
+      "x": 335,
+      "y": 268.75,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-desktop-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-invalid-desktop-main-component",
+      "x": 446.71875,
+      "y": 575.140625,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-desktop-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-invalid-desktop-main-component",
+      "x": 335,
+      "y": 575.140625,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 125.125,
+      "width": 366,
+      "height": 589.75,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-invalid-mobile-main-component",
+      "x": 31,
+      "y": 144.125,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-mobile-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-invalid-mobile-main-component",
+      "x": 251.78125,
+      "y": 628.78125,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-invalid-mobile-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-invalid-mobile-main-component",
+      "x": 140.0625,
+      "y": 628.78125,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-invalid",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 262.65625,
+      "width": 820,
+      "height": 374.671875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-saving-desktop-main-component",
+      "x": 335,
+      "y": 298.640625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-desktop-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-saving-desktop-main-component",
+      "x": 446.71875,
+      "y": 545.234375,
+      "width": 106.890625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-desktop-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-saving-desktop-main-component",
+      "x": 335,
+      "y": 545.234375,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 155.015625,
+      "width": 366,
+      "height": 529.953125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-saving-mobile-main-component",
+      "x": 31,
+      "y": 174.015625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-mobile-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-saving-mobile-main-component",
+      "x": 252.109375,
+      "y": 598.875,
+      "width": 106.890625,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-saving-mobile-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-saving-mobile-main-component",
+      "x": 140.390625,
+      "y": 598.875,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-saving",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-desktop-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 310,
+      "y": 262.65625,
+      "width": 820,
+      "height": 374.671875,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-desktop-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-delete-confirm-desktop-main-component",
+      "x": 335,
+      "y": 298.640625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-desktop-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-delete-confirm-desktop-main-component",
+      "x": 446.71875,
+      "y": 545.234375,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-desktop-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-delete-confirm-desktop-main-component",
+      "x": 335,
+      "y": 545.234375,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "desktop",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-mobile-main-component",
+      "tag": "section",
+      "parentId": null,
+      "x": 12,
+      "y": 155.015625,
+      "width": 366,
+      "height": 529.953125,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-mobile-primary-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-delete-confirm-mobile-main-component",
+      "x": 31,
+      "y": 174.015625,
+      "width": 110.203125,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-mobile-primary-action-2",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-delete-confirm-mobile-main-component",
+      "x": 251.78125,
+      "y": 598.875,
+      "width": 107.21875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    },
+    {
+      "id": "admin-redirect-editor-delete-confirm-mobile-delete-action",
+      "tag": "button",
+      "parentId": "admin-redirect-editor-delete-confirm-mobile-main-component",
+      "x": 140.0625,
+      "y": 598.875,
+      "width": 103.71875,
+      "height": 44,
+      "status": "MEASURED",
+      "evidence": "Chromium getBoundingClientRect",
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "viewportId": "mobile",
+      "tokenRefs": [
+        "pearl/50",
+        "surface/0",
+        "ink/950",
+        "rosewood/700",
+        "line/200"
+      ],
+      "assetRefs": []
+    }
+  ],
+  "frames": [
+    {
+      "frameId": "admin-redirect-editor-list",
+      "rootIds": [
+        "admin-redirect-editor-list-desktop-main-component",
+        "admin-redirect-editor-list-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-redirect-editor-create",
+      "rootIds": [
+        "admin-redirect-editor-create-desktop-main-component",
+        "admin-redirect-editor-create-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-redirect-editor-edit",
+      "rootIds": [
+        "admin-redirect-editor-edit-desktop-main-component",
+        "admin-redirect-editor-edit-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-redirect-editor-invalid",
+      "rootIds": [
+        "admin-redirect-editor-invalid-desktop-main-component",
+        "admin-redirect-editor-invalid-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-redirect-editor-saving",
+      "rootIds": [
+        "admin-redirect-editor-saving-desktop-main-component",
+        "admin-redirect-editor-saving-mobile-main-component"
+      ]
+    },
+    {
+      "frameId": "admin-redirect-editor-delete-confirm",
+      "rootIds": [
+        "admin-redirect-editor-delete-confirm-desktop-main-component",
+        "admin-redirect-editor-delete-confirm-mobile-main-component"
+      ]
+    }
+  ]
+}

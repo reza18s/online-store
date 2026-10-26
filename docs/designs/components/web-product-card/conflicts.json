@@ -1,0 +1,23 @@
+{
+  "conflicts": [
+    {
+      "id": "product-card-ratio",
+      "property": "Product image crop for Home/listing contexts",
+      "candidates": [
+        {
+          "value": "1:1",
+          "source": "historical/current CSS reference",
+          "status": "OLDER_CONFLICT"
+        },
+        {
+          "value": "4:5",
+          "source": "atelier-editorial.md Section 3.6",
+          "status": "CANONICAL_FOR_HOME_LIST"
+        }
+      ],
+      "winner": "4:5 for Home/listing card use only",
+      "rationale": "Keep the product-detail gallery separate."
+    }
+  ],
+  "proposals": []
+}

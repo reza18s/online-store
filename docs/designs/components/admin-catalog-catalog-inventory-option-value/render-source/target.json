@@ -1,0 +1,45 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-option-value",
+  "scope": "admin",
+  "symbol": "OptionValue",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/option-value.tsx",
+    "anchor": "OptionValue (7-38)",
+    "lines": "7-38",
+    "sha256": "4dcd9dd74bd0426f963e91369d161623512c50eb1b6f66123f2ec2f874b0acf5",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "span",
+    "UiInput",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "label"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

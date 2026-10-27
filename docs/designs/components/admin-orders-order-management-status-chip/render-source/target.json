@@ -1,0 +1,23 @@
+{
+  "targetId": "admin-orders-order-management-status-chip",
+  "scope": "admin",
+  "symbol": "StatusChip",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/status-chip.tsx",
+    "anchor": "StatusChip (9-24)",
+    "lines": "9-24",
+    "sha256": "941a0537fe73a75dc9baa10932151b0661de8861a24d4abe333a70d1aa1da5fc",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "status",
+  "status": "PROPOSED"
+}

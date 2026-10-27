@@ -1,0 +1,90 @@
+{
+  "targetId": "web-catalog-listing-discovery-listing-status-filter",
+  "scope": "web",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "tokens": {
+    "pearl/50": {
+      "value": "#F7F4F0",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "surface/0": {
+      "value": "#FFFCF9",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "surface/soft": {
+      "value": "#F1ECE7",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "surface/warm": {
+      "value": "#E8DFD7",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "ink/950": {
+      "value": "#302B29",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "ink/700": {
+      "value": "#6F6560",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "rosewood/700": {
+      "value": "#7B4B59",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "rosewood/800": {
+      "value": "#633D49",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "rosewood/100": {
+      "value": "#F2E8EB",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "line/200": {
+      "value": "#E4DCD5",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  },
+  "typography": {
+    "display": {
+      "family": "Estedad",
+      "weight": 600,
+      "status": "PROPOSED_SUBSTITUTE",
+      "usage": "design-board raster only",
+      "asset": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "license": "SIL Open Font License 1.1"
+    },
+    "body": {
+      "family": "Vazirmatn",
+      "weight": 400,
+      "status": "SOURCE_DEFINED",
+      "usage": "board labels and Persian UI copy",
+      "asset": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "license": "SIL Open Font License 1.1"
+    },
+    "fallback": "Tahoma, sans-serif"
+  },
+  "shape": {
+    "interactiveTargetMinPx": {
+      "width": 44,
+      "height": 44,
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "controlRadiusPx": {
+      "value": 10,
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  }
+}

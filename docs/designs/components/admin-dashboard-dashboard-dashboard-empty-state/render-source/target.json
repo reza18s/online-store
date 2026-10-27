@@ -1,0 +1,29 @@
+{
+  "targetId": "admin-dashboard-dashboard-dashboard-empty-state",
+  "scope": "admin",
+  "symbol": "DashboardEmptyState",
+  "source": {
+    "path": "apps/admin/src/features/dashboard/components/dashboard/dashboard-empty-state.tsx",
+    "anchor": "DashboardEmptyState (3-19)",
+    "lines": "3-19",
+    "sha256": "72746e7ca5142e7f7aaeb01ca9e3d1ceb3612a9aebe0133dbce9b3234c5ace55",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "خلاصه‌ای برای نمایش وجود ندارد",
+    "در این بازه داده‌ای از API دریافت نشد."
+  ],
+  "jsxTags": [
+    "Card",
+    "section",
+    "h2",
+    "p"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,35 @@
+{
+  "targetId": "admin-auth-permission-denied-page",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/auth/components/AdminPermissionDeniedPage.tsx",
+      "anchor": "AdminPermissionDeniedPage (5-26)",
+      "lines": "5-26",
+      "sha256": "74cdbd154d58c7b63fb2485da6588655df2d81c1b421194af0a11403636b2bdb",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "NOVA / ADMIN ACCESS",
+    "دسترسی کافی نیست",
+    "حساب کاربری شما برای مشاهده این بخش از فضای مدیریت مجوز لازم را ندارد.",
+    "بازگشت به داشبورد"
+  ],
+  "jsxTags": [
+    "main",
+    "section",
+    "span",
+    "h1",
+    "p",
+    "div",
+    "a",
+    "AdminLogoutButton"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

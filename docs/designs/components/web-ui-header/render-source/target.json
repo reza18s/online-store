@@ -1,0 +1,96 @@
+{
+  "targetId": "web-ui-header",
+  "scope": "web",
+  "symbol": "Header",
+  "source": {
+    "path": "apps/web/src/shared/ui/header.tsx",
+    "anchor": "Header (11-239)",
+    "lines": "11-239",
+    "sha256": "221aa4e2d6ca178a00ff6e40a6bd64f2158d9912150a2854dbd40c0469b228ce",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "جست‌وجوی محصولات",
+    "باز کردن منو",
+    "ورود یا حساب کاربری",
+    "ورود / حساب",
+    "بستن جست‌وجو",
+    "جست‌وجوی محصولات، برندها و ...",
+    "جست‌وجو",
+    "دسته‌بندی‌های اصلی",
+    "علاقه‌مندی‌ها"
+  ],
+  "jsxTags": [
+    "Button",
+    "Icon",
+    "a",
+    "span",
+    "header",
+    "div",
+    "form",
+    "input",
+    "nav",
+    "Logo"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "جست‌وجوی محصولات",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "باز کردن منو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "باز کردن منو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit",
+        "onKeyDown"
+      ],
+      "label": "بستن جست‌وجو / جست‌وجوی محصولات، برندها و ... / جست‌وجو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "بستن جست‌وجو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "input",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "isCompact",
+    "isSearchOpen",
+    "searchTerm"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

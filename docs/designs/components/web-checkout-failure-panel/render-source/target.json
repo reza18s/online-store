@@ -1,0 +1,40 @@
+{
+  "targetId": "web-checkout-failure-panel",
+  "scope": "web",
+  "symbol": "FailurePanel",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/failure-panel.tsx",
+    "anchor": "FailurePanel (9-48)",
+    "lines": "9-48",
+    "sha256": "546dff464e8c0ce1a6f25dba7e0e4286af329997b69767fa3820b0e44f8f56b0",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "بازگشت به سبد"
+  ],
+  "jsxTags": [
+    "div",
+    "span",
+    "Icon",
+    "h2",
+    "p",
+    "Button",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

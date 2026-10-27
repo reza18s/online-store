@@ -1,0 +1,34 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-product-card",
+  "scope": "admin",
+  "symbol": "ProductCard",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/product-card.tsx",
+    "anchor": "ProductCard (9-44)",
+    "lines": "9-44",
+    "sha256": "92bbdb233a2a13e1d83661aa4b13d7c7fd85b648b107b4789ecba1d100c09768",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "قیمت:",
+    "موجودی:"
+  ],
+  "jsxTags": [
+    "article",
+    "MediaThumb",
+    "div",
+    "a",
+    "StatusBadge",
+    "p",
+    "dl",
+    "dt",
+    "dd"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

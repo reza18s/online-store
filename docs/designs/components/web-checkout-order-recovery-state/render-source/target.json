@@ -1,0 +1,46 @@
+{
+  "targetId": "web-checkout-order-recovery-state",
+  "scope": "web",
+  "symbol": "OrderRecoveryState",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/order-recovery-state.tsx",
+    "anchor": "OrderRecoveryState (15-59)",
+    "lines": "15-59",
+    "sha256": "4d1583e858c2a93b5810c8431582b58cba6ec2b5d6c1a4a48b330d237a3a3bb9",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "NOVA / PAYMENT RECOVERY",
+    "مشاهده وضعیت سفارش"
+  ],
+  "jsxTags": [
+    "ConfirmationBody",
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "strong",
+    "div",
+    "Button",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "pending"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

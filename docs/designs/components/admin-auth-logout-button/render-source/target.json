@@ -1,0 +1,37 @@
+{
+  "targetId": "admin-auth-logout-button",
+  "scope": "admin",
+  "symbol": "AdminLogoutButton",
+  "source": {
+    "path": "apps/admin/src/features/auth/components/AdminLogoutButton.tsx",
+    "anchor": "AdminLogoutButton (9-47)",
+    "lines": "9-47",
+    "sha256": "910c19f12b85cbeeb433cdfde55d995dc9335559d016fa02e63b5acab9cb4eeb",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "خروج از حساب",
+    "در حال خروج..."
+  ],
+  "jsxTags": [
+    "Button",
+    "Icon",
+    "span"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "در حال خروج...",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "media",
+  "status": "PROPOSED"
+}

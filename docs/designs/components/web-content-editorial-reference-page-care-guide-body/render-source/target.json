@@ -1,0 +1,38 @@
+{
+  "targetId": "web-content-editorial-reference-page-care-guide-body",
+  "scope": "web",
+  "symbol": "CareGuideBody",
+  "source": {
+    "path": "apps/web/src/features/content/components/editorial-reference-page.tsx",
+    "anchor": "CareGuideBody (207-222)",
+    "lines": "207-222",
+    "sha256": "49ef95c6543a8cfe23811066c1ed75364f6ed00946c1012ad9190d1cc9f3613d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "بافت پارچه‌های نوا",
+    "مراقبت بهتر",
+    "سبک زندگی زیباتر",
+    "راهنمای منتشرشده مراقبت",
+    "پرسش درباره مراقبت از لباس"
+  ],
+  "jsxTags": [
+    "section",
+    "img",
+    "div",
+    "strong",
+    "br",
+    "article",
+    "p",
+    "RenderedBlock",
+    "a",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

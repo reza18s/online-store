@@ -1,0 +1,91 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-public-app",
+  "coordinateSystem": "CSS-pixel-like coordinates from the deterministic raster renderer; each frame is independent.",
+  "frames": [
+    {
+      "id": "web-public-app-desktop",
+      "width": 1440,
+      "height": 900,
+      "rootIds": [
+        "web-public-app-desktop-specimen"
+      ]
+    },
+    {
+      "id": "web-public-app-mobile",
+      "width": 390,
+      "height": 844,
+      "rootIds": [
+        "web-public-app-mobile-specimen"
+      ]
+    },
+    {
+      "id": "web-public-app-board",
+      "width": 1536,
+      "height": 1024,
+      "rootIds": [
+        "web-public-app-board-specimen"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "web-public-app-board-specimen",
+      "frameId": "web-public-app-board",
+      "parentId": null,
+      "role": "desktop-reference-thumbnail",
+      "x": 78,
+      "y": 220,
+      "width": 812,
+      "height": 507,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-public-app-desktop-specimen",
+      "frameId": "web-public-app-desktop",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 106,
+      "y": 258,
+      "width": 1228,
+      "height": 542,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-public-app-desktop-content-region-1",
+      "x": 134,
+      "y": 370,
+      "width": 1172,
+      "height": 66,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-public-app-desktop",
+      "parentId": "web-public-app-desktop-specimen",
+      "role": "content-region-1"
+    },
+    {
+      "id": "web-public-app-mobile-specimen",
+      "frameId": "web-public-app-mobile",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 34,
+      "y": 210,
+      "width": 322,
+      "height": 572,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-public-app-mobile-content-region-1",
+      "x": 52,
+      "y": 296,
+      "width": 286,
+      "height": 54,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-public-app-mobile",
+      "parentId": "web-public-app-mobile-specimen",
+      "role": "content-region-1"
+    }
+  ]
+}

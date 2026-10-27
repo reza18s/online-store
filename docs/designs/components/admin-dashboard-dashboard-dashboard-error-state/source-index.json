@@ -1,0 +1,39 @@
+{
+  "targetId": "admin-dashboard-dashboard-dashboard-error-state",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/dashboard/components/dashboard/dashboard-error-state.tsx",
+      "anchor": "DashboardErrorState (5-28)",
+      "lines": "5-28",
+      "sha256": "361ddf7d4e9b5d6764026ef07fb4db042e6ec0da6f52aef6be19ec6e13491bf4",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "خلاصه داشبورد در دسترس نیست",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "Card",
+    "section",
+    "h2",
+    "p",
+    "Button"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

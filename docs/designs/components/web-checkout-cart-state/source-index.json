@@ -1,0 +1,47 @@
+{
+  "targetId": "web-checkout-cart-state",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/cart-state.tsx",
+      "anchor": "CartState (11-50)",
+      "lines": "11-50",
+      "sha256": "e559d52bf2891b6d055f04ea3733cfd1c2e9fd1a4eea4a96c8693d1d6da1f388",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال بارگذاری سبد خرید",
+    "سبد خرید بارگذاری نشد",
+    "اتصال خود را بررسی کنید؛ هیچ سفارشی ثبت نشده است.",
+    "تلاش دوباره",
+    "سبد خرید شما خالی است",
+    "برای تکمیل سفارش، ابتدا یک محصول به سبد خرید اضافه کنید.",
+    "مشاهده فروشگاه"
+  ],
+  "jsxTags": [
+    "LoadingState",
+    "CheckoutShell",
+    "section",
+    "Icon",
+    "h1",
+    "p",
+    "Button",
+    "a"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

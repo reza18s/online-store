@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-card-description",
+  "scope": "shared",
+  "symbol": "CardDescription",
+  "source": {
+    "path": "packages/ui/src/card.tsx",
+    "anchor": "CardDescription (45-50)",
+    "lines": "45-50",
+    "sha256": "dd75d6ef7c7801ce8cbfa83167cda373d10be91ac8e530a4274a5b2739901725",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "p"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

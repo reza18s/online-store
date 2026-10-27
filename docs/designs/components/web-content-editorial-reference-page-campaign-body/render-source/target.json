@@ -1,0 +1,49 @@
+{
+  "targetId": "web-content-editorial-reference-page-campaign-body",
+  "scope": "web",
+  "symbol": "CampaignBody",
+  "source": {
+    "path": "apps/web/src/features/content/components/editorial-reference-page.tsx",
+    "anchor": "CampaignBody (124-162)",
+    "lines": "124-162",
+    "sha256": "49ef95c6543a8cfe23811066c1ed75364f6ed00946c1012ad9190d1cc9f3613d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "لایه‌هایی از شخصیت",
+    "پالتوها و کت‌های فصل جدید",
+    "جزئیاتی که ماندگارند",
+    "کیف‌ها و اکسسوری‌های خاص",
+    "تعادل در تمام لحظات",
+    "استایل روزمره با امضای نوا",
+    "مشاهده",
+    "“",
+    "داستان این کمپین",
+    "بیشتر درباره کمپین",
+    "زن، سبک زندگی، فراتر از زمان."
+  ],
+  "jsxTags": [
+    "section",
+    "a",
+    "img",
+    "span",
+    "strong",
+    "small",
+    "em",
+    "Icon",
+    "blockquote",
+    "b",
+    "p",
+    "cite",
+    "article",
+    "h2",
+    "ProductRail"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

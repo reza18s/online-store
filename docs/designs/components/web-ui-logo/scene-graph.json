@@ -1,0 +1,91 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-ui-logo",
+  "coordinateSystem": "CSS-pixel-like coordinates from the deterministic raster renderer; each frame is independent.",
+  "frames": [
+    {
+      "id": "web-ui-logo-desktop",
+      "width": 1440,
+      "height": 900,
+      "rootIds": [
+        "web-ui-logo-desktop-specimen"
+      ]
+    },
+    {
+      "id": "web-ui-logo-mobile",
+      "width": 390,
+      "height": 844,
+      "rootIds": [
+        "web-ui-logo-mobile-specimen"
+      ]
+    },
+    {
+      "id": "web-ui-logo-board",
+      "width": 1536,
+      "height": 1024,
+      "rootIds": [
+        "web-ui-logo-board-specimen"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "web-ui-logo-board-specimen",
+      "frameId": "web-ui-logo-board",
+      "parentId": null,
+      "role": "desktop-reference-thumbnail",
+      "x": 78,
+      "y": 220,
+      "width": 812,
+      "height": 507,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-ui-logo-desktop-specimen",
+      "frameId": "web-ui-logo-desktop",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 106,
+      "y": 258,
+      "width": 1228,
+      "height": 542,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-ui-logo-desktop-media-placeholder",
+      "x": 134,
+      "y": 370,
+      "width": 1172,
+      "height": 265,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-logo-desktop",
+      "parentId": "web-ui-logo-desktop-specimen",
+      "role": "media-placeholder"
+    },
+    {
+      "id": "web-ui-logo-mobile-specimen",
+      "frameId": "web-ui-logo-mobile",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 34,
+      "y": 210,
+      "width": 322,
+      "height": 572,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-ui-logo-mobile-media-placeholder",
+      "x": 52,
+      "y": 296,
+      "width": 286,
+      "height": 175,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-logo-mobile",
+      "parentId": "web-ui-logo-mobile-specimen",
+      "role": "media-placeholder"
+    }
+  ]
+}

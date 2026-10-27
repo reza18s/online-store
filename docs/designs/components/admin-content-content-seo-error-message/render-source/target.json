@@ -1,0 +1,23 @@
+{
+  "targetId": "admin-content-content-seo-error-message",
+  "scope": "admin",
+  "symbol": "ErrorMessage",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/error-message.tsx",
+    "anchor": "ErrorMessage (3-12)",
+    "lines": "3-12",
+    "sha256": "824c0d2702134f9598bd3fb2b97ef68cac287786bbb3d58b64260ae09e426a7e",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "div"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

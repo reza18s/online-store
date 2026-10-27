@@ -1,0 +1,25 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-media-thumb",
+  "scope": "admin",
+  "symbol": "MediaThumb",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/media-thumb.tsx",
+    "anchor": "MediaThumb (3-15)",
+    "lines": "3-15",
+    "sha256": "3322ff249ce5fc35c93dd332136b9f89a4bdbbbb56aacce28a2cf3abcadd44ca",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "img",
+    "span",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "media",
+  "status": "PROPOSED"
+}

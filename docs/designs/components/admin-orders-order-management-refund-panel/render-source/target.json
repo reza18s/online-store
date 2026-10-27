@@ -1,0 +1,34 @@
+{
+  "targetId": "admin-orders-order-management-refund-panel",
+  "scope": "admin",
+  "symbol": "RefundPanel",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/refund-panel.tsx",
+    "anchor": "RefundPanel (15-61)",
+    "lines": "15-61",
+    "sha256": "d35b0074970fd05474025d05c86f23faab13abdea43ae398f4e154c9b4afc724",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "بازپرداخت‌ها",
+    "شناسه داخلی:",
+    "دلیل:",
+    "بازپرداختی برای این سفارش ثبت نشده است.",
+    "وضعیت تلاش پرداخت:"
+  ],
+  "jsxTags": [
+    "section",
+    "PanelHeading",
+    "div",
+    "span",
+    "StatusChip",
+    "p"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

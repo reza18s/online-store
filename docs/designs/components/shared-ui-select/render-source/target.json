@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-select",
+  "scope": "shared",
+  "symbol": "Select",
+  "source": {
+    "path": "packages/ui/src/select.tsx",
+    "anchor": "Select (8-17)",
+    "lines": "8-17",
+    "sha256": "4e6ad50bf1b750eecac43699ef9fd7bd140fa2289464f9bd1d0635b2dc6e792a",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "select"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "selection",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,171 @@
+{
+  "targetId": "web-catalog-category-discovery",
+  "scope": "web",
+  "symbol": "CategoryDiscovery",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+    "anchor": "CategoryDiscovery (75-328)",
+    "lines": "75-328",
+    "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "پارچه‌های آتلیه نوا",
+    "دسته‌بندی",
+    "سایز",
+    "رنگ",
+    "جنس",
+    "فقط موجود",
+    "پیشنهاد ویژه",
+    "پاک‌کردن فیلترها",
+    "خانه",
+    "/",
+    "پوشاک راحت برای روزهای پرماجرای کودک",
+    "در حال دریافت محصولات…",
+    "فیلترها",
+    "مرتب‌سازی",
+    "مرتب‌سازی محصولات",
+    "راهنمای انتخاب",
+    "سایز درست، حس درست",
+    "برای هر مدل، اندازه‌گیری و پیشنهاد فیت را کنار مشخصات محصول گذاشته‌ایم.",
+    "مشاهده راهنمای اندازه",
+    "بستن فیلترها",
+    "نمایش نتایج"
+  ],
+  "jsxTags": [
+    "div",
+    "FilterSelect",
+    "label",
+    "Checkbox",
+    "a",
+    "main",
+    "span",
+    "CategoryHero",
+    "CategoryCardStack",
+    "CategoryQuickRail",
+    "strong",
+    "Button",
+    "Icon",
+    "UiSelect",
+    "option",
+    "CategorySidebar",
+    "CategoryResults",
+    "section",
+    "h2",
+    "p"
+  ],
+  "actions": [
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "فیلترها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "مرتب‌سازی محصولات",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CategorySidebar",
+      "events": [
+        "onUpdate"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "div",
+      "events": [
+        "onMouseDown"
+      ],
+      "label": "فیلترها / بستن فیلترها / نمایش نتایج",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "section",
+      "events": [
+        "onKeyDown"
+      ],
+      "label": "فیلترها / بستن فیلترها / نمایش نتایج",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "بستن فیلترها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "نمایش نتایج",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "mobileFiltersOpen"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,31 @@
+{
+  "targetId": "shared-ui-badge",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "packages/ui/src/badge.tsx",
+      "anchor": "Badge (30-34)",
+      "lines": "30-34",
+      "sha256": "3fd28dd743bf7757ed9f09f6d669a77abae3095d2a0dadf7fa444f92f5b010b1",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [
+    "default",
+    "secondary",
+    "outline",
+    "success",
+    "warning",
+    "destructive",
+    "info"
+  ],
+  "sizes": [],
+  "interactionEvents": []
+}

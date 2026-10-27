@@ -1,0 +1,43 @@
+{
+  "targetId": "web-account-order-detail-error",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/order-detail-error.tsx",
+      "anchor": "OrderDetailError (12-41)",
+      "lines": "12-41",
+      "sha256": "4de44e40586a6ffeec7742d0267305db82c6e4b8a60e4922591ce95d0d3c854a",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "نشست شما منقضی شده است",
+    "اتصال اینترنت برقرار نیست",
+    "این سفارش قابل مشاهده نیست",
+    "سفارش بارگذاری نشد",
+    "برای دیدن اطلاعات سفارش دوباره وارد حساب شوید.",
+    "پس از اتصال دوباره، جزئیات سفارش را دریافت کنید.",
+    "این سفارش پیدا نشد یا دیگر در حساب شما قابل مشاهده نیست.",
+    "ورود دوباره",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "PageFrame",
+    "EmptyState"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "EmptyState",
+      "events": [
+        "onAction"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

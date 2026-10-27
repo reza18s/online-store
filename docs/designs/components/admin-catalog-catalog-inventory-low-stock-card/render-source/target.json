@@ -1,0 +1,50 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-low-stock-card",
+  "scope": "admin",
+  "symbol": "LowStockCard",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/low-stock-card.tsx",
+    "anchor": "LowStockCard (10-81)",
+    "lines": "10-81",
+    "sha256": "9652d3147747b118468fa28f969ffb4dc9e6c3bbb11bd59e5f4c845cc12cdc18",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "INVENTORY WATCH",
+    "موجودی کم",
+    "در حال دریافت هشدارهای موجودی...",
+    "دریافت دوباره",
+    "هشدار موجودی فعالی ثبت نشده است.",
+    "تنوع اصلی",
+    "·",
+    "قابل فروش",
+    "مشاهده همه"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "p",
+    "h3",
+    "Icon",
+    "LoadingState",
+    "Button",
+    "a",
+    "span"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "دریافت دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

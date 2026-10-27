@@ -1,0 +1,90 @@
+{
+  "targetId": "shared-ui-select",
+  "scope": "shared",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "tokens": {
+    "pearl/50": {
+      "value": "#F7F4F0",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "surface/0": {
+      "value": "#FFFCF9",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "surface/soft": {
+      "value": "#F1ECE7",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "surface/warm": {
+      "value": "#E8DFD7",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "ink/950": {
+      "value": "#302B29",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "ink/700": {
+      "value": "#6F6560",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "rosewood/700": {
+      "value": "#7B4B59",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "rosewood/800": {
+      "value": "#633D49",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "rosewood/100": {
+      "value": "#F2E8EB",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    },
+    "line/200": {
+      "value": "#E4DCD5",
+      "evidenceStatus": "PROPOSED",
+      "source": "Shared UI neutral render proposal; host-owned appearance remains caller-owned."
+    }
+  },
+  "typography": {
+    "display": {
+      "family": "Estedad",
+      "weight": 600,
+      "status": "PROPOSED_SUBSTITUTE",
+      "usage": "design-board raster only",
+      "asset": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "license": "SIL Open Font License 1.1"
+    },
+    "body": {
+      "family": "Vazirmatn",
+      "weight": 400,
+      "status": "SOURCE_DEFINED",
+      "usage": "board labels and Persian UI copy",
+      "asset": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "license": "SIL Open Font License 1.1"
+    },
+    "fallback": "Tahoma, sans-serif"
+  },
+  "shape": {
+    "interactiveTargetMinPx": {
+      "width": 44,
+      "height": 44,
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "controlRadiusPx": {
+      "value": 10,
+      "status": "PROPOSED",
+      "source": "admin reference board proposal"
+    }
+  }
+}

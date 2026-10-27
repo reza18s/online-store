@@ -1,0 +1,39 @@
+{
+  "targetId": "web-checkout-local-payment-page",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/local-payment-page.tsx",
+      "anchor": "LocalPaymentPage (13-74)",
+      "lines": "13-74",
+      "sha256": "cf7fdc6294b9bbe744611139206f785e9eff47c3b5d8984afd61a948abcfa390",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "لینک پرداخت محلی کامل نیست؛ سفارش شما تغییر نکرده است.",
+    "پرداخت محلی تأیید نشد؛ وضعیت سفارش خود را بررسی کنید.",
+    "تکمیل پرداخت محلی ممکن نشد؛ دوباره تلاش کنید.",
+    "پرداخت انجام نشد",
+    "در حال تکمیل پرداخت محلی",
+    "پرداخت آزمایشی بدون اتصال به درگاه خارجی در حال ثبت است.",
+    "بررسی وضعیت سفارش"
+  ],
+  "jsxTags": [
+    "CheckoutShell",
+    "section",
+    "Icon",
+    "h1",
+    "p",
+    "Button",
+    "a"
+  ],
+  "stateVariables": [
+    "error"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

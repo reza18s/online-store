@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-card-title",
+  "scope": "shared",
+  "symbol": "CardTitle",
+  "source": {
+    "path": "packages/ui/src/card.tsx",
+    "anchor": "CardTitle (37-41)",
+    "lines": "37-41",
+    "sha256": "dd75d6ef7c7801ce8cbfa83167cda373d10be91ac8e530a4274a5b2739901725",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "h3"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

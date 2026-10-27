@@ -1,0 +1,23 @@
+{
+  "targetId": "admin-content-content-seo-draft-notice",
+  "scope": "admin",
+  "symbol": "DraftNotice",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/draft-notice.tsx",
+    "anchor": "DraftNotice (1-10)",
+    "lines": "1-10",
+    "sha256": "49671650fc81e00977c18b501c2032d54b5c2fddf501825a3761c5be26e33d2f",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "div"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

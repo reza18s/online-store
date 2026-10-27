@@ -1,0 +1,41 @@
+{
+  "targetId": "web-catalog-category-discovery-category-hero",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+      "anchor": "CategoryHero (479-525)",
+      "lines": "479-525",
+      "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "NOVA",
+    "TIMELESS&nbsp;&nbsp; ELEGANT&nbsp;&nbsp; PERSIAN",
+    "داستان کالکشن زنانه",
+    "لباس‌هایی برای داستان زندگی شما",
+    "A MORE",
+    "BEAUTIFUL",
+    "YOU"
+  ],
+  "jsxTags": [
+    "section",
+    "img",
+    "div",
+    "span",
+    "h1",
+    "p",
+    "a",
+    "Icon",
+    "aside",
+    "em",
+    "br"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

@@ -1,0 +1,98 @@
+{
+  "targetId": "admin-auth-login-page",
+  "scope": "admin",
+  "symbol": "AdminLoginPage",
+  "source": {
+    "path": "apps/admin/src/features/auth/components/AdminLoginPage.tsx",
+    "anchor": "AdminLoginPage (20-232)",
+    "lines": "20-232",
+    "sha256": "771f0be6b26df0d8cffcd61e6eff2d698c217699ff5cbd0235c9624edc2cc373",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "روایت برند نوا",
+    "جزئیات، هویت برند ماست.",
+    "PEOPLE · FASHION · DETAILS",
+    "مدیریت دنیای نوا از زیبایی",
+    "NOVA / ADMIN ACCESS",
+    "ورود به فضای مدیریت",
+    "برای ادامه، رمز عبور و کد تأیید دومرحله‌ای مدیر را وارد کنید.",
+    "نشست مدیریت منقضی شده است؛ برای ادامه دوباره وارد شوید.",
+    "ایمیل سازمانی",
+    "admin@example.com",
+    "رمز عبور",
+    "کد تأیید دومرحله‌ای یا کد بازیابی",
+    "در حال بررسی...",
+    "ورود به پنل",
+    "دسترسی امن و رمزگذاری‌شده",
+    "اطلاعات شما با بالاترین سطح امنیت محافظت می‌شود.",
+    "بازگشت به فروشگاه"
+  ],
+  "jsxTags": [
+    "main",
+    "div",
+    "aside",
+    "img",
+    "Logo",
+    "p",
+    "span",
+    "small",
+    "section",
+    "Icon",
+    "h1",
+    "form",
+    "label",
+    "UiInput",
+    "Button",
+    "strong",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "ایمیل سازمانی / رمز عبور / کد تأیید دومرحله‌ای یا کد بازیابی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "email",
+    "password",
+    "factor",
+    "formError",
+    "fieldError"
+  ],
+  "stateMarkers": [
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

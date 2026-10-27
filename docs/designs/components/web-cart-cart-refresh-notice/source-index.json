@@ -1,0 +1,38 @@
+{
+  "targetId": "web-cart-cart-refresh-notice",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/cart/components/cart-refresh-notice.tsx",
+      "anchor": "CartRefreshNotice (4-17)",
+      "lines": "4-17",
+      "sha256": "413f5a7135f599b816cc127ff58b3d793babd0d2b3493414fe8a326b32caa302",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "به‌روزرسانی سبد خرید انجام نشد؛ اطلاعات فعلی ممکن است قدیمی باشد.",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "div",
+    "span",
+    "Button",
+    "Icon"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

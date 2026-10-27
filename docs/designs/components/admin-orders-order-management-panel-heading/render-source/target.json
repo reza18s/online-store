@@ -1,0 +1,25 @@
+{
+  "targetId": "admin-orders-order-management-panel-heading",
+  "scope": "admin",
+  "symbol": "PanelHeading",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/panel-heading.tsx",
+    "anchor": "PanelHeading (5-25)",
+    "lines": "5-25",
+    "sha256": "20bb2d906a5300652db7df2cf362fc391c24f93451ab769eda5cec566411bd4f",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "div",
+    "h2",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

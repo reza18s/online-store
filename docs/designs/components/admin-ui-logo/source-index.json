@@ -1,0 +1,27 @@
+{
+  "targetId": "admin-ui-logo",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/shared/ui/logo.tsx",
+      "anchor": "Logo (1-20)",
+      "lines": "1-20",
+      "sha256": "5c64cbe582bf5d48fca89b02624522f2e3cfe350153f120347f964f976d7081a",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "NOVA، داشبورد مدیریت",
+    "NOVA"
+  ],
+  "jsxTags": [
+    "a",
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

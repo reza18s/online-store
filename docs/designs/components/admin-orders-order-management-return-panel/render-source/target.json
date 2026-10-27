@@ -1,0 +1,60 @@
+{
+  "targetId": "admin-orders-order-management-return-panel",
+  "scope": "admin",
+  "symbol": "ReturnPanel",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/return-panel.tsx",
+    "anchor": "ReturnPanel (21-137)",
+    "lines": "21-137",
+    "sha256": "13dc3f5332cd884c6f7a7a59694f9309c75af0e1fd3f8522e1873b3594242fbe",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "بررسی بازگشت",
+    "وضعیت درخواست",
+    "دلیل",
+    "درخواست در",
+    "بررسی در",
+    "دریافت در",
+    "یادداشت مشتری",
+    "اقلام درخواست بازگشت",
+    "تعداد:",
+    "SKU:",
+    "تلاش دوباره بازپرداخت",
+    "نقش فعلی اجازه بررسی درخواست بازگشت را ندارد.",
+    "برای این سفارش درخواست بازگشتی ثبت نشده است."
+  ],
+  "jsxTags": [
+    "section",
+    "PanelHeading",
+    "div",
+    "span",
+    "StatusChip",
+    "dl",
+    "dt",
+    "dd",
+    "strong",
+    "p",
+    "h3",
+    "ul",
+    "li",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره بازپرداخت",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

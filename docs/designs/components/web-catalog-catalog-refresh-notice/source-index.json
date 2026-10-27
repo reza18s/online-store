@@ -1,0 +1,38 @@
+{
+  "targetId": "web-catalog-catalog-refresh-notice",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/catalog-refresh-notice.tsx",
+      "anchor": "CatalogRefreshNotice (4-17)",
+      "lines": "4-17",
+      "sha256": "6ec86248c300358e211f094f9fb5eceef0a21f17015b1c79e7d664fec4d05321",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "به‌روزرسانی نتایج انجام نشد؛ اطلاعات فعلی ممکن است قدیمی باشد.",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "div",
+    "span",
+    "Button",
+    "Icon"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

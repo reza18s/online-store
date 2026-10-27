@@ -1,0 +1,208 @@
+{
+  "targetId": "admin-orders-order-management-order-detail-view",
+  "scope": "admin",
+  "symbol": "OrderDetailView",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/OrderDetailView.tsx",
+    "anchor": "OrderDetailView (65-537)",
+    "lines": "65-537",
+    "sha256": "c25914463c5da586f4dfd7260a43c4a29d2fb999f3531bba164fd40c7787d365",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "برای ثبت عملیات، دلیل را وارد کنید.",
+    "دلیل عملیات نباید بیشتر از ۵۰۰ نویسه باشد.",
+    "وضعیت سفارش با موفقیت ثبت شد.",
+    "نام سرویس و روش ارسال را وارد کنید.",
+    "شناسه رهگیری فقط می‌تواند شامل حروف لاتین، عدد و . _ : - باشد.",
+    "اطلاعات ارسال با موفقیت ثبت شد.",
+    "دریافت ثبت شد؛ وضعیت بازپرداخت از پاسخ سرویس به‌روزرسانی می‌شود.",
+    "بررسی درخواست بازگشت با موفقیت ثبت شد.",
+    "عملیات انجام نشد؛ اطلاعات تازه را بررسی و دوباره تلاش کنید.",
+    "در حال دریافت جزئیات سفارش",
+    "نمایش سفارش از سرویس مدیریت بارگیری می‌شود.",
+    "جزئیات سفارش در دسترس نیست",
+    "این سفارش پیدا نشد یا قابل مشاهده نیست.",
+    "تلاش دوباره",
+    "بازگشت به سفارش‌ها",
+    "جزئیات سفارش / عملیات",
+    "آخرین تغییر:",
+    "خلاصه سفارش",
+    "مبلغ نهایی",
+    "مشتری",
+    "مشتری ثبت‌نشده",
+    "شماره ثبت نشده",
+    "ارسال",
+    "نامشخص",
+    "ثبت نشده",
+    "شناسه رهگیری ثبت نشده",
+    "اقلام سفارش",
+    "نسخه ثبت‌شده و غیرقابل ویرایش",
+    "SKU:",
+    "تعداد:",
+    "خط زمانی وضعیت",
+    "ثبت سفارش",
+    "رویداد قابل نمایش ثبت نشده است.",
+    "این تغییر پس از تأیید با نسخه فعلی سفارش ثبت می‌شود.",
+    "وضعیت هدف",
+    "نتیجه بررسی",
+    "سرویس ارسال",
+    "روش ارسال",
+    "وضعیت ارسال",
+    "شناسه رهگیری"
+  ],
+  "jsxTags": [
+    "PermissionPanel",
+    "StatePanel",
+    "Button",
+    "Icon",
+    "main",
+    "header",
+    "div",
+    "a",
+    "p",
+    "h1",
+    "span",
+    "StatusChip",
+    "PaymentChip",
+    "section",
+    "SummaryCard",
+    "PanelHeading",
+    "strong",
+    "ol",
+    "li",
+    "OperationsPanel",
+    "ReturnPanel",
+    "RefundPanel",
+    "AddressPanel",
+    "Modal",
+    "form",
+    "label",
+    "UiSelect",
+    "option",
+    "UiInput",
+    "UiTextarea"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "OperationsPanel",
+      "events": [
+        "onShipment",
+        "onStatus"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ReturnPanel",
+      "events": [
+        "onReview"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Modal",
+      "events": [
+        "onClose"
+      ],
+      "label": "این عملیات طبق قرارداد سرویس، دریافت کالا و فرایند بازپرداخت را ثبت می‌کند. نتیجه موفق یا ناموفق در",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "وضعیت هدف / نتیجه بررسی / سرویس ارسال",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "انصراف",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "pendingAction",
+    "reason",
+    "actionError",
+    "successMessage",
+    "shipmentDraft"
+  ],
+  "stateMarkers": [
+    "pending",
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

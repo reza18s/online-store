@@ -1,0 +1,105 @@
+{
+  "targetId": "web-checkout-checkout-step-panel",
+  "scope": "web",
+  "symbol": "CheckoutStepPanel",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/checkout-step-panel.tsx",
+    "anchor": "CheckoutStepPanel (25-195)",
+    "lines": "25-195",
+    "sha256": "90f3fdf8dbff3c4053bed1d3d24485ac1dd7f417104946c11f9d7c752a092e5c",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "مراحل تکمیل سفارش",
+    "مرحله",
+    "از ۳",
+    "آدرس تحویل",
+    "روش ارسال",
+    "پرداخت امن",
+    "اطلاعات شما فقط برای تکمیل همین سفارش استفاده می‌شود.",
+    "کد تخفیف (اختیاری)",
+    "کد تخفیف را وارد کنید",
+    "در حال محاسبه دوباره مبلغ سفارش...",
+    "کد",
+    "اعمال شد.",
+    "این کد تخفیف اعمال نشد؛ مبلغ به‌روز را بررسی کنید.",
+    "قیمت فعلی تا",
+    "معتبر است؛ پس از آن مبلغ و موجودی دوباره بررسی می‌شود.",
+    "در حال ثبت امن سفارش...",
+    "پرداخت و ثبت سفارش",
+    "ادامه"
+  ],
+  "jsxTags": [
+    "div",
+    "section",
+    "nav",
+    "a",
+    "span",
+    "header",
+    "h1",
+    "p",
+    "AddressForm",
+    "ShippingOptions",
+    "PaymentOptions",
+    "label",
+    "UiInput",
+    "Icon",
+    "FailurePanel",
+    "Button",
+    "OrderSummary"
+  ],
+  "actions": [
+    {
+      "element": "AddressForm",
+      "events": [
+        "onSelect",
+        "onToggleNewAddress",
+        "onDraftChange",
+        "onCreate"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ShippingOptions",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FailurePanel",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "در حال ثبت امن سفارش... / پرداخت و ثبت سفارش / ادامه",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success",
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

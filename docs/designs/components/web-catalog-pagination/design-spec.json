@@ -1,0 +1,336 @@
+{
+  "schemaVersion": "2.0.0",
+  "target": {
+    "id": "web-catalog-pagination",
+    "scope": "web",
+    "symbol": "Pagination",
+    "source": "apps/web/src/features/catalog/components/pagination.tsx",
+    "lines": "3-58"
+  },
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "direction": "NOVA Store / atelier-editorial.md Section 18 Soft Modern.",
+  "purpose": "برد مستقل برای Pagination؛ متن‌ها و eventهای موجود از inventory منبع‌اند و چیدمان تصویر پیشنهادی است.",
+  "sourceEvidence": {
+    "labels": [
+      "صفحه‌بندی محصولات",
+      "قبلی",
+      "…",
+      "بعدی"
+    ],
+    "jsxTags": [
+      "nav",
+      "a",
+      "span"
+    ],
+    "stateVariables": [],
+    "stateMarkers": [],
+    "variants": [],
+    "sizes": []
+  },
+  "proposal": {
+    "layoutType": "navigation",
+    "status": "PROPOSED",
+    "desktop": "Independent 1440x900 component specimen inside a neutral design-review frame; geometry is not copied from the live DOM.",
+    "mobile": "Independent 390x844 stacked specimen; breakpoints and behavior remain proposals unless separately defined by the owning page source.",
+    "typography": {
+      "display": {
+        "family": "Estedad",
+        "weight": 600,
+        "status": "PROPOSED_SUBSTITUTE",
+        "assetPath": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf"
+      },
+      "body": {
+        "family": "Vazirmatn",
+        "weight": 400,
+        "status": "SOURCE_DEFINED",
+        "assetPath": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf"
+      }
+    }
+  },
+  "actions": [],
+  "states": [
+    {
+      "id": "baseline-specimen",
+      "label": "ساختار پایه برای بررسی بصری",
+      "status": "PROPOSED_BASELINE"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/pagination.tsx",
+      "anchor": "Pagination (3-58)",
+      "lines": "3-58",
+      "sha256": "69a67cbf5bc739fbf610c8551217b9e8ca88ba64155e71c05a9f902e74b38676",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "assets": [
+    {
+      "assetId": "estedad-semibold-v8.5",
+      "path": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "a5cbf97d61e22ef5d072171db000ff8467c3992353d9124f9e0794bf35b13364"
+    },
+    {
+      "assetId": "vazirmatn-regular-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-Regular.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "b69fd4c680b8f3f225feabcc655a2c585d97627b8f5f5c0f9985e894069f3a56"
+    },
+    {
+      "assetId": "vazirmatn-semibold-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "3f239d8364c14ee32c46b6839fa197c28958358b82a9673d2c6acc8506d78bc5"
+    }
+  ],
+  "frames": [
+    {
+      "id": "web-catalog-pagination-desktop",
+      "viewportId": "desktop",
+      "width": 1440,
+      "height": 900,
+      "screenshot": "docs/designs/components/web-catalog-pagination/02-Clean-Reference.png",
+      "componentBounds": {
+        "x": 106,
+        "y": 258,
+        "width": 1228,
+        "height": 542,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    },
+    {
+      "id": "web-catalog-pagination-mobile",
+      "viewportId": "mobile",
+      "width": 390,
+      "height": 844,
+      "screenshot": "docs/designs/components/web-catalog-pagination/03-Clean-Reference-Mobile.png",
+      "componentBounds": {
+        "x": 34,
+        "y": 210,
+        "width": 322,
+        "height": 572,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    },
+    {
+      "id": "web-catalog-pagination-board",
+      "viewportId": "board",
+      "width": 1536,
+      "height": 1024,
+      "screenshot": "docs/designs/components/web-catalog-pagination/01-Visual-Design-Board.png",
+      "componentBounds": {
+        "x": 78,
+        "y": 220,
+        "width": 812,
+        "height": 507,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/web-catalog-pagination/01-Visual-Design-Board.png",
+      "artifactType": "annotated-design-board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/02-Clean-Reference.png",
+      "artifactType": "clean-desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/03-Clean-Reference-Mobile.png",
+      "artifactType": "clean-mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/design-spec.json",
+      "artifactType": "design-specification",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/design-spec.schema.json",
+      "artifactType": "json-schema",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/scene-graph.json",
+      "artifactType": "scene-graph",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/source-index.json",
+      "artifactType": "source-index",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/authority-map.json",
+      "artifactType": "authority-map",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/conflicts.json",
+      "artifactType": "conflicts-and-proposals",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/design-tokens.json",
+      "artifactType": "design-tokens",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/asset-registry.json",
+      "artifactType": "asset-registry",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/coverage-matrix.json",
+      "artifactType": "coverage-matrix",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/qa-report.json",
+      "artifactType": "qa-report",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/manifest.json",
+      "artifactType": "manifest",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/component-handoff.md",
+      "artifactType": "component-handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/render-source/target.json",
+      "artifactType": "renderer-input",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-catalog-pagination/render-source/README.md",
+      "artifactType": "renderer-instructions",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-identity",
+        "status": "PASS",
+        "method": "SHA-256 comparison against the checked component inventory",
+        "evidence": "apps/web/src/features/catalog/components/pagination.tsx matches inventory hash 69a67cbf5bc739fbf610c8551217b9e8ca88ba64155e71c05a9f902e74b38676."
+      },
+      {
+        "id": "artifact-dimensions",
+        "status": "PASS",
+        "method": "Pillow image metadata from generated PNGs",
+        "evidence": "Board 1536x1024; desktop 1440x900; mobile 390x844."
+      },
+      {
+        "id": "persian-font-and-rtl",
+        "status": "PASS",
+        "method": "Pillow 12.3.0 FreeType + RAQM render using bundled licensed fonts",
+        "evidence": "Persian strings are rendered with RTL shaping; the clean references are generated independently at their declared sizes."
+      },
+      {
+        "id": "schema-and-semantic-integrity",
+        "status": "PASS",
+        "method": "JSON Schema Draft 2020-12 plus source, output, manifest, font and scene-graph semantic checks",
+        "evidence": "The source hash matches; all 17 package outputs exist; 16 manifest fingerprints match; font assets, declared PNG dimensions, scene node IDs/references/bounds, and source-derived variant/state evidence pass."
+      },
+      {
+        "id": "interactive-app-runtime",
+        "status": "UNVERIFIED",
+        "method": "Application runtime was not operated",
+        "evidence": "The board records source inventory evidence and design proposals only."
+      },
+      {
+        "id": "photo-assets",
+        "status": "NOT_APPLICABLE",
+        "method": "Local render-source asset registry",
+        "evidence": "No product photography or unlicensed external image is used; media regions are drawn placeholders."
+      }
+    ],
+    "warnings": [
+      "Every layout, spacing and rectangle is a proposed design choice; captured pixel bounds describe this renderer output, not the live React component.",
+      "Only copy, JSX tag names, event labels, state variables and state markers indexed from the source are treated as source-defined evidence.",
+      "Estedad display text is a proposed substitute for Peyda in storefront board images; it does not change the application's font contract. Admin display typography follows its existing component-board token source.",
+      "The live app, keyboard interactions, API data, permission behavior and product-image licensing were not tested by this renderer."
+    ]
+  }
+}

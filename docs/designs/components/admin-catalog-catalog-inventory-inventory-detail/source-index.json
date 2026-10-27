@@ -1,0 +1,126 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-inventory-detail",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/inventory-detail.tsx",
+      "anchor": "InventoryDetail (29-242)",
+      "lines": "29-242",
+      "sha256": "3859af4b28f667bc77b2899edce883c9f1c03e7b0313bd283ccfb3467e3a3d83",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال دریافت جزئیات موجودی...",
+    "اتصال شبکه در دسترس نیست",
+    "دریافت اطلاعات انجام نشد",
+    "جزئیات موجودی در دسترس نیست.",
+    "تلاش دوباره",
+    "یک تنوع را انتخاب کنید",
+    "برای مشاهده جزئیات و ثبت عملیات، یک ردیف از فهرست موجودی را انتخاب کنید.",
+    "INVENTORY DETAIL",
+    "تنوع اصلی",
+    "·",
+    "فیزیکی",
+    "رزروشده",
+    "قابل فروش",
+    "نقطه سفارش",
+    "مغایرت داده: فیزیکی منهای رزروشده با قابل فروش برابر نیست.",
+    "آخرین تغییر:",
+    "اصلاح موجودی",
+    "مقدار تغییر",
+    "مثلاً 5 یا -2",
+    "دلیل ثبت",
+    "دلیل عملیاتی تغییر...",
+    "ثبت اصلاح",
+    "نقطه سفارش مجدد",
+    "حداقل قابل سفارش",
+    "ذخیره نقطه سفارش",
+    "نقش فعلی فقط اجازه مشاهده دارد؛ ثبت اصلاح و نقطه سفارش برای عملیات یا مدیر فعال است.",
+    "حرکت‌های اخیر",
+    "حرکت اخیری ثبت نشده است."
+  ],
+  "jsxTags": [
+    "div",
+    "LoadingState",
+    "StatePanel",
+    "Button",
+    "Icon",
+    "section",
+    "p",
+    "h3",
+    "form",
+    "h4",
+    "label",
+    "UiInput",
+    "UiTextarea",
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "loading",
+    "error",
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "اصلاح موجودی / مقدار تغییر / مثلاً 5 یا -2",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "نقطه سفارش مجدد / حداقل قابل سفارش / ذخیره نقطه سفارش",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

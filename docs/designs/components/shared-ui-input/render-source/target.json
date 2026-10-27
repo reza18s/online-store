@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-input",
+  "scope": "shared",
+  "symbol": "Input",
+  "source": {
+    "path": "packages/ui/src/input.tsx",
+    "anchor": "Input (8-20)",
+    "lines": "8-20",
+    "sha256": "2894295bbf50cedb4f686c8eb2654cc842015753c6fdeb0090dcfcce14b4353a",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "input"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

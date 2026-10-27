@@ -1,0 +1,26 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-mutation-state-badge",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/mutation-state-badge.tsx",
+      "anchor": "MutationStateBadge (7-17)",
+      "lines": "7-17",
+      "sha256": "a7de29f82c5b5b5e153941a93c1638fec019ab1a984b7fc0c23387633793a0a9",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success",
+    "saving"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

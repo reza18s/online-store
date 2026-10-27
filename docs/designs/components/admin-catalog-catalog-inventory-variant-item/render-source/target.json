@@ -1,0 +1,81 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-variant-item",
+  "scope": "admin",
+  "symbol": "VariantItem",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/variant-item.tsx",
+    "anchor": "VariantItem (12-104)",
+    "lines": "12-104",
+    "sha256": "8bfa2ecb2947d54e6da56b9b2a8d5624ca82faf1ae3cf5e1b5773b4a7910fafb",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "موجودی",
+    "ذخیره تنوع",
+    "آخرین تغییر:",
+    "· موجودی از نمای موجودی کنترل می‌شود."
+  ],
+  "jsxTags": [
+    "div",
+    "span",
+    "StatusBadge",
+    "a",
+    "Icon",
+    "UiInput",
+    "Button",
+    "p"
+  ],
+  "actions": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "ذخیره تنوع",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "title",
+    "size",
+    "color",
+    "price"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

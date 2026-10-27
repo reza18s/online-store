@@ -1,0 +1,114 @@
+{
+  "targetId": "web-catalog-category-discovery-category-sidebar",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+      "anchor": "CategorySidebar (330-477)",
+      "lines": "330-477",
+      "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "همه",
+    "دسته‌بندی",
+    "همه دسته‌ها",
+    "سایز",
+    "رنگ",
+    "قیمت (تومان)",
+    "از",
+    "حداقل قیمت",
+    "تا",
+    "حداکثر قیمت",
+    "جنس",
+    "فقط موجود",
+    "پیشنهاد ویژه",
+    "پاک‌کردن فیلترها"
+  ],
+  "jsxTags": [
+    "fieldset",
+    "legend",
+    "label",
+    "input",
+    "span",
+    "i",
+    "small",
+    "aside",
+    "div",
+    "UiInput",
+    "Checkbox",
+    "a"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "input",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "input",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "input",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "input",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

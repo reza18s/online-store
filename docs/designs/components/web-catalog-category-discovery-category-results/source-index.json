@@ -1,0 +1,46 @@
+{
+  "targetId": "web-catalog-category-discovery-category-results",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+      "anchor": "CategoryResults (590-657)",
+      "lines": "590-657",
+      "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال دریافت محصولات…",
+    "مشاهده همه",
+    "انتخاب‌های محبوب"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "h2",
+    "span",
+    "a",
+    "p",
+    "CatalogQueryState",
+    "ProductGrid",
+    "Pagination",
+    "AddToCartFeedback"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "ProductGrid",
+      "events": [
+        "onToggleWishlist",
+        "onAdd"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

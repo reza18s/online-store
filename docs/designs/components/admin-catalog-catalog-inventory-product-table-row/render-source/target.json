@@ -1,0 +1,33 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-product-table-row",
+  "scope": "admin",
+  "symbol": "ProductTableRow",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/product-table-row.tsx",
+    "anchor": "ProductTableRow (13-61)",
+    "lines": "13-61",
+    "sha256": "bfcff463f0618c65be4e83558d7d1be30fd6c890827195922e12d5d368261e92",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "،",
+    "بدون دسته",
+    "قابل فروش"
+  ],
+  "jsxTags": [
+    "tr",
+    "td",
+    "a",
+    "MediaThumb",
+    "span",
+    "StatusBadge",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

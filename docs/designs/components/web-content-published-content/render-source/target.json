@@ -1,0 +1,57 @@
+{
+  "targetId": "web-content-published-content",
+  "scope": "web",
+  "symbol": "PublishedContent",
+  "source": {
+    "path": "apps/web/src/features/content/components/published-content.tsx",
+    "anchor": "PublishedContent (24-125)",
+    "lines": "24-125",
+    "sha256": "50343ac4e0dd9148cbf66b711ab0a2a6c3c58b077ea2663449cdaa93a6aacfbc",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "محتوای نوا",
+    "مسیر صفحه",
+    "خانه",
+    "/",
+    "NOVA / CONTENT",
+    "یادداشت‌ها، راهنماها و روایت‌های منتشرشده از آتلیه نوا.",
+    "محتوای منتشرشده",
+    "این صفحه منتشر شده است، اما هنوز محتوای قابل نمایش ندارد.",
+    "بخشی از این صفحه در حال حاضر برای نمایش ایمن پشتیبانی نمی‌شود. برای ادامه، از خانه شروع کنید.",
+    "بازگشت به خانه",
+    "راهنمای مطالعه",
+    "NOVA / JOURNAL",
+    "در این صفحه",
+    "روایت‌ها و راهنماهای نوا برای انتخابی آگاهانه‌تر؛ با حوصله بخوانید و جزئیات را نزدیک ببینید.",
+    "پرسشی دارید؟",
+    "بافت‌های طبیعی آتلیه نوا"
+  ],
+  "jsxTags": [
+    "AboutContentPage",
+    "EditorialReferencePage",
+    "PageShell",
+    "nav",
+    "a",
+    "span",
+    "section",
+    "div",
+    "h1",
+    "p",
+    "img",
+    "article",
+    "RenderedBlock",
+    "Icon",
+    "aside",
+    "h2"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

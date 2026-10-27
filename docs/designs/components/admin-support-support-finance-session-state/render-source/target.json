@@ -1,0 +1,41 @@
+{
+  "targetId": "admin-support-support-finance-session-state",
+  "scope": "admin",
+  "symbol": "AdminSessionState",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/admin-session-state.tsx",
+    "anchor": "AdminSessionState (3-50)",
+    "lines": "3-50",
+    "sha256": "d9ec57322de85e6305c276378126dfcc091335f1420a4aa06f6860af8490c0bd",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بررسی نشست مدیریت",
+    "دسترسی امن پنل در حال بررسی است.",
+    "نشست مدیریت منقضی شده است",
+    "برای ادامه دوباره وارد فضای مدیریت شوید.",
+    "دسترسی کافی ندارید",
+    "این بخش برای نقش فعلی شما فعال نیست.",
+    "ورود به پنل مدیریت لازم است",
+    "برای مشاهده اطلاعات عملیاتی، ابتدا وارد شوید.",
+    "NOVA / ADMIN INSPECTION",
+    "ورود به پنل"
+  ],
+  "jsxTags": [
+    "main",
+    "section",
+    "span",
+    "h1",
+    "p",
+    "a"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "loading"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

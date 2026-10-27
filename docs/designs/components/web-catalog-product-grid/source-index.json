@@ -1,0 +1,34 @@
+{
+  "targetId": "web-catalog-product-grid",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/product-grid.tsx",
+      "anchor": "ProductGrid (5-29)",
+      "lines": "5-29",
+      "sha256": "64bf82d7055f508f570a269f51c712c26bb5a68943517e38d51bb08aa4724827",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "div",
+    "ProductCard"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "ProductCard",
+      "events": [
+        "onToggleWishlist",
+        "onAdd"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

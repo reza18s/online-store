@@ -1,0 +1,159 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-inventory-view",
+  "scope": "admin",
+  "symbol": "InventoryView",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/inventory-view.tsx",
+    "anchor": "InventoryView (36-282)",
+    "lines": "36-282",
+    "sha256": "ba5ab545e6ed0b9ecad25ca9f3d6d9716c5612ae50fce85204d0758f31df9d2e",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "تغییر موجودی ثبت شد و نسخه تازه بارگیری شد.",
+    "تغییر موجودی ثبت نشد.",
+    "نقطه سفارش مجدد باید عدد صحیح نامنفی باشد.",
+    "نقطه سفارش مجدد ذخیره شد.",
+    "نقطه سفارش مجدد ذخیره نشد.",
+    "در حال دریافت موجودی...",
+    "NOVA / INVENTORY",
+    "موجودی",
+    "نمای کلی موجودی محصولات و مدیریت انبار بر اساس داده‌های واقعی سرویس مدیریت.",
+    "محصول جدید",
+    "خلاصه موجودی",
+    "مجموع موجودی این صفحه",
+    "موجودی کم",
+    "ناموجود",
+    "رزرو شده",
+    "جست‌وجو",
+    "جست‌وجوی محصول یا SKU...",
+    "وضعیت تنوع",
+    "فیلتر وضعیت تنوع",
+    "همه تنوع‌ها",
+    "فعال",
+    "غیرفعال",
+    "فقط موجودی کم",
+    "فیلترها",
+    "محصول",
+    "SKU",
+    "قابل فروش",
+    "رزرو",
+    "فیزیکی",
+    "حد سفارش",
+    "وضعیت",
+    "موجودی‌ای با این فیلتر پیدا نشد",
+    "فیلتر موجودی کم یا عبارت جست‌وجو را تغییر دهید.",
+    "تنوع"
+  ],
+  "jsxTags": [
+    "LoadingState",
+    "QueryState",
+    "div",
+    "header",
+    "span",
+    "h2",
+    "p",
+    "a",
+    "Icon",
+    "section",
+    "article",
+    "strong",
+    "small",
+    "form",
+    "FilterInput",
+    "label",
+    "UiSelect",
+    "option",
+    "Checkbox",
+    "Button",
+    "StatePanel",
+    "InventoryRow",
+    "Pagination",
+    "InventoryDetail"
+  ],
+  "actions": [
+    {
+      "element": "QueryState",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "جست‌وجو / جست‌وجوی محصول یا SKU... / وضعیت تنوع",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FilterInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "فیلتر وضعیت تنوع / همه تنوع‌ها / فعال",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "InventoryRow",
+      "events": [
+        "onSelect"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Pagination",
+      "events": [
+        "onPageChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "InventoryDetail",
+      "events": [
+        "onAdjust",
+        "onReorder"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "filters",
+    "search",
+    "selectedVariantId",
+    "delta",
+    "reason",
+    "reorderPoint",
+    "error",
+    "success"
+  ],
+  "stateMarkers": [
+    "error",
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

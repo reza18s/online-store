@@ -1,0 +1,39 @@
+{
+  "targetId": "web-account-address-field",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/address-field.tsx",
+      "anchor": "AddressField (5-45)",
+      "lines": "5-45",
+      "sha256": "89b47ad95928da17193032272a1e79f5e6ffc250b8cd40e2b935ff9931777ada",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "*"
+  ],
+  "jsxTags": [
+    "label",
+    "span",
+    "b",
+    "UiInput",
+    "Icon",
+    "small"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

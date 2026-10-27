@@ -1,0 +1,179 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-ui-header",
+  "coordinateSystem": "CSS-pixel-like coordinates from the deterministic raster renderer; each frame is independent.",
+  "frames": [
+    {
+      "id": "web-ui-header-desktop",
+      "width": 1440,
+      "height": 900,
+      "rootIds": [
+        "web-ui-header-desktop-specimen"
+      ]
+    },
+    {
+      "id": "web-ui-header-mobile",
+      "width": 390,
+      "height": 844,
+      "rootIds": [
+        "web-ui-header-mobile-specimen"
+      ]
+    },
+    {
+      "id": "web-ui-header-board",
+      "width": 1536,
+      "height": 1024,
+      "rootIds": [
+        "web-ui-header-board-specimen"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "web-ui-header-board-specimen",
+      "frameId": "web-ui-header-board",
+      "parentId": null,
+      "role": "desktop-reference-thumbnail",
+      "x": 78,
+      "y": 220,
+      "width": 812,
+      "height": 507,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-ui-header-desktop-specimen",
+      "frameId": "web-ui-header-desktop",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 106,
+      "y": 258,
+      "width": 1228,
+      "height": 542,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-ui-header-desktop-navigation-item-1",
+      "x": 134,
+      "y": 370,
+      "width": 1172,
+      "height": 52,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-desktop",
+      "parentId": "web-ui-header-desktop-specimen",
+      "role": "navigation-item-1"
+    },
+    {
+      "id": "web-ui-header-desktop-navigation-item-2",
+      "x": 134,
+      "y": 436,
+      "width": 1172,
+      "height": 52,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-desktop",
+      "parentId": "web-ui-header-desktop-specimen",
+      "role": "navigation-item-2"
+    },
+    {
+      "id": "web-ui-header-desktop-navigation-item-3",
+      "x": 134,
+      "y": 502,
+      "width": 1172,
+      "height": 52,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-desktop",
+      "parentId": "web-ui-header-desktop-specimen",
+      "role": "navigation-item-3"
+    },
+    {
+      "id": "web-ui-header-desktop-navigation-item-4",
+      "x": 134,
+      "y": 568,
+      "width": 1172,
+      "height": 52,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-desktop",
+      "parentId": "web-ui-header-desktop-specimen",
+      "role": "navigation-item-4"
+    },
+    {
+      "id": "web-ui-header-desktop-navigation-item-5",
+      "x": 134,
+      "y": 634,
+      "width": 1172,
+      "height": 52,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-desktop",
+      "parentId": "web-ui-header-desktop-specimen",
+      "role": "navigation-item-5"
+    },
+    {
+      "id": "web-ui-header-desktop-navigation-item-6",
+      "x": 134,
+      "y": 700,
+      "width": 1172,
+      "height": 52,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-desktop",
+      "parentId": "web-ui-header-desktop-specimen",
+      "role": "navigation-item-6"
+    },
+    {
+      "id": "web-ui-header-mobile-specimen",
+      "frameId": "web-ui-header-mobile",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 34,
+      "y": 210,
+      "width": 322,
+      "height": 572,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-ui-header-mobile-navigation-item-1",
+      "x": 52,
+      "y": 296,
+      "width": 286,
+      "height": 44,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-mobile",
+      "parentId": "web-ui-header-mobile-specimen",
+      "role": "navigation-item-1"
+    },
+    {
+      "id": "web-ui-header-mobile-navigation-item-2",
+      "x": 52,
+      "y": 352,
+      "width": 286,
+      "height": 44,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-mobile",
+      "parentId": "web-ui-header-mobile-specimen",
+      "role": "navigation-item-2"
+    },
+    {
+      "id": "web-ui-header-mobile-navigation-item-3",
+      "x": 52,
+      "y": 408,
+      "width": 286,
+      "height": 44,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-mobile",
+      "parentId": "web-ui-header-mobile-specimen",
+      "role": "navigation-item-3"
+    },
+    {
+      "id": "web-ui-header-mobile-navigation-item-4",
+      "x": 52,
+      "y": 464,
+      "width": 286,
+      "height": 44,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-ui-header-mobile",
+      "parentId": "web-ui-header-mobile-specimen",
+      "role": "navigation-item-4"
+    }
+  ]
+}

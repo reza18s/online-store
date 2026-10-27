@@ -1,0 +1,40 @@
+{
+  "targetId": "web-ui-empty-state",
+  "scope": "web",
+  "symbol": "EmptyState",
+  "source": {
+    "path": "apps/web/src/shared/ui/empty-state.tsx",
+    "anchor": "EmptyState (5-36)",
+    "lines": "5-36",
+    "sha256": "41a87d83738643e2b8bfad46177ebf18d68096b6a118c2cd056b08066dfd26e7",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "Button",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

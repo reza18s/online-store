@@ -1,0 +1,27 @@
+{
+  "targetId": "web-ui-logo",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/shared/ui/logo.tsx",
+      "anchor": "Logo (1-12)",
+      "lines": "1-12",
+      "sha256": "0de57bf88ba1c17e3dc0e4b6239d54aae514d4000d629d2483e6b62c0af468d7",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "NOVA، صفحه اصلی",
+    "NOVA"
+  ],
+  "jsxTags": [
+    "a",
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

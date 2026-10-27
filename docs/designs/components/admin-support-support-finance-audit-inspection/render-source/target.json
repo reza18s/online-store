@@ -1,0 +1,108 @@
+{
+  "targetId": "admin-support-support-finance-audit-inspection",
+  "scope": "admin",
+  "symbol": "AuditInspection",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/audit-inspection.tsx",
+    "anchor": "AuditInspection (29-143)",
+    "lines": "29-143",
+    "sha256": "cfbe157bcd2f1139b50278e0d71304c8d2bf35bb274fad1a7e96e828f7bcfc11",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "گزارش رویدادها",
+    "عملیات",
+    "مثلاً order.cancelled",
+    "نوع منبع",
+    "Order",
+    "شناسه منبع",
+    "شناسه",
+    "ثبت‌کننده",
+    "رویدادی پیدا نشد",
+    "فیلترهای گزارش را تغییر دهید یا دوباره تلاش کنید.",
+    "فهرست رویدادهای حسابرسی",
+    "منبع",
+    "جزئیات",
+    "زمان"
+  ],
+  "jsxTags": [
+    "InspectionPanel",
+    "FilterBar",
+    "TextFilter",
+    "SelectFilter",
+    "div",
+    "QueryState",
+    "table",
+    "caption",
+    "thead",
+    "tr",
+    "th",
+    "tbody",
+    "td",
+    "span",
+    "StatusBadge",
+    "Pagination"
+  ],
+  "actions": [
+    {
+      "element": "FilterBar",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "عملیات / مثلاً order.cancelled / نوع منبع",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TextFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TextFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TextFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SelectFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Pagination",
+      "events": [
+        "onPageChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "draftAction",
+    "draftResourceType",
+    "draftResourceId",
+    "draftActorType",
+    "filters"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

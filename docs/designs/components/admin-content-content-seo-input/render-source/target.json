@@ -1,0 +1,34 @@
+{
+  "targetId": "admin-content-content-seo-input",
+  "scope": "admin",
+  "symbol": "Input",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/input.tsx",
+    "anchor": "Input (3-34)",
+    "lines": "3-34",
+    "sha256": "7b3857b16e3a0473c45ba00ce62d23a3cb132c28600e9d9bec26a91e382798ef",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "Label",
+    "span",
+    "UiInput"
+  ],
+  "actions": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

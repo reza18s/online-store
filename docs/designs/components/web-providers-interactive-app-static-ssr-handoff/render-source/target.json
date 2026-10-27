@@ -1,0 +1,26 @@
+{
+  "targetId": "web-providers-interactive-app-static-ssr-handoff",
+  "scope": "web",
+  "symbol": "StaticSsrHandoff",
+  "source": {
+    "path": "apps/web/src/app/providers/interactive-app.tsx",
+    "anchor": "StaticSsrHandoff (25-37)",
+    "lines": "25-37",
+    "sha256": "8cb45c85162530d6ab51c008f5121f9b12496fef2a731da09862ee57381e93d3",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "div",
+    "InteractiveApp"
+  ],
+  "actions": [],
+  "stateVariables": [
+    "interactive"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

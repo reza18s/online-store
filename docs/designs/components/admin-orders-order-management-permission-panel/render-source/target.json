@@ -1,0 +1,26 @@
+{
+  "targetId": "admin-orders-order-management-permission-panel",
+  "scope": "admin",
+  "symbol": "PermissionPanel",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/permission-panel.tsx",
+    "anchor": "PermissionPanel (3-12)",
+    "lines": "3-12",
+    "sha256": "b8cf2eec643d8b55cca096c9fe056f2f608f4c52ff98b5d732c83e7be8778f8c",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "دسترسی عملیات سفارش ندارید",
+    "این بخش فقط برای اعضای مجاز پشتیبانی، عملیات یا مدیر سیستم در دسترس است."
+  ],
+  "jsxTags": [
+    "StatePanel"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

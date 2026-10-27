@@ -1,0 +1,32 @@
+{
+  "targetId": "admin-orders-order-management-address-panel",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/address-panel.tsx",
+      "anchor": "AddressPanel (5-27)",
+      "lines": "5-27",
+      "sha256": "27786b2061365f7705c34ba1ce165ab8bd1cb8cbbdd65394e2b00084deeefeac",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "نشانی ثبت‌شده",
+    "،",
+    "·",
+    "نشانی برای این سفارش ثبت نشده است."
+  ],
+  "jsxTags": [
+    "section",
+    "PanelHeading",
+    "div",
+    "p",
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

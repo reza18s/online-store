@@ -1,0 +1,35 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-filter-input",
+  "scope": "admin",
+  "symbol": "FilterInput",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/filter-input.tsx",
+    "anchor": "FilterInput (5-35)",
+    "lines": "5-35",
+    "sha256": "8ed72ac8816207198a33a9f7712fb1703510a4cbee5663b4d46bfd6dfe8e83ce",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "label",
+    "span",
+    "Icon",
+    "UiInput"
+  ],
+  "actions": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "selection",
+  "status": "PROPOSED"
+}

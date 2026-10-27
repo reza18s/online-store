@@ -1,0 +1,26 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-mutation-state-badge",
+  "scope": "admin",
+  "symbol": "MutationStateBadge",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/mutation-state-badge.tsx",
+    "anchor": "MutationStateBadge (7-17)",
+    "lines": "7-17",
+    "sha256": "a7de29f82c5b5b5e153941a93c1638fec019ab1a984b7fc0c23387633793a0a9",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success",
+    "saving"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "status",
+  "status": "PROPOSED"
+}

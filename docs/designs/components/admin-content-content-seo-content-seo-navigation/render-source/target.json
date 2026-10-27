@@ -1,0 +1,31 @@
+{
+  "targetId": "admin-content-content-seo-content-seo-navigation",
+  "scope": "admin",
+  "symbol": "AdminContentSeoNavigation",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/admin-content-seo-navigation.tsx",
+    "anchor": "AdminContentSeoNavigation (5-28)",
+    "lines": "5-28",
+    "sha256": "8ed5d2aa2534070ca33e4bd2d28178d9b6e8aa9001d0ac78d4e6b1e7356b1b35",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "محتوا",
+    "متادیتای SEO",
+    "redirectها",
+    "بخش‌های محتوا و SEO"
+  ],
+  "jsxTags": [
+    "nav",
+    "div",
+    "a",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

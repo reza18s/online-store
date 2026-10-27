@@ -1,0 +1,35 @@
+{
+  "targetId": "web-ui-mobile-bottom-nav",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/shared/ui/mobile-bottom-nav.tsx",
+      "anchor": "MobileBottomNav (4-71)",
+      "lines": "4-71",
+      "sha256": "7a65f513b19e554a32f6ef0ffced35ed0b60c60d3f7a9b204dfc6a4f7ab6ac97",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "ناوبری سریع",
+    "خانه",
+    "جست‌وجو",
+    "دسته‌ها",
+    "سبد",
+    "حساب",
+    "فروشگاه"
+  ],
+  "jsxTags": [
+    "nav",
+    "a",
+    "Icon",
+    "span",
+    "b"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

@@ -1,0 +1,99 @@
+{
+  "targetId": "web-checkout-address-form",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/address-form.tsx",
+      "anchor": "AddressForm (8-123)",
+      "lines": "8-123",
+      "sha256": "f58a650afbd2ae7697653a23acac17ba81c0f2d356c1edf7c829bb372bd751df",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "آدرس تحویل",
+    "· پیش‌فرض",
+    "·",
+    "،",
+    "بستن فرم آدرس جدید",
+    "افزودن آدرس جدید",
+    "آدرس جدید",
+    "عنوان آدرس",
+    "مثلاً خانه",
+    "نام گیرنده",
+    "نام و نام خانوادگی",
+    "شماره موبایل",
+    "استان",
+    "شهر",
+    "کد پستی",
+    "نشانی کامل",
+    "در حال ذخیره آدرس...",
+    "ذخیره و انتخاب آدرس"
+  ],
+  "jsxTags": [
+    "div",
+    "fieldset",
+    "legend",
+    "label",
+    "Radio",
+    "span",
+    "strong",
+    "small",
+    "Icon",
+    "Button",
+    "form",
+    "h3",
+    "UiInput",
+    "UiTextarea",
+    "p"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "selected"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Radio",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "بستن فرم آدرس جدید / افزودن آدرس جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "آدرس جدید / عنوان آدرس / مثلاً خانه",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

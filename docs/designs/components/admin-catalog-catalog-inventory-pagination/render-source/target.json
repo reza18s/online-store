@@ -1,0 +1,50 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-pagination",
+  "scope": "admin",
+  "symbol": "Pagination",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/pagination.tsx",
+    "anchor": "Pagination (9-51)",
+    "lines": "9-51",
+    "sha256": "501bf8271c1630d9d7a64533c9d23c495480131c7bafbc54e064d737056888da",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "صفحه",
+    "از",
+    "·",
+    "نتیجه",
+    "صفحه قبل",
+    "صفحه بعد"
+  ],
+  "jsxTags": [
+    "div",
+    "span",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه قبل",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه بعد",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

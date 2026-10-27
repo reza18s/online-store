@@ -1,0 +1,28 @@
+{
+  "targetId": "web-ui-not-found-page",
+  "scope": "web",
+  "symbol": "NotFoundPage",
+  "source": {
+    "path": "apps/web/src/shared/ui/not-found-page.tsx",
+    "anchor": "NotFoundPage (3-14)",
+    "lines": "3-14",
+    "sha256": "288ee9ea4c910e48d63d10c53bd65f8d0e39f47f7dacaf7c8b5fde658c60aeae",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "این صفحه پیدا نشد",
+    "به نظر می‌رسد مسیر تغییر کرده است؛ از خانه دوباره شروع کنید.",
+    "بازگشت به خانه"
+  ],
+  "jsxTags": [
+    "main",
+    "EmptyState"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

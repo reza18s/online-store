@@ -1,0 +1,485 @@
+{
+  "schemaVersion": "2.0.0",
+  "target": {
+    "id": "web-account-customer-return-page",
+    "scope": "web",
+    "symbol": "CustomerReturnPage",
+    "source": "apps/web/src/features/account/pages/customer-return-page.tsx",
+    "lines": "44-386"
+  },
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "direction": "NOVA Store / atelier-editorial.md Section 18 Soft Modern.",
+  "purpose": "برد مستقل برای CustomerReturnPage؛ متن‌ها و eventهای موجود از inventory منبع‌اند و چیدمان تصویر پیشنهادی است.",
+  "sourceEvidence": {
+    "labels": [
+      "در حال بارگذاری درخواست بازگشت",
+      "بازگشت کالا",
+      "برای پیگیری یا ثبت درخواست بازگشت ابتدا وارد حساب شوید.",
+      "یک سفارش را انتخاب کنید",
+      "درخواست بازگشت را از صفحه جزئیات همان سفارش شروع کنید تا اطلاعات واقعی سفارش بررسی شود.",
+      "مشاهده سفارش‌ها",
+      "RETURNS /",
+      "وضعیت درخواست بازگشت",
+      "وضعیت فعلی درخواست شما:",
+      "ثبت درخواست:",
+      "وضعیت بازپرداخت",
+      "مبلغ:",
+      "ثبت:",
+      "تکمیل:",
+      "هنوز رکورد بازپرداختی برای این سفارش از سرور دریافت نشده است.",
+      "مشاهده سفارش",
+      "تماس با پشتیبانی",
+      "حداقل یک کالا را برای بازگشت انتخاب کنید.",
+      "برای ثبت درخواست، شرایط سلامت و برچسب کالا را تأیید کنید.",
+      "اتصال برقرار نیست؛ درخواست بازگشت ثبت نشد.",
+      "ثبت درخواست بازگشت انجام نشد؛ وضعیت سفارش را دوباره بررسی کنید.",
+      "NOVA returns",
+      "استایل زنانه نوا",
+      "اعتماد شما برای ما ارزشمند است.",
+      "بازگشت آسان، تجربه‌ای مطمئن.",
+      "NOVA",
+      "درخواست بازگشت کالا",
+      "در چند مرحله، کالای خود را برای بازگشت ثبت کنید.",
+      "انصراف",
+      "مراحل درخواست بازگشت",
+      "۱",
+      "انتخاب سفارش",
+      "۲",
+      "انتخاب کالا",
+      "۳",
+      "دلیل بازگشت",
+      "۴",
+      "تکمیل اطلاعات",
+      "۵",
+      "ارسال درخواست"
+    ],
+    "jsxTags": [
+      "PageFrame",
+      "LoadingState",
+      "OrderDetailError",
+      "SessionState",
+      "span",
+      "EmptyState",
+      "section",
+      "h1",
+      "p",
+      "strong",
+      "h2",
+      "div",
+      "Button",
+      "a",
+      "ReturnOrderState",
+      "aside",
+      "img",
+      "small",
+      "header",
+      "b",
+      "form",
+      "label",
+      "UiSelect",
+      "option",
+      "Icon",
+      "fieldset",
+      "legend",
+      "Checkbox",
+      "UiTextarea",
+      "nav"
+    ],
+    "stateVariables": [
+      "reason",
+      "note",
+      "confirmed",
+      "selectedItemIds",
+      "formError",
+      "submittedOrder"
+    ],
+    "stateMarkers": [
+      "selected",
+      "error",
+      "success"
+    ],
+    "variants": [],
+    "sizes": []
+  },
+  "proposal": {
+    "layoutType": "navigation",
+    "status": "PROPOSED",
+    "desktop": "Independent 1440x900 component specimen inside a neutral design-review frame; geometry is not copied from the live DOM.",
+    "mobile": "Independent 390x844 stacked specimen; breakpoints and behavior remain proposals unless separately defined by the owning page source.",
+    "typography": {
+      "display": {
+        "family": "Estedad",
+        "weight": 600,
+        "status": "PROPOSED_SUBSTITUTE",
+        "assetPath": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf"
+      },
+      "body": {
+        "family": "Vazirmatn",
+        "weight": 400,
+        "status": "SOURCE_DEFINED",
+        "assetPath": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf"
+      }
+    }
+  },
+  "actions": [
+    {
+      "element": "OrderDetailError",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "OrderDetailError",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "۱. انتخاب سفارش / سفارش شماره / ۲. انتخاب کالاهای قابل بازگشت",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "سفارش شماره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "states": [
+    {
+      "id": "selected",
+      "label": "selected",
+      "status": "SOURCE_MARKER"
+    },
+    {
+      "id": "error",
+      "label": "error",
+      "status": "SOURCE_MARKER"
+    },
+    {
+      "id": "success",
+      "label": "success",
+      "status": "SOURCE_MARKER"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/pages/customer-return-page.tsx",
+      "anchor": "CustomerReturnPage (44-386)",
+      "lines": "44-386",
+      "sha256": "74dc02e83f5a6531c54899e87db2f0ba8d5f14ea050c90d7fcbdf61070dda381",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "pearl/50",
+      "value": "#F7F4F0",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/0",
+      "value": "#FFFCF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/soft",
+      "value": "#F1ECE7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "surface/warm",
+      "value": "#E8DFD7",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/950",
+      "value": "#302B29",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "ink/700",
+      "value": "#6F6560",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/700",
+      "value": "#7B4B59",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/800",
+      "value": "#633D49",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "rosewood/100",
+      "value": "#F2E8EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    {
+      "id": "line/200",
+      "value": "#E4DCD5",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    }
+  ],
+  "assets": [
+    {
+      "assetId": "estedad-semibold-v8.5",
+      "path": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "a5cbf97d61e22ef5d072171db000ff8467c3992353d9124f9e0794bf35b13364"
+    },
+    {
+      "assetId": "vazirmatn-regular-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-Regular.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "b69fd4c680b8f3f225feabcc655a2c585d97627b8f5f5c0f9985e894069f3a56"
+    },
+    {
+      "assetId": "vazirmatn-semibold-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "3f239d8364c14ee32c46b6839fa197c28958358b82a9673d2c6acc8506d78bc5"
+    }
+  ],
+  "frames": [
+    {
+      "id": "web-account-customer-return-page-desktop",
+      "viewportId": "desktop",
+      "width": 1440,
+      "height": 900,
+      "screenshot": "docs/designs/components/web-account-customer-return-page/02-Clean-Reference.png",
+      "componentBounds": {
+        "x": 106,
+        "y": 258,
+        "width": 1228,
+        "height": 542,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    },
+    {
+      "id": "web-account-customer-return-page-mobile",
+      "viewportId": "mobile",
+      "width": 390,
+      "height": 844,
+      "screenshot": "docs/designs/components/web-account-customer-return-page/03-Clean-Reference-Mobile.png",
+      "componentBounds": {
+        "x": 34,
+        "y": 210,
+        "width": 322,
+        "height": 572,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    },
+    {
+      "id": "web-account-customer-return-page-board",
+      "viewportId": "board",
+      "width": 1536,
+      "height": 1024,
+      "screenshot": "docs/designs/components/web-account-customer-return-page/01-Visual-Design-Board.png",
+      "componentBounds": {
+        "x": 78,
+        "y": 220,
+        "width": 812,
+        "height": 507,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/01-Visual-Design-Board.png",
+      "artifactType": "annotated-design-board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/02-Clean-Reference.png",
+      "artifactType": "clean-desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/03-Clean-Reference-Mobile.png",
+      "artifactType": "clean-mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/design-spec.json",
+      "artifactType": "design-specification",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/design-spec.schema.json",
+      "artifactType": "json-schema",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/scene-graph.json",
+      "artifactType": "scene-graph",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/source-index.json",
+      "artifactType": "source-index",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/authority-map.json",
+      "artifactType": "authority-map",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/conflicts.json",
+      "artifactType": "conflicts-and-proposals",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/design-tokens.json",
+      "artifactType": "design-tokens",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/asset-registry.json",
+      "artifactType": "asset-registry",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/coverage-matrix.json",
+      "artifactType": "coverage-matrix",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/qa-report.json",
+      "artifactType": "qa-report",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/manifest.json",
+      "artifactType": "manifest",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/component-handoff.md",
+      "artifactType": "component-handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/render-source/target.json",
+      "artifactType": "renderer-input",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/web-account-customer-return-page/render-source/README.md",
+      "artifactType": "renderer-instructions",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-identity",
+        "status": "PASS",
+        "method": "SHA-256 comparison against the checked component inventory",
+        "evidence": "apps/web/src/features/account/pages/customer-return-page.tsx matches inventory hash 74dc02e83f5a6531c54899e87db2f0ba8d5f14ea050c90d7fcbdf61070dda381."
+      },
+      {
+        "id": "artifact-dimensions",
+        "status": "PASS",
+        "method": "Pillow image metadata from generated PNGs",
+        "evidence": "Board 1536x1024; desktop 1440x900; mobile 390x844."
+      },
+      {
+        "id": "persian-font-and-rtl",
+        "status": "PASS",
+        "method": "Pillow 12.3.0 FreeType + RAQM render using bundled licensed fonts",
+        "evidence": "Persian strings are rendered with RTL shaping; the clean references are generated independently at their declared sizes."
+      },
+      {
+        "id": "schema-and-semantic-integrity",
+        "status": "PASS",
+        "method": "JSON Schema Draft 2020-12 plus source, output, manifest, font and scene-graph semantic checks",
+        "evidence": "The source hash matches; all 17 package outputs exist; 16 manifest fingerprints match; font assets, declared PNG dimensions, scene node IDs/references/bounds, and source-derived variant/state evidence pass."
+      },
+      {
+        "id": "interactive-app-runtime",
+        "status": "UNVERIFIED",
+        "method": "Application runtime was not operated",
+        "evidence": "The board records source inventory evidence and design proposals only."
+      },
+      {
+        "id": "photo-assets",
+        "status": "NOT_APPLICABLE",
+        "method": "Local render-source asset registry",
+        "evidence": "No product photography or unlicensed external image is used; media regions are drawn placeholders."
+      }
+    ],
+    "warnings": [
+      "Every layout, spacing and rectangle is a proposed design choice; captured pixel bounds describe this renderer output, not the live React component.",
+      "Only copy, JSX tag names, event labels, state variables and state markers indexed from the source are treated as source-defined evidence.",
+      "Estedad display text is a proposed substitute for Peyda in storefront board images; it does not change the application's font contract. Admin display typography follows its existing component-board token source.",
+      "The live app, keyboard interactions, API data, permission behavior and product-image licensing were not tested by this renderer."
+    ]
+  }
+}

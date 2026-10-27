@@ -1,0 +1,26 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-loading-state",
+  "scope": "admin",
+  "symbol": "LoadingState",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/loading-state.tsx",
+    "anchor": "LoadingState (1-16)",
+    "lines": "1-16",
+    "sha256": "0b1370eb32d2b09f40b6e3d68863f6f82a30fef70876490ba08a5c69fa7c3396",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگذاری اطلاعات..."
+  ],
+  "jsxTags": [
+    "div",
+    "span"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

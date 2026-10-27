@@ -1,0 +1,144 @@
+{
+  "targetId": "web-account-customer-order-page",
+  "scope": "web",
+  "symbol": "CustomerOrderPage",
+  "source": {
+    "path": "apps/web/src/features/account/pages/customer-order-page.tsx",
+    "anchor": "CustomerOrderPage (29-387)",
+    "lines": "29-387",
+    "sha256": "2c469bbde3e22c6184068bf6b699bfe893c3f1eeb8feebefb713709429ed9841",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگذاری سفارش",
+    "جزئیات سفارش",
+    "برای مشاهده جزئیات سفارش ابتدا وارد حساب شوید.",
+    "دلیل لغو را وارد کنید.",
+    "لغو سفارش انجام نشد؛ وضعیت سفارش را دوباره بررسی کنید.",
+    "سفارش‌ها",
+    "/",
+    "ORDER /",
+    "پیگیری سفارش",
+    "· ثبت‌شده در",
+    "درخواست لغو سفارش ثبت شد؛ وضعیت و بازپرداخت فقط از پاسخ سرور پیروی می‌کند.",
+    "مسیر سفارش",
+    "سفارش ثبت شد",
+    "به‌روزرسانی سفارش",
+    "وضعیت ارسال:",
+    "تحویل شده",
+    "ارسال شده",
+    "در حال آماده‌سازی",
+    "کد رهگیری هنوز ثبت نشده است",
+    "اقلام سفارش",
+    "کالا",
+    "عدد · هر عدد",
+    "جزئیات اقلام این سفارش در دسترس نیست.",
+    "خلاصه مالی",
+    "جمع کالاها",
+    "تخفیف",
+    "−",
+    "هزینه ارسال",
+    "رایگان",
+    "مالیات",
+    "مبلغ پرداخت‌شده",
+    "وضعیت پرداخت:",
+    "پرداخت شده",
+    "بازپرداخت شده",
+    "ناموفق",
+    "در انتظار",
+    "اطلاعات ارسال",
+    "،",
+    "کد پستی:",
+    "آدرس تحویل برای این سفارش ثبت نشده است."
+  ],
+  "jsxTags": [
+    "PageFrame",
+    "LoadingState",
+    "OrderDetailError",
+    "SessionState",
+    "span",
+    "div",
+    "a",
+    "header",
+    "h1",
+    "p",
+    "section",
+    "h2",
+    "Icon",
+    "strong",
+    "small",
+    "article",
+    "h3",
+    "dl",
+    "dt",
+    "dd",
+    "bdi",
+    "Button",
+    "form",
+    "label",
+    "UiTextarea"
+  ],
+  "actions": [
+    {
+      "element": "OrderDetailError",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "OrderDetailError",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "لغو سفارش",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "لغو سفارش / این درخواست توسط سرور بررسی می‌شود. اگر پرداخت انجام شده باشد، بازپرداخت نیز از همان مسی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "انصراف",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "cancelOpen",
+    "cancelReason",
+    "cancelError",
+    "cancelSuccess"
+  ],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

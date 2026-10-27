@@ -1,0 +1,38 @@
+{
+  "targetId": "web-checkout-checkout-confirmation-page",
+  "scope": "web",
+  "symbol": "CheckoutConfirmationPage",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/checkout-confirmation-page.tsx",
+    "anchor": "CheckoutConfirmationPage (18-53)",
+    "lines": "18-53",
+    "sha256": "81b2b5c17c4e3bca8db1e0c8fab1cec15f43e0cca07560b6b6f8889149af5a41",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "سفارش‌ها",
+    "/",
+    "تأیید سفارش",
+    "در حال دریافت سفارش ثبت‌شده",
+    "شماره سفارش معتبر نیست."
+  ],
+  "jsxTags": [
+    "CheckoutShell",
+    "div",
+    "a",
+    "span",
+    "section",
+    "OrderLookupState",
+    "OrderRecoveryState",
+    "ConfirmationBody"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "loading"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

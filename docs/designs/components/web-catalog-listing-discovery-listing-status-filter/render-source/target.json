@@ -1,0 +1,61 @@
+{
+  "targetId": "web-catalog-listing-discovery-listing-status-filter",
+  "scope": "web",
+  "symbol": "ListingStatusFilter",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+    "anchor": "ListingStatusFilter (794-837)",
+    "lines": "794-837",
+    "sha256": "0bfe90b13266d1ae88d3b48e20fe6ccd96fb4faa5a53b8482f9efebf73f0df64",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "موجودی",
+    "فقط موجود",
+    "تخفیف ویژه"
+  ],
+  "jsxTags": [
+    "section",
+    "button",
+    "span",
+    "small",
+    "Icon",
+    "div",
+    "label",
+    "Checkbox"
+  ],
+  "actions": [
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "موجودی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "isOpen"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "selection",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,31 @@
+{
+  "targetId": "web-ui-preview-state-page",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/shared/ui/preview-state-page.tsx",
+      "anchor": "PreviewStatePage (8-36)",
+      "lines": "8-36",
+      "sha256": "8f7f72f7032906fbc96acdc2cbae7947f6e74ba33bf9630a9f0c9e84f6ae4d22",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "main",
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "div",
+    "Button",
+    "a"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

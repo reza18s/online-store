@@ -1,0 +1,39 @@
+{
+  "targetId": "web-account-profile-panel",
+  "scope": "web",
+  "symbol": "ProfilePanel",
+  "source": {
+    "path": "apps/web/src/features/account/components/profile-panel.tsx",
+    "anchor": "ProfilePanel (3-27)",
+    "lines": "3-27",
+    "sha256": "be89f7370f7726bd8334e78558dec776698b717e07b37e3c9ebb842ce18f87ff",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "اطلاعات تماس",
+    "شماره موبایل",
+    "ایمیل",
+    "ثبت نشده",
+    "وضعیت حساب",
+    "حساب فعال",
+    "حساب محدود",
+    "برای تغییر اطلاعات ورود یا کمک درباره حساب، با پشتیبانی نوا در تماس باشید.",
+    "ارتباط با پشتیبانی"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "span",
+    "h2",
+    "p",
+    "a",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

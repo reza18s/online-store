@@ -1,0 +1,41 @@
+{
+  "targetId": "web-catalog-category-discovery-category-hero",
+  "scope": "web",
+  "symbol": "CategoryHero",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+    "anchor": "CategoryHero (479-525)",
+    "lines": "479-525",
+    "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "NOVA",
+    "TIMELESS&nbsp;&nbsp; ELEGANT&nbsp;&nbsp; PERSIAN",
+    "داستان کالکشن زنانه",
+    "لباس‌هایی برای داستان زندگی شما",
+    "A MORE",
+    "BEAUTIFUL",
+    "YOU"
+  ],
+  "jsxTags": [
+    "section",
+    "img",
+    "div",
+    "span",
+    "h1",
+    "p",
+    "a",
+    "Icon",
+    "aside",
+    "em",
+    "br"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "media",
+  "status": "PROPOSED"
+}

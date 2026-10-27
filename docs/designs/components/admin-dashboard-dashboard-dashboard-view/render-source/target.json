@@ -1,0 +1,85 @@
+{
+  "targetId": "admin-dashboard-dashboard-dashboard-view",
+  "scope": "admin",
+  "symbol": "DashboardView",
+  "source": {
+    "path": "apps/admin/src/features/dashboard/components/dashboard/DashboardView.tsx",
+    "anchor": "DashboardView (21-147)",
+    "lines": "21-147",
+    "sha256": "abbad024ade629f8b733b3a74d093b8924ac357414513ab0f3b0c27587f514fd",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "NOVA / ATELIER EDITORIAL",
+    "صبح بخیر 👋",
+    "خوش آمدید به پنل مدیریت نوا. خلاصه وضعیت فروشگاه را در بازه انتخاب‌شده ببینید.",
+    "بازه گزارش",
+    "شاخص‌های خلاصه داشبورد",
+    "بر اساس داده زنده بازه انتخاب‌شده",
+    "LIVE ORDERS",
+    "نمودار وضعیت سفارش‌ها",
+    "تعداد سفارش‌ها بر اساس وضعیت",
+    "در این بازه سفارشی ثبت نشده است.",
+    "QUICK ACCESS",
+    "دسترسی سریع",
+    "سفارش‌ها",
+    "پیگیری و عملیات",
+    "محصولات",
+    "کاتالوگ فروشگاه",
+    "موجودی",
+    "کنترل انبار",
+    "محتوا",
+    "انتشار و SEO"
+  ],
+  "jsxTags": [
+    "main",
+    "DashboardAccessDenied",
+    "DashboardLoadingState",
+    "DashboardErrorState",
+    "DashboardEmptyState",
+    "div",
+    "header",
+    "span",
+    "h1",
+    "p",
+    "label",
+    "UiSelect",
+    "option",
+    "section",
+    "Card",
+    "article",
+    "Icon",
+    "h2",
+    "small",
+    "OrderStatusCounts",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "DashboardErrorState",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "periodDays"
+  ],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

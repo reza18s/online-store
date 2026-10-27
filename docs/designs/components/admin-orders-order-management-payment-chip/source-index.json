@@ -1,0 +1,25 @@
+{
+  "targetId": "admin-orders-order-management-payment-chip",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/payment-chip.tsx",
+      "anchor": "PaymentChip (7-19)",
+      "lines": "7-19",
+      "sha256": "63613627d24d5ea54bcfb7fed4985ce20949158403de9a5c1fd1e0c97a0c8e1d",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

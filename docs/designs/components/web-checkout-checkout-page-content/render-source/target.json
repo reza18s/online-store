@@ -1,0 +1,61 @@
+{
+  "targetId": "web-checkout-checkout-page-content",
+  "scope": "web",
+  "symbol": "CheckoutPageContent",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/checkout-page-content.tsx",
+    "anchor": "CheckoutPageContent (18-107)",
+    "lines": "18-107",
+    "sha256": "48c9957353fc8c5944418d099b2c014c56645d61e4d22e8bfb14de6fa1283880",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگذاری آدرس‌ها",
+    "برای تکمیل خرید وارد شوید",
+    "برای انتخاب آدرس و ثبت سفارش، ابتدا وارد حساب خود شوید.",
+    "ورود به حساب",
+    "تلاش دوباره",
+    "مرحله ۱ از ۳",
+    "آدرس تحویل",
+    "برای ادامه‌ی خرید، یک آدرس واقعی برای تحویل سفارش ثبت کنید.",
+    "آدرس این مرحله معتبر نیست",
+    "یک آدرس معتبر از حساب خود انتخاب کنید.",
+    "انتخاب آدرس",
+    "سبد خرید",
+    "/",
+    "تکمیل سفارش"
+  ],
+  "jsxTags": [
+    "LoadingState",
+    "CheckoutShell",
+    "section",
+    "h1",
+    "p",
+    "Button",
+    "a",
+    "div",
+    "header",
+    "span",
+    "AddressForm",
+    "OrderSummary",
+    "CheckoutStepPanel"
+  ],
+  "actions": [
+    {
+      "element": "AddressForm",
+      "events": [
+        "onSelect",
+        "onDraftChange",
+        "onCreate"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

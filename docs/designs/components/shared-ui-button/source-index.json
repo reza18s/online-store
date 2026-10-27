@@ -1,0 +1,39 @@
+{
+  "targetId": "shared-ui-button",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "packages/ui/src/button.tsx",
+      "anchor": "Button (40-79)",
+      "lines": "40-79",
+      "sha256": "353e0d3cc707e6fc43372d33788788fcc8543d597aadffcc3f81bd1721968426",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "Component",
+    "span",
+    "Slottable"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "disabled",
+    "loading"
+  ],
+  "variants": [
+    "primary",
+    "secondary",
+    "outline",
+    "ghost",
+    "destructive"
+  ],
+  "sizes": [
+    "sm",
+    "md",
+    "lg",
+    "icon"
+  ],
+  "interactionEvents": []
+}

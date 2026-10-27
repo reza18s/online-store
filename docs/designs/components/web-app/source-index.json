@@ -1,0 +1,67 @@
+{
+  "targetId": "web-app",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/app/App.tsx",
+      "anchor": "App (16-94)",
+      "lines": "16-94",
+      "sha256": "b441acc21fd977c70c02ad08d0e6e825bb959ffc38f294da29de3d5f64751241",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "div",
+    "Header",
+    "PublicApp",
+    "MobileBottomNav",
+    "SearchDialog",
+    "MenuDrawer"
+  ],
+  "stateVariables": [
+    "searchOpen",
+    "menuOpen",
+    "wishlist"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Header",
+      "events": [
+        "onSearchSubmit",
+        "onMenu"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "PublicApp",
+      "events": [
+        "onRetryCart",
+        "onToggleWishlist"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SearchDialog",
+      "events": [
+        "onClose"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "MenuDrawer",
+      "events": [
+        "onClose"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

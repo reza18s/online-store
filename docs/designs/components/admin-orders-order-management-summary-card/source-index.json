@@ -1,0 +1,27 @@
+{
+  "targetId": "admin-orders-order-management-summary-card",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/summary-card.tsx",
+      "anchor": "SummaryCard (3-42)",
+      "lines": "3-42",
+      "sha256": "0eb43757790f0e9b68d565071eefc2ed3754ca7c38092f8b22fe2778791899b0",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "article",
+    "div",
+    "span",
+    "Icon",
+    "strong"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

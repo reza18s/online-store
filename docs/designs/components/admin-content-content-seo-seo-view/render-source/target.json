@@ -1,0 +1,126 @@
+{
+  "targetId": "admin-content-content-seo-seo-view",
+  "scope": "admin",
+  "symbol": "SeoView",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/seo-view.tsx",
+    "anchor": "SeoView (22-183)",
+    "lines": "22-183",
+    "sha256": "cdef5deebc0a92a1bc2d460c150e410f8fed839508337606135f6784516b77f3",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگیری متادیتا",
+    "رکوردهای SEO در حال دریافت هستند.",
+    "بارگیری SEO انجام نشد",
+    "تلاش دوباره",
+    "جست‌وجوی صفحات...",
+    "فیلترهای سریع",
+    "همه",
+    "برگه‌ها",
+    "محصولات",
+    "دسته‌ها",
+    "افزودن دستی",
+    "متادیتای SEO خالی است",
+    "برای کنترل عنوان، توضیح و canonical مسیرهای مهم، اولین رکورد را ایجاد کنید.",
+    "رکورد جدید",
+    "فهرست متادیتای SEO",
+    "صفحه",
+    "عنوان SEO",
+    "توضیحات متا",
+    "Canonical",
+    "وضعیت",
+    "آخرین بروزرسانی",
+    "صفحه اصلی",
+    "نیاز به بررسی",
+    "بهینه"
+  ],
+  "jsxTags": [
+    "StatePanel",
+    "Button",
+    "Icon",
+    "div",
+    "SearchBar",
+    "button",
+    "section",
+    "span",
+    "strong",
+    "small",
+    "em",
+    "SeoEditor"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SearchBar",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "افزودن دستی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "رکورد جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه اصلی / نیاز به بررسی / بهینه",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه اصلی / نیاز به بررسی / بهینه",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SeoEditor",
+      "events": [
+        "onSaved"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "search",
+    "selectedId",
+    "creating"
+  ],
+  "stateMarkers": [
+    "loading",
+    "offline",
+    "error",
+    "empty",
+    "selected"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

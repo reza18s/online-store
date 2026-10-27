@@ -1,0 +1,39 @@
+{
+  "targetId": "admin-support-support-finance-query-state",
+  "scope": "admin",
+  "symbol": "QueryState",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/query-state.tsx",
+    "anchor": "QueryState (11-48)",
+    "lines": "11-48",
+    "sha256": "13dd34195a0a441398818990af507fc90a0d5fed56c69ca55340a071f934020c",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "اتصال شبکه در دسترس نیست",
+    "دریافت اطلاعات انجام نشد",
+    "اتصال را بررسی کنید و برای دریافت دوباره اطلاعات تلاش کنید.",
+    "اطلاعات فعلاً در دسترس نیست؛ می‌توانید دوباره تلاش کنید.",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "LoadingRows",
+    "StateCard"
+  ],
+  "actions": [
+    {
+      "element": "StateCard",
+      "events": [
+        "onAction"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,23 @@
+{
+  "targetId": "web-checkout-checkout-shell",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/checkout-shell.tsx",
+      "anchor": "CheckoutShell (3-12)",
+      "lines": "3-12",
+      "sha256": "885cf7b7b56d6c884429818841c48de2099090e02769a608572b8a0b2885206b",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "main"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

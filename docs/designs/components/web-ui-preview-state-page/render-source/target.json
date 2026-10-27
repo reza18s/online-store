@@ -1,0 +1,31 @@
+{
+  "targetId": "web-ui-preview-state-page",
+  "scope": "web",
+  "symbol": "PreviewStatePage",
+  "source": {
+    "path": "apps/web/src/shared/ui/preview-state-page.tsx",
+    "anchor": "PreviewStatePage (8-36)",
+    "lines": "8-36",
+    "sha256": "8f7f72f7032906fbc96acdc2cbae7947f6e74ba33bf9630a9f0c9e84f6ae4d22",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "main",
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "div",
+    "Button",
+    "a"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

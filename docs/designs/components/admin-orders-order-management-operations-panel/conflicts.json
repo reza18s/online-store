@@ -1,0 +1,15 @@
+{
+  "targetId": "admin-orders-order-management-operations-panel",
+  "conflicts": [],
+  "proposals": [
+    {
+      "id": "display-font-raster-substitute",
+      "property": "Display font used in board images",
+      "value": "Estedad SemiBold",
+      "status": "PROPOSED",
+      "rationale": "The board renderer uses the locally bundled Estedad SemiBold. Admin source tokens already name Estedad as display; for web, Estedad is a licensed proposed substitute for the Peyda display role. This is image-only and does not revise app typography.",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens.displayFont"
+    }
+  ],
+  "unresolved": []
+}

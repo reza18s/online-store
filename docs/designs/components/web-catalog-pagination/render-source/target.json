@@ -1,0 +1,30 @@
+{
+  "targetId": "web-catalog-pagination",
+  "scope": "web",
+  "symbol": "Pagination",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/pagination.tsx",
+    "anchor": "Pagination (3-58)",
+    "lines": "3-58",
+    "sha256": "69a67cbf5bc739fbf610c8551217b9e8ca88ba64155e71c05a9f902e74b38676",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "صفحه‌بندی محصولات",
+    "قبلی",
+    "…",
+    "بعدی"
+  ],
+  "jsxTags": [
+    "nav",
+    "a",
+    "span"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-textarea",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "packages/ui/src/textarea.tsx",
+      "anchor": "Textarea (8-19)",
+      "lines": "8-19",
+      "sha256": "ae708487cdce72a557eac4c546f776c624c07549a1bdecfa9ec7dda4caf848ce",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "textarea"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

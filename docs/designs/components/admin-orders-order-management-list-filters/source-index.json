@@ -1,0 +1,75 @@
+{
+  "targetId": "admin-orders-order-management-list-filters",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/list-filters.tsx",
+      "anchor": "ListFilters (12-101)",
+      "lines": "12-101",
+      "sha256": "91c1c6faf5eeffb9b415ad3bacf3c588f61ef22cbfd47aa1a7b12d3ebfc3a8e7",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "جست‌وجو در سفارش‌ها",
+    "شماره سفارش یا شناسه مشتری",
+    "وضعیت سفارش",
+    "فیلتر وضعیت سفارش",
+    "همه وضعیت‌ها",
+    "وضعیت پرداخت",
+    "فیلتر وضعیت پرداخت",
+    "اعمال فیلتر"
+  ],
+  "jsxTags": [
+    "form",
+    "div",
+    "label",
+    "span",
+    "Icon",
+    "UiInput",
+    "UiSelect",
+    "option",
+    "Button"
+  ],
+  "stateVariables": [
+    "search"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "جست‌وجو در سفارش‌ها / شماره سفارش یا شناسه مشتری / وضعیت سفارش",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "فیلتر وضعیت سفارش / همه وضعیت‌ها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "فیلتر وضعیت پرداخت",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-session-state",
+  "scope": "admin",
+  "symbol": "AdminSessionState",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/admin-session-state.tsx",
+    "anchor": "AdminSessionState (7-51)",
+    "lines": "7-51",
+    "sha256": "c213146e0228735c2f58e9a8a0eae70bc8d1f55bb84617389cb599af9d5be1ea",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بررسی نشست مدیریت",
+    "دسترسی عملیاتی از سرویس مدیریت بررسی می‌شود.",
+    "نشست مدیریت منقضی شده است",
+    "برای مشاهده کاتالوگ و موجودی دوباره وارد پنل شوید.",
+    "دسترسی مدیریت کافی نیست",
+    "نقش فعلی شما اجازه مشاهده این بخش عملیاتی را ندارد.",
+    "ورود به پنل مدیریت لازم است",
+    "برای مشاهده اطلاعات واقعی کاتالوگ و موجودی ابتدا وارد شوید.",
+    "ورود به پنل"
+  ],
+  "jsxTags": [
+    "main",
+    "StatePanel",
+    "Button",
+    "a"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "loading"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

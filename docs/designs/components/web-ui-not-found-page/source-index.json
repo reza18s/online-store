@@ -1,0 +1,28 @@
+{
+  "targetId": "web-ui-not-found-page",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/shared/ui/not-found-page.tsx",
+      "anchor": "NotFoundPage (3-14)",
+      "lines": "3-14",
+      "sha256": "288ee9ea4c910e48d63d10c53bd65f8d0e39f47f7dacaf7c8b5fde658c60aeae",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "این صفحه پیدا نشد",
+    "به نظر می‌رسد مسیر تغییر کرده است؛ از خانه دوباره شروع کنید.",
+    "بازگشت به خانه"
+  ],
+  "jsxTags": [
+    "main",
+    "EmptyState"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

@@ -1,0 +1,47 @@
+{
+  "status": "PASS_WITH_WARNINGS",
+  "checks": [
+    {
+      "id": "source-identity",
+      "status": "PASS",
+      "method": "SHA-256 comparison against the checked component inventory",
+      "evidence": "apps/admin/src/features/content/components/content-seo/redirects-view.tsx matches inventory hash fc6010ba328a417046644ffc8029f910a59ab108ecfd5c40105c89a17b795647."
+    },
+    {
+      "id": "artifact-dimensions",
+      "status": "PASS",
+      "method": "Pillow image metadata from generated PNGs",
+      "evidence": "Board 1536x1024; desktop 1440x900; mobile 390x844."
+    },
+    {
+      "id": "persian-font-and-rtl",
+      "status": "PASS",
+      "method": "Pillow 12.3.0 FreeType + RAQM render using bundled licensed fonts",
+      "evidence": "Persian strings are rendered with RTL shaping; the clean references are generated independently at their declared sizes."
+    },
+    {
+      "id": "schema-and-semantic-integrity",
+      "status": "PASS",
+      "method": "JSON Schema Draft 2020-12 plus source, output, manifest, font and scene-graph semantic checks",
+      "evidence": "The source hash matches; all 17 package outputs exist; 16 manifest fingerprints match; font assets, declared PNG dimensions, scene node IDs/references/bounds, and source-derived variant/state evidence pass."
+    },
+    {
+      "id": "interactive-app-runtime",
+      "status": "UNVERIFIED",
+      "method": "Application runtime was not operated",
+      "evidence": "The board records source inventory evidence and design proposals only."
+    },
+    {
+      "id": "photo-assets",
+      "status": "NOT_APPLICABLE",
+      "method": "Local render-source asset registry",
+      "evidence": "No product photography or unlicensed external image is used; media regions are drawn placeholders."
+    }
+  ],
+  "warnings": [
+    "Every layout, spacing and rectangle is a proposed design choice; captured pixel bounds describe this renderer output, not the live React component.",
+    "Only copy, JSX tag names, event labels, state variables and state markers indexed from the source are treated as source-defined evidence.",
+    "Estedad display text is a proposed substitute for Peyda in storefront board images; it does not change the application's font contract. Admin display typography follows its existing component-board token source.",
+    "The live app, keyboard interactions, API data, permission behavior and product-image licensing were not tested by this renderer."
+  ]
+}

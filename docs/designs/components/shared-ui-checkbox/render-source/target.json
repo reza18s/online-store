@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-checkbox",
+  "scope": "shared",
+  "symbol": "Checkbox",
+  "source": {
+    "path": "packages/ui/src/checkbox.tsx",
+    "anchor": "Checkbox (8-20)",
+    "lines": "8-20",
+    "sha256": "890252f65537e0c11df50281833fe2aace433c5130e310abd6eb9a26a214ace6",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "input"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

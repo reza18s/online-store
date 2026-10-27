@@ -1,0 +1,27 @@
+{
+  "targetId": "admin-support-support-finance-inspection-panel",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/support/components/support-finance/inspection-panel.tsx",
+      "anchor": "InspectionPanel (5-30)",
+      "lines": "5-30",
+      "sha256": "707bef77a218f5aa267bce4387cd066b58c89863aeb48bd1c1686200b56316cf",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "section",
+    "div",
+    "span",
+    "Icon",
+    "h2"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

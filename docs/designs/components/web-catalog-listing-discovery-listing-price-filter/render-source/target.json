@@ -1,0 +1,78 @@
+{
+  "targetId": "web-catalog-listing-discovery-listing-price-filter",
+  "scope": "web",
+  "symbol": "ListingPriceFilter",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+    "anchor": "ListingPriceFilter (839-958)",
+    "lines": "839-958",
+    "sha256": "0bfe90b13266d1ae88d3b48e20fe6ccd96fb4faa5a53b8482f9efebf73f0df64",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "قیمت (تومان)",
+    "حداقل قیمت",
+    "حداکثر قیمت",
+    "تا"
+  ],
+  "jsxTags": [
+    "section",
+    "button",
+    "span",
+    "Icon",
+    "div",
+    "input",
+    "label",
+    "UiInput"
+  ],
+  "actions": [
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "قیمت (تومان)",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "input",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "input",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "isOpen"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "selection",
+  "status": "PROPOSED"
+}

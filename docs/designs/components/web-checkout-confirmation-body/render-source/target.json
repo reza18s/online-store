@@ -1,0 +1,40 @@
+{
+  "targetId": "web-checkout-confirmation-body",
+  "scope": "web",
+  "symbol": "ConfirmationBody",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/confirmation-body.tsx",
+    "anchor": "ConfirmationBody (8-40)",
+    "lines": "8-40",
+    "sha256": "ed0dd040c030dae6dfe277ab80a944ecbf079c8fd97f8e2d231b4f984a2e3dd4",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "NOVA / ORDER CONFIRMED",
+    "سفارش شما با موفقیت تأیید شد",
+    "جزئیات زیر از سفارش ثبت‌شده در حساب شما دریافت شده است.",
+    "وضعیت پرداخت",
+    "پرداخت‌شده",
+    "مبلغ نهایی",
+    "پیگیری سفارش",
+    "بازگشت به خانه"
+  ],
+  "jsxTags": [
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "strong",
+    "div",
+    "Button",
+    "a"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

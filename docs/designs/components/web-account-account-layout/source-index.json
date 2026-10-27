@@ -1,0 +1,56 @@
+{
+  "targetId": "web-account-account-layout",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/account-layout.tsx",
+      "anchor": "AccountLayout (14-83)",
+      "lines": "14-83",
+      "sha256": "63c52e9b7309b174686d8f24df168a386cdcb62733897584dd888b6de2e34cf8",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "خانه",
+    "/",
+    "حساب کاربری",
+    "بخش‌های حساب کاربری",
+    "ن",
+    "مشتری نوا",
+    "در حال خروج...",
+    "خروج از حساب",
+    "بافت‌های طبیعی آتلیه نوا",
+    "NOVA / ATELIER",
+    "به دنیای نوا بپیوندید",
+    "مشاهده کالکشن"
+  ],
+  "jsxTags": [
+    "PageFrame",
+    "div",
+    "a",
+    "span",
+    "aside",
+    "strong",
+    "small",
+    "Icon",
+    "p",
+    "Button",
+    "img",
+    "section"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "در حال خروج... / خروج از حساب",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "targetId": "admin-support-support-finance-payment-inspection",
+  "scope": "admin",
+  "symbol": "PaymentInspection",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/payment-inspection.tsx",
+    "anchor": "PaymentInspection (37-159)",
+    "lines": "37-159",
+    "sha256": "c8296adab3424f6ed3b518c07f6f0776e809f24cb0f30090d8c21da41f07583d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "تلاش‌های پرداخت",
+    "درگاه",
+    "مثلاً fake-gateway",
+    "شماره سفارش",
+    "NV-...",
+    "وضعیت پرداخت",
+    "تلاش پرداختی پیدا نشد",
+    "با فیلترهای دیگری جست‌وجو کنید یا بعداً دوباره بررسی کنید.",
+    "فهرست تلاش‌های پرداخت",
+    "شناسه تلاش",
+    "سفارش",
+    "مبلغ",
+    "وضعیت",
+    "ثبت"
+  ],
+  "jsxTags": [
+    "InspectionPanel",
+    "FilterBar",
+    "TextFilter",
+    "SelectFilter",
+    "div",
+    "QueryState",
+    "table",
+    "caption",
+    "thead",
+    "tr",
+    "th",
+    "tbody",
+    "td",
+    "Button",
+    "a",
+    "StatusBadge",
+    "Pagination",
+    "PaymentDetail"
+  ],
+  "actions": [
+    {
+      "element": "FilterBar",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "درگاه / مثلاً fake-gateway / شماره سفارش",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TextFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TextFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SelectFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Pagination",
+      "events": [
+        "onPageChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "draftStatus",
+    "draftProvider",
+    "draftOrderNumber",
+    "filters",
+    "selectedId"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,41 @@
+{
+  "targetId": "admin-dashboard-dashboard-order-status-counts",
+  "scope": "admin",
+  "symbol": "OrderStatusCounts",
+  "source": {
+    "path": "apps/admin/src/features/dashboard/components/dashboard/order-status-counts.tsx",
+    "anchor": "OrderStatusCounts (9-49)",
+    "lines": "9-49",
+    "sha256": "a7c27a35f3fb70a18285e8daf95817d16b6a4793314baa9f1440dd8be5d688af",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "ORDER STATUS",
+    "وضعیت سفارش‌ها",
+    "مجموع سفارش‌ها",
+    "وضعیتی برای این بازه ثبت نشده است."
+  ],
+  "jsxTags": [
+    "Card",
+    "section",
+    "div",
+    "span",
+    "h2",
+    "Icon",
+    "strong",
+    "small",
+    "dl",
+    "dt",
+    "dd",
+    "p"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "status",
+  "status": "PROPOSED"
+}

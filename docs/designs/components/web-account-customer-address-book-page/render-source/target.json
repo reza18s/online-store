@@ -1,0 +1,122 @@
+{
+  "targetId": "web-account-customer-address-book-page",
+  "scope": "web",
+  "symbol": "CustomerAddressBookPage",
+  "source": {
+    "path": "apps/web/src/features/account/pages/customer-address-book-page.tsx",
+    "anchor": "CustomerAddressBookPage (36-502)",
+    "lines": "36-502",
+    "sha256": "dd04f7dec5518978e27af7c66fd1dcc3a030c884274bb2c6f54260991132ca70",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگذاری آدرس‌ها",
+    "آدرس‌های من",
+    "برای مدیریت آدرس‌های تحویل ابتدا وارد حساب شوید.",
+    "نشست شما منقضی شده است",
+    "دسترسی به آدرس‌ها ممکن نیست",
+    "اتصال اینترنت برقرار نیست",
+    "بارگذاری آدرس‌ها ممکن نشد",
+    "برای حفاظت از آدرس‌ها دوباره وارد حساب شوید.",
+    "این حساب اجازه مدیریت آدرس‌ها را ندارد.",
+    "پس از اتصال دوباره تلاش کنید؛ اطلاعات فرم خصوصی شما ارسال نشده است.",
+    "دریافت آدرس‌ها ممکن نشد.",
+    "ورود دوباره",
+    "تلاش دوباره",
+    "تغییر آدرس اصلی انجام نشد.",
+    "حذف آدرس انجام نشد.",
+    "آدرس پیدا نشد",
+    "این آدرس دیگر در حساب شما وجود ندارد یا به این حساب تعلق ندارد.",
+    "بازگشت به آدرس‌ها",
+    "مشتری نوا",
+    "NOVA editorial",
+    "گل‌ها و فضای آرام آتلیه نوا",
+    "خانه،",
+    "جایی که سبک زندگی شما ادامه دارد.",
+    "NOVA",
+    "ایجاد آدرس جدید",
+    "لطفاً اطلاعات آدرس خود را با دقت وارد کنید تا سفارش‌ها به‌درستی ارسال شوند.",
+    "بازگشت",
+    "حساب کاربری",
+    "داشبورد حساب",
+    "اطلاعات شخصی",
+    "سفارش‌های من",
+    "علاقه‌مندی‌ها",
+    "مرجوعی‌ها",
+    "پشتیبانی",
+    "به دنیای نوا بپیوندید",
+    "مجموعه‌ها و پیشنهادهای اختصاصی",
+    "خانه؛ فراتر از یک مکان، یک حس است.",
+    "NOVA / ATELIER EDITORIAL",
+    "آدرس‌های خود را مدیریت کنید تا تجربه خرید سریع‌تر و آسان‌تری داشته باشید.",
+    "افزودن آدرس جدید"
+  ],
+  "jsxTags": [
+    "PageFrame",
+    "LoadingState",
+    "SessionState",
+    "span",
+    "EmptyState",
+    "div",
+    "aside",
+    "img",
+    "strong",
+    "br",
+    "small",
+    "section",
+    "header",
+    "Icon",
+    "h1",
+    "p",
+    "a",
+    "CustomerAddressForm",
+    "nav",
+    "article",
+    "h2",
+    "address",
+    "b",
+    "Button"
+  ],
+  "actions": [
+    {
+      "element": "EmptyState",
+      "events": [
+        "onAction"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "قرار دادن به عنوان پیش‌فرض",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "حذف",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CustomerAddressForm",
+      "events": [
+        "onDelete"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "actionError"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,49 @@
+{
+  "targetId": "web-account-account-layout",
+  "decisions": [
+    {
+      "property": "Component labels and visible copy",
+      "winner": "apps/web/src/features/account/components/account-layout.tsx",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Copy comes from the checked source inventory and source-file SHA-256.",
+      "anchor": "AccountLayout (14-83)"
+    },
+    {
+      "property": "JSX anatomy and event labels",
+      "winner": "apps/web/src/features/account/components/account-layout.tsx",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Only tags and events recorded in the source inventory are represented; unlabelled actions remain unlabelled.",
+      "anchor": "AccountLayout (14-83)"
+    },
+    {
+      "property": "Appearance palette",
+      "winner": "docs/designs/atelier-editorial.md#18",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Storefront follows Soft Modern tokens; admin keeps its separate staff palette; shared primitive host appearance stays caller-owned."
+    },
+    {
+      "property": "Board layout and responsive arrangement",
+      "winner": "render-source/generate-inventory-component-boards.py",
+      "status": "PROPOSED",
+      "rationale": "The source inventory does not define the complete layout geometry for this independent component board."
+    },
+    {
+      "property": "Body typeface",
+      "winner": "docs/designs/atelier-editorial.md#6-typography",
+      "status": "SOURCE_DEFINED",
+      "rationale": "Vazirmatn is used for readable Persian UI/body copy in design-board images."
+    },
+    {
+      "property": "Display typeface in board raster",
+      "winner": "docs/designs/atelier-editorial.md#6-typography-and-18-soft-modern-refresh",
+      "status": "PROPOSED_SUBSTITUTE",
+      "rationale": "The board renderer uses the locally bundled Estedad SemiBold. Admin source tokens already name Estedad as display; for web, Estedad is a licensed proposed substitute for the Peyda display role. This is image-only and does not revise app typography."
+    },
+    {
+      "property": "Interactive app behavior and exact runtime geometry",
+      "winner": "Not observed",
+      "status": "UNVERIFIED",
+      "rationale": "The live app was not operated; renderer rectangles are measured only within this proposed image."
+    }
+  ]
+}

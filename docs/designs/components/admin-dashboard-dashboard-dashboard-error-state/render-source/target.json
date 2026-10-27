@@ -1,0 +1,39 @@
+{
+  "targetId": "admin-dashboard-dashboard-dashboard-error-state",
+  "scope": "admin",
+  "symbol": "DashboardErrorState",
+  "source": {
+    "path": "apps/admin/src/features/dashboard/components/dashboard/dashboard-error-state.tsx",
+    "anchor": "DashboardErrorState (5-28)",
+    "lines": "5-28",
+    "sha256": "361ddf7d4e9b5d6764026ef07fb4db042e6ec0da6f52aef6be19ec6e13491bf4",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "خلاصه داشبورد در دسترس نیست",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "Card",
+    "section",
+    "h2",
+    "p",
+    "Button"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

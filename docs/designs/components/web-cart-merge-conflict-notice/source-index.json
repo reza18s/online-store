@@ -1,0 +1,47 @@
+{
+  "targetId": "web-cart-merge-conflict-notice",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/cart/components/merge-conflict-notice.tsx",
+      "anchor": "MergeConflictNotice (8-70)",
+      "lines": "8-70",
+      "sha256": "724e0b2346de32e7e6cbdde26c491da1109aaf626051acb6487334c4067e14d3",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "این تنوع دیگر موجود نیست.",
+    "تعداد قابل افزودن به موجودی فعلی محدود شد.",
+    "تعداد این کالا به سقف مجاز رسید.",
+    "بخشی از سبد مهمان نیازمند بررسی است",
+    "ورود انجام شده، اما این موارد بدون تأیید شما ادغام نشدند.",
+    "حذف کالا از سبد مهمان"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "Icon",
+    "h2",
+    "p",
+    "ul",
+    "li",
+    "span",
+    "Button"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "حذف کالا از سبد مهمان",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

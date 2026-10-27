@@ -1,0 +1,88 @@
+{
+  "targetId": "admin-support-support-finance-notification-inspection",
+  "scope": "admin",
+  "symbol": "NotificationInspection",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/notification-inspection.tsx",
+    "anchor": "NotificationInspection (29-120)",
+    "lines": "29-120",
+    "sha256": "be303a85f825451dd5064c4d0f359af5e4a7fca9726bcc5f6f2f9365b1dc5173",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "تحویل اعلان‌ها",
+    "نوع اعلان",
+    "مثلاً PAYMENT_SUCCEEDED",
+    "وضعیت تحویل",
+    "اعلانی پیدا نشد",
+    "فیلترها را تغییر دهید یا بازه دیگری را بررسی کنید.",
+    "فهرست وضعیت تحویل اعلان‌ها",
+    "وضعیت",
+    "تلاش",
+    "زمان آماده‌سازی",
+    "آخرین وضعیت",
+    "خطای تحویل ثبت شده",
+    "در انتظار نتیجه"
+  ],
+  "jsxTags": [
+    "InspectionPanel",
+    "FilterBar",
+    "TextFilter",
+    "SelectFilter",
+    "div",
+    "QueryState",
+    "table",
+    "caption",
+    "thead",
+    "tr",
+    "th",
+    "tbody",
+    "td",
+    "StatusBadge",
+    "Pagination"
+  ],
+  "actions": [
+    {
+      "element": "FilterBar",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "نوع اعلان / مثلاً PAYMENT_SUCCEEDED / وضعیت تحویل",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TextFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SelectFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Pagination",
+      "events": [
+        "onPageChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "draftKind",
+    "draftStatus",
+    "filters"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

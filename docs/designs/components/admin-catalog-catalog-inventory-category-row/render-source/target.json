@@ -1,0 +1,93 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-category-row",
+  "scope": "admin",
+  "symbol": "CategoryRow",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/category-row.tsx",
+    "anchor": "CategoryRow (13-124)",
+    "lines": "13-124",
+    "sha256": "b7d2ffe0e04f7db837bfddaa5fcac0bacacd74cb1fd8f50ca74d7a513a3d15be",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "نام دسته",
+    "والد",
+    "بدون والد",
+    "ذخیره",
+    "لغو",
+    "ریشه",
+    "محصول ·",
+    "زیرمجموعه",
+    "آخرین تغییر:",
+    "فعال‌سازی",
+    "آرشیو"
+  ],
+  "jsxTags": [
+    "form",
+    "label",
+    "UiInput",
+    "UiSelect",
+    "option",
+    "div",
+    "Button",
+    "span",
+    "StatusBadge",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "نام دسته / والد / بدون والد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "بدون والد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "لغو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "فعال‌سازی / آرشیو",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

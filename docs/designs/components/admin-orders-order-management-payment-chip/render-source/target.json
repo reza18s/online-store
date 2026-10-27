@@ -1,0 +1,25 @@
+{
+  "targetId": "admin-orders-order-management-payment-chip",
+  "scope": "admin",
+  "symbol": "PaymentChip",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/payment-chip.tsx",
+    "anchor": "PaymentChip (7-19)",
+    "lines": "7-19",
+    "sha256": "63613627d24d5ea54bcfb7fed4985ce20949158403de9a5c1fd1e0c97a0c8e1d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "status",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,37 @@
+{
+  "targetId": "web-checkout-checkout-payment-recovery-page",
+  "scope": "web",
+  "symbol": "CheckoutPaymentRecoveryPage",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/checkout-payment-recovery-page.tsx",
+    "anchor": "CheckoutPaymentRecoveryPage (14-51)",
+    "lines": "14-51",
+    "sha256": "cd921f8cbf545c29577abd8261399accf865cd2951a8ad84ecea5d31926c4208",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "سفارش‌ها",
+    "/",
+    "بازیابی پرداخت",
+    "در حال بررسی وضعیت پرداخت",
+    "شماره سفارش در لینک پرداخت وجود ندارد."
+  ],
+  "jsxTags": [
+    "CheckoutShell",
+    "div",
+    "a",
+    "span",
+    "section",
+    "OrderLookupState",
+    "OrderRecoveryState"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "loading"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

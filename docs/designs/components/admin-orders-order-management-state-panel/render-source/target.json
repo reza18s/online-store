@@ -1,0 +1,29 @@
+{
+  "targetId": "admin-orders-order-management-state-panel",
+  "scope": "admin",
+  "symbol": "StatePanel",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/state-panel.tsx",
+    "anchor": "StatePanel (5-33)",
+    "lines": "5-33",
+    "sha256": "afb477cca4d1a7b75ee9217a27d3613663873e1b8ef64108ca0f5496314b2399",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "div",
+    "Icon",
+    "h2",
+    "p"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

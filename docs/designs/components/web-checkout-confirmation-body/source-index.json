@@ -1,0 +1,40 @@
+{
+  "targetId": "web-checkout-confirmation-body",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/confirmation-body.tsx",
+      "anchor": "ConfirmationBody (8-40)",
+      "lines": "8-40",
+      "sha256": "ed0dd040c030dae6dfe277ab80a944ecbf079c8fd97f8e2d231b4f984a2e3dd4",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "NOVA / ORDER CONFIRMED",
+    "سفارش شما با موفقیت تأیید شد",
+    "جزئیات زیر از سفارش ثبت‌شده در حساب شما دریافت شده است.",
+    "وضعیت پرداخت",
+    "پرداخت‌شده",
+    "مبلغ نهایی",
+    "پیگیری سفارش",
+    "بازگشت به خانه"
+  ],
+  "jsxTags": [
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "strong",
+    "div",
+    "Button",
+    "a"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

@@ -1,0 +1,26 @@
+{
+  "targetId": "web-cart-cart-skeleton",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/cart/components/cart-skeleton.tsx",
+      "anchor": "CartSkeleton (1-19)",
+      "lines": "1-19",
+      "sha256": "b0437e74c01ae9a01e9505fcc1c2f85463a8b547a386ae839f2ac9a62db4eb45",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال بارگذاری سبد خرید"
+  ],
+  "jsxTags": [
+    "section",
+    "div"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

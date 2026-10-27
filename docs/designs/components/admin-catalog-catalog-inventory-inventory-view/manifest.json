@@ -1,0 +1,144 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-inventory-view",
+  "scope": "admin",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/inventory-view.tsx",
+    "anchor": "InventoryView (36-282)",
+    "lines": "36-282",
+    "sha256": "ba5ab545e6ed0b9ecad25ca9f3d6d9716c5612ae50fce85204d0758f31df9d2e",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "generator": {
+    "name": "generate-inventory-component-boards.py",
+    "version": "1.0.0",
+    "python": "3.12",
+    "pillow": "12.3.0",
+    "layoutEngine": "FreeType RAQM"
+  },
+  "fonts": [
+    {
+      "assetId": "estedad-semibold-v8.5",
+      "path": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "sha256": "a5cbf97d61e22ef5d072171db000ff8467c3992353d9124f9e0794bf35b13364",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "assetId": "vazirmatn-regular-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-Regular.ttf",
+      "sha256": "b69fd4c680b8f3f225feabcc655a2c585d97627b8f5f5c0f9985e894069f3a56",
+      "license": "SIL Open Font License 1.1"
+    },
+    {
+      "assetId": "vazirmatn-semibold-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "sha256": "3f239d8364c14ee32c46b6839fa197c28958358b82a9673d2c6acc8506d78bc5",
+      "license": "SIL Open Font License 1.1"
+    }
+  ],
+  "viewports": {
+    "board": "1536x1024",
+    "desktop": "1440x900",
+    "mobile": "390x844"
+  },
+  "outputCount": 17,
+  "qaStatus": "PASS_WITH_WARNINGS",
+  "files": [
+    {
+      "path": "01-Visual-Design-Board.png",
+      "artifactType": "annotated-design-board",
+      "sha256": "a02ffa19a12489c76e2822550eb23cfdc7e1106e4a6f3be7d04efc919d9b78e7",
+      "bytes": 153148
+    },
+    {
+      "path": "02-Clean-Reference.png",
+      "artifactType": "clean-desktop-reference",
+      "sha256": "7de641ea25cbe090605bd9d9b896e68015a4e5b678c807b6b9710eb0933e6d5b",
+      "bytes": 54733
+    },
+    {
+      "path": "03-Clean-Reference-Mobile.png",
+      "artifactType": "clean-mobile-reference",
+      "sha256": "7ca60a19360e825f6769484a8af743f4dcf0b578972ba96a30264d14c002b545",
+      "bytes": 39834
+    },
+    {
+      "path": "design-spec.json",
+      "artifactType": "design-specification",
+      "sha256": "bcba4425a07d768b236ea261dd77c5da3c24360189ca0235792b86808c92c42d",
+      "bytes": 15475
+    },
+    {
+      "path": "design-spec.schema.json",
+      "artifactType": "json-schema",
+      "sha256": "4bff67adac03441989924b00e1a6e7950a6ae606c3ad137806bd8aa7a4b873a9",
+      "bytes": 7452
+    },
+    {
+      "path": "scene-graph.json",
+      "artifactType": "scene-graph",
+      "sha256": "bf4fabcae1277971c387d2e699d79db58e4ffae4e7fdde0618f3beda91345a26",
+      "bytes": 5321
+    },
+    {
+      "path": "source-index.json",
+      "artifactType": "source-index",
+      "sha256": "8953798c138d7745e5e5f96678940ce9aa62f888d97984a5ac8fd640446e089d",
+      "bytes": 4038
+    },
+    {
+      "path": "authority-map.json",
+      "artifactType": "authority-map",
+      "sha256": "a2d1798dfd51f412b07ed544f4258f618b8336e79afaec5205e99cb7bc48663b",
+      "bytes": 2490
+    },
+    {
+      "path": "conflicts.json",
+      "artifactType": "conflicts-and-proposals",
+      "sha256": "2555b6748db31c7f72db579ec59605454e01150503f5e3bcaeaeb4619eada9ad",
+      "bytes": 695
+    },
+    {
+      "path": "design-tokens.json",
+      "artifactType": "design-tokens",
+      "sha256": "105ac43b319dcd654d22ae8af703d623370b6c243bd626c6b71746b97076c642",
+      "bytes": 2438
+    },
+    {
+      "path": "asset-registry.json",
+      "artifactType": "asset-registry",
+      "sha256": "66d126e67dfbea49adcf5b7453faf8d6d483bcb54a42704c98e4258e06eed4a8",
+      "bytes": 1165
+    },
+    {
+      "path": "coverage-matrix.json",
+      "artifactType": "coverage-matrix",
+      "sha256": "9b644117f75c30784c061b4c9589465c815bbba82bafa93fe4e48bc07af289bf",
+      "bytes": 4282
+    },
+    {
+      "path": "qa-report.json",
+      "artifactType": "qa-report",
+      "sha256": "816eba6504e822dddf6ac325a1938314cd085904ad5e51f9bed26a981324a5db",
+      "bytes": 2514
+    },
+    {
+      "path": "component-handoff.md",
+      "artifactType": "component-handoff",
+      "sha256": "5805447bae36544bee747cfe8b68f0fd7ec0158ce7a52ce6144a347cb3a3a4d9",
+      "bytes": 3169
+    },
+    {
+      "path": "render-source/target.json",
+      "artifactType": "renderer-input",
+      "sha256": "aa102715329c19f8610038c74568e2b04313bc64ca15ea5754946a10e7fa9730",
+      "bytes": 3885
+    },
+    {
+      "path": "render-source/README.md",
+      "artifactType": "renderer-instructions",
+      "sha256": "c61555ac1217ace8bcfba95b3bd00864a266caab2ed3c2f58adef2f843d3e26e",
+      "bytes": 645
+    }
+  ]
+}

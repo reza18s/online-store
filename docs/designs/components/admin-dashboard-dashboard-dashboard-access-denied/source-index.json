@@ -1,0 +1,31 @@
+{
+  "targetId": "admin-dashboard-dashboard-dashboard-access-denied",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/dashboard/components/dashboard/dashboard-access-denied.tsx",
+      "anchor": "DashboardAccessDenied (3-20)",
+      "lines": "3-20",
+      "sha256": "2067b06c819f8b1caf3575ef7224bd490107960d25f2e9f517d89e3d5bd550da",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "NOVA / ADMIN ACCESS",
+    "دسترسی کافی نیست",
+    "حساب کاربری شما برای مشاهده خلاصه داشبورد مجوز مدیر را ندارد."
+  ],
+  "jsxTags": [
+    "Card",
+    "section",
+    "span",
+    "h1",
+    "p"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

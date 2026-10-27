@@ -1,0 +1,37 @@
+{
+  "targetId": "admin-auth-logout-button",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/auth/components/AdminLogoutButton.tsx",
+      "anchor": "AdminLogoutButton (9-47)",
+      "lines": "9-47",
+      "sha256": "910c19f12b85cbeeb433cdfde55d995dc9335559d016fa02e63b5acab9cb4eeb",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "خروج از حساب",
+    "در حال خروج..."
+  ],
+  "jsxTags": [
+    "Button",
+    "Icon",
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "در حال خروج...",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

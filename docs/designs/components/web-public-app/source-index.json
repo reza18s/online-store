@@ -1,0 +1,86 @@
+{
+  "targetId": "web-public-app",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/app/PublicApp.tsx",
+      "anchor": "PublicApp (27-144)",
+      "lines": "27-144",
+      "sha256": "93e96a0f2fab434dd6e5357653e38ea269d18eb04aa88c1e1aff21a53ecd4911",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "StorefrontDiscoveryPage",
+    "AuthPage",
+    "StorefrontCartPage",
+    "CheckoutPaymentRecoveryPage",
+    "PreviewStatePage",
+    "CheckoutConfirmationPage",
+    "LocalPaymentPage",
+    "StorefrontCheckoutPage",
+    "CustomerAccountPage",
+    "CustomerAddressBookPage",
+    "CustomerOrderPage",
+    "CustomerReturnPage",
+    "PublicContentSystemPage",
+    "NotFoundPage"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "StorefrontDiscoveryPage",
+      "events": [
+        "onToggleWishlist"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "StorefrontDiscoveryPage",
+      "events": [
+        "onToggleWishlist"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "StorefrontDiscoveryPage",
+      "events": [
+        "onToggleWishlist"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "StorefrontDiscoveryPage",
+      "events": [
+        "onToggleWishlist"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "StorefrontCartPage",
+      "events": [
+        "onRetry",
+        "onToggleWishlist"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "StorefrontCheckoutPage",
+      "events": [
+        "onRetryCart"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

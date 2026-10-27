@@ -1,0 +1,26 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-permission-panel",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/permission-panel.tsx",
+      "anchor": "PermissionPanel (3-12)",
+      "lines": "3-12",
+      "sha256": "9a0e7fe01337a7effcb789c56606c79c0eeb4d48b7aadcb7a95fe02965fcca2d",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "دسترسی کافی ندارید",
+    "این بخش برای نقش فعلی شما فعال نیست."
+  ],
+  "jsxTags": [
+    "StatePanel"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

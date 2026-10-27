@@ -1,0 +1,43 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-query-state",
+  "scope": "admin",
+  "symbol": "QueryState",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/query-state.tsx",
+    "anchor": "QueryState (15-61)",
+    "lines": "15-61",
+    "sha256": "aa1ce8fa1e492f2443805e1c4aaf5e6fe38e21aa5cf18eef8ba38b454782c40d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "اتصال شبکه در دسترس نیست",
+    "دریافت اطلاعات انجام نشد",
+    "اتصال را بررسی کنید و دوباره تلاش کنید.",
+    "اطلاعات فعلاً در دسترس نیست.",
+    "تلاش دوباره",
+    "موردی پیدا نشد",
+    "فیلترها را تغییر دهید یا اولین مورد را از همین نما ثبت کنید."
+  ],
+  "jsxTags": [
+    "LoadingState",
+    "StatePanel",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

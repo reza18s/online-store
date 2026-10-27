@@ -1,0 +1,39 @@
+{
+  "targetId": "web-catalog-message-card",
+  "scope": "web",
+  "symbol": "MessageCard",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/message-card.tsx",
+    "anchor": "MessageCard (4-39)",
+    "lines": "4-39",
+    "sha256": "62a6fad34d0c454c812791ac91d7875c5e5dc1daedd9a52390b99fe27045bd96",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "span",
+    "Icon",
+    "h2",
+    "p",
+    "Button"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

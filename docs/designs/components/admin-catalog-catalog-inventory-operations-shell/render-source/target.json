@@ -1,0 +1,50 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-operations-shell",
+  "scope": "admin",
+  "symbol": "AdminOperationsShell",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/admin-operations-shell.tsx",
+    "anchor": "AdminOperationsShell (7-89)",
+    "lines": "7-89",
+    "sha256": "7158f040745c32a8d97ce2d2fc89ac5a00bdbf39241f51ff8e2979505441b902",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "محصولات",
+    "دسته‌بندی‌ها",
+    "موجودی کم",
+    "ATELIER / ADMIN OPERATIONS",
+    "کاتالوگ و موجودی",
+    "مدیریت محصول، طبقه‌بندی و موجودی بر پایه داده‌های واقعی سرویس مدیریت.",
+    "،",
+    "کاربر مدیریت",
+    "داده زنده",
+    "بخش‌های کاتالوگ و عملیات",
+    "راهنمای عملیات",
+    "OPERATIONS NOTE",
+    "ثبت مسئولانه",
+    "شناسه‌ها در مسیرهای لاتین جدا نگه داشته می‌شوند و هر تغییر موجودی با نسخه آخر داده ارسال می‌شود.",
+    "پیش‌نویس تا زمان انتشار عمومی است.",
+    "موجودی کم نیازمند بررسی عملیات است."
+  ],
+  "jsxTags": [
+    "main",
+    "div",
+    "header",
+    "span",
+    "h1",
+    "p",
+    "Icon",
+    "nav",
+    "a",
+    "aside",
+    "h2"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

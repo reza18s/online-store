@@ -1,0 +1,29 @@
+{
+  "targetId": "web-content-rendered-block",
+  "scope": "web",
+  "symbol": "RenderedBlock",
+  "source": {
+    "path": "apps/web/src/features/content/components/rendered-block.tsx",
+    "anchor": "RenderedBlock (5-31)",
+    "lines": "5-31",
+    "sha256": "aad2089adeaf714353c7a09cfe7460544b9cf9d2ea0ac56254874c8f315548c9",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "p",
+    "h3",
+    "h2",
+    "blockquote",
+    "cite",
+    "a",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

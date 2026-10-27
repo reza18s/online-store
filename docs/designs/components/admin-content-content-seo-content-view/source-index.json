@@ -1,0 +1,117 @@
+{
+  "targetId": "admin-content-content-seo-content-view",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/content-view.tsx",
+      "anchor": "ContentView (26-154)",
+      "lines": "26-154",
+      "sha256": "de4666a7a88cd273c18e24fac60a6926d5e10554f13d684d1113295c6a8a4110",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال بارگیری صفحه‌ها",
+    "فهرست محتوای مدیریت در حال دریافت است.",
+    "اتصال برقرار نیست",
+    "بارگیری صفحه‌ها انجام نشد",
+    "تلاش دوباره",
+    "جزئیات صفحه بارگیری نشد",
+    "جست‌وجو در عنوان و اسلاگ…",
+    "وضعیت",
+    "همه وضعیت‌ها",
+    "پیش‌نویس",
+    "منتشر شده",
+    "بایگانی شده",
+    "هنوز صفحه‌ای ندارید",
+    "یک صفحه را به‌عنوان پیش‌نویس بسازید و بعد از بررسی منتشر کنید.",
+    "صفحه جدید"
+  ],
+  "jsxTags": [
+    "StatePanel",
+    "Button",
+    "Icon",
+    "div",
+    "SearchBar",
+    "Select",
+    "option",
+    "ContentList",
+    "ContentEditor"
+  ],
+  "stateVariables": [
+    "search",
+    "status",
+    "selectedId",
+    "isCreating",
+    "editorKey"
+  ],
+  "stateMarkers": [
+    "loading",
+    "offline",
+    "error",
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SearchBar",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Select",
+      "events": [
+        "onChange"
+      ],
+      "label": "وضعیت / همه وضعیت‌ها / پیش‌نویس",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ContentList",
+      "events": [
+        "onSelect",
+        "onCreate"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ContentEditor",
+      "events": [
+        "onCreated",
+        "onSaved"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

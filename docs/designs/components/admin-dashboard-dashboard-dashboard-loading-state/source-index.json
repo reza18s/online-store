@@ -1,0 +1,28 @@
+{
+  "targetId": "admin-dashboard-dashboard-dashboard-loading-state",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/dashboard/components/dashboard/dashboard-loading-state.tsx",
+      "anchor": "DashboardLoadingState (3-19)",
+      "lines": "3-19",
+      "sha256": "2daae7dbe61e6503acbeff497d6736e70111ccb5f96f3fae1fa93e542da680b7",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال دریافت خلاصه داشبورد",
+    "در حال دریافت خلاصه داشبورد…"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "p"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

@@ -1,0 +1,26 @@
+{
+  "targetId": "admin-content-content-seo-panel",
+  "scope": "admin",
+  "symbol": "Panel",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/panel.tsx",
+    "anchor": "Panel (3-27)",
+    "lines": "3-27",
+    "sha256": "55f85b76e00ada93c936f436cc5d0adaddbe6a880aac70ad092e2b5fd3f576e0",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "div",
+    "span",
+    "h2"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

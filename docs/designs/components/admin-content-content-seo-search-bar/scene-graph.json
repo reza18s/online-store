@@ -1,0 +1,113 @@
+{
+  "version": "1.0.0",
+  "targetId": "admin-content-content-seo-search-bar",
+  "coordinateSystem": "CSS-pixel-like coordinates from the deterministic raster renderer; each frame is independent.",
+  "frames": [
+    {
+      "id": "admin-content-content-seo-search-bar-desktop",
+      "width": 1440,
+      "height": 900,
+      "rootIds": [
+        "admin-content-content-seo-search-bar-desktop-specimen"
+      ]
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-mobile",
+      "width": 390,
+      "height": 844,
+      "rootIds": [
+        "admin-content-content-seo-search-bar-mobile-specimen"
+      ]
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-board",
+      "width": 1536,
+      "height": 1024,
+      "rootIds": [
+        "admin-content-content-seo-search-bar-board-specimen"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "admin-content-content-seo-search-bar-board-specimen",
+      "frameId": "admin-content-content-seo-search-bar-board",
+      "parentId": null,
+      "role": "desktop-reference-thumbnail",
+      "x": 78,
+      "y": 220,
+      "width": 812,
+      "height": 507,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-desktop-specimen",
+      "frameId": "admin-content-content-seo-search-bar-desktop",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 106,
+      "y": 258,
+      "width": 1228,
+      "height": 542,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-desktop-content-region-1",
+      "x": 134,
+      "y": 370,
+      "width": 1172,
+      "height": 66,
+      "geometryStatus": "PROPOSED",
+      "frameId": "admin-content-content-seo-search-bar-desktop",
+      "parentId": "admin-content-content-seo-search-bar-desktop-specimen",
+      "role": "content-region-1"
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-desktop-primary-action",
+      "x": 134,
+      "y": 534,
+      "width": 1172,
+      "height": 54,
+      "geometryStatus": "PROPOSED",
+      "frameId": "admin-content-content-seo-search-bar-desktop",
+      "parentId": "admin-content-content-seo-search-bar-desktop-specimen",
+      "role": "primary-action"
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-mobile-specimen",
+      "frameId": "admin-content-content-seo-search-bar-mobile",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 34,
+      "y": 210,
+      "width": 322,
+      "height": 572,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-mobile-content-region-1",
+      "x": 52,
+      "y": 296,
+      "width": 286,
+      "height": 54,
+      "geometryStatus": "PROPOSED",
+      "frameId": "admin-content-content-seo-search-bar-mobile",
+      "parentId": "admin-content-content-seo-search-bar-mobile-specimen",
+      "role": "content-region-1"
+    },
+    {
+      "id": "admin-content-content-seo-search-bar-mobile-primary-action",
+      "x": 52,
+      "y": 428,
+      "width": 286,
+      "height": 48,
+      "geometryStatus": "PROPOSED",
+      "frameId": "admin-content-content-seo-search-bar-mobile",
+      "parentId": "admin-content-content-seo-search-bar-mobile-specimen",
+      "role": "primary-action"
+    }
+  ]
+}

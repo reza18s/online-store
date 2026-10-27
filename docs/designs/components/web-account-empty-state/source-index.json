@@ -1,0 +1,40 @@
+{
+  "targetId": "web-account-empty-state",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/empty-state.tsx",
+      "anchor": "EmptyState (5-38)",
+      "lines": "5-38",
+      "sha256": "15765dc607b2df4503e737854d6617267f7af322a6d0310e0521e274e6c3f641",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "Button",
+    "a"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

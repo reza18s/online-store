@@ -1,0 +1,33 @@
+{
+  "targetId": "admin-support-support-finance-text-filter",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/support/components/support-finance/text-filter.tsx",
+      "anchor": "TextFilter (3-31)",
+      "lines": "3-31",
+      "sha256": "b4099ffeb01f97c75b5eaa16281c174dc674ab395e84b09ac0034d9bfb825fac",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "label",
+    "UiInput"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

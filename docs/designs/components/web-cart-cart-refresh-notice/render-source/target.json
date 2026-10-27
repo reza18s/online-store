@@ -1,0 +1,38 @@
+{
+  "targetId": "web-cart-cart-refresh-notice",
+  "scope": "web",
+  "symbol": "CartRefreshNotice",
+  "source": {
+    "path": "apps/web/src/features/cart/components/cart-refresh-notice.tsx",
+    "anchor": "CartRefreshNotice (4-17)",
+    "lines": "4-17",
+    "sha256": "413f5a7135f599b816cc127ff58b3d793babd0d2b3493414fe8a326b32caa302",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "به‌روزرسانی سبد خرید انجام نشد؛ اطلاعات فعلی ممکن است قدیمی باشد.",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "div",
+    "span",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

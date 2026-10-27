@@ -1,0 +1,201 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-catalog-product-grid",
+  "coordinateSystem": "CSS-pixel-like coordinates from the deterministic raster renderer; each frame is independent.",
+  "frames": [
+    {
+      "id": "web-catalog-product-grid-desktop",
+      "width": 1440,
+      "height": 900,
+      "rootIds": [
+        "web-catalog-product-grid-desktop-specimen"
+      ]
+    },
+    {
+      "id": "web-catalog-product-grid-mobile",
+      "width": 390,
+      "height": 844,
+      "rootIds": [
+        "web-catalog-product-grid-mobile-specimen"
+      ]
+    },
+    {
+      "id": "web-catalog-product-grid-board",
+      "width": 1536,
+      "height": 1024,
+      "rootIds": [
+        "web-catalog-product-grid-board-specimen"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "web-catalog-product-grid-board-specimen",
+      "frameId": "web-catalog-product-grid-board",
+      "parentId": null,
+      "role": "desktop-reference-thumbnail",
+      "x": 78,
+      "y": 220,
+      "width": 812,
+      "height": 507,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-specimen",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 106,
+      "y": 258,
+      "width": 1228,
+      "height": 542,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-1-1",
+      "x": 134,
+      "y": 370,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-1-1"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-1-2",
+      "x": 431,
+      "y": 370,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-1-2"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-1-3",
+      "x": 728,
+      "y": 370,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-1-3"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-1-4",
+      "x": 1025,
+      "y": 370,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-1-4"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-2-1",
+      "x": 134,
+      "y": 566,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-2-1"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-2-2",
+      "x": 431,
+      "y": 566,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-2-2"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-2-3",
+      "x": 728,
+      "y": 566,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-2-3"
+    },
+    {
+      "id": "web-catalog-product-grid-desktop-product-card-2-4",
+      "x": 1025,
+      "y": 566,
+      "width": 281,
+      "height": 180,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-desktop",
+      "parentId": "web-catalog-product-grid-desktop-specimen",
+      "role": "product-card-2-4"
+    },
+    {
+      "id": "web-catalog-product-grid-mobile-specimen",
+      "frameId": "web-catalog-product-grid-mobile",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 34,
+      "y": 210,
+      "width": 322,
+      "height": 572,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-catalog-product-grid-mobile-product-card-1-1",
+      "x": 52,
+      "y": 296,
+      "width": 138,
+      "height": 192,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-mobile",
+      "parentId": "web-catalog-product-grid-mobile-specimen",
+      "role": "product-card-1-1"
+    },
+    {
+      "id": "web-catalog-product-grid-mobile-product-card-1-2",
+      "x": 200,
+      "y": 296,
+      "width": 138,
+      "height": 192,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-mobile",
+      "parentId": "web-catalog-product-grid-mobile-specimen",
+      "role": "product-card-1-2"
+    },
+    {
+      "id": "web-catalog-product-grid-mobile-product-card-2-1",
+      "x": 52,
+      "y": 498,
+      "width": 138,
+      "height": 192,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-mobile",
+      "parentId": "web-catalog-product-grid-mobile-specimen",
+      "role": "product-card-2-1"
+    },
+    {
+      "id": "web-catalog-product-grid-mobile-product-card-2-2",
+      "x": 200,
+      "y": 498,
+      "width": 138,
+      "height": 192,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-catalog-product-grid-mobile",
+      "parentId": "web-catalog-product-grid-mobile-specimen",
+      "role": "product-card-2-2"
+    }
+  ]
+}

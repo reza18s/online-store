@@ -1,0 +1,29 @@
+{
+  "targetId": "web-catalog-category-discovery-category-quick-rail",
+  "scope": "web",
+  "symbol": "CategoryQuickRail",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+    "anchor": "CategoryQuickRail (563-588)",
+    "lines": "563-588",
+    "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "دسته‌های پوشاک مردانه"
+  ],
+  "jsxTags": [
+    "nav",
+    "a",
+    "img",
+    "span",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

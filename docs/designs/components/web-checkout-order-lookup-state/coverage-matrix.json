@@ -1,0 +1,134 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-checkout-order-lookup-state",
+  "sourceEvidence": {
+    "labels": {
+      "status": "DOCUMENTED",
+      "count": 6
+    },
+    "actions": {
+      "status": "DOCUMENTED",
+      "count": 1
+    },
+    "stateMarkers": {
+      "status": "DOCUMENTED",
+      "count": 0
+    },
+    "jsxTags": {
+      "status": "DOCUMENTED",
+      "count": 7
+    },
+    "variants": {
+      "status": "DOCUMENTED",
+      "count": 0
+    },
+    "sizes": {
+      "status": "DOCUMENTED",
+      "count": 0
+    }
+  },
+  "artifacts": [
+    {
+      "type": "annotated-design-board",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/01-Visual-Design-Board.png",
+      "status": "GENERATED"
+    },
+    {
+      "type": "clean-desktop-reference",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/02-Clean-Reference.png",
+      "status": "GENERATED"
+    },
+    {
+      "type": "clean-mobile-reference",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/03-Clean-Reference-Mobile.png",
+      "status": "GENERATED"
+    },
+    {
+      "type": "design-specification",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/design-spec.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "json-schema",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/design-spec.schema.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "scene-graph",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/scene-graph.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "source-index",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/source-index.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "authority-map",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/authority-map.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "conflicts-and-proposals",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/conflicts.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "design-tokens",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/design-tokens.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "asset-registry",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/asset-registry.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "coverage-matrix",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/coverage-matrix.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "qa-report",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/qa-report.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "manifest",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/manifest.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "component-handoff",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/component-handoff.md",
+      "status": "GENERATED"
+    },
+    {
+      "type": "renderer-input",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/render-source/target.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "renderer-instructions",
+      "path": "docs/designs/components/web-checkout-order-lookup-state/render-source/README.md",
+      "status": "GENERATED"
+    }
+  ],
+  "viewports": [
+    {
+      "id": "desktop",
+      "width": 1440,
+      "height": 900,
+      "status": "GENERATED",
+      "screenshot": "02-Clean-Reference.png"
+    },
+    {
+      "id": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": "GENERATED",
+      "screenshot": "03-Clean-Reference-Mobile.png"
+    }
+  ],
+  "statePresentation": "Source markers are listed on the design board/specification; full live state transitions remain UNVERIFIED."
+}

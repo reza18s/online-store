@@ -1,0 +1,28 @@
+{
+  "targetId": "web-catalog-product-skeleton",
+  "scope": "web",
+  "symbol": "ProductSkeleton",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/product-skeleton.tsx",
+    "anchor": "ProductSkeleton (1-26)",
+    "lines": "1-26",
+    "sha256": "86f77170651a8558979437169bfcd6cf7c77f764e7c9426a268897b0d8b6de8b",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگذاری محصولات"
+  ],
+  "jsxTags": [
+    "div",
+    "span"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "loading"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

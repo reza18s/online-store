@@ -1,0 +1,137 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-media-panel",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/media-panel.tsx",
+      "anchor": "MediaPanel (35-262)",
+      "lines": "35-262",
+      "sha256": "2f6e27944322cb985560fea97dd8a383c786600727e3d116c8cde425ea953ebb",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "رسانه ثبت نشد.",
+    "متن جایگزین رسانه را وارد کنید.",
+    "بارگذاری رسانه انجام نشد.",
+    "در حال دریافت رسانه‌ها...",
+    "رسانه‌های محصول در دسترس نیست",
+    "دریافت رسانه‌ها انجام نشد.",
+    "تلاش دوباره",
+    "MEDIA",
+    "رسانه محصول",
+    "فایل تصویر ابتدا با لینک امن در فضای ذخیره‌سازی بارگذاری و سپس با کنترل نوع، اندازه و ابعاد ثبت می‌شود.",
+    "فایل تصویر",
+    "متن جایگزین",
+    "نوع رسانه",
+    "محصول",
+    "جزئیات",
+    "نمونه رنگ",
+    "بارگذاری فایل",
+    "یا افزودن نشانی موجود",
+    "نشانی رسانه",
+    "https://...",
+    "افزودن",
+    "رسانه‌ای ثبت نشده است."
+  ],
+  "jsxTags": [
+    "section",
+    "LoadingState",
+    "StatePanel",
+    "Button",
+    "Icon",
+    "div",
+    "p",
+    "h3",
+    "form",
+    "UiInput",
+    "UiSelect",
+    "option",
+    "span",
+    "MediaItem"
+  ],
+  "stateVariables": [
+    "draft",
+    "error",
+    "selectedFile",
+    "fileInputKey"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "فایل تصویر / متن جایگزین / نوع رسانه",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "نوع رسانه / محصول / جزئیات",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "نشانی رسانه / متن جایگزین / نوع رسانه",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "نوع رسانه / محصول / جزئیات",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

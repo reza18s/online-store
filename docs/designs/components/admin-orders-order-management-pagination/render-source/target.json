@@ -1,0 +1,50 @@
+{
+  "targetId": "admin-orders-order-management-pagination",
+  "scope": "admin",
+  "symbol": "Pagination",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/pagination.tsx",
+    "anchor": "Pagination (6-49)",
+    "lines": "6-49",
+    "sha256": "8ccc924b212a70958288410d6d58e5fd48160e46f9de9e4eba38118030b167bc",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "صفحه‌های سفارش‌ها",
+    "صفحه",
+    "از",
+    "صفحه قبل",
+    "صفحه بعد"
+  ],
+  "jsxTags": [
+    "nav",
+    "span",
+    "div",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه قبل",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه بعد",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

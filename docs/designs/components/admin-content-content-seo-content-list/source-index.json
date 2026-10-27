@@ -1,0 +1,54 @@
+{
+  "targetId": "admin-content-content-seo-content-list",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/content-list.tsx",
+      "anchor": "ContentList (14-82)",
+      "lines": "14-82",
+      "sha256": "df7e3be0288a98974b304ab9ff8a7dd05b67a661836b6d568de535eb7757cb5e",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "صفحه‌های محتوا",
+    "نتیجه در این صفحه",
+    "صفحه جدید",
+    "/",
+    "مشاهده",
+    "هنوز صفحه‌ای ثبت نشده است."
+  ],
+  "jsxTags": [
+    "Panel",
+    "div",
+    "span",
+    "Button",
+    "Icon",
+    "strong",
+    "StatusChip",
+    "a"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "/",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "targetId": "web-checkout-loading-state",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/loading-state.tsx",
+      "anchor": "LoadingState (3-12)",
+      "lines": "3-12",
+      "sha256": "9f9e903abc996534b786e6f1cd6b9eebc5b122c936007a5d4fa296bb168a4426",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "CheckoutShell",
+    "section",
+    "div"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

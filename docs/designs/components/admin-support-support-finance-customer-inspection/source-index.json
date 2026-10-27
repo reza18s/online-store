@@ -1,0 +1,149 @@
+{
+  "targetId": "admin-support-support-finance-customer-inspection",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/support/components/support-finance/customer-inspection.tsx",
+      "anchor": "CustomerInspection (37-254)",
+      "lines": "37-254",
+      "sha256": "f68214e9cf03a7d1e8565b0d5a7f01baa37d098292c1986288061b083c3eef27",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "مدیریت مشتریان",
+    "جست‌وجو",
+    "ایمیل، تلفن یا شناسه مشتری...",
+    "وضعیت",
+    "مشتری پیدا نشد",
+    "عبارت جست‌وجو یا وضعیت را تغییر دهید.",
+    "خلاصه مشتریان",
+    "کل مشتریان",
+    "فعال در این صفحه",
+    "دارای سفارش",
+    "غیرفعال در این صفحه",
+    "فهرست مشتریان",
+    "مشتری",
+    "سفارش‌ها",
+    "آخرین سفارش",
+    "به‌روزرسانی",
+    "عملیات",
+    "بدون سفارش",
+    "مشاهده مشتری",
+    "بستن جزئیات",
+    "مشتری نوا",
+    "تعداد سفارش",
+    "آخرین به‌روزرسانی",
+    "مشاهده پروفایل",
+    "مشاهده سفارش"
+  ],
+  "jsxTags": [
+    "InspectionPanel",
+    "div",
+    "FilterBar",
+    "TextFilter",
+    "SelectFilter",
+    "QueryState",
+    "section",
+    "article",
+    "span",
+    "Icon",
+    "strong",
+    "small",
+    "table",
+    "caption",
+    "thead",
+    "tr",
+    "th",
+    "tbody",
+    "td",
+    "button",
+    "StatusBadge",
+    "a",
+    "Pagination",
+    "aside",
+    "h3",
+    "p",
+    "dl",
+    "dt",
+    "dd"
+  ],
+  "stateVariables": [
+    "draftQ",
+    "draftStatus",
+    "selectedCustomerId",
+    "filters"
+  ],
+  "stateMarkers": [
+    "selected"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "FilterBar",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "جست‌وجو / ایمیل، تلفن یا شناسه مشتری... / وضعیت",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TextFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SelectFilter",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "tr",
+      "events": [
+        "onClick"
+      ],
+      "label": "بدون سفارش / مشاهده مشتری",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Pagination",
+      "events": [
+        "onPageChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "بستن جزئیات",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

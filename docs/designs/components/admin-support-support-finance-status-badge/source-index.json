@@ -1,0 +1,23 @@
+{
+  "targetId": "admin-support-support-finance-status-badge",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/support/components/support-finance/status-badge.tsx",
+      "anchor": "StatusBadge (7-9)",
+      "lines": "7-9",
+      "sha256": "eb70639329931000dd2d859ea058b77c33ccc7d06c002e1018cd9c912cd0de81",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

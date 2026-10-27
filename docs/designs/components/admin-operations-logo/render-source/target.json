@@ -1,0 +1,28 @@
+{
+  "targetId": "admin-operations-logo",
+  "scope": "admin",
+  "symbol": "AdminOperationsLogo",
+  "source": {
+    "path": "apps/admin/src/shared/components/AdminOperationsLogo.tsx",
+    "anchor": "AdminOperationsLogo (1-14)",
+    "lines": "1-14",
+    "sha256": "4681fa93e29759994785ae06e2321814ebb7fa108de1788e5fdb4bc56adea169",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "نوا، فضای مدیریت",
+    "نوا",
+    "ATELIER EDITORIAL"
+  ],
+  "jsxTags": [
+    "a",
+    "span"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "media",
+  "status": "PROPOSED"
+}

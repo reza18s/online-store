@@ -1,0 +1,37 @@
+{
+  "targetId": "admin-content-content-seo-search-bar",
+  "scope": "admin",
+  "symbol": "SearchBar",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/search-bar.tsx",
+    "anchor": "SearchBar (5-27)",
+    "lines": "5-27",
+    "sha256": "3dd02fe2ca6bdabd8f2e9ea095e8293dc40b79c28ab037282d22498cee4b9d65",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "جست‌وجو"
+  ],
+  "jsxTags": [
+    "label",
+    "Icon",
+    "span",
+    "UiInput"
+  ],
+  "actions": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

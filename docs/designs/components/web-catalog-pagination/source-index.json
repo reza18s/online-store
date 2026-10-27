@@ -1,0 +1,30 @@
+{
+  "targetId": "web-catalog-pagination",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/pagination.tsx",
+      "anchor": "Pagination (3-58)",
+      "lines": "3-58",
+      "sha256": "69a67cbf5bc739fbf610c8551217b9e8ca88ba64155e71c05a9f902e74b38676",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "صفحه‌بندی محصولات",
+    "قبلی",
+    "…",
+    "بعدی"
+  ],
+  "jsxTags": [
+    "nav",
+    "a",
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

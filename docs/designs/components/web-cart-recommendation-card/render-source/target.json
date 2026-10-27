@@ -1,0 +1,38 @@
+{
+  "targetId": "web-cart-recommendation-card",
+  "scope": "web",
+  "symbol": "RecommendationCard",
+  "source": {
+    "path": "apps/web/src/features/cart/components/recommendation-card.tsx",
+    "anchor": "RecommendationCard (7-60)",
+    "lines": "7-60",
+    "sha256": "adddbf9755184dca05a7e4015206100b0ad48f0c99b78689990d8635737df543",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "article",
+    "a",
+    "img",
+    "span",
+    "Icon",
+    "div",
+    "Button"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "media",
+  "status": "PROPOSED"
+}

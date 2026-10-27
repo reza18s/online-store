@@ -1,0 +1,74 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-option-item",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/option-item.tsx",
+      "anchor": "OptionItem (9-75)",
+      "lines": "9-75",
+      "sha256": "9c86be142f5f12b3d25e2bc3576c507a3e02efbdc962d0b6acaab29934accd62",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "new-value",
+    "مقدار"
+  ],
+  "jsxTags": [
+    "div",
+    "UiInput",
+    "Button",
+    "Icon",
+    "span",
+    "OptionValue"
+  ],
+  "stateVariables": [
+    "name"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "OptionValue",
+      "events": [
+        "onSave"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "مقدار",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

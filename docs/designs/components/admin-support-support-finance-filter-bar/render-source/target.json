@@ -1,0 +1,36 @@
+{
+  "targetId": "admin-support-support-finance-filter-bar",
+  "scope": "admin",
+  "symbol": "FilterBar",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/filter-bar.tsx",
+    "anchor": "FilterBar (7-29)",
+    "lines": "7-29",
+    "sha256": "61fa0995a7e9c4d3f80e37e7d389175df405b77beb5062fed9b7024f8bb850ad",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "اعمال فیلتر"
+  ],
+  "jsxTags": [
+    "form",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "اعمال فیلتر",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "selection",
+  "status": "PROPOSED"
+}

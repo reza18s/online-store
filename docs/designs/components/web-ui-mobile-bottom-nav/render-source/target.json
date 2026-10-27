@@ -1,0 +1,35 @@
+{
+  "targetId": "web-ui-mobile-bottom-nav",
+  "scope": "web",
+  "symbol": "MobileBottomNav",
+  "source": {
+    "path": "apps/web/src/shared/ui/mobile-bottom-nav.tsx",
+    "anchor": "MobileBottomNav (4-71)",
+    "lines": "4-71",
+    "sha256": "7a65f513b19e554a32f6ef0ffced35ed0b60c60d3f7a9b204dfc6a4f7ab6ac97",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "ناوبری سریع",
+    "خانه",
+    "جست‌وجو",
+    "دسته‌ها",
+    "سبد",
+    "حساب",
+    "فروشگاه"
+  ],
+  "jsxTags": [
+    "nav",
+    "a",
+    "Icon",
+    "span",
+    "b"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

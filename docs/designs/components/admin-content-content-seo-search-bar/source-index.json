@@ -1,0 +1,37 @@
+{
+  "targetId": "admin-content-content-seo-search-bar",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/search-bar.tsx",
+      "anchor": "SearchBar (5-27)",
+      "lines": "5-27",
+      "sha256": "3dd02fe2ca6bdabd8f2e9ea095e8293dc40b79c28ab037282d22498cee4b9d65",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "جست‌وجو"
+  ],
+  "jsxTags": [
+    "label",
+    "Icon",
+    "span",
+    "UiInput"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

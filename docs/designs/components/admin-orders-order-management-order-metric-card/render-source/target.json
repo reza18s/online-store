@@ -1,0 +1,28 @@
+{
+  "targetId": "admin-orders-order-management-order-metric-card",
+  "scope": "admin",
+  "symbol": "OrderMetricCard",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/order-metric-card.tsx",
+    "anchor": "OrderMetricCard (6-32)",
+    "lines": "6-32",
+    "sha256": "44e527690ee7d2f73e8991a9249d91938b569920cf2e8bddb51167a688135730",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "Card",
+    "article",
+    "div",
+    "span",
+    "Icon",
+    "strong"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

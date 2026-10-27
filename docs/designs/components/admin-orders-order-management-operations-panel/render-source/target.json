@@ -1,0 +1,55 @@
+{
+  "targetId": "admin-orders-order-management-operations-panel",
+  "scope": "admin",
+  "symbol": "OperationsPanel",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/operations-panel.tsx",
+    "anchor": "OperationsPanel (16-94)",
+    "lines": "16-94",
+    "sha256": "2b11ec88855941413b6015d6ca45ae19817f3ada33f0a2a2673fcc2e405954f8",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "عملیات fulfillment و ارسال",
+    "وضعیت فعلی",
+    "تغییر وضعیت",
+    "اطلاعات ارسال",
+    "هنوز ثبت نشده",
+    "ویرایش اطلاعات ارسال",
+    "نقش فعلی فقط اجازه مشاهده این عملیات را دارد."
+  ],
+  "jsxTags": [
+    "section",
+    "PanelHeading",
+    "div",
+    "span",
+    "StatusChip",
+    "p",
+    "Button",
+    "Icon"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "ویرایش اطلاعات ارسال",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,31 @@
+{
+  "targetId": "admin-orders-order-management-status-chip",
+  "assets": [
+    {
+      "assetId": "estedad-semibold-v8.5",
+      "path": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "a5cbf97d61e22ef5d072171db000ff8467c3992353d9124f9e0794bf35b13364"
+    },
+    {
+      "assetId": "vazirmatn-regular-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-Regular.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "b69fd4c680b8f3f225feabcc655a2c585d97627b8f5f5c0f9985e894069f3a56"
+    },
+    {
+      "assetId": "vazirmatn-semibold-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "3f239d8364c14ee32c46b6839fa197c28958358b82a9673d2c6acc8506d78bc5"
+    }
+  ],
+  "media": [],
+  "notes": [
+    "No photography is included; media areas are vector placeholders.",
+    "Font license texts are included with render-source assets."
+  ]
+}

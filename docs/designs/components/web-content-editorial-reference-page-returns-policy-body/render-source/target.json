@@ -1,0 +1,43 @@
+{
+  "targetId": "web-content-editorial-reference-page-returns-policy-body",
+  "scope": "web",
+  "symbol": "ReturnsPolicyBody",
+  "source": {
+    "path": "apps/web/src/features/content/components/editorial-reference-page.tsx",
+    "anchor": "ReturnsPolicyBody (256-273)",
+    "lines": "256-273",
+    "sha256": "49ef95c6543a8cfe23811066c1ed75364f6ed00946c1012ad9190d1cc9f3613d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "جزئیات، نشانه احترام ما به شماست.",
+    "NOVA",
+    "سفارش‌های من",
+    "بررسی امکان بازگشت در جزئیات سفارش",
+    "تماس با نوا",
+    "راه‌های ارتباطی منتشرشده",
+    "پشتیبانی",
+    "راهنمای سفارش و بازگشت"
+  ],
+  "jsxTags": [
+    "div",
+    "section",
+    "blockquote",
+    "img",
+    "span",
+    "p",
+    "cite",
+    "RenderedBlock",
+    "a",
+    "Icon",
+    "strong",
+    "small"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

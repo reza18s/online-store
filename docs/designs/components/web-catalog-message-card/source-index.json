@@ -1,0 +1,39 @@
+{
+  "targetId": "web-catalog-message-card",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/message-card.tsx",
+      "anchor": "MessageCard (4-39)",
+      "lines": "4-39",
+      "sha256": "62a6fad34d0c454c812791ac91d7875c5e5dc1daedd9a52390b99fe27045bd96",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "section",
+    "span",
+    "Icon",
+    "h2",
+    "p",
+    "Button"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "targetId": "admin-orders-order-management-orders-view",
+  "scope": "admin",
+  "symbol": "OrdersView",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/OrdersView.tsx",
+    "anchor": "OrdersView (32-251)",
+    "lines": "32-251",
+    "sha256": "e3add556bf7ab2b1b107dcad97739892f37e837e6dd277285212a395e161b1e4",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال دریافت سفارش‌ها",
+    "فهرست واقعی سفارش‌ها از سرویس مدیریت بارگیری می‌شود.",
+    "دریافت سفارش‌ها ممکن نشد",
+    "دوباره تلاش کنید.",
+    "تلاش دوباره",
+    "فضای مدیریت / عملیات",
+    "سفارش‌ها",
+    "پیگیری وضعیت سفارش، ارسال، درخواست بازگشت و بازپرداخت بر اساس داده‌های ثبت‌شده.",
+    "مجموع سفارش‌ها:",
+    "شاخص‌های سفارش‌ها",
+    "کل سفارش‌ها",
+    "پرداخت موفق",
+    "تکمیل شده",
+    "در انتظار مرجوعی",
+    "سفارشی با این فیلتر پیدا نشد",
+    "عبارت جست‌وجو یا فیلترهای وضعیت را تغییر دهید؛ این صفحه داده عملیاتی ساختگی نمایش نمی‌دهد.",
+    "فهرست سفارش‌ها",
+    "مورد در این صفحه",
+    "سفارش‌های واقعی قابل مشاهده برای کاربر فعلی",
+    "سفارش",
+    "مشتری",
+    "وضعیت",
+    "پرداخت",
+    "ارسال",
+    "مبلغ",
+    "عملیات",
+    "مشتری ثبت‌نشده",
+    "ثبت نشده"
+  ],
+  "jsxTags": [
+    "PermissionPanel",
+    "StatePanel",
+    "Button",
+    "Icon",
+    "main",
+    "header",
+    "div",
+    "p",
+    "h1",
+    "span",
+    "strong",
+    "section",
+    "OrderMetricCard",
+    "ListFilters",
+    "h2",
+    "table",
+    "caption",
+    "thead",
+    "tr",
+    "th",
+    "tbody",
+    "td",
+    "a",
+    "StatusChip",
+    "PaymentChip",
+    "Pagination"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ListFilters",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Pagination",
+      "events": [
+        "onPageChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "filters"
+  ],
+  "stateMarkers": [
+    "success",
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

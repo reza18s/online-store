@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-radio",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "packages/ui/src/radio.tsx",
+      "anchor": "Radio (8-18)",
+      "lines": "8-18",
+      "sha256": "f3d3675c8dd14b4543bf0ae712f6ea632f4b91f9a73a6976ab04e2568b78662f",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "input"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

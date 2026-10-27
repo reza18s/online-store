@@ -1,0 +1,75 @@
+{
+  "targetId": "admin-content-content-seo-content-seo-view",
+  "scope": "admin",
+  "locale": "fa-IR",
+  "direction": "rtl",
+  "tokens": {
+    "page": {
+      "value": "#F5F1EB",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    "surface": {
+      "value": "#FFFDF9",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    "ink": {
+      "value": "#1A1715",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    "charcoal": {
+      "value": "#1C1C1D",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    "wine": {
+      "value": "#7D1F2D",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    "wineSoft": {
+      "value": "#F2E4E3",
+      "evidenceStatus": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    "line": {
+      "value": "#E5DED6",
+      "evidenceStatus": "PROPOSED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    }
+  },
+  "typography": {
+    "display": {
+      "family": "Estedad",
+      "weight": 600,
+      "status": "SOURCE_DEFINED",
+      "usage": "design-board raster only",
+      "asset": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "license": "SIL Open Font License 1.1"
+    },
+    "body": {
+      "family": "Vazirmatn",
+      "weight": 400,
+      "status": "SOURCE_DEFINED",
+      "usage": "board labels and Persian UI copy",
+      "asset": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "license": "SIL Open Font License 1.1"
+    },
+    "fallback": "Tahoma, sans-serif"
+  },
+  "shape": {
+    "interactiveTargetMinPx": {
+      "width": 44,
+      "height": 44,
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/atelier-editorial.md#18"
+    },
+    "controlRadiusPx": {
+      "value": 10,
+      "status": "PROPOSED",
+      "source": "admin reference board proposal"
+    }
+  }
+}

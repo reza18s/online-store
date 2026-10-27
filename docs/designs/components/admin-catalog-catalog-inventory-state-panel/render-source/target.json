@@ -1,0 +1,29 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-state-panel",
+  "scope": "admin",
+  "symbol": "StatePanel",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/state-panel.tsx",
+    "anchor": "StatePanel (5-33)",
+    "lines": "5-33",
+    "sha256": "4563ce1f63f6b90e578c8d0b5be2aaad9334e7061915322fe06994080315fb94",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "div",
+    "Icon",
+    "h2",
+    "p"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

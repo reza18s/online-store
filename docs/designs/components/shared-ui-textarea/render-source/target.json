@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-textarea",
+  "scope": "shared",
+  "symbol": "Textarea",
+  "source": {
+    "path": "packages/ui/src/textarea.tsx",
+    "anchor": "Textarea (8-19)",
+    "lines": "8-19",
+    "sha256": "ae708487cdce72a557eac4c546f776c624c07549a1bdecfa9ec7dda4caf848ce",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "textarea"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

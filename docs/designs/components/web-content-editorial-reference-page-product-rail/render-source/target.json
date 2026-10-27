@@ -1,0 +1,34 @@
+{
+  "targetId": "web-content-editorial-reference-page-product-rail",
+  "scope": "web",
+  "symbol": "ProductRail",
+  "source": {
+    "path": "apps/web/src/features/content/components/editorial-reference-page.tsx",
+    "anchor": "ProductRail (275-292)",
+    "lines": "275-292",
+    "sha256": "49ef95c6543a8cfe23811066c1ed75364f6ed00946c1012ad9190d1cc9f3613d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "محصولات منتخب",
+    "مشاهده همه"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "h2",
+    "a",
+    "Icon",
+    "CatalogQueryState",
+    "img",
+    "strong",
+    "small"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

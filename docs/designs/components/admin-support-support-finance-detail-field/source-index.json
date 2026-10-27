@@ -1,0 +1,25 @@
+{
+  "targetId": "admin-support-support-finance-detail-field",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/support/components/support-finance/detail-field.tsx",
+      "anchor": "DetailField (3-10)",
+      "lines": "3-10",
+      "sha256": "e914b8f5cd585df2c8bd65ad1ccecef5051db0388d01b27a1365842f74e31371",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "div",
+    "dt",
+    "dd"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

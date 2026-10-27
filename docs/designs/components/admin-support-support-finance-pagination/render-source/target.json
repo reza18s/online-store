@@ -1,0 +1,51 @@
+{
+  "targetId": "admin-support-support-finance-pagination",
+  "scope": "admin",
+  "symbol": "Pagination",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/pagination.tsx",
+    "anchor": "Pagination (9-54)",
+    "lines": "9-54",
+    "sha256": "84a2561c40ed97bd9233f8ab1407456e81a92e38016701bb74dcb2b51170e045",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "نتیجه",
+    "صفحه",
+    "از",
+    "·",
+    "صفحه قبل",
+    "صفحه بعد"
+  ],
+  "jsxTags": [
+    "p",
+    "div",
+    "Button",
+    "Icon",
+    "span"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه قبل",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "صفحه بعد",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

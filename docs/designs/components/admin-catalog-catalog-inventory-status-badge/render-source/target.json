@@ -1,0 +1,23 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-status-badge",
+  "scope": "admin",
+  "symbol": "StatusBadge",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/status-badge.tsx",
+    "anchor": "StatusBadge (7-9)",
+    "lines": "7-9",
+    "sha256": "1b36d8f0c3ae7c483858ae1e9e836d1061f971a6c0397425abb85701f6c2184b",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "status",
+  "status": "PROPOSED"
+}

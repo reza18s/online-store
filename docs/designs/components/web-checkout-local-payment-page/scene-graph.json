@@ -1,0 +1,113 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-checkout-local-payment-page",
+  "coordinateSystem": "CSS-pixel-like coordinates from the deterministic raster renderer; each frame is independent.",
+  "frames": [
+    {
+      "id": "web-checkout-local-payment-page-desktop",
+      "width": 1440,
+      "height": 900,
+      "rootIds": [
+        "web-checkout-local-payment-page-desktop-specimen"
+      ]
+    },
+    {
+      "id": "web-checkout-local-payment-page-mobile",
+      "width": 390,
+      "height": 844,
+      "rootIds": [
+        "web-checkout-local-payment-page-mobile-specimen"
+      ]
+    },
+    {
+      "id": "web-checkout-local-payment-page-board",
+      "width": 1536,
+      "height": 1024,
+      "rootIds": [
+        "web-checkout-local-payment-page-board-specimen"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "web-checkout-local-payment-page-board-specimen",
+      "frameId": "web-checkout-local-payment-page-board",
+      "parentId": null,
+      "role": "desktop-reference-thumbnail",
+      "x": 78,
+      "y": 220,
+      "width": 812,
+      "height": 507,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-checkout-local-payment-page-desktop-specimen",
+      "frameId": "web-checkout-local-payment-page-desktop",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 106,
+      "y": 258,
+      "width": 1228,
+      "height": 542,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-checkout-local-payment-page-desktop-field-1",
+      "x": 134,
+      "y": 393,
+      "width": 1172,
+      "height": 58,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-checkout-local-payment-page-desktop",
+      "parentId": "web-checkout-local-payment-page-desktop-specimen",
+      "role": "field-1"
+    },
+    {
+      "id": "web-checkout-local-payment-page-desktop-primary-action",
+      "x": 134,
+      "y": 465,
+      "width": 1172,
+      "height": 54,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-checkout-local-payment-page-desktop",
+      "parentId": "web-checkout-local-payment-page-desktop-specimen",
+      "role": "primary-action"
+    },
+    {
+      "id": "web-checkout-local-payment-page-mobile-specimen",
+      "frameId": "web-checkout-local-payment-page-mobile",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 34,
+      "y": 210,
+      "width": 322,
+      "height": 572,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "web-checkout-local-payment-page-mobile-field-1",
+      "x": 52,
+      "y": 319,
+      "width": 286,
+      "height": 52,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-checkout-local-payment-page-mobile",
+      "parentId": "web-checkout-local-payment-page-mobile-specimen",
+      "role": "field-1"
+    },
+    {
+      "id": "web-checkout-local-payment-page-mobile-primary-action",
+      "x": 52,
+      "y": 382,
+      "width": 286,
+      "height": 48,
+      "geometryStatus": "PROPOSED",
+      "frameId": "web-checkout-local-payment-page-mobile",
+      "parentId": "web-checkout-local-payment-page-mobile-specimen",
+      "role": "primary-action"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "targetId": "web-checkout-order-summary",
+  "scope": "web",
+  "symbol": "OrderSummary",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/order-summary.tsx",
+    "anchor": "OrderSummary (8-50)",
+    "lines": "8-50",
+    "sha256": "b7400b39c9a0bcd11377708202ef4de6bf4a5982b56b558500b517f6f02e045f",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "خلاصه سفارش",
+    "کالا",
+    "مبلغ کالاها",
+    "تخفیف",
+    "−",
+    "ارسال",
+    "پس از تأیید آدرس",
+    "مبلغ نهایی",
+    "پس از دریافت قیمت",
+    "·",
+    "ویرایش سبد"
+  ],
+  "jsxTags": [
+    "aside",
+    "span",
+    "h2",
+    "div",
+    "strong",
+    "p",
+    "a",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

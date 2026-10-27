@@ -1,0 +1,25 @@
+{
+  "targetId": "admin-content-content-seo-status-chip",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/status-chip.tsx",
+      "anchor": "StatusChip (6-14)",
+      "lines": "6-14",
+      "sha256": "a93f8e3c35578a0d892e5cfd216249263087756a8b6659dbebc79f844be9e4c8",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "Badge"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

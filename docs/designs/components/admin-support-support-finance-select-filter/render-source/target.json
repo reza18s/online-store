@@ -1,0 +1,36 @@
+{
+  "targetId": "admin-support-support-finance-select-filter",
+  "scope": "admin",
+  "symbol": "SelectFilter",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/select-filter.tsx",
+    "anchor": "SelectFilter (5-36)",
+    "lines": "5-36",
+    "sha256": "8639e150761330810334c651b3d3ec3ec49d175091e512df3a943f9705af30d7",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "همه"
+  ],
+  "jsxTags": [
+    "label",
+    "UiSelect",
+    "option"
+  ],
+  "actions": [
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "همه",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "selection",
+  "status": "PROPOSED"
+}

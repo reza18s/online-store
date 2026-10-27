@@ -1,0 +1,46 @@
+{
+  "targetId": "admin-routes-route-unavailable-page",
+  "scope": "admin",
+  "symbol": "AdminRouteUnavailablePage",
+  "source": {
+    "path": "apps/admin/src/app/routes/AdminRouteUnavailablePage.tsx",
+    "anchor": "AdminRouteUnavailablePage (5-41)",
+    "lines": "5-41",
+    "sha256": "71b9c9da15d9a6ab86c8b3232e64b7aa9c29679c33f5278e239e9700ec6cfeb6",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "داشبورد",
+    "دسته‌بندی‌ها",
+    "موجودی",
+    "سفارش‌ها",
+    "پرداخت‌ها",
+    "کدهای تخفیف",
+    "مشتری‌ها",
+    "محتوا",
+    "گزارش فعالیت",
+    "عملیات",
+    "این بخش",
+    "NOVA / ADMIN",
+    "هنوز آماده نیست",
+    "این مسیر هنوز به داده‌های واقعی پنل متصل نشده است و برای جلوگیری از نمایش اطلاعات نمونه، فعلاً غیرفعال است.",
+    "بازگشت به داشبورد"
+  ],
+  "jsxTags": [
+    "main",
+    "section",
+    "span",
+    "h1",
+    "p",
+    "div",
+    "a",
+    "AdminLogoutButton"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

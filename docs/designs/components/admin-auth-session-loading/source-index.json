@@ -1,0 +1,31 @@
+{
+  "targetId": "admin-auth-session-loading",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/auth/components/AdminSessionLoading.tsx",
+      "anchor": "AdminSessionLoading (3-15)",
+      "lines": "3-15",
+      "sha256": "a5e6fc424f7f878eb567160c79f0b4eadfd058f59b4409271d0b2c0846f5e0b6",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "NOVA / ADMIN ACCESS",
+    "در حال بررسی دسترسی",
+    "نشست مدیریت شما در حال بررسی است."
+  ],
+  "jsxTags": [
+    "main",
+    "section",
+    "span",
+    "h1",
+    "p"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

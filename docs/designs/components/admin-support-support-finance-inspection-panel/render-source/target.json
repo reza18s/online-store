@@ -1,0 +1,27 @@
+{
+  "targetId": "admin-support-support-finance-inspection-panel",
+  "scope": "admin",
+  "symbol": "InspectionPanel",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/inspection-panel.tsx",
+    "anchor": "InspectionPanel (5-30)",
+    "lines": "5-30",
+    "sha256": "707bef77a218f5aa267bce4387cd066b58c89863aeb48bd1c1686200b56316cf",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "div",
+    "span",
+    "Icon",
+    "h2"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

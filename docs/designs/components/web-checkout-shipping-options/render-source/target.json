@@ -1,0 +1,46 @@
+{
+  "targetId": "web-checkout-shipping-options",
+  "scope": "web",
+  "symbol": "ShippingOptions",
+  "source": {
+    "path": "apps/web/src/features/checkout/components/shipping-options.tsx",
+    "anchor": "ShippingOptions (6-34)",
+    "lines": "6-34",
+    "sha256": "40b1ff8f942334a57c7e6426fa00b68b4d66febf11ee75a60888685484743a09",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "روش ارسال را انتخاب کنید",
+    "ارسال عادی",
+    "ارسال سریع",
+    "هزینه و زمان تحویل پس از بررسی آدرس از سرور دریافت می‌شود."
+  ],
+  "jsxTags": [
+    "fieldset",
+    "legend",
+    "label",
+    "Radio",
+    "span",
+    "strong",
+    "small",
+    "b"
+  ],
+  "actions": [
+    {
+      "element": "Radio",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "selected"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,36 @@
+{
+  "targetId": "admin-content-content-seo-textarea",
+  "scope": "admin",
+  "symbol": "Textarea",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/textarea.tsx",
+    "anchor": "Textarea (3-36)",
+    "lines": "3-36",
+    "sha256": "75733681b0bfdbe31bd69366c0555c45a58ddaef40795d58cce3e9d9a28b0c6c",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "Label",
+    "span",
+    "UiTextarea"
+  ],
+  "actions": [
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "disabled"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

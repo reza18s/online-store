@@ -1,0 +1,27 @@
+{
+  "targetId": "admin-support-support-finance-loading-rows",
+  "scope": "admin",
+  "symbol": "LoadingRows",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/loading-rows.tsx",
+    "anchor": "LoadingRows (1-16)",
+    "lines": "1-16",
+    "sha256": "fd6c9ddd17e331485775c865dc07811fe4c28a6c21a114af4b03d181eb392684",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگذاری",
+    "در حال دریافت اطلاعات..."
+  ],
+  "jsxTags": [
+    "div",
+    "span"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

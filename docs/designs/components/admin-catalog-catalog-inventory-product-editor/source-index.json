@@ -1,0 +1,175 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-product-editor",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/product-editor.tsx",
+      "anchor": "ProductEditor (62-436)",
+      "lines": "62-436",
+      "sha256": "b6b40ecb750c886166275b00a0c7757551359d1e183c659f50f659c65cee8227",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "محصول ذخیره نشد.",
+    "انتشار تا رفع خطاهای فرم مسدود است.",
+    "وضعیت محصول تغییر نکرد.",
+    "دسته‌بندی محصول ذخیره نشد.",
+    "دسترسی مشاهده کاتالوگ ندارید",
+    "در حال دریافت محصول...",
+    "محصول پیدا نشد",
+    "شناسه محصول در سرویس مدیریت وجود ندارد یا دسترسی مشاهده آن محدود شده است.",
+    "بازگشت به محصولات",
+    "CATALOG / PRODUCT EDITOR",
+    "محصول جدید",
+    "اطلاعات پایه را ثبت کنید؛ تنوع و رسانه پس از ذخیره فعال می‌شود.",
+    "آخرین تغییر:",
+    "·",
+    "آرشیو",
+    "اطلاعات پایه",
+    "شناسه محصول",
+    "نام محصول",
+    "قیمت پایه (تومان)",
+    "قیمت قبل (اختیاری)",
+    "برند",
+    "توضیح کوتاه",
+    "توضیحات",
+    "ذخیره محصول"
+  ],
+  "jsxTags": [
+    "PermissionPanel",
+    "LoadingState",
+    "QueryState",
+    "StatePanel",
+    "div",
+    "header",
+    "a",
+    "Icon",
+    "p",
+    "h2",
+    "StatusBadge",
+    "Button",
+    "form",
+    "h3",
+    "MutationStateBadge",
+    "label",
+    "span",
+    "UiInput",
+    "UiTextarea",
+    "TaxonomyPanel",
+    "OptionsPanel",
+    "VariantsPanel",
+    "MediaPanel"
+  ],
+  "stateVariables": [
+    "localProductId",
+    "createdProduct",
+    "draft",
+    "loadedKey",
+    "selectedCategoryIds",
+    "error"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "QueryState",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "آرشیو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "اطلاعات پایه / شناسه محصول / نام محصول",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "TaxonomyPanel",
+      "events": [
+        "onToggle",
+        "onSave"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

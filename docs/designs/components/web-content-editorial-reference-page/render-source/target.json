@@ -1,0 +1,54 @@
+{
+  "targetId": "web-content-editorial-reference-page",
+  "scope": "web",
+  "symbol": "EditorialReferencePage",
+  "source": {
+    "path": "apps/web/src/features/content/components/editorial-reference-page.tsx",
+    "anchor": "EditorialReferencePage (50-122)",
+    "lines": "50-122",
+    "sha256": "49ef95c6543a8cfe23811066c1ed75364f6ed00946c1012ad9190d1cc9f3613d",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "زیبایی، انتخاب آگاهانه است.",
+    "بیش از مد،",
+    "یک سبک زندگی.",
+    "TIMELESS",
+    "ELEGANT",
+    "PERSIAN",
+    "ALWAYS YOU",
+    "محتوای منتشرشده",
+    "این صفحه هنوز محتوای کامل ندارد.",
+    "بخشی از محتوای این صفحه فعلاً قابل نمایش نیست."
+  ],
+  "jsxTags": [
+    "PageShell",
+    "div",
+    "section",
+    "img",
+    "span",
+    "h1",
+    "p",
+    "a",
+    "Icon",
+    "small",
+    "aside",
+    "br",
+    "CampaignBody",
+    "LookbookBody",
+    "CareGuideBody",
+    "PrivacyBody",
+    "ReturnsPolicyBody",
+    "article",
+    "RenderedBlock"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

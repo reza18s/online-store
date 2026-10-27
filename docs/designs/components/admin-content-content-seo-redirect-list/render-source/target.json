@@ -1,0 +1,51 @@
+{
+  "targetId": "admin-content-content-seo-redirect-list",
+  "scope": "admin",
+  "symbol": "RedirectList",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/redirect-list.tsx",
+    "anchor": "RedirectList (8-67)",
+    "lines": "8-67",
+    "sha256": "9738abdd388040a81adae51f703f95a7be08e21c3679f3a3c88ef4746564fd6f",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "redirectها",
+    "مسیر بارگیری‌شده",
+    "redirect جدید",
+    "→",
+    "redirectی ثبت نشده است."
+  ],
+  "jsxTags": [
+    "Panel",
+    "div",
+    "span",
+    "Button",
+    "Icon",
+    "strong"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "redirect جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "→",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

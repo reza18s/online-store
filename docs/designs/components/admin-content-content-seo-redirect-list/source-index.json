@@ -1,0 +1,51 @@
+{
+  "targetId": "admin-content-content-seo-redirect-list",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/redirect-list.tsx",
+      "anchor": "RedirectList (8-67)",
+      "lines": "8-67",
+      "sha256": "9738abdd388040a81adae51f703f95a7be08e21c3679f3a3c88ef4746564fd6f",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "redirectها",
+    "مسیر بارگیری‌شده",
+    "redirect جدید",
+    "→",
+    "redirectی ثبت نشده است."
+  ],
+  "jsxTags": [
+    "Panel",
+    "div",
+    "span",
+    "Button",
+    "Icon",
+    "strong"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "redirect جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "→",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "targetId": "web-cart-cart-view",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/cart/components/CartView.tsx",
+      "anchor": "CartView (42-326)",
+      "lines": "42-326",
+      "sha256": "727ac75ab74fdd4a52ab36170a17c6a6ff5a86bff945ab671a614e4d93c72a9a",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "این پیشنهاد بدون انتخاب تنوع قابل افزودن نیست.",
+    "سبد خرید بارگذاری نشد",
+    "لطفاً اتصال خود را بررسی کنید و دوباره تلاش کنید.",
+    "تلاش دوباره",
+    "NOVA / CART",
+    "سبد خرید",
+    "سبد خرید شما هنوز خالی است",
+    "از میان انتخاب‌های آتلیه، قطعه‌ای برای روزهای پیش رو پیدا کنید.",
+    "مشاهده تازه‌ها",
+    "خانه",
+    "/",
+    "کالا در سبد شماست.",
+    "کالاهای سبد خرید",
+    "قیمت و موجودی در مرحله پرداخت دوباره بررسی می‌شود. موجودی کم یا تغییر قیمت بدون تأیید شما موفق تلقی نمی‌شود.",
+    "خلاصه سفارش",
+    "جمع کالاها",
+    "ارسال",
+    "پس از انتخاب آدرس",
+    "مبلغ قابل پرداخت",
+    "کد تخفیف در مرحله پرداخت، همراه با آدرس و روش ارسال، با قیمت نهایی بررسی و محاسبه می‌شود.",
+    "ادامه فرایند خرید",
+    "ادامه خرید",
+    "پیشنهادهای همراه",
+    "انتخاب‌های واقعی کاتالوگ",
+    "پیشنهادهای همراه موقتاً در دسترس نیستند."
+  ],
+  "jsxTags": [
+    "main",
+    "CartSkeleton",
+    "MessageCard",
+    "header",
+    "span",
+    "h1",
+    "CartRefreshNotice",
+    "section",
+    "Icon",
+    "h2",
+    "p",
+    "Button",
+    "a",
+    "div",
+    "MergeConflictNotice",
+    "CartLineView",
+    "aside",
+    "dl",
+    "dt",
+    "dd",
+    "RecommendationCard"
+  ],
+  "stateVariables": [
+    "busyVariantId"
+  ],
+  "stateMarkers": [
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "MessageCard",
+      "events": [
+        "onAction"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CartRefreshNotice",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CartRefreshNotice",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "MergeConflictNotice",
+      "events": [
+        "onResolve"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CartLineView",
+      "events": [
+        "onUpdate",
+        "onRemove"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "RecommendationCard",
+      "events": [
+        "onAdd"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

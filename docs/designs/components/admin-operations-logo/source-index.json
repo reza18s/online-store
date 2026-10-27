@@ -1,0 +1,28 @@
+{
+  "targetId": "admin-operations-logo",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/shared/components/AdminOperationsLogo.tsx",
+      "anchor": "AdminOperationsLogo (1-14)",
+      "lines": "1-14",
+      "sha256": "4681fa93e29759994785ae06e2321814ebb7fa108de1788e5fdb4bc56adea169",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "نوا، فضای مدیریت",
+    "نوا",
+    "ATELIER EDITORIAL"
+  ],
+  "jsxTags": [
+    "a",
+    "span"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

@@ -1,0 +1,31 @@
+{
+  "targetId": "admin-dashboard-dashboard-dashboard-access-denied",
+  "scope": "admin",
+  "symbol": "DashboardAccessDenied",
+  "source": {
+    "path": "apps/admin/src/features/dashboard/components/dashboard/dashboard-access-denied.tsx",
+    "anchor": "DashboardAccessDenied (3-20)",
+    "lines": "3-20",
+    "sha256": "2067b06c819f8b1caf3575ef7224bd490107960d25f2e9f517d89e3d5bd550da",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "NOVA / ADMIN ACCESS",
+    "دسترسی کافی نیست",
+    "حساب کاربری شما برای مشاهده خلاصه داشبورد مجوز مدیر را ندارد."
+  ],
+  "jsxTags": [
+    "Card",
+    "section",
+    "span",
+    "h1",
+    "p"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

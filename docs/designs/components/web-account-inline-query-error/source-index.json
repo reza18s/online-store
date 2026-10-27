@@ -1,0 +1,42 @@
+{
+  "targetId": "web-account-inline-query-error",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/inline-query-error.tsx",
+      "anchor": "InlineQueryError (11-34)",
+      "lines": "11-34",
+      "sha256": "2c8763be02fb6f3da2412b5ee9b8b8bbd615cba0c11c221e18cabac3899c2e21",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "اتصال برقرار نیست؛ اطلاعات خصوصی شما پس از اتصال دوباره بارگذاری می‌شود.",
+    "دسترسی به این اطلاعات ممکن نیست.",
+    "دریافت اطلاعات انجام نشد.",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "div",
+    "Icon",
+    "span",
+    "Button"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "error"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

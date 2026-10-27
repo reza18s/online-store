@@ -1,0 +1,34 @@
+{
+  "targetId": "web-catalog-product-grid",
+  "scope": "web",
+  "symbol": "ProductGrid",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/product-grid.tsx",
+    "anchor": "ProductGrid (5-29)",
+    "lines": "5-29",
+    "sha256": "64bf82d7055f508f570a269f51c712c26bb5a68943517e38d51bb08aa4724827",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "div",
+    "ProductCard"
+  ],
+  "actions": [
+    {
+      "element": "ProductCard",
+      "events": [
+        "onToggleWishlist",
+        "onAdd"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "grid",
+  "status": "PROPOSED"
+}

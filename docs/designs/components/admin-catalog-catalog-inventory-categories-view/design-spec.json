@@ -1,0 +1,407 @@
+{
+  "schemaVersion": "2.0.0",
+  "target": {
+    "id": "admin-catalog-catalog-inventory-categories-view",
+    "scope": "admin",
+    "symbol": "CategoriesView",
+    "source": "apps/admin/src/features/catalog/components/catalog-inventory/categories-view.tsx",
+    "lines": "29-231"
+  },
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "direction": "NOVA admin staff surface; the existing admin navigation board tokens remain the appearance authority.",
+  "purpose": "برد مستقل برای CategoriesView؛ متن‌ها و eventهای موجود از inventory منبع‌اند و چیدمان تصویر پیشنهادی است.",
+  "sourceEvidence": {
+    "labels": [
+      "شناسه دسته‌بندی و نام معتبر لازم است.",
+      "دسته‌بندی ثبت نشد.",
+      "نام دسته‌بندی را وارد کنید.",
+      "دسته‌بندی ویرایش نشد.",
+      "وضعیت دسته‌بندی تغییر نکرد.",
+      "در حال دریافت taxonomy...",
+      "CATALOG / TAXONOMY",
+      "دسته‌بندی‌ها",
+      "ساختار طبقه‌بندی با parent واقعی سرویس مدیریت نگهداری می‌شود.",
+      "شناسه لاتین",
+      "outerwear",
+      "نام دسته",
+      "لباس رویی",
+      "والد",
+      "بدون والد",
+      "افزودن",
+      "فهرست taxonomy",
+      "دسته",
+      "هنوز دسته‌ای ثبت نشده است",
+      "پس از دریافت واقعی از سرویس، دسته‌ها در اینجا نمایش داده می‌شوند."
+    ],
+    "jsxTags": [
+      "LoadingState",
+      "QueryState",
+      "div",
+      "header",
+      "p",
+      "h2",
+      "form",
+      "label",
+      "UiInput",
+      "UiSelect",
+      "option",
+      "Button",
+      "Icon",
+      "section",
+      "h3",
+      "span",
+      "StatePanel",
+      "CategoryRow"
+    ],
+    "stateVariables": [
+      "editingId",
+      "draft",
+      "newCategory",
+      "error"
+    ],
+    "stateMarkers": [],
+    "variants": [],
+    "sizes": []
+  },
+  "proposal": {
+    "layoutType": "form",
+    "status": "PROPOSED",
+    "desktop": "Independent 1440x900 component specimen inside a neutral design-review frame; geometry is not copied from the live DOM.",
+    "mobile": "Independent 390x844 stacked specimen; breakpoints and behavior remain proposals unless separately defined by the owning page source.",
+    "typography": {
+      "display": {
+        "family": "Estedad",
+        "weight": 600,
+        "status": "SOURCE_DEFINED",
+        "assetPath": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf"
+      },
+      "body": {
+        "family": "Vazirmatn",
+        "weight": 400,
+        "status": "SOURCE_DEFINED",
+        "assetPath": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf"
+      }
+    }
+  },
+  "actions": [
+    {
+      "element": "QueryState",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "شناسه لاتین / نام دسته / لباس رویی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "بدون والد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CategoryRow",
+      "events": [
+        "onEdit",
+        "onDraftChange",
+        "onSave",
+        "onCancel",
+        "onToggle"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "states": [
+    {
+      "id": "baseline-specimen",
+      "label": "ساختار پایه برای بررسی بصری",
+      "status": "PROPOSED_BASELINE"
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/categories-view.tsx",
+      "anchor": "CategoriesView (29-231)",
+      "lines": "29-231",
+      "sha256": "cc37969aed3f095063cf26ec2f797efb13a27ef95428029e9f57b5343a949eac",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "tokens": [
+    {
+      "id": "page",
+      "value": "#F5F1EB",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    {
+      "id": "surface",
+      "value": "#FFFDF9",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    {
+      "id": "ink",
+      "value": "#1A1715",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    {
+      "id": "charcoal",
+      "value": "#1C1C1D",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    {
+      "id": "wine",
+      "value": "#7D1F2D",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    {
+      "id": "wineSoft",
+      "value": "#F2E4E3",
+      "status": "SOURCE_DEFINED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    },
+    {
+      "id": "line",
+      "value": "#E5DED6",
+      "status": "PROPOSED",
+      "source": "docs/designs/components/admin-navigation-sidebar/design-tokens.json#tokens"
+    }
+  ],
+  "assets": [
+    {
+      "assetId": "estedad-semibold-v8.5",
+      "path": "docs/designs/components/render-source/assets/Estedad-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "a5cbf97d61e22ef5d072171db000ff8467c3992353d9124f9e0794bf35b13364"
+    },
+    {
+      "assetId": "vazirmatn-regular-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-Regular.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "b69fd4c680b8f3f225feabcc655a2c585d97627b8f5f5c0f9985e894069f3a56"
+    },
+    {
+      "assetId": "vazirmatn-semibold-v33.003",
+      "path": "docs/designs/components/render-source/assets/Vazirmatn-SemiBold.ttf",
+      "kind": "font",
+      "license": "SIL Open Font License 1.1",
+      "sha256": "3f239d8364c14ee32c46b6839fa197c28958358b82a9673d2c6acc8506d78bc5"
+    }
+  ],
+  "frames": [
+    {
+      "id": "admin-catalog-catalog-inventory-categories-view-desktop",
+      "viewportId": "desktop",
+      "width": 1440,
+      "height": 900,
+      "screenshot": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/02-Clean-Reference.png",
+      "componentBounds": {
+        "x": 106,
+        "y": 258,
+        "width": 1228,
+        "height": 542,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    },
+    {
+      "id": "admin-catalog-catalog-inventory-categories-view-mobile",
+      "viewportId": "mobile",
+      "width": 390,
+      "height": 844,
+      "screenshot": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/03-Clean-Reference-Mobile.png",
+      "componentBounds": {
+        "x": 34,
+        "y": 210,
+        "width": 322,
+        "height": 572,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    },
+    {
+      "id": "admin-catalog-catalog-inventory-categories-view-board",
+      "viewportId": "board",
+      "width": 1536,
+      "height": 1024,
+      "screenshot": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/01-Visual-Design-Board.png",
+      "componentBounds": {
+        "x": 78,
+        "y": 220,
+        "width": 812,
+        "height": 507,
+        "geometryStatus": "PROPOSED",
+        "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+      },
+      "direction": "rtl"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/01-Visual-Design-Board.png",
+      "artifactType": "annotated-design-board",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/02-Clean-Reference.png",
+      "artifactType": "clean-desktop-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/03-Clean-Reference-Mobile.png",
+      "artifactType": "clean-mobile-reference",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/design-spec.json",
+      "artifactType": "design-specification",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/design-spec.schema.json",
+      "artifactType": "json-schema",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/scene-graph.json",
+      "artifactType": "scene-graph",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/source-index.json",
+      "artifactType": "source-index",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/authority-map.json",
+      "artifactType": "authority-map",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/conflicts.json",
+      "artifactType": "conflicts-and-proposals",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/design-tokens.json",
+      "artifactType": "design-tokens",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/asset-registry.json",
+      "artifactType": "asset-registry",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/coverage-matrix.json",
+      "artifactType": "coverage-matrix",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/qa-report.json",
+      "artifactType": "qa-report",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/manifest.json",
+      "artifactType": "manifest",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/component-handoff.md",
+      "artifactType": "component-handoff",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/render-source/target.json",
+      "artifactType": "renderer-input",
+      "status": "GENERATED"
+    },
+    {
+      "path": "docs/designs/components/admin-catalog-catalog-inventory-categories-view/render-source/README.md",
+      "artifactType": "renderer-instructions",
+      "status": "GENERATED"
+    }
+  ],
+  "qa": {
+    "status": "PASS_WITH_WARNINGS",
+    "checks": [
+      {
+        "id": "source-identity",
+        "status": "PASS",
+        "method": "SHA-256 comparison against the checked component inventory",
+        "evidence": "apps/admin/src/features/catalog/components/catalog-inventory/categories-view.tsx matches inventory hash cc37969aed3f095063cf26ec2f797efb13a27ef95428029e9f57b5343a949eac."
+      },
+      {
+        "id": "artifact-dimensions",
+        "status": "PASS",
+        "method": "Pillow image metadata from generated PNGs",
+        "evidence": "Board 1536x1024; desktop 1440x900; mobile 390x844."
+      },
+      {
+        "id": "persian-font-and-rtl",
+        "status": "PASS",
+        "method": "Pillow 12.3.0 FreeType + RAQM render using bundled licensed fonts",
+        "evidence": "Persian strings are rendered with RTL shaping; the clean references are generated independently at their declared sizes."
+      },
+      {
+        "id": "schema-and-semantic-integrity",
+        "status": "PASS",
+        "method": "JSON Schema Draft 2020-12 plus source, output, manifest, font and scene-graph semantic checks",
+        "evidence": "The source hash matches; all 17 package outputs exist; 16 manifest fingerprints match; font assets, declared PNG dimensions, scene node IDs/references/bounds, and source-derived variant/state evidence pass."
+      },
+      {
+        "id": "interactive-app-runtime",
+        "status": "UNVERIFIED",
+        "method": "Application runtime was not operated",
+        "evidence": "The board records source inventory evidence and design proposals only."
+      },
+      {
+        "id": "photo-assets",
+        "status": "NOT_APPLICABLE",
+        "method": "Local render-source asset registry",
+        "evidence": "No product photography or unlicensed external image is used; media regions are drawn placeholders."
+      }
+    ],
+    "warnings": [
+      "Every layout, spacing and rectangle is a proposed design choice; captured pixel bounds describe this renderer output, not the live React component.",
+      "Only copy, JSX tag names, event labels, state variables and state markers indexed from the source are treated as source-defined evidence.",
+      "Estedad display text is a proposed substitute for Peyda in storefront board images; it does not change the application's font contract. Admin display typography follows its existing component-board token source.",
+      "The live app, keyboard interactions, API data, permission behavior and product-image licensing were not tested by this renderer."
+    ]
+  }
+}

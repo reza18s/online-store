@@ -1,0 +1,46 @@
+{
+  "targetId": "web-catalog-category-discovery-category-results",
+  "scope": "web",
+  "symbol": "CategoryResults",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+    "anchor": "CategoryResults (590-657)",
+    "lines": "590-657",
+    "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال دریافت محصولات…",
+    "مشاهده همه",
+    "انتخاب‌های محبوب"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "h2",
+    "span",
+    "a",
+    "p",
+    "CatalogQueryState",
+    "ProductGrid",
+    "Pagination",
+    "AddToCartFeedback"
+  ],
+  "actions": [
+    {
+      "element": "ProductGrid",
+      "events": [
+        "onToggleWishlist",
+        "onAdd"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

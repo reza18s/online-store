@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-input",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "packages/ui/src/input.tsx",
+      "anchor": "Input (8-20)",
+      "lines": "8-20",
+      "sha256": "2894295bbf50cedb4f686c8eb2654cc842015753c6fdeb0090dcfcce14b4353a",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "input"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

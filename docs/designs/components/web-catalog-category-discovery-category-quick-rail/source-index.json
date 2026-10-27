@@ -1,0 +1,29 @@
+{
+  "targetId": "web-catalog-category-discovery-category-quick-rail",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+      "anchor": "CategoryQuickRail (563-588)",
+      "lines": "563-588",
+      "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "دسته‌های پوشاک مردانه"
+  ],
+  "jsxTags": [
+    "nav",
+    "a",
+    "img",
+    "span",
+    "Icon"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

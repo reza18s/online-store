@@ -1,0 +1,45 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-option-value",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/option-value.tsx",
+      "anchor": "OptionValue (7-38)",
+      "lines": "7-38",
+      "sha256": "4dcd9dd74bd0426f963e91369d161623512c50eb1b6f66123f2ec2f874b0acf5",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "span",
+    "UiInput",
+    "Button",
+    "Icon"
+  ],
+  "stateVariables": [
+    "label"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

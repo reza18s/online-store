@@ -1,0 +1,64 @@
+{
+  "targetId": "admin-support-support-finance-payment-detail",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/support/components/support-finance/payment-detail.tsx",
+      "anchor": "PaymentDetail (23-107)",
+      "lines": "23-107",
+      "sha256": "6f961777d56927218e577dd5b961eb088d50c426df130b2dd9055e01bd39aac1",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "جزئیات پرداخت در دسترس نیست",
+    "جزئیات این تلاش پرداخت قابل دریافت نیست؛ دوباره تلاش کنید.",
+    "تلاش دوباره",
+    "PAYMENT / REDACTED DETAIL",
+    "جزئیات تلاش پرداخت",
+    "شناسه تلاش",
+    "شماره سفارش",
+    "شناسه تراکنش درگاه",
+    "ثبت نشده",
+    "مبلغ",
+    "وضعیت سفارش",
+    "وضعیت پرداخت",
+    "آخرین تغییر",
+    "پرداخت موفق",
+    "بازپرداخت‌ها",
+    "برای این تلاش بازپرداختی ثبت نشده است.",
+    "شناسه بازپرداخت:",
+    "ثبت:"
+  ],
+  "jsxTags": [
+    "div",
+    "LoadingRows",
+    "StateCard",
+    "section",
+    "span",
+    "h3",
+    "StatusBadge",
+    "dl",
+    "DetailField",
+    "a",
+    "h4",
+    "p",
+    "ul",
+    "li"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "StateCard",
+      "events": [
+        "onAction"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "targetId": "admin-content-content-seo-textarea",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/textarea.tsx",
+      "anchor": "Textarea (3-36)",
+      "lines": "3-36",
+      "sha256": "75733681b0bfdbe31bd69366c0555c45a58ddaef40795d58cce3e9d9a28b0c6c",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "Label",
+    "span",
+    "UiTextarea"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "disabled"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

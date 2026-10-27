@@ -1,0 +1,67 @@
+{
+  "targetId": "web-ui-menu-drawer",
+  "scope": "web",
+  "symbol": "MenuDrawer",
+  "source": {
+    "path": "apps/web/src/shared/ui/menu-drawer.tsx",
+    "anchor": "MenuDrawer (10-67)",
+    "lines": "10-67",
+    "sha256": "98bdcd71b9023bbe446c6948a768f04d1d8d3110b352665d5660023edb729f46",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "منوی فروشگاه",
+    "بستن منو",
+    "ورود به حساب کاربری",
+    "پشتیبانی و تماس"
+  ],
+  "jsxTags": [
+    "div",
+    "aside",
+    "Logo",
+    "Button",
+    "Icon",
+    "nav",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "div",
+      "events": [
+        "onMouseDown"
+      ],
+      "label": "منوی فروشگاه / بستن منو / ورود به حساب کاربری",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "aside",
+      "events": [
+        "onKeyDown"
+      ],
+      "label": "منوی فروشگاه / بستن منو / ورود به حساب کاربری",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "بستن منو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "a",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "dialog",
+  "status": "PROPOSED"
+}

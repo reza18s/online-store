@@ -1,0 +1,89 @@
+{
+  "targetId": "admin-content-content-seo-redirects-view",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/redirects-view.tsx",
+      "anchor": "RedirectsView (22-104)",
+      "lines": "22-104",
+      "sha256": "fc6010ba328a417046644ffc8029f910a59ab108ecfd5c40105c89a17b795647",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال بارگیری redirectها",
+    "قواعد انتقال در حال دریافت هستند.",
+    "بارگیری redirectها انجام نشد",
+    "تلاش دوباره",
+    "جست‌وجو در مسیرهای داخلی…",
+    "redirectی ثبت نشده است",
+    "انتقال‌های قدیمی به مسیرهای جدید را به‌صورت داخلی و قابل بررسی ثبت کنید.",
+    "redirect جدید"
+  ],
+  "jsxTags": [
+    "StatePanel",
+    "Button",
+    "Icon",
+    "div",
+    "SearchBar",
+    "RedirectList",
+    "RedirectEditor"
+  ],
+  "stateVariables": [
+    "search",
+    "selectedId",
+    "creating"
+  ],
+  "stateMarkers": [
+    "loading",
+    "offline",
+    "error",
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "SearchBar",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "redirect جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "RedirectList",
+      "events": [
+        "onSelect",
+        "onCreate"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "RedirectEditor",
+      "events": [
+        "onSaved"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

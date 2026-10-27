@@ -1,0 +1,26 @@
+{
+  "targetId": "admin-orders-order-management-permission-panel",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/orders/components/order-management/permission-panel.tsx",
+      "anchor": "PermissionPanel (3-12)",
+      "lines": "3-12",
+      "sha256": "b8cf2eec643d8b55cca096c9fe056f2f608f4c52ff98b5d732c83e7be8778f8c",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "دسترسی عملیات سفارش ندارید",
+    "این بخش فقط برای اعضای مجاز پشتیبانی، عملیات یا مدیر سیستم در دسترس است."
+  ],
+  "jsxTags": [
+    "StatePanel"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

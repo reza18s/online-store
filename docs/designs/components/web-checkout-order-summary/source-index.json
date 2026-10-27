@@ -1,0 +1,44 @@
+{
+  "targetId": "web-checkout-order-summary",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/order-summary.tsx",
+      "anchor": "OrderSummary (8-50)",
+      "lines": "8-50",
+      "sha256": "b7400b39c9a0bcd11377708202ef4de6bf4a5982b56b558500b517f6f02e045f",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "خلاصه سفارش",
+    "کالا",
+    "مبلغ کالاها",
+    "تخفیف",
+    "−",
+    "ارسال",
+    "پس از تأیید آدرس",
+    "مبلغ نهایی",
+    "پس از دریافت قیمت",
+    "·",
+    "ویرایش سبد"
+  ],
+  "jsxTags": [
+    "aside",
+    "span",
+    "h2",
+    "div",
+    "strong",
+    "p",
+    "a",
+    "Icon"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

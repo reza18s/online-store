@@ -1,0 +1,46 @@
+{
+  "targetId": "web-content-system-state-panel",
+  "scope": "web",
+  "symbol": "SystemStatePanel",
+  "source": {
+    "path": "apps/web/src/features/content/components/system-state-panel.tsx",
+    "anchor": "SystemStatePanel (9-51)",
+    "lines": "9-51",
+    "sha256": "86c4527352dce309477a0c00e2cc10e63eff067e2b7c9810710f78e41746ac62",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "تلاش دوباره",
+    "بازگشت به خانه"
+  ],
+  "jsxTags": [
+    "PageShell",
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "div",
+    "Button",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty",
+    "loading"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

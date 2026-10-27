@@ -1,0 +1,25 @@
+{
+  "targetId": "admin-support-support-finance-detail-field",
+  "scope": "admin",
+  "symbol": "DetailField",
+  "source": {
+    "path": "apps/admin/src/features/support/components/support-finance/detail-field.tsx",
+    "anchor": "DetailField (3-10)",
+    "lines": "3-10",
+    "sha256": "e914b8f5cd585df2c8bd65ad1ccecef5051db0388d01b27a1365842f74e31371",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "div",
+    "dt",
+    "dd"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

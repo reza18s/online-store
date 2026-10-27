@@ -1,0 +1,51 @@
+{
+  "targetId": "admin-content-content-seo-content-seo-view",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/ContentSeoView.tsx",
+      "anchor": "ContentSeoView (20-127)",
+      "lines": "20-127",
+      "sha256": "cfbda988bd9a78f47426807fbb66c65b70c3961a97dca1a2fb02aad309bac6f2",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "در حال بررسی نشست مدیریت",
+    "دسترسی این بخش در حال بررسی است.",
+    "نشست مدیریت منقضی شده است",
+    "برای ادامه، دوباره وارد فضای مدیریت شوید.",
+    "دسترسی این بخش مجاز نیست",
+    "حساب فعلی اجازه دسترسی به محتوای مدیریتی را ندارد.",
+    "نشست مدیریت پیدا نشد",
+    "برای مشاهده و تغییر محتوا باید وارد فضای مدیریت شوید.",
+    "دسترسی کافی ندارید",
+    "این بخش به نقش مدیر نیاز دارد؛ کنترل‌های تغییردهنده برای نقش‌های دیگر نمایش داده نمی‌شوند.",
+    "ATELIER EDITORIAL / ADMIN",
+    "محتوا و دیده‌شدن",
+    "صفحه‌های عمومی، متادیتای SEO و انتقال‌های سایت را با چرخه پیش‌نویس تا انتشار مدیریت کنید.",
+    "اتصال به قراردادهای واقعی محتوا"
+  ],
+  "jsxTags": [
+    "main",
+    "div",
+    "StatePanel",
+    "header",
+    "span",
+    "h1",
+    "p",
+    "Icon",
+    "AdminContentSeoNavigation",
+    "ContentView",
+    "SeoView",
+    "RedirectsView"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "loading"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

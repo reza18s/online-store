@@ -1,0 +1,23 @@
+{
+  "targetId": "admin-content-content-seo-error-message",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/error-message.tsx",
+      "anchor": "ErrorMessage (3-12)",
+      "lines": "3-12",
+      "sha256": "824c0d2702134f9598bd3fb2b97ef68cac287786bbb3d58b64260ae09e426a7e",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "div"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

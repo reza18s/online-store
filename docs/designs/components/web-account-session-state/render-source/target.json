@@ -1,0 +1,52 @@
+{
+  "targetId": "web-account-session-state",
+  "scope": "web",
+  "symbol": "SessionState",
+  "source": {
+    "path": "apps/web/src/features/account/components/session-state.tsx",
+    "anchor": "SessionState (21-95)",
+    "lines": "21-95",
+    "sha256": "f85641a21c3aff9b549d62e31da55331f311ca8c92d27ab85e7e08e56e754c2c",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "حساب کاربری",
+    "اطلاعات خصوصی شما فقط پس از ورود به حساب نمایش داده می‌شود.",
+    "در حال بارگذاری حساب کاربری",
+    "نشست شما منقضی شده است",
+    "دسترسی به حساب ممکن نیست",
+    "اتصال اینترنت برقرار نیست",
+    "حساب کاربری بارگذاری نشد",
+    "برای حفاظت از اطلاعات سفارش‌ها و آدرس‌ها دوباره وارد حساب شوید.",
+    "این حساب در حال حاضر اجازه استفاده از این بخش را ندارد.",
+    "اتصال را بررسی کنید و برای دریافت دوباره اطلاعات تلاش کنید.",
+    "دریافت اطلاعات حساب ممکن نشد؛ دوباره تلاش کنید.",
+    "ورود دوباره",
+    "تلاش دوباره",
+    "حساب شما در دسترس نیست",
+    "این حساب امکان استفاده از بخش‌های مشتری را ندارد. برای راهنمایی با پشتیبانی تماس بگیرید.",
+    "تماس با پشتیبانی",
+    "ورود به حساب"
+  ],
+  "jsxTags": [
+    "PageFrame",
+    "LoadingState",
+    "EmptyState"
+  ],
+  "actions": [
+    {
+      "element": "EmptyState",
+      "events": [
+        "onAction"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

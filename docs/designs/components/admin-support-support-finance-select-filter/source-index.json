@@ -1,0 +1,36 @@
+{
+  "targetId": "admin-support-support-finance-select-filter",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/support/components/support-finance/select-filter.tsx",
+      "anchor": "SelectFilter (5-36)",
+      "lines": "5-36",
+      "sha256": "8639e150761330810334c651b3d3ec3ec49d175091e512df3a943f9705af30d7",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "همه"
+  ],
+  "jsxTags": [
+    "label",
+    "UiSelect",
+    "option"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "همه",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

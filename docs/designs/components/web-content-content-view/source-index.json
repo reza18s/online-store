@@ -1,0 +1,35 @@
+{
+  "targetId": "web-content-content-view",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/content/components/ContentView.tsx",
+      "anchor": "ContentView (16-44)",
+      "lines": "16-44",
+      "sha256": "ef9cdc7cbebb5ac17f2f92462cc490b91db6074e1d02f7b0bb7442c772b2a96a",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "SystemStatePanel",
+    "PublishedContent"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "SystemStatePanel",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

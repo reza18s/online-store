@@ -1,0 +1,39 @@
+{
+  "targetId": "web-account-address-field",
+  "scope": "web",
+  "symbol": "AddressField",
+  "source": {
+    "path": "apps/web/src/features/account/components/address-field.tsx",
+    "anchor": "AddressField (5-45)",
+    "lines": "5-45",
+    "sha256": "89b47ad95928da17193032272a1e79f5e6ffc250b8cd40e2b935ff9931777ada",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "*"
+  ],
+  "jsxTags": [
+    "label",
+    "span",
+    "b",
+    "UiInput",
+    "Icon",
+    "small"
+  ],
+  "actions": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

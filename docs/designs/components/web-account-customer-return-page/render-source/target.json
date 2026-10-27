@@ -1,0 +1,169 @@
+{
+  "targetId": "web-account-customer-return-page",
+  "scope": "web",
+  "symbol": "CustomerReturnPage",
+  "source": {
+    "path": "apps/web/src/features/account/pages/customer-return-page.tsx",
+    "anchor": "CustomerReturnPage (44-386)",
+    "lines": "44-386",
+    "sha256": "74dc02e83f5a6531c54899e87db2f0ba8d5f14ea050c90d7fcbdf61070dda381",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "در حال بارگذاری درخواست بازگشت",
+    "بازگشت کالا",
+    "برای پیگیری یا ثبت درخواست بازگشت ابتدا وارد حساب شوید.",
+    "یک سفارش را انتخاب کنید",
+    "درخواست بازگشت را از صفحه جزئیات همان سفارش شروع کنید تا اطلاعات واقعی سفارش بررسی شود.",
+    "مشاهده سفارش‌ها",
+    "RETURNS /",
+    "وضعیت درخواست بازگشت",
+    "وضعیت فعلی درخواست شما:",
+    "ثبت درخواست:",
+    "وضعیت بازپرداخت",
+    "مبلغ:",
+    "ثبت:",
+    "تکمیل:",
+    "هنوز رکورد بازپرداختی برای این سفارش از سرور دریافت نشده است.",
+    "مشاهده سفارش",
+    "تماس با پشتیبانی",
+    "حداقل یک کالا را برای بازگشت انتخاب کنید.",
+    "برای ثبت درخواست، شرایط سلامت و برچسب کالا را تأیید کنید.",
+    "اتصال برقرار نیست؛ درخواست بازگشت ثبت نشد.",
+    "ثبت درخواست بازگشت انجام نشد؛ وضعیت سفارش را دوباره بررسی کنید.",
+    "NOVA returns",
+    "استایل زنانه نوا",
+    "اعتماد شما برای ما ارزشمند است.",
+    "بازگشت آسان، تجربه‌ای مطمئن.",
+    "NOVA",
+    "درخواست بازگشت کالا",
+    "در چند مرحله، کالای خود را برای بازگشت ثبت کنید.",
+    "انصراف",
+    "مراحل درخواست بازگشت",
+    "۱",
+    "انتخاب سفارش",
+    "۲",
+    "انتخاب کالا",
+    "۳",
+    "دلیل بازگشت",
+    "۴",
+    "تکمیل اطلاعات",
+    "۵",
+    "ارسال درخواست"
+  ],
+  "jsxTags": [
+    "PageFrame",
+    "LoadingState",
+    "OrderDetailError",
+    "SessionState",
+    "span",
+    "EmptyState",
+    "section",
+    "h1",
+    "p",
+    "strong",
+    "h2",
+    "div",
+    "Button",
+    "a",
+    "ReturnOrderState",
+    "aside",
+    "img",
+    "small",
+    "header",
+    "b",
+    "form",
+    "label",
+    "UiSelect",
+    "option",
+    "Icon",
+    "fieldset",
+    "legend",
+    "Checkbox",
+    "UiTextarea",
+    "nav"
+  ],
+  "actions": [
+    {
+      "element": "OrderDetailError",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "OrderDetailError",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "۱. انتخاب سفارش / سفارش شماره / ۲. انتخاب کالاهای قابل بازگشت",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "سفارش شماره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiTextarea",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "reason",
+    "note",
+    "confirmed",
+    "selectedItemIds",
+    "formError",
+    "submittedOrder"
+  ],
+  "stateMarkers": [
+    "selected",
+    "error",
+    "success"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

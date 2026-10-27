@@ -1,0 +1,50 @@
+{
+  "targetId": "admin-content-content-seo-seo-list",
+  "scope": "admin",
+  "symbol": "SeoList",
+  "source": {
+    "path": "apps/admin/src/features/content/components/content-seo/seo-list.tsx",
+    "anchor": "SeoList (10-67)",
+    "lines": "10-67",
+    "sha256": "9a0aa67ddb9eef67a5a506c02303e3daf0982c5f5d34f83a6c1be4e76ebaf823",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "متادیتای SEO",
+    "مسیر",
+    "رکورد جدید",
+    "برای هیچ مسیری متادیتا ثبت نشده است."
+  ],
+  "jsxTags": [
+    "Panel",
+    "div",
+    "span",
+    "Button",
+    "Icon",
+    "strong"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "رکورد جدید",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

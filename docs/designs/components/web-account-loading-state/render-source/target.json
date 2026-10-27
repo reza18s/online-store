@@ -1,0 +1,24 @@
+{
+  "targetId": "web-account-loading-state",
+  "scope": "web",
+  "symbol": "LoadingState",
+  "source": {
+    "path": "apps/web/src/features/account/components/loading-state.tsx",
+    "anchor": "LoadingState (1-14)",
+    "lines": "1-14",
+    "sha256": "30ac319682cee02f4499f1418096868f722a8d0123dc5e8271a5d357179b9d69",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "div"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

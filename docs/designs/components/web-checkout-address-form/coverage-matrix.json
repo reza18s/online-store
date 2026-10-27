@@ -1,0 +1,134 @@
+{
+  "version": "1.0.0",
+  "targetId": "web-checkout-address-form",
+  "sourceEvidence": {
+    "labels": {
+      "status": "DOCUMENTED",
+      "count": 18
+    },
+    "actions": {
+      "status": "DOCUMENTED",
+      "count": 5
+    },
+    "stateMarkers": {
+      "status": "DOCUMENTED",
+      "count": 1
+    },
+    "jsxTags": {
+      "status": "DOCUMENTED",
+      "count": 15
+    },
+    "variants": {
+      "status": "DOCUMENTED",
+      "count": 0
+    },
+    "sizes": {
+      "status": "DOCUMENTED",
+      "count": 0
+    }
+  },
+  "artifacts": [
+    {
+      "type": "annotated-design-board",
+      "path": "docs/designs/components/web-checkout-address-form/01-Visual-Design-Board.png",
+      "status": "GENERATED"
+    },
+    {
+      "type": "clean-desktop-reference",
+      "path": "docs/designs/components/web-checkout-address-form/02-Clean-Reference.png",
+      "status": "GENERATED"
+    },
+    {
+      "type": "clean-mobile-reference",
+      "path": "docs/designs/components/web-checkout-address-form/03-Clean-Reference-Mobile.png",
+      "status": "GENERATED"
+    },
+    {
+      "type": "design-specification",
+      "path": "docs/designs/components/web-checkout-address-form/design-spec.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "json-schema",
+      "path": "docs/designs/components/web-checkout-address-form/design-spec.schema.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "scene-graph",
+      "path": "docs/designs/components/web-checkout-address-form/scene-graph.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "source-index",
+      "path": "docs/designs/components/web-checkout-address-form/source-index.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "authority-map",
+      "path": "docs/designs/components/web-checkout-address-form/authority-map.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "conflicts-and-proposals",
+      "path": "docs/designs/components/web-checkout-address-form/conflicts.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "design-tokens",
+      "path": "docs/designs/components/web-checkout-address-form/design-tokens.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "asset-registry",
+      "path": "docs/designs/components/web-checkout-address-form/asset-registry.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "coverage-matrix",
+      "path": "docs/designs/components/web-checkout-address-form/coverage-matrix.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "qa-report",
+      "path": "docs/designs/components/web-checkout-address-form/qa-report.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "manifest",
+      "path": "docs/designs/components/web-checkout-address-form/manifest.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "component-handoff",
+      "path": "docs/designs/components/web-checkout-address-form/component-handoff.md",
+      "status": "GENERATED"
+    },
+    {
+      "type": "renderer-input",
+      "path": "docs/designs/components/web-checkout-address-form/render-source/target.json",
+      "status": "GENERATED"
+    },
+    {
+      "type": "renderer-instructions",
+      "path": "docs/designs/components/web-checkout-address-form/render-source/README.md",
+      "status": "GENERATED"
+    }
+  ],
+  "viewports": [
+    {
+      "id": "desktop",
+      "width": 1440,
+      "height": 900,
+      "status": "GENERATED",
+      "screenshot": "02-Clean-Reference.png"
+    },
+    {
+      "id": "mobile",
+      "width": 390,
+      "height": 844,
+      "status": "GENERATED",
+      "screenshot": "03-Clean-Reference-Mobile.png"
+    }
+  ],
+  "statePresentation": "Source markers are listed on the design board/specification; full live state transitions remain UNVERIFIED."
+}

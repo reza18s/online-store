@@ -1,0 +1,23 @@
+{
+  "targetId": "web-content-page-shell",
+  "scope": "web",
+  "symbol": "PageShell",
+  "source": {
+    "path": "apps/web/src/features/content/components/page-shell.tsx",
+    "anchor": "PageShell (3-13)",
+    "lines": "3-13",
+    "sha256": "89c520edfec613d2b02c99a241ecf97a2ccffda4d8119b38f938c00543133676",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "main"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

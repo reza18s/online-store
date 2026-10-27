@@ -1,0 +1,142 @@
+{
+  "targetId": "web-catalog-home-discovery",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/catalog/components/home-discovery.tsx",
+      "anchor": "HomeDiscovery (18-648)",
+      "lines": "18-648",
+      "sha256": "387c7da9d38d5940e2ce34f9a6645f8f4e3544be821c4ae24ed986db8ba19b9d",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "زنانه",
+    "مردانه",
+    "بچگانه",
+    "اکسسوری",
+    "جدیدترین‌ها",
+    "کالکشن‌ها",
+    "تخفیف‌ها",
+    "روش‌های ارسال",
+    "هزینه و زمان ارسال هنگام پرداخت",
+    "ضمانت اصالت کالا",
+    "تضمین کیفیت و بازگشت کالا",
+    "شرایط بازگشت کالا",
+    "جزئیات در راهنمای بازگشت کالا",
+    "پشتیبانی اختصاصی",
+    "همیشه در کنار شما هستیم",
+    "افزودن به سبد",
+    "ایمیل شما",
+    "عضویت",
+    "عضویت خبرنامه در حال حاضر فعال نیست.",
+    "مدل نوا با کیف زرشکی در کالکشن پاییز",
+    "کالکشن پاییز",
+    "فرم‌های آرام",
+    "برای روزهای بلند",
+    "جایی که استایل در جزئیات با زندگی امروز ملاقات می‌کند.",
+    "مشاهده کالکشن",
+    "خرید زنانه",
+    "مجموعه مردانه",
+    "استایل معاصر برای لحظه‌های ماندگار",
+    "مشاهده",
+    "مجموعه بچگانه",
+    "لباس‌هایی راحت، شاد و ظریف",
+    "منتخب سردبیر",
+    "مشاهده اکسسوری‌های نوا",
+    "شال بافتنی و جزئیات اکسسوری نوا",
+    "،",
+    "اکسسوری‌های نوا",
+    "بافت‌ها و جزئیاتی برای کامل کردن استایل روزمره",
+    "مشاهده محصولات",
+    "دسته‌بندی‌های فروشگاه",
+    "%"
+  ],
+  "jsxTags": [
+    "article",
+    "div",
+    "a",
+    "img",
+    "Icon",
+    "Button",
+    "span",
+    "strong",
+    "form",
+    "label",
+    "input",
+    "button",
+    "p",
+    "main",
+    "section",
+    "h1",
+    "br",
+    "small",
+    "em",
+    "nav",
+    "h2",
+    "CatalogQueryState",
+    "aside",
+    "svg",
+    "path",
+    "footer",
+    "Logo",
+    "AddToCartFeedback"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "selected"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "افزودن به سبد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "افزودن به سبد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "ایمیل شما / عضویت",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "افزودن به سبد",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

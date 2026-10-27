@@ -1,0 +1,32 @@
+{
+  "targetId": "web-catalog-category-discovery-category-card-stack",
+  "scope": "web",
+  "symbol": "CategoryCardStack",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/category-discovery.tsx",
+    "anchor": "CategoryCardStack (527-561)",
+    "lines": "527-561",
+    "sha256": "2b097d89e8178a2253058a3dd702e96d88a9c32fd2bdf576656fdddae7ec2fef",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "دسته‌های لباس کودک",
+    "مشاهده"
+  ],
+  "jsxTags": [
+    "nav",
+    "a",
+    "img",
+    "span",
+    "strong",
+    "small",
+    "Icon"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "navigation",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,100 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-options-panel",
+  "scope": "admin",
+  "symbol": "OptionsPanel",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/options-panel.tsx",
+    "anchor": "OptionsPanel (26-183)",
+    "lines": "26-183",
+    "sha256": "7e41814b29b506f8cd7c25847b78d09d56b7d3271675d23b27dec3b59ffc6567",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "کلید لاتین و نام گزینه معتبر لازم است.",
+    "گزینه ثبت نشد.",
+    "کلید مقدار باید با حروف لاتین کوچک، عدد و خط تیره باشد.",
+    "مقدار گزینه ثبت نشد.",
+    "در حال دریافت گزینه‌ها...",
+    "گزینه‌های محصول در دسترس نیست",
+    "دریافت گزینه‌ها انجام نشد.",
+    "تلاش دوباره",
+    "OPTIONS",
+    "گزینه‌ها و مقدارها",
+    "کلید گزینه",
+    "size",
+    "نام گزینه",
+    "سایز",
+    "افزودن",
+    "گزینه‌ای ثبت نشده است.",
+    "گزینه ویرایش نشد.",
+    "مقدار گزینه ویرایش نشد."
+  ],
+  "jsxTags": [
+    "section",
+    "LoadingState",
+    "StatePanel",
+    "Button",
+    "Icon",
+    "div",
+    "p",
+    "h3",
+    "form",
+    "UiInput",
+    "OptionItem"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "کلید گزینه / نام گزینه / سایز",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "OptionItem",
+      "events": [
+        "onNewValue",
+        "onAddValue",
+        "onUpdate",
+        "onUpdateValue"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "newOption",
+    "newValues",
+    "error"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

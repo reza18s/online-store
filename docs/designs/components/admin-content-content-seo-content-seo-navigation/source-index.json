@@ -1,0 +1,31 @@
+{
+  "targetId": "admin-content-content-seo-content-seo-navigation",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/admin-content-seo-navigation.tsx",
+      "anchor": "AdminContentSeoNavigation (5-28)",
+      "lines": "5-28",
+      "sha256": "8ed5d2aa2534070ca33e4bd2d28178d9b6e8aa9001d0ac78d4e6b1e7356b1b35",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "محتوا",
+    "متادیتای SEO",
+    "redirectها",
+    "بخش‌های محتوا و SEO"
+  ],
+  "jsxTags": [
+    "nav",
+    "div",
+    "a",
+    "Icon"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

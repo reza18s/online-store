@@ -1,0 +1,257 @@
+{
+  "targetId": "web-catalog-listing-discovery",
+  "scope": "web",
+  "symbol": "ListingDiscovery",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/listing-discovery.tsx",
+    "anchor": "ListingDiscovery (50-792)",
+    "lines": "50-792",
+    "sha256": "0bfe90b13266d1ae88d3b48e20fe6ccd96fb4faa5a53b8482f9efebf73f0df64",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "تخفیف‌های منتخب",
+    "تازه‌های آتلیه",
+    "همه محصولات",
+    "فقط موجود",
+    "تخفیف ویژه",
+    "دسته‌بندی",
+    "سایز",
+    "رنگ",
+    "جنس پارچه",
+    "خانه",
+    "/",
+    "فروشگاه",
+    "NOVA / CATALOG",
+    "در حال بارگذاری...",
+    "فیلترها",
+    "مرتب‌سازی",
+    "جدیدترین",
+    "ارزان‌ترین",
+    "گران‌ترین",
+    "الفبا",
+    "جست‌وجوی محصولات",
+    "عبارت جست‌وجو",
+    "پاک کردن عبارت جست‌وجو",
+    "جست‌وجو",
+    "پیشنهادهای جست‌وجو",
+    "در حال جست‌وجو...",
+    "فیلترهای اعمال‌شده",
+    "نتیجه",
+    "حذف همه",
+    "فیلتر محصولات",
+    "بستن فیلترها",
+    "اعمال فیلتر (",
+    "نتیجه)",
+    "حذف همه فیلترها",
+    "نتایج محصولات"
+  ],
+  "jsxTags": [
+    "div",
+    "FilterSelect",
+    "ListingPriceFilter",
+    "ListingStatusFilter",
+    "main",
+    "a",
+    "span",
+    "header",
+    "h1",
+    "p",
+    "Button",
+    "Icon",
+    "small",
+    "label",
+    "UiSelect",
+    "option",
+    "section",
+    "form",
+    "UiInput",
+    "strong",
+    "button",
+    "aside",
+    "CatalogQueryState",
+    "ProductGrid",
+    "Pagination",
+    "AddToCartFeedback",
+    "h2"
+  ],
+  "actions": [
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ListingPriceFilter",
+      "events": [
+        "onUpdate"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "FilterSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ListingStatusFilter",
+      "events": [
+        "onSale",
+        "onInStockChange",
+        "onSaleChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "فیلترها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "جدیدترین / ارزان‌ترین / گران‌ترین",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "جست‌وجوی محصولات / عبارت جست‌وجو / پاک کردن عبارت جست‌وجو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "پاک کردن عبارت جست‌وجو",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "فیلترها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "جدیدترین / ارزان‌ترین / گران‌ترین",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "بستن فیلترها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "اعمال فیلتر ( / نتیجه)",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "ProductGrid",
+      "events": [
+        "onToggleWishlist",
+        "onAdd"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "div",
+      "events": [
+        "onMouseDown"
+      ],
+      "label": "فیلترها / بستن فیلترها / اعمال فیلتر (",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "بستن فیلترها",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "اعمال فیلتر ( / نتیجه)",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "desktopFiltersOpen",
+    "desktopFilterRailMounted",
+    "mobileFiltersOpen",
+    "mobileFilterSheetMounted",
+    "mobileFiltersClosing",
+    "searchDraft",
+    "isMobileSearch"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "collection",
+  "status": "PROPOSED"
+}

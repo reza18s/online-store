@@ -1,0 +1,23 @@
+{
+  "targetId": "web-account-page-frame",
+  "scope": "web",
+  "symbol": "PageFrame",
+  "source": {
+    "path": "apps/web/src/features/account/pages/page-frame.tsx",
+    "anchor": "PageFrame (3-17)",
+    "lines": "3-17",
+    "sha256": "6e2bc08bce79163fc28a155a23c1217845a4dbb62b9fff27a3805df187ec7aa9",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "main"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,38 @@
+{
+  "targetId": "web-checkout-payment-options",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/payment-options.tsx",
+      "anchor": "PaymentOptions (5-23)",
+      "lines": "5-23",
+      "sha256": "e48e8d6e0d32a8a0a9a30164627f420c9696c987316b586a0a8c0f406893ece4",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "روش پرداخت",
+    "پرداخت آنلاین",
+    "پس از ثبت امن سفارش، در صورت فعال‌بودن درگاه به آن منتقل می‌شوید.",
+    "وضعیت پرداخت پس از بازگشت، فقط از روی سفارش معتبر سرور نمایش داده می‌شود."
+  ],
+  "jsxTags": [
+    "fieldset",
+    "legend",
+    "label",
+    "Radio",
+    "span",
+    "strong",
+    "small",
+    "Icon",
+    "div"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "selected"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

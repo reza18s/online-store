@@ -1,0 +1,45 @@
+{
+  "targetId": "web-checkout-order-lookup-state",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/checkout/components/order-lookup-state.tsx",
+      "anchor": "OrderLookupState (8-30)",
+      "lines": "8-30",
+      "sha256": "89b53f47649070bf0ee260fdcc1d0e8dc744dfa8e23384720df49ca56f82731f",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "وضعیت سفارش دریافت نشد.",
+    "برای مشاهده نتیجه وارد شوید",
+    "سفارش فقط برای حساب صاحب آن قابل مشاهده است.",
+    "ورود به حساب",
+    "مشاهده سفارش‌ها",
+    "تلاش دوباره"
+  ],
+  "jsxTags": [
+    "section",
+    "Icon",
+    "h1",
+    "p",
+    "div",
+    "Button",
+    "a"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "تلاش دوباره",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

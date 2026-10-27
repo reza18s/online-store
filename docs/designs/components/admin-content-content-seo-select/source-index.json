@@ -1,0 +1,36 @@
+{
+  "targetId": "admin-content-content-seo-select",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/content/components/content-seo/select.tsx",
+      "anchor": "Select (5-31)",
+      "lines": "5-31",
+      "sha256": "0a2dafb6fa9ce04011274422b01575c3f0c50f780ba2556e874c204f39f14d2b",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "Label",
+    "span",
+    "UiSelect"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "disabled"
+  ],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

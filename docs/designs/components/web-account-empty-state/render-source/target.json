@@ -1,0 +1,40 @@
+{
+  "targetId": "web-account-empty-state",
+  "scope": "web",
+  "symbol": "EmptyState",
+  "source": {
+    "path": "apps/web/src/features/account/components/empty-state.tsx",
+    "anchor": "EmptyState (5-38)",
+    "lines": "5-38",
+    "sha256": "15765dc607b2df4503e737854d6617267f7af322a6d0310e0521e274e6c3f641",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "section",
+    "span",
+    "Icon",
+    "h1",
+    "p",
+    "Button",
+    "a"
+  ],
+  "actions": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [
+    "empty"
+  ],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

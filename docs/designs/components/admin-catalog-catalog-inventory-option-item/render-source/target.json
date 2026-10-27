@@ -1,0 +1,74 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-option-item",
+  "scope": "admin",
+  "symbol": "OptionItem",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/option-item.tsx",
+    "anchor": "OptionItem (9-75)",
+    "lines": "9-75",
+    "sha256": "9c86be142f5f12b3d25e2bc3576c507a3e02efbdc962d0b6acaab29934accd62",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "new-value",
+    "مقدار"
+  ],
+  "jsxTags": [
+    "div",
+    "UiInput",
+    "Button",
+    "Icon",
+    "span",
+    "OptionValue"
+  ],
+  "actions": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "OptionValue",
+      "events": [
+        "onSave"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "مقدار",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "name"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "card",
+  "status": "PROPOSED"
+}

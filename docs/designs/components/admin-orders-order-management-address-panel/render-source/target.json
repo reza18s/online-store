@@ -1,0 +1,32 @@
+{
+  "targetId": "admin-orders-order-management-address-panel",
+  "scope": "admin",
+  "symbol": "AddressPanel",
+  "source": {
+    "path": "apps/admin/src/features/orders/components/order-management/address-panel.tsx",
+    "anchor": "AddressPanel (5-27)",
+    "lines": "5-27",
+    "sha256": "27786b2061365f7705c34ba1ce165ab8bd1cb8cbbdd65394e2b00084deeefeac",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "نشانی ثبت‌شده",
+    "،",
+    "·",
+    "نشانی برای این سفارش ثبت نشده است."
+  ],
+  "jsxTags": [
+    "section",
+    "PanelHeading",
+    "div",
+    "p",
+    "span"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

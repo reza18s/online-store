@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-radio",
+  "scope": "shared",
+  "symbol": "Radio",
+  "source": {
+    "path": "packages/ui/src/radio.tsx",
+    "anchor": "Radio (8-18)",
+    "lines": "8-18",
+    "sha256": "f3d3675c8dd14b4543bf0ae712f6ea632f4b91f9a73a6976ab04e2568b78662f",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [],
+  "jsxTags": [
+    "input"
+  ],
+  "actions": [],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

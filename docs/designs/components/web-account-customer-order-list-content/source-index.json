@@ -1,0 +1,60 @@
+{
+  "targetId": "web-account-customer-order-list-content",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/web/src/features/account/components/customer-order-list-content.tsx",
+      "anchor": "CustomerOrderListContent (18-105)",
+      "lines": "18-105",
+      "sha256": "304799b62bceab2dc0d70a3ae9b205cbc3bb86d995af22a8b2bf44226b416955",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "فیلتر سفارش‌ها",
+    "همه",
+    "در حال بارگذاری سفارش‌ها",
+    "هنوز سفارشی ثبت نکرده‌اید",
+    "وقتی اولین خرید خود را انجام دهید، وضعیت آن را همین‌جا دنبال می‌کنید.",
+    "مشاهده فروشگاه",
+    "·",
+    "اتصال فعلی قطع است؛ اقدام‌های سفارش فقط پس از اتصال انجام می‌شوند."
+  ],
+  "jsxTags": [
+    "div",
+    "Button",
+    "InlineQueryError",
+    "EmptyState",
+    "a",
+    "span",
+    "small",
+    "strong",
+    "Icon",
+    "p"
+  ],
+  "stateVariables": [
+    "status"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "همه",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "InlineQueryError",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

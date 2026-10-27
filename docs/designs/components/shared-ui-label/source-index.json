@@ -1,0 +1,23 @@
+{
+  "targetId": "shared-ui-label",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "packages/ui/src/label.tsx",
+      "anchor": "Label (8-10)",
+      "lines": "8-10",
+      "sha256": "ca367c659cec12b0d2857df886001f7b47ee6a80fd428997822ce0fb0f3074a8",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [],
+  "jsxTags": [
+    "label"
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": []
+}

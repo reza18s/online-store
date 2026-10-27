@@ -1,0 +1,53 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-taxonomy-panel",
+  "scope": "admin",
+  "symbol": "TaxonomyPanel",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/taxonomy-panel.tsx",
+    "anchor": "TaxonomyPanel (6-61)",
+    "lines": "6-61",
+    "sha256": "36ba95750219520b1388b9b667e308d98bb1360b1923cb72b86f670fdacee502",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "TAXONOMY",
+    "دسته‌بندی محصول",
+    "دسته‌بندی‌ای از سرویس دریافت نشد.",
+    "ذخیره دسته‌بندی"
+  ],
+  "jsxTags": [
+    "section",
+    "div",
+    "p",
+    "h3",
+    "Icon",
+    "label",
+    "Checkbox",
+    "span",
+    "Button"
+  ],
+  "actions": [
+    {
+      "element": "Checkbox",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "ذخیره دسته‌بندی",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}

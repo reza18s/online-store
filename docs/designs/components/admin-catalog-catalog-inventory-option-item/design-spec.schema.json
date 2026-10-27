@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/reza18s/online-store/blob/main/docs/designs/components/component-design-spec.schema.json",
+  "title": "NOVA component design reference v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "target", "sourceRevision", "direction", "purpose",
+    "sourceEvidence", "proposal", "actions", "states", "sources",
+    "tokens", "assets", "frames", "outputs", "qa"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "2.0.0" },
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "scope", "symbol", "source", "lines"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "scope": { "enum": ["web", "admin", "shared"] },
+        "symbol": { "type": "string", "minLength": 1 },
+        "source": { "type": "string", "minLength": 1 },
+        "lines": { "type": "string", "minLength": 1 }
+      }
+    },
+    "sourceRevision": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+    "direction": { "type": "string", "minLength": 1 },
+    "purpose": { "type": "string", "minLength": 1 },
+    "sourceEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["labels", "jsxTags", "stateVariables", "stateMarkers", "variants", "sizes"],
+      "properties": {
+        "labels": { "type": "array", "items": { "type": "string" } },
+        "jsxTags": { "type": "array", "items": { "type": "string" } },
+        "stateVariables": { "type": "array", "items": { "type": "string" } },
+        "stateMarkers": { "type": "array", "items": { "type": "string" } },
+        "variants": { "type": "array", "items": { "type": "string" } },
+        "sizes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "proposal": {
+      "type": "object", "additionalProperties": false,
+      "required": ["layoutType", "status", "desktop", "mobile", "typography"],
+      "properties": {
+        "layoutType": { "type": "string" },
+        "status": { "const": "PROPOSED" },
+        "desktop": { "type": "string" },
+        "mobile": { "type": "string" },
+        "typography": {
+          "type": "object", "additionalProperties": false,
+          "required": ["display", "body"],
+          "properties": {
+            "display": { "$ref": "#/$defs/typeface" },
+            "body": { "$ref": "#/$defs/typeface" }
+          }
+        }
+      }
+    },
+    "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+    "states": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/state" } },
+    "sources": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["path", "anchor", "lines", "sha256", "status"],
+        "properties": {
+          "path": { "type": "string" },
+          "anchor": { "type": "string" },
+          "lines": { "type": "string" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "status": { "const": "INVENTORY_SOURCE_HASH_VERIFIED" }
+        }
+      }
+    },
+    "tokens": { "type": "array", "items": { "$ref": "#/$defs/token" } },
+    "assets": { "type": "array", "items": { "$ref": "#/$defs/asset" } },
+    "frames": {
+      "type": "array", "minItems": 3,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "viewportId", "width", "height", "screenshot", "componentBounds", "direction"],
+        "properties": {
+          "id": { "type": "string" },
+          "viewportId": { "enum": ["desktop", "mobile", "board"] },
+          "width": { "type": "integer", "minimum": 1 },
+          "height": { "type": "integer", "minimum": 1 },
+          "screenshot": { "type": "string" },
+          "componentBounds": { "$ref": "#/$defs/bounds" },
+          "direction": { "const": "rtl" }
+        }
+      }
+    },
+    "outputs": {
+      "type": "array", "minItems": 15,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["path", "artifactType", "status"],
+        "properties": {
+          "path": { "type": "string" },
+          "artifactType": { "type": "string" },
+          "status": { "enum": ["GENERATED", "VERIFIED"] }
+        }
+      }
+    },
+    "qa": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "checks", "warnings"],
+      "properties": {
+        "status": { "enum": ["PASS_WITH_WARNINGS", "UNVERIFIED", "FAIL"] },
+        "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "typeface": {
+      "type": "object", "additionalProperties": false,
+      "required": ["family", "weight", "status", "assetPath"],
+      "properties": {
+        "family": { "type": "string" },
+        "weight": { "type": "integer", "minimum": 100, "maximum": 900 },
+        "status": { "enum": ["SOURCE_DEFINED", "PROPOSED_SUBSTITUTE"] },
+        "assetPath": { "type": "string" }
+      }
+    },
+    "action": {
+      "type": "object", "additionalProperties": false,
+      "required": ["element", "events", "label", "status"],
+      "properties": {
+        "element": { "type": "string" },
+        "events": { "type": "array", "items": { "type": "string" } },
+        "label": { "type": "string" },
+        "status": { "const": "SOURCE_DEFINED" }
+      }
+    },
+    "state": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "label", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "status": { "enum": ["SOURCE_MARKER", "PROPOSED_BASELINE"] }
+      }
+    },
+    "token": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "value", "status", "source"],
+      "properties": {
+        "id": { "type": "string" },
+        "value": { "type": "string" },
+        "status": { "enum": ["SOURCE_DEFINED", "PROPOSED"] },
+        "source": { "type": "string" }
+      }
+    },
+    "asset": {
+      "type": "object", "additionalProperties": false,
+      "required": ["assetId", "path", "kind", "license", "sha256"],
+      "properties": {
+        "assetId": { "type": "string" },
+        "path": { "type": "string" },
+        "kind": { "enum": ["font", "illustrative-vector"] },
+        "license": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "bounds": {
+      "type": "object", "additionalProperties": false,
+      "required": ["x", "y", "width", "height", "geometryStatus", "captureStatus"],
+      "properties": {
+        "x": { "type": "number", "minimum": 0 },
+        "y": { "type": "number", "minimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 },
+        "geometryStatus": { "const": "PROPOSED" },
+        "captureStatus": { "const": "MEASURED_IN_RENDERER_OUTPUT" }
+      }
+    },
+    "check": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "status", "method", "evidence"],
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "enum": ["PASS", "PASS_WITH_WARNINGS", "UNVERIFIED", "NOT_APPLICABLE"] },
+        "method": { "type": "string" },
+        "evidence": { "type": "string" }
+      }
+    }
+  }
+}

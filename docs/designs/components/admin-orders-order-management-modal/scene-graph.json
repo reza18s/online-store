@@ -1,0 +1,91 @@
+{
+  "version": "1.0.0",
+  "targetId": "admin-orders-order-management-modal",
+  "coordinateSystem": "CSS-pixel-like coordinates from the deterministic raster renderer; each frame is independent.",
+  "frames": [
+    {
+      "id": "admin-orders-order-management-modal-desktop",
+      "width": 1440,
+      "height": 900,
+      "rootIds": [
+        "admin-orders-order-management-modal-desktop-specimen"
+      ]
+    },
+    {
+      "id": "admin-orders-order-management-modal-mobile",
+      "width": 390,
+      "height": 844,
+      "rootIds": [
+        "admin-orders-order-management-modal-mobile-specimen"
+      ]
+    },
+    {
+      "id": "admin-orders-order-management-modal-board",
+      "width": 1536,
+      "height": 1024,
+      "rootIds": [
+        "admin-orders-order-management-modal-board-specimen"
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "admin-orders-order-management-modal-board-specimen",
+      "frameId": "admin-orders-order-management-modal-board",
+      "parentId": null,
+      "role": "desktop-reference-thumbnail",
+      "x": 78,
+      "y": 220,
+      "width": 812,
+      "height": 507,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "admin-orders-order-management-modal-desktop-specimen",
+      "frameId": "admin-orders-order-management-modal-desktop",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 106,
+      "y": 258,
+      "width": 1228,
+      "height": 542,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "admin-orders-order-management-modal-desktop-dialog-panel",
+      "x": 134,
+      "y": 370,
+      "width": 1172,
+      "height": 402,
+      "geometryStatus": "PROPOSED",
+      "frameId": "admin-orders-order-management-modal-desktop",
+      "parentId": "admin-orders-order-management-modal-desktop-specimen",
+      "role": "dialog-panel"
+    },
+    {
+      "id": "admin-orders-order-management-modal-mobile-specimen",
+      "frameId": "admin-orders-order-management-modal-mobile",
+      "parentId": null,
+      "role": "component-specimen",
+      "x": 34,
+      "y": 210,
+      "width": 322,
+      "height": 572,
+      "geometryStatus": "PROPOSED",
+      "captureStatus": "MEASURED_IN_RENDERER_OUTPUT"
+    },
+    {
+      "id": "admin-orders-order-management-modal-mobile-dialog-panel",
+      "x": 52,
+      "y": 296,
+      "width": 286,
+      "height": 468,
+      "geometryStatus": "PROPOSED",
+      "frameId": "admin-orders-order-management-modal-mobile",
+      "parentId": "admin-orders-order-management-modal-mobile-specimen",
+      "role": "dialog-panel"
+    }
+  ]
+}

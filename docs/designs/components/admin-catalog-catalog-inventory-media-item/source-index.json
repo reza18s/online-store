@@ -1,0 +1,59 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-media-item",
+  "sourceRevision": "6e4770d05ca67b2fecd337298359de8c6d838176",
+  "discoveryMethod": "TypeScript AST pass over non-test TSX sources; components require a capitalized function or forwardRef/memo export containing JSX.",
+  "sources": [
+    {
+      "path": "apps/admin/src/features/catalog/components/catalog-inventory/media-item.tsx",
+      "anchor": "MediaItem (13-84)",
+      "lines": "13-84",
+      "sha256": "b85e648487a38c44300fab320b915bebad5e6d780c29b950998a46314200ad84",
+      "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+    }
+  ],
+  "copy": [
+    "تصویر اصلی محصول منتشرشده قابل حذف نیست.",
+    "ذخیره متن جایگزین",
+    "حذف رسانه"
+  ],
+  "jsxTags": [
+    "div",
+    "img",
+    "p",
+    "UiInput",
+    "Button",
+    "Icon"
+  ],
+  "stateVariables": [
+    "altText"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "interactionEvents": [
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "ذخیره متن جایگزین",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "Button",
+      "events": [
+        "onClick"
+      ],
+      "label": "حذف رسانه",
+      "status": "SOURCE_DEFINED"
+    }
+  ]
+}

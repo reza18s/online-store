@@ -1,0 +1,119 @@
+{
+  "targetId": "admin-catalog-catalog-inventory-categories-view",
+  "scope": "admin",
+  "symbol": "CategoriesView",
+  "source": {
+    "path": "apps/admin/src/features/catalog/components/catalog-inventory/categories-view.tsx",
+    "anchor": "CategoriesView (29-231)",
+    "lines": "29-231",
+    "sha256": "cc37969aed3f095063cf26ec2f797efb13a27ef95428029e9f57b5343a949eac",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "شناسه دسته‌بندی و نام معتبر لازم است.",
+    "دسته‌بندی ثبت نشد.",
+    "نام دسته‌بندی را وارد کنید.",
+    "دسته‌بندی ویرایش نشد.",
+    "وضعیت دسته‌بندی تغییر نکرد.",
+    "در حال دریافت taxonomy...",
+    "CATALOG / TAXONOMY",
+    "دسته‌بندی‌ها",
+    "ساختار طبقه‌بندی با parent واقعی سرویس مدیریت نگهداری می‌شود.",
+    "شناسه لاتین",
+    "outerwear",
+    "نام دسته",
+    "لباس رویی",
+    "والد",
+    "بدون والد",
+    "افزودن",
+    "فهرست taxonomy",
+    "دسته",
+    "هنوز دسته‌ای ثبت نشده است",
+    "پس از دریافت واقعی از سرویس، دسته‌ها در اینجا نمایش داده می‌شوند."
+  ],
+  "jsxTags": [
+    "LoadingState",
+    "QueryState",
+    "div",
+    "header",
+    "p",
+    "h2",
+    "form",
+    "label",
+    "UiInput",
+    "UiSelect",
+    "option",
+    "Button",
+    "Icon",
+    "section",
+    "h3",
+    "span",
+    "StatePanel",
+    "CategoryRow"
+  ],
+  "actions": [
+    {
+      "element": "QueryState",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "label": "شناسه لاتین / نام دسته / لباس رویی",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiInput",
+      "events": [
+        "onChange"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "UiSelect",
+      "events": [
+        "onChange"
+      ],
+      "label": "بدون والد",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CategoryRow",
+      "events": [
+        "onEdit",
+        "onDraftChange",
+        "onSave",
+        "onCancel",
+        "onToggle"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [
+    "editingId",
+    "draft",
+    "newCategory",
+    "error"
+  ],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "form",
+  "status": "PROPOSED"
+}

@@ -1,0 +1,55 @@
+{
+  "targetId": "web-catalog-catalog-query-state",
+  "scope": "web",
+  "symbol": "CatalogQueryState",
+  "source": {
+    "path": "apps/web/src/features/catalog/components/catalog-query-state.tsx",
+    "anchor": "CatalogQueryState (15-77)",
+    "lines": "15-77",
+    "sha256": "0d2c491b823705cf82d8987089efac7602c28acf8cb1864c22e75f8e58e32431",
+    "status": "INVENTORY_SOURCE_HASH_VERIFIED"
+  },
+  "labels": [
+    "محصولی برای نمایش پیدا نشد",
+    "اتصال اینترنت برقرار نیست",
+    "سرویس فهرست محصولات در دسترس نیست",
+    "بارگذاری محصولات ممکن نشد",
+    "اتصال خود را بررسی کنید و دوباره تلاش کنید.",
+    "ارتباط با سرور محصولات برقرار نشد. پس از بررسی وضعیت سامانه دوباره تلاش کنید.",
+    "لطفاً چند لحظه بعد دوباره تلاش کنید.",
+    "تلاش دوباره",
+    "فیلترها را تغییر دهید یا از انتخاب‌های تازه نوا دیدن کنید.",
+    "در حال به‌روزرسانی نتایج..."
+  ],
+  "jsxTags": [
+    "ProductSkeleton",
+    "MessageCard",
+    "CatalogRefreshNotice",
+    "div",
+    "p"
+  ],
+  "actions": [
+    {
+      "element": "MessageCard",
+      "events": [
+        "onAction"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    },
+    {
+      "element": "CatalogRefreshNotice",
+      "events": [
+        "onRetry"
+      ],
+      "label": "",
+      "status": "SOURCE_DEFINED"
+    }
+  ],
+  "stateVariables": [],
+  "stateMarkers": [],
+  "variants": [],
+  "sizes": [],
+  "layoutType": "panel",
+  "status": "PROPOSED"
+}
